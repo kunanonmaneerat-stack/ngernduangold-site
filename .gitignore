@@ -1,0 +1,6 @@
+site/
+__pycache__/
+*.pyc
+*.zip
+build_site.py.bak-*
+.~lock.*

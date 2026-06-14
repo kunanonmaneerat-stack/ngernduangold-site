@@ -1,0 +1,11 @@
+# Netlify config — Git-connected deploy for ngernduangold
+# Netlify runs `command` on each push, then publishes `publish/`.
+# build_site.py uses only the Python stdlib (no pip install needed).
+[build]
+  command = "python3 build_site.py"
+  publish = "site"
+
+[build.environment]
+  SITE_BASE = "https://ngernduangold.netlify.app"
+  SITE_GA = "G-17PPE0M1B8"
+  PYTHON_VERSION = "3.11"
