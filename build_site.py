@@ -11,7 +11,7 @@ GA_ID = os.environ.get("SITE_GA","")
 if GA_ID:
     _g = '<script async src="https://www.googletagmanager.com/gtag/js?id='+GA_ID+'"></script>'
     _g += '<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config","'+GA_ID+'");'
-    _g += 'document.addEventListener("click",function(e){var a=e.target&&e.target.closest?e.target.closest("a"):null;if(!a)return;var rel=a.getAttribute("rel")||"",cl=" "+(a.className||"")+" ";if(/sponsored/.test(rel)||cl.indexOf(" hubbtn ")>=0||cl.indexOf(" cta ")>=0||cl.indexOf(" go ")>=0){try{gtag("event","affiliate_click",{link_url:a.href,link_text:(a.textContent||"").trim().slice(0,80),page:location.pathname,campaign:((a.href.match(/utm_campaign=([^&]+)/)||[])[1]||""),provider:(a.getAttribute("data-provider")||"")})}catch(_){} }else if(cl.indexOf(" shr ")>=0){try{gtag("event","share",{method:(a.getAttribute("data-method")||""),page:location.pathname})}catch(_){} }});</script>'
+    _g += 'document.addEventListener("click",function(e){var a=e.target&&e.target.closest?e.target.closest("a"):null;if(!a)return;var rel=a.getAttribute("rel")||"",cl=" "+(a.className||"")+" ";if(/sponsored/.test(rel)||cl.indexOf(" hubbtn ")>=0||cl.indexOf(" cta ")>=0||cl.indexOf(" go ")>=0){try{gtag("event","affiliate_click",{link_url:a.href,link_text:(a.textContent||"").trim().slice(0,80),page:location.pathname,campaign:((a.href.match(/utm_campaign=([^&]+)/)||[])[1]||""),sub_id:((a.href.match(/utm_content=([^&]+)/)||[])[1]||""),channel:((a.href.match(/utm_source=([^&]+)/)||[])[1]||""),provider:(a.getAttribute("data-provider")||"")})}catch(_){} }else if(cl.indexOf(" shr ")>=0){try{gtag("event","share",{method:(a.getAttribute("data-method")||""),page:location.pathname})}catch(_){} }});</script>'
     GA_SNIPPET=_g
 else:
     GA_SNIPPET=""
@@ -23,9 +23,13 @@ for _s,_d in [("cover_banner.png","og-default.png"),("cover_banner_loan.png","og
         try: shutil.copy(_s, f"{OUT}/{_d}")
         except Exception: pass
 
-def utm(base, merchant, slug):
+def utm(base, merchant, slug, channel="website", medium="article"):
+    # AccessTrade stores UTM params AS Sub IDs (official docs) -> these double as GA4 UTM
+    # AND AccessTrade attribution sub-ids. utm_content = composite reconciliation key:
+    # {channel}_{page}_{provider}  e.g. website_credit-card-krungsri_Krungsri
     sep = "&" if "?" in base else "?"
-    return f"{base}{sep}utm_source=website&utm_medium=article&utm_campaign={merchant}&utm_content={slug}"
+    sub = f"{channel}_{slug}_{merchant}"
+    return f"{base}{sep}utm_source={channel}&utm_medium={medium}&utm_campaign={merchant}&utm_content={sub}"
 
 CSS = """
 :root{--bg:#0f0f12;--gold:#e0b23c;--ink:#1a1a1f;--muted:#5b5b66;--line:#e7e7ea;--card:#fff}
@@ -938,7 +942,9 @@ print("built site/ ->", sorted(os.listdir(OUT)))
 # ---- links hub (link-in-bio) ----
 LOAN_HUB = "https://atth.me/00c27p002a0x"
 def bcta(url, merchant, text, sub):
-    u = utm(url, merchant, "linkhub")
+    # default channel=website; the /links page JS rewrites utm_source/utm_content to the
+    # incoming channel (e.g. ?utm_source=pantip) so hub clicks are attributed per channel.
+    u = utm(url, merchant, "links", channel="website", medium="linkhub")
     return f'<a class="hubbtn" rel="sponsored noopener nofollow" target="_blank" href="{u}">{text}<small>{sub}</small></a>'
 hub_style = """<style>
 body{background:#0f0f12}
@@ -958,6 +964,10 @@ body{background:#0f0f12}
 .hubsoc a{color:#e0b23c;border:1px solid rgba(224,178,60,.5);border-radius:20px;padding:6px 14px;text-decoration:none;font-size:13px;font-weight:600}
 .hubsoc a:hover{background:rgba(224,178,60,.10)}
 </style>"""
+# channel-attribution JS (kept OUT of the f-string because it contains { } braces):
+# rewrites hub atth.me links so a visitor arriving via ?utm_source=pantip gets the
+# AccessTrade sub-id channel = pantip (utm_source + utm_content {pantip}_links_{provider}).
+LINKS_CHANNEL_JS = """<script>(function(){try{var ch=(new URLSearchParams(location.search).get("utm_source")||"").replace(/[^a-z0-9]/gi,"").toLowerCase().slice(0,20);if(!ch||ch==="website")return;document.querySelectorAll('a.hubbtn[href*="atth.me"]').forEach(function(a){var u=new URL(a.href),prov=u.searchParams.get("utm_campaign")||"";u.searchParams.set("utm_source",ch);u.searchParams.set("utm_content",ch+"_links_"+prov);a.href=u.toString();});}catch(e){}})();</script>"""
 links_body = hub_style + f'''<div class="hub">
 <img class="logo" src="/logo.png" alt="{SITE}" width="88" height="88" decoding="async">
 <h1>{SITE}</h1>
@@ -975,7 +985,7 @@ links_body = hub_style + f'''<div class="hub">
 <a href="https://www.youtube.com/@ngernduangold" target="_blank" rel="noopener">YouTube</a>
 </div>
 <p class="hubdisc">* หน้านี้มีลิงก์พันธมิตร (affiliate) เราอาจได้รับค่าตอบแทนเมื่อคุณสมัครผ่านลิงก์ โดยไม่มีค่าใช้จ่ายเพิ่มกับคุณ · <a href="/disclaimer.html">นโยบาย</a></p>
-</div>'''
+</div>''' + LINKS_CHANNEL_JS
 links_ld = [{"@context":"https://schema.org","@type":"WebPage","name":SITE+" — ลิงก์รวม","url":BASE+"/links","inLanguage":"th"}]
 open(f"{OUT}/links.html","w",encoding="utf-8").write(head(SITE+" — ลิงก์รวม บัตรเครดิต สินเชื่อ ออมเงิน","รวมลิงก์สมัครบัตรเครดิต สินเชื่อ และบัญชีออมเงินดอกสูง คัดมาให้มนุษย์เงินเดือน พร้อมบทความรีวิวก่อนสมัคร","links",links_ld,"website")+links_body+FOOTER)
 print("links.html written")
