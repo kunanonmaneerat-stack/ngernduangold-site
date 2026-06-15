@@ -6,3 +6,8 @@
 {"ts":"2026-06-15T21:10:00+07:00","routine":"delivery-verify","status":"registered","summary":"first scheduled fire คืนนี้ ~21:16 — ยืนยันออกจริง + fallback","metrics":{}}
 {"ts":"2026-06-15T21:10:00+07:00","routine":"weekly-review","status":"registered","summary":"awaiting first scheduled run (จันทร์ ~09:16) — รายงาน + reconcile","metrics":{}}
 {"ts":"2026-06-15T21:10:00+07:00","routine":"link-health","status":"registered","summary":"awaiting first scheduled run (อาทิตย์ ~09:32) — เช็กลิงก์ atth.me ไม่พัง","metrics":{}}
+{"ts": "2026-06-15T19:39:45+07:00", "routine": "ngernduangold-link-health", "status": "ok", "summary": "เช็ก atth.me 8 ลิงก์ = HTTP 200 ทั้งหมด, 0 พัง", "metrics": {"checked": 8, "broken": 0}}
+{"ts": "2026-06-15T19:39:45+07:00", "routine": "ngernduangold-delivery-heartbeat", "status": "ok", "summary": "FB+IG content Reels 15 มิ.ย. LIVE (Meta MCP permalink); YT/Threads รอ browser; TikTok manual", "metrics": {"fb": "live", "ig": "live", "yt": "unverified", "threads": "unverified"}}
+{"ts": "2026-06-15T19:39:46+07:00", "routine": "ngernduangold-comment-loop", "status": "ok", "summary": "เช็กโพสต์ล่าสุด: 1 comment (cover update) 0 บน content reels -> ยังไม่มีที่ต้องตอบ", "metrics": {"comments": 1, "drafted": 0}}
+{"ts": "2026-06-15T19:39:46+07:00", "routine": "ngernduangold-queue-keeper", "status": "partial", "summary": "held top-up: ask_postiz coverage เชื่อไม่ได้ + รอ cleanup linktr.ee 22-28 (กัน double-schedule)", "metrics": {"added": 0}}
+{"ts": "2026-06-15T19:39:46+07:00", "routine": "ngernduangold-first-signal", "status": "ok", "summary": "ยังไม่มีสัญญาณเงิน - launch วันนี้ engagement ~0-1 like ยังไม่มี conversion", "metrics": {"signal": "none"}}
