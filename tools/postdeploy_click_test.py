@@ -1,0 +1,151 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""postdeploy_click_test — RUNTIME proof that affiliate_click fires + sub_id ถูกต้อง.
+
+ยืนยันสิ่งที่ static smoke (postdeploy_smoke.py) ทำไม่ได้: โหลดหน้า live จริง →
+wrap window.dataLayer.push → คลิกปุ่ม affiliate แรก → assert event 'affiliate_click'
+ยิงจริง + sub_id/channel/provider ถูกตามพฤติกรรม JS จริง:
+  /links?utm_source=test  → hub JS rewrite → channel=test, sub_id=test_links_{provider}
+  article CTA (cta/go)    → ไม่ถูก rewrite → channel=website, sub_id=website_{page}_{provider}
+(handler GA อ่าน sub_id=utm_content, channel=utm_source จาก a.href — build_site.py บรรทัด 14)
+
+ต้องมี Playwright:  pip install playwright && python -m playwright install chromium
+รัน:  python tools/postdeploy_click_test.py [--base URL] [--report] [--telegram-on-fail]
+⚠️ ต้อง chromium → ไม่ใช่ build-gate/HTTP-only · รัน on-demand หรือ host ที่มี browser.
+"""
+import os, sys, re, argparse, datetime
+
+for _s in (sys.stdout, sys.stderr):
+    try:
+        _s.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
+CANON = {"krungsri", "kept", "srisawad", "carforcash", "ktcphboom",
+         "happycash", "ktcproud", "refinance", "loan"}
+HERE = os.path.dirname(os.path.abspath(__file__))
+REPO = os.path.dirname(HERE)
+
+# (path, css selector, expected channel, expected sub_id prefix)
+TARGETS = [
+    ("/links?utm_source=test", 'a.hubbtn[href*="atth.me"]', "test", "test_"),
+    ("/title-loan-2026", 'a[href*="atth.me"]', "website", "website_"),
+    ("/credit-card-salary-15000-2026", 'a[href*="atth.me"]', "website", "website_"),
+]
+
+# wrap dataLayer.push BEFORE page scripts → จับ affiliate_click ทุกแบบ (gtag args หรือ dict)
+WRAP = """
+window.__aff = [];
+window.dataLayer = window.dataLayer || [];
+var _p = window.dataLayer.push.bind(window.dataLayer);
+window.dataLayer.push = function () {
+  try {
+    for (var i = 0; i < arguments.length; i++) {
+      var a = arguments[i];
+      if (a && (a[1] === 'affiliate_click' || a.event === 'affiliate_click'))
+        window.__aff.push(a[2] || a);
+    }
+  } catch (e) {}
+  return _p.apply(window.dataLayer, arguments);
+};
+"""
+
+def run(base, targets):
+    from playwright.sync_api import sync_playwright
+    results = []
+    with sync_playwright() as pw:
+        browser = pw.chromium.launch(headless=True)
+        for path, sel, exp_ch, exp_prefix in targets:
+            fails, got = [], None
+            ctx = browser.new_context()
+            page = ctx.new_page()
+            page.add_init_script(WRAP)
+            page.route(re.compile(r"atth\.me"), lambda r: r.abort())  # ไม่โหลด affiliate จริง
+            try:
+                page.goto(base + path, wait_until="domcontentloaded", timeout=30000)
+                page.wait_for_timeout(1500)            # ให้ GA + hub JS รัน/rewrite
+                el = page.query_selector(sel)
+                if not el:
+                    fails.append("ไม่เจอปุ่ม %s" % sel)
+                else:
+                    try:
+                        el.click(timeout=4000, no_wait_after=True)
+                    except Exception:
+                        try:
+                            el.evaluate("e => e.click()")
+                        except Exception:
+                            pass
+                    page.wait_for_timeout(400)
+                    aff = page.evaluate("() => window.__aff || []")
+                    if not aff:
+                        fails.append("affiliate_click ไม่ยิงหลังคลิก")
+                    else:
+                        got = aff[0]
+                        sub = str(got.get("sub_id", ""))
+                        ch = str(got.get("channel", ""))
+                        prov = str(got.get("provider", ""))
+                        parts = sub.split("_")
+                        if sub != sub.lower():
+                            fails.append("sub_id ไม่ lowercase: " + sub)
+                        if len(parts) < 3 or parts[-1] not in CANON:
+                            fails.append("sub_id format ผิด: " + sub)
+                        if exp_ch and ch != exp_ch:
+                            fails.append("channel ได้ '%s' คาด '%s'" % (ch, exp_ch))
+                        if exp_prefix and not sub.startswith(exp_prefix):
+                            fails.append("sub_id ขึ้นต้นผิด: '%s' คาด '%s...'" % (sub, exp_prefix))
+                        if prov not in CANON:
+                            fails.append("provider '%s' ไม่อยู่ใน canon" % prov)
+            except Exception as e:
+                fails.append("error: " + str(e)[:140])
+            ctx.close()
+            results.append((path, got, fails))
+        browser.close()
+    return results
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--base", default="https://ngernduangold.netlify.app")
+    ap.add_argument("--report", nargs="?",
+                    const=os.path.join(REPO, "automation-log", "clicktest-latest.md"))
+    ap.add_argument("--telegram-on-fail", action="store_true")
+    a = ap.parse_args()
+    try:
+        results = run(a.base, TARGETS)
+    except ImportError:
+        print("❌ Playwright ไม่ได้ติดตั้ง — `pip install playwright && python -m playwright install chromium`")
+        sys.exit(2)
+
+    npass = sum(1 for _, _, f in results if not f)
+    ok = npass == len(results)
+    head = "%d/%d หน้า runtime ผ่าน" % (npass, len(results))
+    print("🖱️ click-test [%s] — %s · %s" % (a.base, head, "✅ PASS" if ok else "❌ FAIL"))
+    for path, got, fails in results:
+        info = ("sub_id=%s channel=%s" % (got.get("sub_id"), got.get("channel"))) if got else "no event"
+        print("  %s %s — %s%s" % ("✅" if not fails else "❌", path, info,
+                                  "" if not fails else " | " + " ; ".join(fails)))
+
+    if a.report:
+        ts = datetime.datetime.now(datetime.timezone.utc).astimezone().isoformat(timespec="seconds")
+        L = ["# 🖱️ runtime click-test ล่าสุด", "", "_%s · %s · %s_" % (ts, a.base, head), ""]
+        for path, got, fails in results:
+            ev = ("sub_id=`%s` channel=`%s` provider=`%s`" % (
+                got.get("sub_id"), got.get("channel"), got.get("provider"))) if got else "ไม่มี event"
+            L.append("- %s **%s** — %s%s" % ("✅" if not fails else "❌", path, ev,
+                                             "" if not fails else " — " + "; ".join(fails)))
+        os.makedirs(os.path.dirname(a.report), exist_ok=True)
+        open(a.report, "w", encoding="utf-8").write("\n".join(L) + "\n")
+        print("report ->", a.report)
+
+    if not ok and a.telegram_on_fail:
+        try:
+            sys.path.insert(0, os.path.join(REPO, "automation-log"))
+            import telegram_notify
+            telegram_notify.notify("🖱️ CLICK-TEST FAIL — %s\n%s" % (
+                head, ", ".join(p for p, _, f in results if f)[:300]))
+        except Exception as e:
+            sys.stderr.write("tg skip: %s\n" % e)
+
+    sys.exit(0 if ok else 1)
+
+if __name__ == "__main__":
+    main()
