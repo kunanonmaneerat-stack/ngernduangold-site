@@ -6,3 +6,9 @@ build_site.py.bak-*
 .~lock.*
 
 poll_*.py
+
+# secrets — NEVER commit (repo is PUBLIC)
+.env
+*.env
+telegram.env
+secrets/
