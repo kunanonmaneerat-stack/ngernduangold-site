@@ -6,3 +6,4 @@
 {"ts":"2026-06-15T19:39:46+07:00","routine":"ngernduangold-pantip-monitor","status":"registered","summary":"awaiting first scheduled run (~08:19 ทุกวัน) — รายการตอบ Pantip 5-8 (รันมือ inline แล้ว 15 มิ.ย. ได้ 7 คำตอบ ส่ง Cowork)","metrics":{}}
 {"ts":"2026-06-15T19:39:46+07:00","routine":"ngernduangold-delivery-verify","status":"registered","summary":"first scheduled fire คืนนี้ ~21:16 — ยืนยันออกจริง + fallback","metrics":{}}
 {"ts":"2026-06-15T19:39:46+07:00","routine":"ngernduangold-weekly-review","status":"registered","summary":"awaiting first scheduled run (จันทร์ ~09:16) — รายงาน + reconcile","metrics":{}}
+{"ts": "2026-06-15T20:42:25+07:00", "routine": "ngernduangold-queue-keeper", "status": "ok", "summary": "manual regen 22-28 (Cowork ลบ linktr.ee batch แล้ว): IG+FB+YT 21 โพสต์สะอาด caption-layer+sub-id+ctaQ no-linktr; 7 คลิป/wk conservative; TikTok=native Cowork; Threads=มือ", "metrics": {"ig": 7, "fb": 7, "yt": 7, "unique_clips": 7}}
