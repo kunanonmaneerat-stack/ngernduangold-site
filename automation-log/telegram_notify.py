@@ -23,7 +23,7 @@ def _load_creds():
     if tok and chat:
         return tok, chat
     try:
-        for line in open(ENV_FILE, encoding="utf-8"):
+        for line in open(ENV_FILE, encoding="utf-8-sig"):  # -sig strips PowerShell Out-File BOM
             line = line.strip()
             if not line or line.startswith("#") or "=" not in line:
                 continue
