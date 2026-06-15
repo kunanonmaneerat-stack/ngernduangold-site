@@ -1,0 +1,8 @@
+{"ts":"2026-06-15T21:10:00+07:00","routine":"delivery-heartbeat","status":"ok","summary":"manual fire 15 มิ.ย. (Claude Code inline): FB+IG content Reels ออกสด LIVE ยืนยันผ่าน Meta MCP; YT/Threads รอ browser-check; TikTok manual eyeball","metrics":{"fb":"live","ig":"live","fb_permalink":"https://www.facebook.com/reel/973747449034637/","ig_permalink":"https://www.instagram.com/reel/DZmg3AzE6J6/","yt":"unverified","threads":"unverified","tiktok":"manual"}}
+{"ts":"2026-06-15T21:10:00+07:00","routine":"pantip-monitor","status":"registered","summary":"awaiting first scheduled run (~08:19 ทุกวัน) — รายการตอบ Pantip 5-8 กระทู้","metrics":{}}
+{"ts":"2026-06-15T21:10:00+07:00","routine":"comment-loop","status":"registered","summary":"awaiting first scheduled run (~12:52 ทุกวัน) — ร่างตอบคอมเมนต์","metrics":{}}
+{"ts":"2026-06-15T21:10:00+07:00","routine":"first-signal","status":"registered","summary":"awaiting first scheduled run (~12:24 ทุกวัน) — จับสัญญาณเงินแรก","metrics":{}}
+{"ts":"2026-06-15T21:10:00+07:00","routine":"queue-keeper","status":"registered","summary":"awaiting first scheduled run (จ.+พฤ. ~09:13) — คิว ≥7 วัน + TikTok 2/วัน","metrics":{}}
+{"ts":"2026-06-15T21:10:00+07:00","routine":"delivery-verify","status":"registered","summary":"first scheduled fire คืนนี้ ~21:16 — ยืนยันออกจริง + fallback","metrics":{}}
+{"ts":"2026-06-15T21:10:00+07:00","routine":"weekly-review","status":"registered","summary":"awaiting first scheduled run (จันทร์ ~09:16) — รายงาน + reconcile","metrics":{}}
+{"ts":"2026-06-15T21:10:00+07:00","routine":"link-health","status":"registered","summary":"awaiting first scheduled run (อาทิตย์ ~09:32) — เช็กลิงก์ atth.me ไม่พัง","metrics":{}}
