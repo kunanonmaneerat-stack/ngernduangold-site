@@ -2,7 +2,7 @@
 # Netlify runs `command` on each push, then publishes `publish/`.
 # build_site.py uses only the Python stdlib (no pip install needed).
 [build]
-  command = "python3 build_site.py"
+  command = "python3 build_site.py && python3 tools/postdeploy_smoke.py --src site"
   publish = "site"
 
 [build.environment]
