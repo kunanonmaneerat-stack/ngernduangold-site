@@ -965,6 +965,10 @@ def bcta(url, merchant, text, sub):
     # incoming channel (e.g. ?utm_source=pantip) so hub clicks are attributed per channel.
     u = utm(url, merchant, "links", channel="website", medium="linkhub")
     return f'<a class="hubbtn" rel="sponsored noopener nofollow" target="_blank" data-provider="{_pcode(merchant)}" href="{u}">{text}<small>{sub}</small></a>'
+def bmini(url, merchant, text):
+    # compact affiliate button (alt providers in a row); class hubmini also rewritten by LINKS_CHANNEL_JS
+    u = utm(url, merchant, "links", channel="website", medium="linkhub")
+    return f'<a class="hubmini" rel="sponsored noopener nofollow" target="_blank" data-provider="{_pcode(merchant)}" href="{u}">{text}</a>'
 hub_style = """<style>
 body{background:#0f0f12}
 .hub{max-width:520px;margin:0 auto;padding:30px 20px 48px;text-align:center}
@@ -982,19 +986,50 @@ body{background:#0f0f12}
 .hubsoc{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:0 0 4px}
 .hubsoc a{color:#e0b23c;border:1px solid rgba(224,178,60,.5);border-radius:20px;padding:6px 14px;text-decoration:none;font-size:13px;font-weight:600}
 .hubsoc a:hover{background:rgba(224,178,60,.10)}
+.hubsec{color:#e0b23c;font-weight:700;font-size:15.5px;text-align:left;margin:24px 0 2px;padding-top:12px;border-top:1px solid rgba(224,178,60,.20)}
+.hubsec small{display:block;color:#9a9aa6;font-weight:400;font-size:12.5px;margin-top:2px}
+.hublbl{color:#aaa;font-size:12.5px;text-align:left;margin:9px 0 2px}
+.hubrow{display:flex;flex-wrap:wrap;gap:7px;margin:4px 0}
+.artlink,.hubmini{flex:1 1 calc(50% - 7px);border-radius:11px;padding:11px 8px;text-decoration:none;font-size:13.5px;text-align:center;font-weight:600}
+.artlink{color:#c8c8d0;border:1px solid rgba(255,255,255,.16)}
+.artlink:hover{background:rgba(224,178,60,.08);color:#e0b23c}
+.hubmini{color:#1a1a1f;background:rgba(224,178,60,.88)}
+.hubmini:hover{background:#e0b23c}
 </style>"""
 # channel-attribution JS (kept OUT of the f-string because it contains { } braces):
 # rewrites hub atth.me links so a visitor arriving via ?utm_source=pantip gets the
 # AccessTrade sub-id channel = pantip (utm_source + utm_content {pantip}_links_{provider}).
-LINKS_CHANNEL_JS = """<script>(function(){try{var ch=(new URLSearchParams(location.search).get("utm_source")||"").replace(/[^a-z0-9]/gi,"").toLowerCase().slice(0,20);if(!ch||ch==="website")return;document.querySelectorAll('a.hubbtn[href*="atth.me"]').forEach(function(a){var u=new URL(a.href),prov=u.searchParams.get("utm_campaign")||"";u.searchParams.set("utm_source",ch);u.searchParams.set("utm_content",ch+"_links_"+prov);a.href=u.toString();});}catch(e){}})();</script>"""
+LINKS_CHANNEL_JS = """<script>(function(){try{var ch=(new URLSearchParams(location.search).get("utm_source")||"").replace(/[^a-z0-9]/gi,"").toLowerCase().slice(0,20);if(!ch||ch==="website")return;document.querySelectorAll('a.hubbtn[href*="atth.me"], a.hubmini[href*="atth.me"]').forEach(function(a){var u=new URL(a.href),prov=u.searchParams.get("utm_campaign")||"";u.searchParams.set("utm_source",ch);u.searchParams.set("utm_content",ch+"_links_"+prov);a.href=u.toString();});}catch(e){}})();</script>"""
 links_body = hub_style + f'''<div class="hub">
 <img class="logo" src="/logo.png" alt="{SITE}" width="88" height="88" decoding="async">
 <h1>{SITE}</h1>
-<p class="tag">บัตรเครดิต • สินเชื่อ • ออมเงิน ฉบับมนุษย์เงินเดือน — รีวิว/เทียบของจริง ไม่ขายฝัน</p>
-{bcta(LOAN_HUB,"loan","💸 สินเชื่อเงินด่วน / จำนำทะเบียนรถ","รถยังใช้ได้ · รู้ผลไว สมัครออนไลน์")}
+<p class="tag">บัตรเครดิต • สินเชื่อ • ออมเงิน ฉบับมนุษย์เงินเดือน — เทียบของจริง อนุมัติไว สมัครออนไลน์<br><b style="color:#e7be4a">เลือกตามสถานการณ์คุณ 👇</b></p>
+
+<div class="hubsec">💳 อยากได้บัตรเครดิต<small>เงินคืน/ของกำนัล · สมัครออนไลน์ รู้ผลไว</small></div>
 {bcta(KRUNGSRI,"krungsri","💳 สมัครบัตรเครดิต Krungsri","เงินคืนสูง · สมัครออนไลน์ รับของกำนัล")}
+<p class="hublbl">เลือกเคสของคุณ (อ่าน + ลิงก์สมัครในบทความ):</p>
+<div class="hubrow">
+<a class="artlink" href="/credit-card-salary-15000-2026">เงินเดือน 15,000 สมัครใบไหน</a>
+<a class="artlink" href="/credit-card-easy-approval-2026">บัตรใบแรก / อนุมัติง่าย</a>
+<a class="artlink" href="/credit-card-freelance-2026">ฟรีแลนซ์ ไม่มีสลิป</a>
+<a class="artlink" href="/credit-card-installment-0-2026">ผ่อน 0% ใช้ให้คุ้ม</a>
+</div>
+
+<div class="hubsec">💸 ต้องใช้เงินด่วน / ปลดหนี้<small>เทียบหลายเจ้า · รถยังใช้ได้ · สมัครออนไลน์</small></div>
+{bcta(SRISAWAD,"srisawad","💸 สินเชื่อจำนำทะเบียนรถ","รถยังใช้ได้ · รู้ผลไว เทียบดอกก่อนเซ็น")}
+{bcta(HAPPYDEBT,"happycash","🔗 รวมหนี้ก้อนเดียว ดอกถูกลง","รวมบัตร/สินเชื่อหลายใบ เหลือจ่ายที่เดียว")}
+{bcta(KTCPROUD,"ktcproud","💵 สินเชื่อส่วนบุคคล KTC PROUD","วงเงินก้อน ไม่ต้องค้ำ · ผ่อนรายเดือน")}
+<p class="hublbl">เทียบเจ้าอื่น (จำนำทะเบียน / บัตรกดเงินสด):</p>
+<div class="hubrow">
+{bmini(CAR4CASH,"car4cash","🚗 รถแลกเงิน Car4Cash")}
+{bmini(KTCPBM,"ktcphboom","⚡ KTC พี่เบิ้ม")}
+</div>
+
+<div class="hubsec">🏦 อยากออม / ลดภาระบ้าน<small>ดอกสูงกว่าออมทรัพย์ · รีไฟแนนซ์ลดดอก</small></div>
 {bcta(KEPT,"kept","🏦 ออมเงินดอกสูง Kept by Krungsri","สมัครฟรี · ไม่เช็คเครดิต ดอกสูงกว่าออมทรัพย์")}
-<a class="hubbtn alt" href="/">📚 บทความ + รีวิวการเงิน (อ่านก่อนสมัคร)</a>
+{bcta(REFI,"refinance","🏠 รีไฟแนนซ์บ้าน ลดดอกเบี้ย","ผ่อนบ้าน >3 ปี เทียบลดดอก/ลดงวด")}
+
+<a class="hubbtn alt" href="/">📚 บทความ + รีวิวการเงินทั้งหมด (อ่านก่อนสมัคร)</a>
 <p class="hubsoc-lb">ช่องทางโซเชียลของเรา</p>
 <div class="hubsoc">
 <a href="https://www.facebook.com/583765282304956" target="_blank" rel="noopener">Facebook</a>
@@ -1003,7 +1038,7 @@ links_body = hub_style + f'''<div class="hub">
 <a href="https://www.tiktok.com/@ngernduangold" target="_blank" rel="noopener">TikTok</a>
 <a href="https://www.youtube.com/@ngernduangold" target="_blank" rel="noopener">YouTube</a>
 </div>
-<p class="hubdisc">* หน้านี้มีลิงก์พันธมิตร (affiliate) เราอาจได้รับค่าตอบแทนเมื่อคุณสมัครผ่านลิงก์ โดยไม่มีค่าใช้จ่ายเพิ่มกับคุณ · <a href="/disclaimer.html">นโยบาย</a></p>
+<p class="hubdisc">* หน้านี้มีลิงก์พันธมิตร (affiliate) เราอาจได้รับค่าตอบแทนเมื่อคุณสมัครผ่านลิงก์ โดยไม่มีค่าใช้จ่ายเพิ่มกับคุณ · ข้อมูลเพื่อการศึกษา ไม่การันตีอนุมัติ/อัตราดอกเบี้ย เงื่อนไขเป็นไปตามผู้ให้บริการ กดตรวจล่าสุดที่หน้าสมัคร · <a href="/disclaimer.html">นโยบาย</a></p>
 </div>''' + LINKS_CHANNEL_JS
 links_ld = [{"@context":"https://schema.org","@type":"WebPage","name":SITE+" — ลิงก์รวม","url":BASE+"/links","inLanguage":"th"}]
 open(f"{OUT}/links.html","w",encoding="utf-8").write(head(SITE+" — ลิงก์รวม บัตรเครดิต สินเชื่อ ออมเงิน","รวมลิงก์สมัครบัตรเครดิต สินเชื่อ และบัญชีออมเงินดอกสูง คัดมาให้มนุษย์เงินเดือน พร้อมบทความรีวิวก่อนสมัคร","links",links_ld,"website")+links_body+FOOTER)

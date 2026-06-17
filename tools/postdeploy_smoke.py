@@ -87,8 +87,12 @@ def check_page(html):
 def pages_local(src):
     out = {}
     for fn in sorted(os.listdir(src)):
-        if fn.endswith(".html"):
-            out[fn] = open(os.path.join(src, fn), encoding="utf-8", errors="replace").read()
+        if not fn.endswith(".html"):
+            continue
+        content = open(os.path.join(src, fn), encoding="utf-8", errors="replace").read()
+        if content.startswith("google-site-verification:"):
+            continue  # GSC ownership token, not a content page (sitemap/--live exclude it too)
+        out[fn] = content
     return out
 
 def pages_live():

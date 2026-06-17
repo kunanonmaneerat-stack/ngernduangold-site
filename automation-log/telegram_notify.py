@@ -57,13 +57,32 @@ def notify(text: str) -> bool:
                 sys.stderr.write("telegram_notify: failed after retry: %s\n" % e)
     return False
 
+def approval(what: str, detail: str = "", link: str = "") -> bool:
+    """Approval-request ping → owner's phone. Owner replies YES/NO in the Cowork chat
+    (2-way bot reply is a later optional). Use before any PUBLIC post needing sign-off
+    (Pantip / Threads / TikTok / comment reply)."""
+    msg = "🔔 <b>APPROVAL NEEDED</b>: " + what
+    if detail:
+        msg += "\n" + detail
+    if link:
+        msg += "\n" + link
+    msg += "\n→ ตอบ <b>YES</b> (อนุมัติโพสต์) / <b>NO</b> (ไม่อนุมัติ)"
+    return notify(msg)
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--text")
     ap.add_argument("--test", action="store_true")
+    ap.add_argument("--approval", help="what needs approval (sends APPROVAL NEEDED ping)")
+    ap.add_argument("--detail", default="", help="draft summary / context")
+    ap.add_argument("--link", default="", help="optional draft/preview link")
     a = ap.parse_args()
     if a.test:
         ok = notify("🔔 ngernduangold alerts ออนไลน์แล้ว — ระบบแจ้งเตือน Telegram พร้อมใช้งาน")
         print("TEST sent:", ok)
         sys.exit(0 if ok else 1)
-    print("sent:", notify(a.text)) if a.text else print("usage: --text '...' | --test")
+    if a.approval:
+        ok = approval(a.approval, a.detail, a.link)
+        print("APPROVAL sent:", ok)
+        sys.exit(0 if ok else 1)
+    print("sent:", notify(a.text)) if a.text else print("usage: --text '...' | --approval '...' [--detail .. --link ..] | --test")
