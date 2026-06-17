@@ -69,20 +69,36 @@ def approval(what: str, detail: str = "", link: str = "") -> bool:
     msg += "\n→ ตอบ <b>YES</b> (อนุมัติโพสต์) / <b>NO</b> (ไม่อนุมัติ)"
     return notify(msg)
 
+def posted(channel: str, topic: str = "", link: str = "") -> bool:
+    """Done-notify — posting is PRE-APPROVED, so this is informational (NOT a gate).
+    Sent AFTER a post is live. Format: ✅ โพสต์แล้ว: {channel} · {topic} · {link}."""
+    msg = "✅ <b>โพสต์แล้ว</b>: " + channel
+    if topic:
+        msg += " · " + topic
+    if link:
+        msg += "\n" + link
+    return notify(msg)
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--text")
     ap.add_argument("--test", action="store_true")
     ap.add_argument("--approval", help="what needs approval (sends APPROVAL NEEDED ping)")
     ap.add_argument("--detail", default="", help="draft summary / context")
-    ap.add_argument("--link", default="", help="optional draft/preview link")
+    ap.add_argument("--link", default="", help="optional link / permalink")
+    ap.add_argument("--posted", help="channel just posted to (sends ✅ done-notify)")
+    ap.add_argument("--topic", default="", help="topic/headline for the done-notify")
     a = ap.parse_args()
     if a.test:
         ok = notify("🔔 ngernduangold alerts ออนไลน์แล้ว — ระบบแจ้งเตือน Telegram พร้อมใช้งาน")
         print("TEST sent:", ok)
         sys.exit(0 if ok else 1)
+    if a.posted:
+        ok = posted(a.posted, a.topic, a.link)
+        print("POSTED-notify sent:", ok)
+        sys.exit(0 if ok else 1)
     if a.approval:
         ok = approval(a.approval, a.detail, a.link)
         print("APPROVAL sent:", ok)
         sys.exit(0 if ok else 1)
-    print("sent:", notify(a.text)) if a.text else print("usage: --text '...' | --approval '...' [--detail .. --link ..] | --test")
+    print("sent:", notify(a.text)) if a.text else print("usage: --text '...' | --posted '<channel>' [--topic .. --link ..] | --approval '...' | --test")
