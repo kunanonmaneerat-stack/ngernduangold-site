@@ -260,7 +260,7 @@ def _public_safe(row):
 
 def record_post(channel, clip_key, when, post_id="", video="", topic="",
                 ptype="schedule", source="queue-keeper", status="scheduled",
-                window_days=WINDOW_DAYS, note=""):
+                window_days=WINDOW_DAYS, note="", fmt=""):
     """Append ONE per-channel row. Idempotent: refuse if dedup_key already present."""
     ck = resolve_clip_key(clip_key) or clip_key
     if ck not in KNOWN_CLIP_KEYS:
@@ -276,18 +276,29 @@ def record_post(channel, clip_key, when, post_id="", video="", topic="",
            "type": ptype, "source": source, "status": status, "window_days": window_days}
     if note:
         row["note"] = note
+    if fmt:
+        row["fmt"] = fmt          # 7-format rotation log (number-shock/compare/myth-bust/pov/checklist/trend-jack/reply-comment)
     _public_safe(row)
     _append(row)
     return {"dedup_key": dk, "appended": True, "row": row}
 
 
 def record_multicast(channels, clip_key, when, post_id="", video="", topic="",
-                     ptype="schedule", source="queue-keeper", window_days=WINDOW_DAYS):
+                     ptype="schedule", source="queue-keeper", window_days=WINDOW_DAYS, fmt=""):
     """A multicast MUST write one row per target channel (else a per-channel twin reopens)."""
     out = [record_post(c, clip_key, when, post_id, video, topic, ptype, source,
-                       "scheduled", window_days) for c in channels]
+                       "scheduled", window_days, fmt=fmt) for c in channels]
     assert len([o for o in out if o.get("appended") or o.get("reason") == "already recorded"]) == len(channels)
     return out
+
+
+def recent_formats(path=LEDGER, n=3):
+    """Last n posted content formats (chronological, most-recent-last) for no-repeat rotation.
+    Reads `fmt` from post rows (skips status rows). Engine picks a clip whose content_queue
+    `format` is NOT in this list -> enforces 'no same format in last 3 posts'."""
+    fmts = [r.get("fmt") for r in iter_ledger(path)
+            if r.get("type") != "status" and r.get("fmt")]
+    return fmts[-n:]
 
 
 def claim(channel, clip_key, when, source="adhoc", window_days=WINDOW_DAYS):
@@ -349,8 +360,12 @@ def main():
     r.add_argument("--type", default="schedule")
     r.add_argument("--source", default="queue-keeper")
     r.add_argument("--note", default="")
+    r.add_argument("--format", default="", help="7-format tag (number-shock/compare/myth-bust/pov/checklist/trend-jack/reply-comment)")
 
     sub.add_parser("list", help="dump current dedup index summary")
+
+    rf = sub.add_parser("recent-formats", help="last N posted formats (for no-repeat rotation)")
+    rf.add_argument("-n", type=int, default=3)
 
     a = ap.parse_args()
     if a.cmd == "check":
@@ -371,8 +386,12 @@ def main():
         sys.exit(0)
     elif a.cmd == "record":
         print(json.dumps(record_post(a.channel, a.clip, a.date, a.post_id, a.video,
-                                      a.topic, a.type, a.source, note=a.note),
+                                      a.topic, a.type, a.source, note=a.note, fmt=a.format),
                          ensure_ascii=False))
+    elif a.cmd == "recent-formats":
+        rf = recent_formats(n=a.n)
+        print("recent formats (last %d, oldest->newest): %s" % (a.n, rf))
+        print("AVOID for next post:", sorted(set(rf)) or "none yet")
     elif a.cmd == "list":
         idx = load_index()
         print(f"ledger: {LEDGER}")
