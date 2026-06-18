@@ -1114,6 +1114,7 @@ links_body = hub_style + f'''<div class="hub">
 <a class="artlink" href="/credit-card-easy-approval-2026">บัตรใบแรก / อนุมัติง่าย</a>
 <a class="artlink" href="/credit-card-freelance-2026">ฟรีแลนซ์ ไม่มีสลิป</a>
 <a class="artlink" href="/credit-card-installment-0-2026">ผ่อน 0% ใช้ให้คุ้ม</a>
+<a class="artlink" href="/lifestyle-credit-card-2026">💳 สายไลฟ์สไตล์ กินหรู/โรงแรม/เลานจ์</a>
 </div>
 
 <div class="hubsec">💸 ต้องใช้เงินด่วน / ปลดหนี้<small>เทียบหลายเจ้า · รถยังใช้ได้ · สมัครออนไลน์</small></div>
