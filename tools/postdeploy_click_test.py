@@ -102,6 +102,49 @@ def run(base, targets):
         browser.close()
     return results
 
+def run_quiz(base):
+    """Drive /quiz (client-side): Q1=urgent -> Q2=car -> click result affiliate button.
+    Assert affiliate_click fires with channel=quiz + sub_id quiz_{page}_{provider}."""
+    from playwright.sync_api import sync_playwright
+    path, fails, got = "/quiz (urgent->car)", [], None
+    with sync_playwright() as pw:
+        browser = pw.chromium.launch(headless=True)
+        ctx = browser.new_context()
+        page = ctx.new_page()
+        page.add_init_script(WRAP)
+        page.route(re.compile(r"atth\.me"), lambda r: r.abort())
+        try:
+            page.goto(base + "/quiz", wait_until="domcontentloaded", timeout=30000)
+            page.wait_for_timeout(1200)
+            page.click('[data-q1="urgent"]', timeout=5000); page.wait_for_timeout(400)
+            page.click('[data-q2="car"]', timeout=5000); page.wait_for_timeout(500)
+            el = page.query_selector('#quiz-result a.go[href*="atth.me"]')
+            if not el:
+                fails.append("ไม่เจอปุ่ม result affiliate หลังตอบ quiz")
+            else:
+                try:
+                    el.click(timeout=4000, no_wait_after=True)
+                except Exception:
+                    try: el.evaluate("e => e.click()")
+                    except Exception: pass
+                page.wait_for_timeout(400)
+                aff = page.evaluate("() => window.__aff || []")
+                if not aff:
+                    fails.append("affiliate_click ไม่ยิงหลังคลิก result")
+                else:
+                    got = aff[0]
+                    sub, ch, prov = str(got.get("sub_id","")), str(got.get("channel","")), str(got.get("provider",""))
+                    parts = sub.split("_")
+                    if ch != "quiz": fails.append("channel ได้ '%s' คาด 'quiz'" % ch)
+                    if not sub.startswith("quiz_"): fails.append("sub_id ไม่ขึ้นต้น quiz_: " + sub)
+                    if len(parts) < 3 or parts[-1] not in CANON: fails.append("sub_id format ผิด: " + sub)
+                    if prov not in CANON: fails.append("provider '%s' ไม่อยู่ใน canon" % prov)
+        except Exception as e:
+            fails.append("error: " + str(e)[:140])
+        ctx.close()
+        browser.close()
+    return (path, got, fails)
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--base", default="https://ngernduangold.netlify.app")
@@ -111,6 +154,7 @@ def main():
     a = ap.parse_args()
     try:
         results = run(a.base, TARGETS)
+        results.append(run_quiz(a.base))
     except ImportError:
         print("❌ Playwright ไม่ได้ติดตั้ง — `pip install playwright && python -m playwright install chromium`")
         sys.exit(2)
