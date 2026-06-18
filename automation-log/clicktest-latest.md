@@ -1,6 +1,6 @@
 # 🖱️ runtime click-test ล่าสุด
 
-_2026-06-18T21:31:11+07:00 · https://ngernduangold.netlify.app · 4/4 หน้า runtime ผ่าน_
+_2026-06-18T21:51:15+07:00 · https://ngernduangold.netlify.app · 4/4 หน้า runtime ผ่าน_
 
 - ✅ **/links?utm_source=test** — sub_id=`test_links_krungsri` channel=`test` provider=`krungsri`
 - ✅ **/title-loan-2026** — sub_id=`website_title-loan-widget_srisawad` channel=`website` provider=`srisawad`
