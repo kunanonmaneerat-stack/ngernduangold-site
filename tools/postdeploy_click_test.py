@@ -22,7 +22,8 @@ for _s in (sys.stdout, sys.stderr):
         pass
 
 CANON = {"krungsri", "kept", "srisawad", "carforcash", "ktcphboom",
-         "happycash", "ktcproud", "refinance", "loan"}
+         "happycash", "ktcproud", "refinance", "loan",
+         "scbprotect", "anc", "tuneprotect", "msig", "thanachart", "fwd", "viriyah"}
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HERE)
 

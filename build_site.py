@@ -34,6 +34,9 @@ PROVIDER_CANON = {
     "happycash": "happycash", "debt": "happycash",
     "ktcproud": "ktcproud", "personalloan": "ktcproud",
     "refinance": "refinance", "loan": "loan",
+    # insurance providers (AccessTrade-approved; atth.me links pending pull by Cowork)
+    "scbprotect": "scbprotect", "anc": "anc", "tuneprotect": "tuneprotect",
+    "msig": "msig", "thanachart": "thanachart", "fwd": "fwd", "viriyah": "viriyah",
 }
 
 def _pcode(merchant):
@@ -1002,7 +1005,22 @@ body{background:#0f0f12}
 # channel-attribution JS (kept OUT of the f-string because it contains { } braces):
 # rewrites hub atth.me links so a visitor arriving via ?utm_source=pantip gets the
 # AccessTrade sub-id channel = pantip (utm_source + utm_content {pantip}_links_{provider}).
-LINKS_CHANNEL_JS = """<script>(function(){try{var ch=(new URLSearchParams(location.search).get("utm_source")||"").replace(/[^a-z0-9]/gi,"").toLowerCase().slice(0,20);if(!ch||ch==="website")return;document.querySelectorAll('a.hubbtn[href*="atth.me"], a.hubmini[href*="atth.me"]').forEach(function(a){var u=new URL(a.href),prov=u.searchParams.get("utm_campaign")||"";u.searchParams.set("utm_source",ch);u.searchParams.set("utm_content",ch+"_links_"+prov);a.href=u.toString();});}catch(e){}})();</script>"""
+LINKS_CHANNEL_JS = """<script>(function(){try{var ch=(new URLSearchParams(location.search).get("utm_source")||"").replace(/[^a-z0-9]/gi,"").toLowerCase().slice(0,20);if(!ch||ch==="website")return;document.querySelectorAll('a.hubbtn[href*="atth.me"], a.hubmini[href*="atth.me"]').forEach(function(a){var u=new URL(a.href),prov=u.searchParams.get("utm_campaign")||"";u.searchParams.set("utm_source",ch);var pc=(u.searchParams.get("utm_content")||"").split("_");if(pc.length>=3){pc[0]=ch;u.searchParams.set("utm_content",pc.join("_"));}else{u.searchParams.set("utm_content",ch+"_links_"+prov);}a.href=u.toString();});}catch(e){}})();</script>"""
+# 🛡️ insurance line — types approved on AccessTrade but atth.me links NOT pulled yet.
+# Cowork: pull each link from the AccessTrade dashboard ("รับลิงก์สำหรับโปรโมท") then fill below.
+# Per entry: {"type":"car|travel|pa|ci|health|life|home","provider":"<canon>","label":"...","url":"https://atth.me/..."}
+# EMPTY now -> insurance group/quiz branch render NOTHING (no fake/broken buttons). Populate -> live instantly.
+INSURANCE = []
+_INS_TYPE_TH = {"car":"ประกันรถ","travel":"ประกันเดินทาง","pa":"ประกันอุบัติเหตุ (PA)","ci":"ประกันโรคร้ายแรง (CI)","health":"ประกันสุขภาพ","life":"ประกันชีวิต","home":"ประกันบ้าน/อัคคีภัย"}
+def bins(o):
+    u = utm(o["url"], o["provider"], "insurance-"+o["type"], channel="website", medium="linkhub")
+    return f'<a class="hubbtn" rel="sponsored noopener nofollow" target="_blank" data-provider="{_pcode(o["provider"])}" href="{u}">{o["label"]}<small>{_INS_TYPE_TH.get(o["type"],"ประกัน")} · เทียบความคุ้มครอง/เงื่อนไขที่ผู้ให้บริการ</small></a>'
+def ins_group():
+    if not INSURANCE:
+        return ""
+    return ('<div class="hubsec">🛡️ ประกัน<small>คุ้มครองความเสี่ยง · เทียบความคุ้มครอง/เงื่อนไขก่อน · ไม่การันตีการเคลม</small></div>'
+            + "".join(bins(o) for o in INSURANCE))
+
 links_body = hub_style + f'''<div class="hub">
 <img class="logo" src="/logo.png" alt="{SITE}" width="88" height="88" decoding="async">
 <h1>{SITE}</h1>
@@ -1029,6 +1047,7 @@ links_body = hub_style + f'''<div class="hub">
 {bmini(KTCPBM,"ktcphboom","⚡ KTC พี่เบิ้ม")}
 </div>
 
+{ins_group()}
 <div class="hubsec">🏦 อยากออม / ลดภาระบ้าน<small>ดอกสูงกว่าออมทรัพย์ · รีไฟแนนซ์ลดดอก</small></div>
 {bcta(KEPT,"kept","🏦 ออมเงินดอกสูง Kept by Krungsri","สมัครฟรี · ไม่เช็คเครดิต ดอกสูงกว่าออมทรัพย์")}
 {bcta(REFI,"refinance","🏠 รีไฟแนนซ์บ้าน ลดดอกเบี้ย","ผ่อนบ้าน >3 ปี เทียบลดดอก/ลดงวด")}
@@ -1094,6 +1113,7 @@ var R={
 "save|hi":{reason:"อยากได้ดอกสูงกว่าบัญชีออมทรัพย์ทั่วไป + สมัครฟรี ไม่เช็กเครดิต — เหมาะพักเงินสำรอง",opt:[{p:"kept",pg:"savings",l:"ออมเงินดอกสูง Kept by Krungsri"}],read:[["kept-savings-2026.html","Kept คุ้มไหม"],["high-yield-savings-2026.html","บัญชีออมดอกสูง (เทียบ)"]]},
 "save|home":{reason:"ผ่อนบ้านมาเกิน 3 ปีมักรีไฟแนนซ์เพื่อลดดอก/ลดงวดได้ — เทียบข้อเสนอหลายธนาคารก่อนตัดสินใจ",opt:[{p:"refinance",pg:"refinance",l:"รีไฟแนนซ์บ้าน ลดดอกเบี้ย"}],read:[["refinance-home-2026.html","รีไฟแนนซ์บ้าน คุ้มไหม"]]}
 };
+try{var INS=window.__QUIZ_INS||[];if(INS&&INS.length){Q1.push({k:"protect",t:"🛡️ อยากปกป้อง/ลดความเสี่ยง"});var TTH={car:"ประกันรถ",travel:"ประกันเดินทาง",pa:"ประกันอุบัติเหตุ (PA)",ci:"ประกันโรคร้ายแรง (CI)",health:"ประกันสุขภาพ",life:"ประกันชีวิต",home:"ประกันบ้าน/อัคคีภัย"};var RTH={car:"เลือกชั้นประกันรถให้พอดีการใช้งาน เทียบความคุ้มครอง+เบี้ยก่อน",travel:"ประกันเดินทางคุ้มครองช่วงเดินทาง เทียบแผน/วงเงินก่อนซื้อ",pa:"ประกันอุบัติเหตุ (PA) คุ้มครองกรณีอุบัติเหตุ เทียบเงื่อนไขก่อน",ci:"ประกันโรคร้ายแรง (CI) จ่ายก้อนเมื่อตรวจพบโรคที่คุ้มครอง อ่านรายการโรคก่อน",health:"ประกันสุขภาพช่วยค่ารักษา เทียบวงเงิน/ความคุ้มครองก่อน",life:"ประกันชีวิตเหมาะถ้ามีคนพึ่งพิง เทียบแบบ/เบี้ยก่อน",home:"ประกันบ้าน/อัคคีภัยคุ้มครองทรัพย์สิน เทียบทุนประกันก่อน"};var bt={};INS.forEach(function(o){(bt[o.type]=bt[o.type]||[]).push(o);});Q2.protect=Object.keys(bt).map(function(t){return {k:t,t:TTH[t]||t};});Object.keys(bt).forEach(function(t){R["protect|"+t]={reason:(RTH[t]||"เทียบความคุ้มครอง/เงื่อนไขก่อนตัดสินใจ")+" · ไม่การันตีการเคลม",opt:bt[t].map(function(o){return {p:o.provider,pg:"insurance-"+o.type,l:o.label};}),read:[]};});}}catch(e){}
 function el(i){return document.getElementById(i);}
 function btns(a,at){return a.map(function(o){return '<button class="qopt" '+at+'="'+o.k+'">'+o.t+'</button>';}).join('');}
 var st={q1:null};
@@ -1105,5 +1125,5 @@ showQ1();
 })();
 </script>"""
 quiz_ld=[{"@context":"https://schema.org","@type":"WebPage","name":SITE+" — Quiz เลือกบัตร/สินเชื่อ/ออม","url":BASE+"/quiz","inLanguage":"th"}]
-open(f"{OUT}/quiz.html","w",encoding="utf-8").write(head("Quiz: บัตร/สินเชื่อ/ออม ตัวไหนเหมาะกับคุณ — "+SITE,"ตอบ 2 คำถาม ~30 วิ จับคู่บัตรเครดิต/สินเชื่อ/บัญชีออมที่เหมาะกับคุณ · ข้อมูลไม่ถูกบันทึก ไม่มี PII","quiz",quiz_ld,"website")+quiz_style+quiz_html+quiz_js+FOOTER)
+open(f"{OUT}/quiz.html","w",encoding="utf-8").write(head("Quiz: บัตร/สินเชื่อ/ออม ตัวไหนเหมาะกับคุณ — "+SITE,"ตอบ 2 คำถาม ~30 วิ จับคู่บัตรเครดิต/สินเชื่อ/บัญชีออมที่เหมาะกับคุณ · ข้อมูลไม่ถูกบันทึก ไม่มี PII","quiz",quiz_ld,"website")+quiz_style+quiz_html+("<script>window.__QUIZ_INS="+json.dumps([{"type":o["type"],"provider":_pcode(o["provider"]),"label":o["label"]} for o in INSURANCE],ensure_ascii=False)+"</script>")+quiz_js+FOOTER)
 print("quiz.html written")
