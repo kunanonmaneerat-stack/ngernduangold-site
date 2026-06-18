@@ -32,6 +32,7 @@ TARGETS = [
     ("/links?utm_source=test", 'a.hubbtn[href*="atth.me"]', "test", "test_"),
     ("/title-loan-2026", 'a[href*="atth.me"]', "website", "website_"),
     ("/credit-card-salary-15000-2026", 'a[href*="atth.me"]', "website", "website_"),
+    ("/lifestyle-credit-card-2026", 'a[href*="atth.me"]', "lifestyle", "lifestyle_"),
 ]
 
 # wrap dataLayer.push BEFORE page scripts → จับ affiliate_click ทุกแบบ (gtag args หรือ dict)
