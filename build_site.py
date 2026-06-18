@@ -35,7 +35,7 @@ PROVIDER_CANON = {
     "ktcproud": "ktcproud", "personalloan": "ktcproud",
     "refinance": "refinance", "loan": "loan",
     # insurance providers (AccessTrade-approved; atth.me links pending pull by Cowork)
-    "scbprotect": "scbprotect", "anc": "anc", "tuneprotect": "tuneprotect",
+    "scbprotect": "scbprotect", "scb": "scb", "anc": "anc", "tuneprotect": "tuneprotect",
     "msig": "msig", "thanachart": "thanachart", "fwd": "fwd", "viriyah": "viriyah",
 }
 
@@ -206,7 +206,10 @@ def cmp_widget(caption, rows, slug, note=""):
 
 # 🛡️ insurance — defined early so the pillar article + /links + /quiz all share one source.
 # EMPTY now (atth.me links not pulled). Fill {"type","provider","label","url"} -> buttons go live everywhere.
-INSURANCE = []
+INSURANCE = [
+    {"type":"travel","provider":"msig","label":"ประกันเดินทาง MSIG Travel Easy Plus — คุ้มครองค่ารักษาสูง/เลื่อนไฟลท์/กระเป๋า","url":"https://atth.me/000bqk002a0x"},
+    {"type":"travel","provider":"scb","label":"ประกันเดินทาง SCB protect — ทั้งในและต่างประเทศ","url":"https://atth.me/00db8m002a0x"},
+]
 _INS_TYPE_TH = {"car":"ประกันรถ","travel":"ประกันเดินทาง","pa":"ประกันอุบัติเหตุ (PA)","ci":"ประกันโรคร้ายแรง (CI)","health":"ประกันสุขภาพ","life":"ประกันชีวิต","home":"ประกันบ้าน/อัคคีภัย"}
 # educational comparison rows (approved types) — data-gated affiliate button per type from INSURANCE
 _INS_ROWS = [
@@ -224,7 +227,7 @@ def ins_compare_table():
     for t, name, cover, who, check in _INS_ROWS:
         opts = bytype.get(t, [])
         if opts:
-            cta = " ".join(f'<a class="go" rel="sponsored noopener nofollow" target="_blank" data-provider="{_pcode(o["provider"])}" href="{utm(o["url"],o["provider"],"insurance-compare")}">{o["label"]} 👉</a>' for o in opts)
+            cta = " ".join(f'<a class="go" rel="sponsored noopener nofollow" target="_blank" data-provider="{_pcode(o["provider"])}" href="{utm(o["url"],o["provider"],"compare",channel="ins")}">{o["label"]} 👉</a>' for o in opts)
         else:
             cta = '<span style="color:#9a9aa3;font-size:13px">เทียบที่ผู้ให้บริการ</span>'
         trs += f'<tr><td data-l="ชนิด"><b>{name}</b></td><td data-l="คุ้มครอง">{cover}</td><td data-l="เหมาะกับใคร">{who}</td><td data-l="เช็ก">{check}</td><td data-l="">{cta}</td></tr>'
@@ -1094,7 +1097,7 @@ LINKS_CHANNEL_JS = """<script>(function(){try{var ch=(new URLSearchParams(locati
 # Per entry: {"type":"car|travel|pa|ci|health|life|home","provider":"<canon>","label":"...","url":"https://atth.me/..."}
 # EMPTY now -> insurance group/quiz branch render NOTHING (no fake/broken buttons). Populate -> live instantly.
 def bins(o):
-    u = utm(o["url"], o["provider"], "insurance-"+o["type"], channel="website", medium="linkhub")
+    u = utm(o["url"], o["provider"], "links", channel="ins", medium="linkhub")
     return f'<a class="hubbtn" rel="sponsored noopener nofollow" target="_blank" data-provider="{_pcode(o["provider"])}" href="{u}">{o["label"]}<small>{_INS_TYPE_TH.get(o["type"],"ประกัน")} · เทียบความคุ้มครอง/เงื่อนไขที่ผู้ให้บริการ</small></a>'
 def ins_group():
     # affiliate buttons only (the section header + educational article link always show in links_body)
@@ -1195,17 +1198,17 @@ var R={
 "save|hi":{reason:"อยากได้ดอกสูงกว่าบัญชีออมทรัพย์ทั่วไป + สมัครฟรี ไม่เช็กเครดิต — เหมาะพักเงินสำรอง",opt:[{p:"kept",pg:"savings",l:"ออมเงินดอกสูง Kept by Krungsri"}],read:[["kept-savings-2026.html","Kept คุ้มไหม"],["high-yield-savings-2026.html","บัญชีออมดอกสูง (เทียบ)"]]},
 "save|home":{reason:"ผ่อนบ้านมาเกิน 3 ปีมักรีไฟแนนซ์เพื่อลดดอก/ลดงวดได้ — เทียบข้อเสนอหลายธนาคารก่อนตัดสินใจ",opt:[{p:"refinance",pg:"refinance",l:"รีไฟแนนซ์บ้าน ลดดอกเบี้ย"}],read:[["refinance-home-2026.html","รีไฟแนนซ์บ้าน คุ้มไหม"]]}
 };
-try{var INS=window.__QUIZ_INS||[];if(INS&&INS.length){Q1.push({k:"protect",t:"🛡️ อยากปกป้อง/ลดความเสี่ยง"});var TTH={car:"ประกันรถ",travel:"ประกันเดินทาง",pa:"ประกันอุบัติเหตุ (PA)",ci:"ประกันโรคร้ายแรง (CI)",health:"ประกันสุขภาพ",life:"ประกันชีวิต",home:"ประกันบ้าน/อัคคีภัย"};var RTH={car:"เลือกชั้นประกันรถให้พอดีการใช้งาน เทียบความคุ้มครอง+เบี้ยก่อน",travel:"ประกันเดินทางคุ้มครองช่วงเดินทาง เทียบแผน/วงเงินก่อนซื้อ",pa:"ประกันอุบัติเหตุ (PA) คุ้มครองกรณีอุบัติเหตุ เทียบเงื่อนไขก่อน",ci:"ประกันโรคร้ายแรง (CI) จ่ายก้อนเมื่อตรวจพบโรคที่คุ้มครอง อ่านรายการโรคก่อน",health:"ประกันสุขภาพช่วยค่ารักษา เทียบวงเงิน/ความคุ้มครองก่อน",life:"ประกันชีวิตเหมาะถ้ามีคนพึ่งพิง เทียบแบบ/เบี้ยก่อน",home:"ประกันบ้าน/อัคคีภัยคุ้มครองทรัพย์สิน เทียบทุนประกันก่อน"};var bt={};INS.forEach(function(o){(bt[o.type]=bt[o.type]||[]).push(o);});Q2.protect=Object.keys(bt).map(function(t){return {k:t,t:TTH[t]||t};});Object.keys(bt).forEach(function(t){R["protect|"+t]={reason:(RTH[t]||"เทียบความคุ้มครอง/เงื่อนไขก่อนตัดสินใจ")+" · ไม่การันตีการเคลม",opt:bt[t].map(function(o){return {p:o.provider,pg:"insurance-"+o.type,l:o.label};}),read:[]};});}}catch(e){}
+try{var INS=window.__QUIZ_INS||[];if(INS&&INS.length){Q1.push({k:"protect",t:"🛡️ อยากปกป้อง/ลดความเสี่ยง"});var TTH={car:"ประกันรถ",travel:"ประกันเดินทาง",pa:"ประกันอุบัติเหตุ (PA)",ci:"ประกันโรคร้ายแรง (CI)",health:"ประกันสุขภาพ",life:"ประกันชีวิต",home:"ประกันบ้าน/อัคคีภัย"};var RTH={car:"เลือกชั้นประกันรถให้พอดีการใช้งาน เทียบความคุ้มครอง+เบี้ยก่อน",travel:"ประกันเดินทางคุ้มครองช่วงเดินทาง เทียบแผน/วงเงินก่อนซื้อ",pa:"ประกันอุบัติเหตุ (PA) คุ้มครองกรณีอุบัติเหตุ เทียบเงื่อนไขก่อน",ci:"ประกันโรคร้ายแรง (CI) จ่ายก้อนเมื่อตรวจพบโรคที่คุ้มครอง อ่านรายการโรคก่อน",health:"ประกันสุขภาพช่วยค่ารักษา เทียบวงเงิน/ความคุ้มครองก่อน",life:"ประกันชีวิตเหมาะถ้ามีคนพึ่งพิง เทียบแบบ/เบี้ยก่อน",home:"ประกันบ้าน/อัคคีภัยคุ้มครองทรัพย์สิน เทียบทุนประกันก่อน"};var bt={};INS.forEach(function(o){(bt[o.type]=bt[o.type]||[]).push(o);});Q2.protect=Object.keys(bt).map(function(t){return {k:t,t:TTH[t]||t};});Object.keys(bt).forEach(function(t){R["protect|"+t]={reason:(RTH[t]||"เทียบความคุ้มครอง/เงื่อนไขก่อนตัดสินใจ")+" · ไม่การันตีการเคลม",opt:bt[t].map(function(o){return {p:o.provider,pg:"insurance-"+o.type,l:o.label,url:o.u+"?utm_source=quiz&utm_medium=quiz&utm_campaign="+o.provider+"&utm_content=quiz_insurance-"+o.type+"_"+o.provider};}),read:[]};});}}catch(e){}
 function el(i){return document.getElementById(i);}
 function btns(a,at){return a.map(function(o){return '<button class="qopt" '+at+'="'+o.k+'">'+o.t+'</button>';}).join('');}
 var st={q1:null};
 function showQ1(){el('q2').style.display='none';el('quiz-result').style.display='none';el('quiz-restart').style.display='none';el('q1').innerHTML='<h2>1. ตอนนี้คุณกำลังมองหาอะไร?</h2>'+btns(Q1,'data-q1');}
 function showQ2(k){if(!started){started=true;gev("quiz_start",{quiz_channel:CH});}st.q1=k;var b=el('q2');b.style.display='block';b.innerHTML='<h2>2. ข้อไหนตรงกับคุณที่สุด?</h2>'+btns(Q2[k],'data-q2');b.scrollIntoView({behavior:'smooth',block:'center'});}
-function showRes(a,bk){var r=R[a+'|'+bk];if(!r)return;gev("quiz_complete",{quiz_path:a+"_"+bk,quiz_channel:CH});var h='<h2>🎯 ตัวเลือกที่เหมาะกับคุณ</h2><div class="rreason">'+r.reason+'</div>';r.opt.forEach(function(o){h+='<a class="go" rel="sponsored noopener nofollow" target="_blank" data-provider="'+o.p+'" href="'+aff(o.p,o.pg)+'">'+o.l+' 👉</a>';});if(r.read){h+='<p class="rread">อ่านรายละเอียดก่อนตัดสินใจ:</p><div class="rreadlinks">'+r.read.map(function(x){return '<a href="/'+x[0]+'">'+x[1]+'</a>';}).join('')+'</div>';}var rr=el('quiz-result');rr.innerHTML=h;rr.style.display='block';el('quiz-restart').style.display='inline-block';rr.scrollIntoView({behavior:'smooth',block:'start'});}
+function showRes(a,bk){var r=R[a+'|'+bk];if(!r)return;gev("quiz_complete",{quiz_path:a+"_"+bk,quiz_channel:CH});var h='<h2>🎯 ตัวเลือกที่เหมาะกับคุณ</h2><div class="rreason">'+r.reason+'</div>';r.opt.forEach(function(o){h+='<a class="go" rel="sponsored noopener nofollow" target="_blank" data-provider="'+o.p+'" href="'+(o.url||aff(o.p,o.pg))+'">'+o.l+' 👉</a>';});if(r.read){h+='<p class="rread">อ่านรายละเอียดก่อนตัดสินใจ:</p><div class="rreadlinks">'+r.read.map(function(x){return '<a href="/'+x[0]+'">'+x[1]+'</a>';}).join('')+'</div>';}var rr=el('quiz-result');rr.innerHTML=h;rr.style.display='block';el('quiz-restart').style.display='inline-block';rr.scrollIntoView({behavior:'smooth',block:'start'});}
 document.addEventListener('click',function(e){var b=e.target.closest?e.target.closest('button'):null;if(!b)return;if(b.hasAttribute('data-q1'))showQ2(b.getAttribute('data-q1'));else if(b.hasAttribute('data-q2'))showRes(st.q1,b.getAttribute('data-q2'));else if(b.id==='quiz-restart'){st.q1=null;showQ1();el('q1').scrollIntoView({behavior:'smooth',block:'center'});}});
 showQ1();
 })();
 </script>"""
 quiz_ld=[{"@context":"https://schema.org","@type":"WebPage","name":SITE+" — Quiz เลือกบัตร/สินเชื่อ/ออม","url":BASE+"/quiz","inLanguage":"th"}]
-open(f"{OUT}/quiz.html","w",encoding="utf-8").write(head("Quiz: บัตร/สินเชื่อ/ออม ตัวไหนเหมาะกับคุณ — "+SITE,"ตอบ 2 คำถาม ~30 วิ จับคู่บัตรเครดิต/สินเชื่อ/บัญชีออมที่เหมาะกับคุณ · ข้อมูลไม่ถูกบันทึก ไม่มี PII","quiz",quiz_ld,"website")+quiz_style+quiz_html+("<script>window.__QUIZ_INS="+json.dumps([{"type":o["type"],"provider":_pcode(o["provider"]),"label":o["label"]} for o in INSURANCE],ensure_ascii=False)+"</script>")+quiz_js+FOOTER)
+open(f"{OUT}/quiz.html","w",encoding="utf-8").write(head("Quiz: บัตร/สินเชื่อ/ออม ตัวไหนเหมาะกับคุณ — "+SITE,"ตอบ 2 คำถาม ~30 วิ จับคู่บัตรเครดิต/สินเชื่อ/บัญชีออมที่เหมาะกับคุณ · ข้อมูลไม่ถูกบันทึก ไม่มี PII","quiz",quiz_ld,"website")+quiz_style+quiz_html+("<script>window.__QUIZ_INS="+json.dumps([{"type":o["type"],"provider":_pcode(o["provider"]),"label":o["label"],"u":o["url"]} for o in INSURANCE],ensure_ascii=False)+"</script>")+quiz_js+FOOTER)
 print("quiz.html written")

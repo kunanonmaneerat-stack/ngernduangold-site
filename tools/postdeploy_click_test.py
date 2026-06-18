@@ -23,7 +23,7 @@ for _s in (sys.stdout, sys.stderr):
 
 CANON = {"krungsri", "kept", "srisawad", "carforcash", "ktcphboom",
          "happycash", "ktcproud", "refinance", "loan",
-         "scbprotect", "anc", "tuneprotect", "msig", "thanachart", "fwd", "viriyah"}
+         "scbprotect", "scb", "anc", "tuneprotect", "msig", "thanachart", "fwd", "viriyah"}
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HERE)
 
@@ -33,6 +33,7 @@ TARGETS = [
     ("/title-loan-2026", 'a[href*="atth.me"]', "website", "website_"),
     ("/credit-card-salary-15000-2026", 'a[href*="atth.me"]', "website", "website_"),
     ("/lifestyle-credit-card-2026", 'a[href*="atth.me"]', "lifestyle", "lifestyle_"),
+    ("/insurance-compare-2026", 'a.go[href*="atth.me"]', "ins", "ins_"),
 ]
 
 # wrap dataLayer.push BEFORE page scripts → จับ affiliate_click ทุกแบบ (gtag args หรือ dict)
@@ -106,11 +107,11 @@ def run(base, targets):
         browser.close()
     return results
 
-def run_quiz(base):
-    """Drive /quiz (client-side): Q1=urgent -> Q2=car -> click result affiliate button.
-    Assert affiliate_click fires with channel=quiz + sub_id quiz_{page}_{provider}."""
+def run_quiz(base, q1="urgent", q2="car"):
+    """Drive /quiz: Q1 -> Q2 -> click result affiliate button.
+    Assert affiliate_click fires with channel=quiz + sub_id quiz_* + quiz_start/complete events."""
     from playwright.sync_api import sync_playwright
-    path, fails, got = "/quiz (urgent->car)", [], None
+    path, fails, got = "/quiz (%s->%s)" % (q1, q2), [], None
     with sync_playwright() as pw:
         browser = pw.chromium.launch(headless=True)
         ctx = browser.new_context()
@@ -120,8 +121,8 @@ def run_quiz(base):
         try:
             page.goto(base + "/quiz", wait_until="domcontentloaded", timeout=30000)
             page.wait_for_timeout(1200)
-            page.click('[data-q1="urgent"]', timeout=5000); page.wait_for_timeout(400)
-            page.click('[data-q2="car"]', timeout=5000); page.wait_for_timeout(500)
+            page.click('[data-q1="%s"]' % q1, timeout=5000); page.wait_for_timeout(400)
+            page.click('[data-q2="%s"]' % q2, timeout=5000); page.wait_for_timeout(500)
             el = page.query_selector('#quiz-result a.go[href*="atth.me"]')
             if not el:
                 fails.append("ไม่เจอปุ่ม result affiliate หลังตอบ quiz")
@@ -162,6 +163,7 @@ def main():
     try:
         results = run(a.base, TARGETS)
         results.append(run_quiz(a.base))
+        results.append(run_quiz(a.base, "protect", "travel"))
     except ImportError:
         print("❌ Playwright ไม่ได้ติดตั้ง — `pip install playwright && python -m playwright install chromium`")
         sys.exit(2)
