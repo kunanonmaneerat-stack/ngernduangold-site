@@ -36,6 +36,7 @@ TARGETS = [
 # wrap dataLayer.push BEFORE page scripts → จับ affiliate_click ทุกแบบ (gtag args หรือ dict)
 WRAP = """
 window.__aff = [];
+window.__ev = [];
 window.dataLayer = window.dataLayer || [];
 var _p = window.dataLayer.push.bind(window.dataLayer);
 window.dataLayer.push = function () {
@@ -44,6 +45,7 @@ window.dataLayer.push = function () {
       var a = arguments[i];
       if (a && (a[1] === 'affiliate_click' || a.event === 'affiliate_click'))
         window.__aff.push(a[2] || a);
+      if (a && a[0] === 'event' && a[1]) window.__ev.push(a[1]);
     }
   } catch (e) {}
   return _p.apply(window.dataLayer, arguments);
@@ -139,6 +141,9 @@ def run_quiz(base):
                     if not sub.startswith("quiz_"): fails.append("sub_id ไม่ขึ้นต้น quiz_: " + sub)
                     if len(parts) < 3 or parts[-1] not in CANON: fails.append("sub_id format ผิด: " + sub)
                     if prov not in CANON: fails.append("provider '%s' ไม่อยู่ใน canon" % prov)
+            ev = page.evaluate("() => window.__ev || []")
+            if "quiz_start" not in ev: fails.append("event quiz_start ไม่ยิง")
+            if "quiz_complete" not in ev: fails.append("event quiz_complete ไม่ยิง")
         except Exception as e:
             fails.append("error: " + str(e)[:140])
         ctx.close()

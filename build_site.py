@@ -1075,6 +1075,9 @@ quiz_js = """<script>
 (function(){
 var AFF={krungsri:"https://atth.me/00dayn002a0x",srisawad:"https://atth.me/00c27p002a0x",carforcash:"https://atth.me/00eq00002a0x",happycash:"https://atth.me/00eeae002a0x",refinance:"https://atth.me/00eeac002a0x",ktcproud:"https://atth.me/002114002a0x",kept:"https://atth.me/00d9uk002a0x"};
 function aff(p,pg){return AFF[p]+"?utm_source=quiz&utm_medium=quiz&utm_campaign="+p+"&utm_content=quiz_"+pg+"_"+p;}
+var CH=((new URLSearchParams(location.search).get("utm_source"))||"quiz").replace(/[^a-z0-9]/gi,"").toLowerCase().slice(0,20)||"quiz";
+var started=false;
+function gev(n,p){try{if(window.gtag)window.gtag("event",n,p||{});}catch(e){}}  /* GA4: no PII — only category path + channel */
 var Q1=[{k:"card",t:"💳 อยากได้บัตรเครดิต"},{k:"urgent",t:"💸 ต้องใช้เงินด่วน / มีหนี้"},{k:"save",t:"🏦 อยากออม / ลดภาระบ้าน"}];
 var Q2={card:[{k:"u18",t:"เงินเดือนน้อยกว่า 18,000"},{k:"o18",t:"เงินเดือน 18,000 ขึ้นไป"},{k:"freelance",t:"ฟรีแลนซ์ / ไม่มีสลิปเงินเดือน"},{k:"rejected",t:"เคยสมัครบัตรไม่ผ่าน"},{k:"install",t:"อยากได้บัตรไว้ผ่อน 0%"}],
 urgent:[{k:"car",t:"มีรถปลอดภาระ / ผ่อนใกล้หมด"},{k:"debts",t:"มีหนี้หลายก้อนหลายเจ้า"},{k:"nocol",t:"ไม่มีหลักประกัน (รถ/บ้าน)"}],
@@ -1095,8 +1098,8 @@ function el(i){return document.getElementById(i);}
 function btns(a,at){return a.map(function(o){return '<button class="qopt" '+at+'="'+o.k+'">'+o.t+'</button>';}).join('');}
 var st={q1:null};
 function showQ1(){el('q2').style.display='none';el('quiz-result').style.display='none';el('quiz-restart').style.display='none';el('q1').innerHTML='<h2>1. ตอนนี้คุณกำลังมองหาอะไร?</h2>'+btns(Q1,'data-q1');}
-function showQ2(k){st.q1=k;var b=el('q2');b.style.display='block';b.innerHTML='<h2>2. ข้อไหนตรงกับคุณที่สุด?</h2>'+btns(Q2[k],'data-q2');b.scrollIntoView({behavior:'smooth',block:'center'});}
-function showRes(a,bk){var r=R[a+'|'+bk];if(!r)return;var h='<h2>🎯 ตัวเลือกที่เหมาะกับคุณ</h2><div class="rreason">'+r.reason+'</div>';r.opt.forEach(function(o){h+='<a class="go" rel="sponsored noopener nofollow" target="_blank" data-provider="'+o.p+'" href="'+aff(o.p,o.pg)+'">'+o.l+' 👉</a>';});if(r.read){h+='<p class="rread">อ่านรายละเอียดก่อนตัดสินใจ:</p><div class="rreadlinks">'+r.read.map(function(x){return '<a href="/'+x[0]+'">'+x[1]+'</a>';}).join('')+'</div>';}var rr=el('quiz-result');rr.innerHTML=h;rr.style.display='block';el('quiz-restart').style.display='inline-block';rr.scrollIntoView({behavior:'smooth',block:'start'});}
+function showQ2(k){if(!started){started=true;gev("quiz_start",{quiz_channel:CH});}st.q1=k;var b=el('q2');b.style.display='block';b.innerHTML='<h2>2. ข้อไหนตรงกับคุณที่สุด?</h2>'+btns(Q2[k],'data-q2');b.scrollIntoView({behavior:'smooth',block:'center'});}
+function showRes(a,bk){var r=R[a+'|'+bk];if(!r)return;gev("quiz_complete",{quiz_path:a+"_"+bk,quiz_channel:CH});var h='<h2>🎯 ตัวเลือกที่เหมาะกับคุณ</h2><div class="rreason">'+r.reason+'</div>';r.opt.forEach(function(o){h+='<a class="go" rel="sponsored noopener nofollow" target="_blank" data-provider="'+o.p+'" href="'+aff(o.p,o.pg)+'">'+o.l+' 👉</a>';});if(r.read){h+='<p class="rread">อ่านรายละเอียดก่อนตัดสินใจ:</p><div class="rreadlinks">'+r.read.map(function(x){return '<a href="/'+x[0]+'">'+x[1]+'</a>';}).join('')+'</div>';}var rr=el('quiz-result');rr.innerHTML=h;rr.style.display='block';el('quiz-restart').style.display='inline-block';rr.scrollIntoView({behavior:'smooth',block:'start'});}
 document.addEventListener('click',function(e){var b=e.target.closest?e.target.closest('button'):null;if(!b)return;if(b.hasAttribute('data-q1'))showQ2(b.getAttribute('data-q1'));else if(b.hasAttribute('data-q2'))showRes(st.q1,b.getAttribute('data-q2'));else if(b.id==='quiz-restart'){st.q1=null;showQ1();el('q1').scrollIntoView({behavior:'smooth',block:'center'});}});
 showQ1();
 })();
