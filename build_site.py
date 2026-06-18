@@ -199,6 +199,33 @@ def cmp_widget(caption, rows, slug, note=""):
     n=(note+" · " if note else "")+"*ดอกเบี้ย/วงเงิน/เงื่อนไขจริงเป็นไปตามผู้ให้บริการ — กดเช็กล่าสุดที่หน้าสมัคร"
     return f'<div class="cmp"><div class="cmp-cap">{caption}</div><div style="overflow-x:auto"><table class="cmp-t"><thead>{th}</thead><tbody>{trs}</tbody></table></div><div class="cmp-note">{n}</div></div>'
 
+# 🛡️ insurance — defined early so the pillar article + /links + /quiz all share one source.
+# EMPTY now (atth.me links not pulled). Fill {"type","provider","label","url"} -> buttons go live everywhere.
+INSURANCE = []
+_INS_TYPE_TH = {"car":"ประกันรถ","travel":"ประกันเดินทาง","pa":"ประกันอุบัติเหตุ (PA)","ci":"ประกันโรคร้ายแรง (CI)","health":"ประกันสุขภาพ","life":"ประกันชีวิต","home":"ประกันบ้าน/อัคคีภัย"}
+# educational comparison rows (approved types) — data-gated affiliate button per type from INSURANCE
+_INS_ROWS = [
+    ("travel","ประกันเดินทาง","ค่ารักษา/อุบัติเหตุ/กระเป๋าหาย ระหว่างเดินทาง","คนเที่ยว/บินบ่อย ทำก่อนออกเดินทาง","วงเงินค่ารักษา + ประเทศ/ช่วงที่คุ้มครอง"),
+    ("car","ประกันรถยนต์","รถชน/สูญหาย/ความเสียหายต่อบุคคลภายนอก (ชั้น 1/2/3)","คนมีรถ เลือกชั้นตามการใช้งาน/อายุรถ","ชั้นความคุ้มครอง + ค่าเสียหายส่วนแรก (deductible)"),
+    ("pa","ประกันอุบัติเหตุ (PA)","ค่ารักษา/เงินชดเชยจากอุบัติเหตุ เบี้ยไม่สูง","คนทำงาน/เดินทางบ่อย เสริมจากประกันสุขภาพ","วงเงินต่ออุบัติเหตุ + ข้อยกเว้น"),
+    ("ci","ประกันโรคร้ายแรง (CI)","จ่ายเงินก้อนเมื่อตรวจพบโรคร้ายที่กรมธรรม์คุ้มครอง","คนกังวลค่ารักษาโรคร้าย/มีประวัติครอบครัว","รายการโรคที่คุ้มครอง + เงื่อนไขการจ่าย"),
+]
+def ins_compare_table():
+    bytype = {}
+    for o in INSURANCE:
+        bytype.setdefault(o["type"], []).append(o)
+    hdr = '<tr><th>ชนิดประกัน</th><th>คุ้มครองอะไร</th><th>เหมาะกับใคร</th><th>ก่อนเลือก เช็ก</th><th></th></tr>'
+    trs = ""
+    for t, name, cover, who, check in _INS_ROWS:
+        opts = bytype.get(t, [])
+        if opts:
+            cta = " ".join(f'<a class="go" rel="sponsored noopener nofollow" target="_blank" data-provider="{_pcode(o["provider"])}" href="{utm(o["url"],o["provider"],"insurance-compare")}">{o["label"]} 👉</a>' for o in opts)
+        else:
+            cta = '<span style="color:#9a9aa3;font-size:13px">เทียบที่ผู้ให้บริการ</span>'
+        trs += f'<tr><td data-l="ชนิด"><b>{name}</b></td><td data-l="คุ้มครอง">{cover}</td><td data-l="เหมาะกับใคร">{who}</td><td data-l="เช็ก">{check}</td><td data-l="">{cta}</td></tr>'
+    note = "*ความคุ้มครอง/เบี้ย/เงื่อนไขจริงเป็นไปตามผู้ให้บริการ — อ่านกรมธรรม์และเทียบก่อนตัดสินใจ · ไม่ใช่คำแนะนำการเลือกประกัน ไม่การันตีการเคลม"
+    return f'<div class="cmp"><div class="cmp-cap">เทียบประกัน 4 ชนิดที่มนุษย์เงินเดือนควรรู้</div><div style="overflow-x:auto"><table class="cmp-t"><thead>{hdr}</thead><tbody>{trs}</tbody></table></div><div class="cmp-note">{note}</div></div>'
+
 def share_bar(slug, title):
     import urllib.parse as _up
     eu=_up.quote(f"{BASE}/{slug}", safe=""); et=_up.quote(title, safe="")
@@ -893,6 +920,31 @@ ART.append((slug23,"วิธีแบ่งเงินเดือน 50/30/20
  "วิธีแบ่งเงินเดือน 50/30/20 ปี 2026 พร้อมตัวอย่างตามเงินเดือน 15,000-35,000 และวิธีปรับใช้จริง ช่วยมนุษย์เงินเดือนใช้พอเก็บอยู่ ไม่เครียด",
  body23,faq23,"budget"))
 
+# insurance pillar (educational · data-gated table · no health questions · คปภ. disclosure)
+slug_ins="insurance-compare-2026.html"
+body_ins=f"""<h1 id="top">ประกันที่มนุษย์เงินเดือนควรรู้ 2026 — เดินทาง / รถ / อุบัติเหตุ / โรคร้าย เทียบก่อนเลือก</h1>
+<div class="meta">อัปเดต: {TODAY} · หมวด ประกัน · ข้อมูลเพื่อการศึกษา</div>
+<p>ประกันคือเครื่องมือ "โอนความเสี่ยง" ไม่ให้เหตุไม่คาดฝันมากระทบเงินเก็บที่อุตส่าห์สะสม บทความนี้สรุป 4 ชนิดที่มนุษย์เงินเดือนเจอบ่อย — ประกันเดินทาง รถยนต์ อุบัติเหตุ (PA) และโรคร้ายแรง (CI) — ว่าแต่ละแบบคุ้มครองอะไร เหมาะกับใคร และควรเช็กอะไรก่อนเลือก โดยไม่ขายฝันและไม่การันตีการเคลม</p>
+{toc([('compare','ตารางเทียบ 4 ชนิด'),('travel','ประกันเดินทาง'),('car','ประกันรถยนต์'),('pa','ประกันอุบัติเหตุ (PA)'),('ci','ประกันโรคร้ายแรง (CI)'),('check','เช็ก 5 ข้อก่อนซื้อ'),('faq','คำถามที่พบบ่อย')])}
+<h2 id="compare">ตารางเทียบ 4 ชนิด</h2>
+{ins_compare_table()}
+<h2 id="travel">ประกันเดินทาง</h2>
+<p>คุ้มครองช่วงที่คุณเดินทาง เช่น ค่ารักษาพยาบาลฉุกเฉินในต่างประเทศ อุบัติเหตุ เที่ยวบินดีเลย์ หรือกระเป๋าสูญหาย เหมาะกับคนที่บินบ่อยหรือไปต่างประเทศ ควรซื้อก่อนออกเดินทาง และเลือกวงเงินค่ารักษาให้พอกับประเทศปลายทาง (ค่ารักษาบางประเทศสูงมาก) เทียบแผนและข้อยกเว้นก่อน</p>
+<h2 id="car">ประกันรถยนต์ (ชั้น 1/2/3)</h2>
+<p>ต่างกันที่ความคุ้มครอง — ชั้น 1 ครอบคลุมมากสุด รวมความเสียหายของรถเราแม้ไม่มีคู่กรณี ชั้นรองลงมา (2/3 และแบบ 2+/3+) คุ้มครองน้อยลงตามลำดับ เลือกตามอายุรถ การใช้งาน และงบเบี้ย ดูค่าเสียหายส่วนแรก (deductible) และอู่/ศูนย์ในเครือก่อนตัดสินใจ</p>
+<h2 id="pa">ประกันอุบัติเหตุ (PA)</h2>
+<p>จ่ายค่ารักษาหรือเงินชดเชยกรณีเกิดอุบัติเหตุ เบี้ยมักไม่สูง เหมาะเป็นตัวเสริมจากประกันสุขภาพ โดยเฉพาะคนที่เดินทาง/ทำงานนอกสถานที่บ่อย ดูวงเงินต่ออุบัติเหตุและข้อยกเว้นให้ชัดก่อนเลือก</p>
+<h2 id="ci">ประกันโรคร้ายแรง (CI)</h2>
+<p>จ่ายเงินก้อนเมื่อตรวจพบโรคในรายการที่กรมธรรม์คุ้มครอง (ตามเงื่อนไข) ช่วยแบ่งเบาค่ารักษาที่อาจสูงมากและชดเชยรายได้ช่วงพักรักษา เหมาะกับคนที่กังวลหรือมีประวัติครอบครัว อ่านรายการโรคและเงื่อนไขการจ่ายให้ครบก่อนซื้อ</p>
+<h2 id="check">เช็ก 5 ข้อก่อนซื้อประกัน</h2>
+<ul><li>ความคุ้มครองตรงกับ "ความเสี่ยงจริง" ของเราไหม (ไม่ซื้อเกินจำเป็น)</li><li>วงเงิน/ทุนประกัน พอกับค่าใช้จ่ายที่อาจเกิดจริงไหม</li><li>ข้อยกเว้น — ไม่คุ้มครองอะไรบ้าง อ่านให้ครบ</li><li>เบี้ยต่อปี จ่ายไหวต่อเนื่องระยะยาวไหม</li><li>ผู้ให้บริการมีใบอนุญาต + ขั้นตอนเคลมและรีวิวเป็นอย่างไร</li></ul>
+<p style="background:#faf7ef;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:13.5px;color:#5b5b66">หมายเหตุ (คปภ.): เนื้อหานี้จัดทำเพื่อให้ข้อมูลทั่วไป <b>ไม่ใช่คำแนะนำการเลือกซื้อประกัน</b> ควรเทียบความคุ้มครอง เบี้ย และเงื่อนไขจากผู้ให้บริการที่มีใบอนุญาตก่อนตัดสินใจ · <b>ไม่การันตีการอนุมัติหรือการเคลม</b> · เว็บไซต์ไม่เก็บข้อมูลสุขภาพหรือข้อมูลส่วนบุคคลของคุณ</p>"""
+faqs_ins=[("ประกันเดินทางต้องทำก่อนเดินทางกี่วัน?","โดยทั่วไปทำก่อนออกเดินทาง บางแผนต้องซื้อก่อนวันเดินทางตามที่กำหนด โปรดตรวจเงื่อนไขกับผู้ให้บริการ"),
+("ประกันรถชั้น 1, 2, 3 ต่างกันยังไง?","ต่างกันที่ความคุ้มครอง — ชั้น 1 ครอบคลุมมากสุด (รวมรถเราเสียหายแม้ไม่มีคู่กรณี) ชั้น 2-3 คุ้มครองน้อยลงตามลำดับ เลือกตามอายุรถ การใช้งาน และงบเบี้ย"),
+("PA ต่างจากประกันสุขภาพไหม?","PA เน้นกรณีอุบัติเหตุ เบี้ยมักถูกกว่า ส่วนประกันสุขภาพครอบคลุมการเจ็บป่วยทั่วไป หลายคนทำทั้งคู่เพื่อเสริมกัน"),
+("ประกันโรคร้ายแรงจ่ายอย่างไร?","มักจ่ายเป็นเงินก้อนเมื่อตรวจพบโรคในรายการที่กรมธรรม์ระบุ ตามเงื่อนไข — ควรอ่านรายการโรคและข้อยกเว้นให้ครบก่อนซื้อ")]
+ART.append((slug_ins,"ประกันที่มนุษย์เงินเดือนควรรู้ 2026 — เดินทาง/รถ/PA/โรคร้าย เทียบก่อนเลือก | "+SITE,"เทียบประกันเดินทาง รถยนต์ อุบัติเหตุ (PA) และโรคร้ายแรง (CI) สำหรับมนุษย์เงินเดือน คุ้มครองอะไร เหมาะกับใคร เช็กอะไรก่อนซื้อ — ข้อมูลเพื่อการศึกษา",body_ins,faqs_ins,"insurance"))
+
 # write articles
 for slug,title,desc,body,faqs,camp in ART:
     _name=title.split(" | ")[0]
@@ -906,7 +958,7 @@ for slug,title,desc,body,faqs,camp in ART:
     open(f"{OUT}/{slug}","w",encoding="utf-8").write(head(title,desc,slug,ld,og_image=_ogimg)+f'<main class="wrap">{body}{share_bar(slug,_name)}{QUIZ_CTA}{_nav}</main>'+FOOTER)
 
 # homepage
-TAGS={"credit-card-krungsri-2026.html":"บัตรเครดิต","kept-savings-2026.html":"ออมเงิน","first-credit-card-student-2026.html":"นักศึกษา","credit-card-easy-approval-2026.html":"บัตรเครดิต","cash-card-vs-credit-card-2026.html":"บัตรเครดิต","krungsri-credit-card-rejected-2026.html":"บัตรเครดิต","credit-card-salary-15000-2026.html":"บัตรเครดิต","kept-interest-rate-2026.html":"ออมเงิน","credit-card-documents-2026.html":"บัตรเครดิต","credit-card-freelance-2026.html":"บัตรเครดิต","credit-card-cashback-2026.html":"บัตรเครดิต","credit-card-installment-0-2026.html":"บัตรเครดิต","high-yield-savings-2026.html":"ออมเงิน","loan-cash-2026.html":"สินเชื่อ","title-loan-2026.html":"สินเชื่อ","debt-consolidation-2026.html":"สินเชื่อ","cash-card-easy-2026.html":"สินเชื่อ","personal-loan-2026.html":"สินเชื่อ","refinance-home-2026.html":"สินเชื่อ","car-for-cash-2026.html":"สินเชื่อ","emergency-fund-2026.html":"ออมเงิน","how-to-save-money-2026.html":"ออมเงิน","salary-budgeting-2026.html":"ออมเงิน"}
+TAGS={"credit-card-krungsri-2026.html":"บัตรเครดิต","kept-savings-2026.html":"ออมเงิน","first-credit-card-student-2026.html":"นักศึกษา","credit-card-easy-approval-2026.html":"บัตรเครดิต","cash-card-vs-credit-card-2026.html":"บัตรเครดิต","krungsri-credit-card-rejected-2026.html":"บัตรเครดิต","credit-card-salary-15000-2026.html":"บัตรเครดิต","kept-interest-rate-2026.html":"ออมเงิน","credit-card-documents-2026.html":"บัตรเครดิต","credit-card-freelance-2026.html":"บัตรเครดิต","credit-card-cashback-2026.html":"บัตรเครดิต","credit-card-installment-0-2026.html":"บัตรเครดิต","high-yield-savings-2026.html":"ออมเงิน","loan-cash-2026.html":"สินเชื่อ","title-loan-2026.html":"สินเชื่อ","debt-consolidation-2026.html":"สินเชื่อ","cash-card-easy-2026.html":"สินเชื่อ","personal-loan-2026.html":"สินเชื่อ","refinance-home-2026.html":"สินเชื่อ","car-for-cash-2026.html":"สินเชื่อ","emergency-fund-2026.html":"ออมเงิน","how-to-save-money-2026.html":"ออมเงิน","salary-budgeting-2026.html":"ออมเงิน","insurance-compare-2026.html":"ประกัน"}
 cards="".join(f'<a class="card" href="/{s}"><span class="tag">{TAGS.get(s,"การเงิน")}</span><h3>{t.split(" | ")[0].split(":")[0]}</h3><p>{d[:90]}…</p></a>' for (s,t,d,b,f,c) in ART)
 home_ld=[{"@context":"https://schema.org","@type":"WebSite","name":SITE,"url":BASE+"/","inLanguage":"th"},
  {"@context":"https://schema.org","@type":"Organization","name":SITE,"url":BASE+"/","logo":BASE+"/logo.png","sameAs":["https://www.facebook.com/583765282304956","https://www.threads.net/@ngernduangold","https://www.instagram.com/ngernduangold","https://www.tiktok.com/@ngernduangold","https://www.youtube.com/@ngernduangold"]}]
@@ -1010,8 +1062,6 @@ LINKS_CHANNEL_JS = """<script>(function(){try{var ch=(new URLSearchParams(locati
 # Cowork: pull each link from the AccessTrade dashboard ("รับลิงก์สำหรับโปรโมท") then fill below.
 # Per entry: {"type":"car|travel|pa|ci|health|life|home","provider":"<canon>","label":"...","url":"https://atth.me/..."}
 # EMPTY now -> insurance group/quiz branch render NOTHING (no fake/broken buttons). Populate -> live instantly.
-INSURANCE = []
-_INS_TYPE_TH = {"car":"ประกันรถ","travel":"ประกันเดินทาง","pa":"ประกันอุบัติเหตุ (PA)","ci":"ประกันโรคร้ายแรง (CI)","health":"ประกันสุขภาพ","life":"ประกันชีวิต","home":"ประกันบ้าน/อัคคีภัย"}
 def bins(o):
     u = utm(o["url"], o["provider"], "insurance-"+o["type"], channel="website", medium="linkhub")
     return f'<a class="hubbtn" rel="sponsored noopener nofollow" target="_blank" data-provider="{_pcode(o["provider"])}" href="{u}">{o["label"]}<small>{_INS_TYPE_TH.get(o["type"],"ประกัน")} · เทียบความคุ้มครอง/เงื่อนไขที่ผู้ให้บริการ</small></a>'
