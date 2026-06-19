@@ -55,7 +55,7 @@ def utm(base, merchant, slug, channel="website", medium="article"):
     return f"{base}{sep}utm_source={channel}&utm_medium={medium}&utm_campaign={prov}&utm_content={sub}"
 
 CSS = """
-:root{--bg:#0F172A;--bg-2:#1E293B;--bg-soft:#F8FAFC;--gold:#C6A15A;--gold-lt:#D8B45C;--gold-deep:#8A6E2B;--gold-soft:rgba(198,161,90,.14);--ink:#1E293B;--muted:#64748B;--line:#E2E8F0;--card:#fff;--font-head:'Noto Serif Thai',Georgia,serif;--font-body:'IBM Plex Sans Thai','Sarabun',system-ui,'Segoe UI',sans-serif;--lh:1.85}
+:root{--bg:#0F172A;--bg-2:#1E293B;--bg-soft:#F8FAFC;--gold:#C5A880;--gold-lt:#D8C29A;--gold-deep:#8A6E2B;--gold-soft:rgba(197,168,128,.16);--ink:#1E293B;--muted:#64748B;--line:#E2E8F0;--card:#fff;--font-head:'Noto Serif Thai',Georgia,serif;--font-body:'IBM Plex Sans Thai','Sarabun',system-ui,'Segoe UI',sans-serif;--lh:1.85}
 *{box-sizing:border-box}
 body{margin:0;font-family:var(--font-body);color:var(--ink);background:var(--bg-soft);line-height:var(--lh);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 a{color:var(--gold-deep)}
@@ -66,11 +66,12 @@ header.top b{color:var(--gold);font-size:18px}
 header.top nav{margin-left:auto;display:flex;gap:16px;font-size:14px}
 header.top nav a{color:#ddd;text-decoration:none}
 .wrap{max-width:880px;margin:auto;padding:0 20px}
+main.wrap{max-width:68ch}
 .hero{background:linear-gradient(160deg,var(--bg-2),var(--bg));color:#fff;padding:52px 20px;text-align:center}
 .hero h1{font-size:30px;margin:0 0 8px;color:#fff}
 .hero p{color:#c8c8d0;margin:0;max-width:620px;margin-inline:auto}
 main{padding:32px 0 8px}
-h1,h2,h3,.hero h1{font-family:var(--font-head);font-weight:700;letter-spacing:-.005em}
+h1,h2,h3,.hero h1{font-family:var(--font-head);font-weight:600;letter-spacing:-.005em}
 h1{font-size:clamp(25px,5vw,32px);line-height:1.32}
 h2{font-size:clamp(20px,3.6vw,24px);margin-top:38px;border-left:4px solid var(--gold);padding-left:12px}
 h3{font-size:18px;margin-top:22px}
@@ -143,7 +144,7 @@ def head(title, desc, slug, jsonld_list, og_type="article", og_image="og-default
 <meta property="og:site_name" content="{SITE}"><meta name="twitter:card" content="summary_large_image">
 <meta property="og:image" content="{BASE}/{og_image}"><meta property="og:image:width" content="1640"><meta property="og:image:height" content="664"><meta property="og:image:alt" content="{html.escape(SITE)}"><meta name="twitter:image" content="{BASE}/{og_image}">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;700&family=Noto+Serif+Thai:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;700&family=Noto+Serif+Thai:wght@600&display=swap" rel="stylesheet">
 <style>{CSS}</style>{ld}{GA_SNIPPET}</head><body>
 <header class="top"><div class="wrap"><img src="/logo.png" alt="{SITE}" class="logo" width="26" height="26" decoding="async"><b>{SITE}</b>
 <nav><a href="/">หน้าแรก</a><a href="/about.html">เกี่ยวกับเรา</a><a href="/contact.html">ติดต่อ</a><a href="/disclaimer.html">นโยบาย</a></nav></div></header>"""
