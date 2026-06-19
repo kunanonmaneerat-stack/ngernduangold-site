@@ -170,6 +170,35 @@ def run_quiz(base, q1="urgent", q2="car"):
         browser.close()
     return (path, got, fails)
 
+def run_events(base):
+    """Verify micro-conversion events fire: scroll_to_compare_table (scroll to .cmp) +
+    view_conditions_click (open FAQ details)."""
+    from playwright.sync_api import sync_playwright
+    path, fails, got = "/title-loan-2026 (micro-events)", [], None
+    with sync_playwright() as pw:
+        browser = pw.chromium.launch(headless=True)
+        ctx = browser.new_context(); page = ctx.new_page()
+        page.add_init_script(WRAP)
+        page.route(re.compile(r"atth\.me"), lambda r: r.abort())
+        try:
+            page.goto(base + "/title-loan-2026", wait_until="domcontentloaded", timeout=30000)
+            page.wait_for_timeout(1200)
+            page.evaluate("() => { var e = document.querySelector('.cmp,.ctable'); if (e) e.scrollIntoView(); }")
+            page.wait_for_timeout(600)
+            s = page.query_selector('details summary')
+            if s:
+                try: s.click(timeout=4000)
+                except Exception: pass
+            page.wait_for_timeout(400)
+            ev = page.evaluate("() => window.__ev || []")
+            got = {"events": [e for e in ev if e in ("scroll_to_compare_table", "view_conditions_click")]}
+            if "scroll_to_compare_table" not in ev: fails.append("scroll_to_compare_table ไม่ยิง")
+            if "view_conditions_click" not in ev: fails.append("view_conditions_click ไม่ยิง")
+        except Exception as e:
+            fails.append("error: " + str(e)[:140])
+        ctx.close(); browser.close()
+    return (path, got, fails)
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--base", default="https://ngernduangold.netlify.app")
@@ -181,6 +210,7 @@ def main():
         results = run(a.base, TARGETS)
         results.append(run_quiz(a.base))
         results.append(run_quiz(a.base, "protect", "travel"))
+        results.append(run_events(a.base))
     except ImportError:
         print("❌ Playwright ไม่ได้ติดตั้ง — `pip install playwright && python -m playwright install chromium`")
         sys.exit(2)
