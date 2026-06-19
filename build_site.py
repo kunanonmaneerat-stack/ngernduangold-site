@@ -90,7 +90,7 @@ h3{font-size:18px;margin-top:22px}
 .card p{margin:0;color:var(--muted);font-size:15px}
 .card-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
 .card-tags .tag{margin-bottom:0}
-.tag-ctx{color:#fff;background:var(--bg-2)}
+.card .tag-ctx{color:#fff;background:var(--bg-2)}
 .rt{display:block;margin-top:10px;font-size:12.5px;color:var(--muted);font-weight:600}
 .faq{background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px 20px;margin:14px 0}
 .faq details{border-bottom:1px solid var(--line);padding:12px 0}
