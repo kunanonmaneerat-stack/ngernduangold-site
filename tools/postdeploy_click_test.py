@@ -34,6 +34,7 @@ TARGETS = [
     ("/credit-card-salary-15000-2026", 'a[href*="atth.me"]', "website", "website_"),
     ("/lifestyle-credit-card-2026", 'a[href*="atth.me"]', "lifestyle", "lifestyle_"),
     ("/insurance-compare-2026", 'a.go[href*="atth.me"]', "ins", "ins_"),
+    ("/travel-insurance-vacation-2026", 'a.cta[href*="atth.me"]', "ins", "ins_"),
 ]
 
 # wrap dataLayer.push BEFORE page scripts → จับ affiliate_click ทุกแบบ (gtag args หรือ dict)
