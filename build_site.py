@@ -55,7 +55,7 @@ def utm(base, merchant, slug, channel="website", medium="article"):
     return f"{base}{sep}utm_source={channel}&utm_medium={medium}&utm_campaign={prov}&utm_content={sub}"
 
 CSS = """
-:root{--bg:#0F172A;--bg-2:#1E293B;--bg-soft:#F8FAFC;--gold:#C5A880;--gold-lt:#D8C29A;--gold-deep:#8A6E2B;--gold-soft:rgba(197,168,128,.16);--ink:#1E293B;--muted:#64748B;--line:#E2E8F0;--card:#fff;--font-head:'Noto Serif Thai',Georgia,serif;--font-body:'IBM Plex Sans Thai','Sarabun',system-ui,'Segoe UI',sans-serif;--lh:1.85}
+:root{--bg:#0F172A;--bg-2:#1E293B;--bg-soft:#F8FAFC;--gold:#C5A880;--gold-lt:#D8C29A;--gold-deep:#7A6024;--gold-soft:rgba(197,168,128,.16);--ink:#1E293B;--muted:#64748B;--line:#E2E8F0;--card:#fff;--font-head:'Noto Serif Thai',Georgia,serif;--font-body:'IBM Plex Sans Thai','Sarabun',system-ui,'Segoe UI',sans-serif;--lh:1.85}
 *{box-sizing:border-box}
 body{margin:0;font-family:var(--font-body);color:var(--ink);background:var(--bg-soft);line-height:var(--lh);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 a{color:var(--gold-deep)}
