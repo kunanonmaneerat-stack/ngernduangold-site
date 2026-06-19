@@ -55,6 +55,21 @@ window.dataLayer.push = function () {
 };
 """
 
+def _through_interstitial(page):
+    """If the comparison interstitial modal opened (card/loan CTAs), click its continue button
+    so the real affiliate_click fires on the original atth.me href (sub_id unchanged)."""
+    try:
+        cont = page.query_selector('#interstitial-continue')
+        if cont and cont.is_visible():
+            try:
+                cont.click(timeout=4000, no_wait_after=True)
+            except Exception:
+                try: cont.evaluate("e => e.click()")
+                except Exception: pass
+            page.wait_for_timeout(300)
+    except Exception:
+        pass
+
 def run(base, targets):
     from playwright.sync_api import sync_playwright
     results = []
@@ -81,6 +96,7 @@ def run(base, targets):
                         except Exception:
                             pass
                     page.wait_for_timeout(400)
+                    _through_interstitial(page)
                     aff = page.evaluate("() => window.__aff || []")
                     if not aff:
                         fails.append("affiliate_click ไม่ยิงหลังคลิก")
@@ -133,6 +149,7 @@ def run_quiz(base, q1="urgent", q2="car"):
                     try: el.evaluate("e => e.click()")
                     except Exception: pass
                 page.wait_for_timeout(400)
+                _through_interstitial(page)
                 aff = page.evaluate("() => window.__aff || []")
                 if not aff:
                     fails.append("affiliate_click ไม่ยิงหลังคลิก result")

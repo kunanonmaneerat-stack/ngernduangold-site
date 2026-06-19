@@ -144,13 +144,45 @@ def head(title, desc, slug, jsonld_list, og_type="article", og_image="og-default
 <header class="top"><div class="wrap"><img src="/logo.png" alt="{SITE}" class="logo" width="26" height="26" decoding="async"><b>{SITE}</b>
 <nav><a href="/">หน้าแรก</a><a href="/about.html">เกี่ยวกับเรา</a><a href="/contact.html">ติดต่อ</a><a href="/disclaimer.html">นโยบาย</a></nav></div></header>"""
 
+# global JS on every page: interstitial (card+loan) + micro-conversion events. $0, no-PII (path+channel only).
+SITE_JS = """<div id="interstitial" style="display:none;position:fixed;inset:0;background:rgba(15,15,18,.72);z-index:9999;align-items:center;justify-content:center;padding:18px">
+<div style="background:#fff;max-width:440px;width:100%;border-radius:16px;padding:22px 20px;box-shadow:0 12px 40px rgba(0,0,0,.3)">
+<div style="font-weight:700;font-size:17px;color:#1a1a1f;margin-bottom:6px">ก่อนไปสมัคร — เช็กให้ชัด 1 นาที ✅</div>
+<div id="ist-body" style="font-size:14px;color:#3a3a44;line-height:1.7"></div>
+<a id="interstitial-continue" class="interstitial-go go" rel="sponsored noopener nofollow" target="_blank" href="#" style="display:block;background:#e0b23c;color:#1a1a1f;font-weight:700;text-align:center;padding:14px;border-radius:12px;text-decoration:none;margin:14px 0 8px;font-size:16px">ไปหน้าสมัครต่อ →</a>
+<a href="javascript:void(0)" onclick="window.__istHide&&window.__istHide()" style="display:block;text-align:center;color:#5b5b66;font-size:13px;text-decoration:none">✕ ปิด / ดูบทความเทียบเพิ่มก่อน</a>
+<div style="font-size:11.5px;color:#8a8a95;margin-top:10px;line-height:1.6">* เช็กเงื่อนไข/อนุมัติ/ดอกเบี้ย/ค่าธรรมเนียมล่าสุดที่หน้าสมัคร · ไม่การันตีการอนุมัติ</div>
+</div></div>
+<script>
+(function(){
+function gev(n,p){try{if(window.gtag)window.gtag('event',n,p||{});}catch(e){}}
+var CH=((new URLSearchParams(location.search).get('utm_source'))||'website').replace(/[^a-z0-9]/gi,'').toLowerCase().slice(0,20)||'website';
+try{var seen=false;var els=document.querySelectorAll('.cmp,.ctable');if(els.length&&'IntersectionObserver' in window){var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting&&!seen){seen=true;gev('scroll_to_compare_table',{path:location.pathname,channel:CH});io.disconnect();}});},{threshold:0.25});els.forEach(function(e){io.observe(e);});}}catch(e){}
+document.addEventListener('click',function(e){var s=e.target.closest&&e.target.closest('details summary');if(s){gev('view_conditions_click',{path:location.pathname,channel:CH});}},false);
+var CARDLOAN={krungsri:1,srisawad:1,carforcash:1,ktcphboom:1,happycash:1,ktcproud:1,refinance:1};
+var PROV={
+krungsri:{fit:'อยากได้บัตรเครดิตใบแรก/สะสมเครดิต/รับสิทธิ์',docs:'บัตรประชาชน + เอกสารแสดงรายได้ (สลิปเงินเดือน/เดินบัญชี)',note:'ไม่มีใบไหนการันตีผ่าน เกณฑ์รายได้แล้วแต่บัตร'},
+srisawad:{fit:'มีรถ/มอเตอร์ไซค์ อยากได้เงินก้อนแต่ยังใช้รถได้',docs:'เล่มทะเบียนรถ + บัตรประชาชน + หลักฐานรายได้',note:'วงเงิน/ดอกตามสภาพรถและการพิจารณา'},
+carforcash:{fit:'อยากได้วงเงินจากรถ เทียบหลายเจ้า',docs:'เล่มทะเบียนรถ + บัตรประชาชน',note:'เทียบดอก+ค่าธรรมเนียมก่อนเซ็น'},
+ktcphboom:{fit:'อยากได้สินเชื่อทะเบียนรถ/บัตรกดเงินสด',docs:'บัตรประชาชน + เอกสารรายได้ (+เล่มทะเบียนถ้าใช้รถค้ำ)',note:'เงื่อนไขตามผลิตภัณฑ์'},
+happycash:{fit:'มีหนี้หลายก้อน อยากรวมเหลือก้อนเดียว',docs:'บัตรประชาชน + เอกสารรายได้ + ข้อมูลหนี้เดิม',note:'ดอกรวมต้องต่ำกว่าเดิมถึงคุ้ม'},
+ktcproud:{fit:'อยากได้สินเชื่อส่วนบุคคล ไม่ต้องค้ำ',docs:'บัตรประชาชน + เอกสารแสดงรายได้',note:'วงเงิน/ดอกตามรายได้และการพิจารณา'},
+refinance:{fit:'ผ่อนบ้านมาเกิน 3 ปี อยากลดดอก/ลดงวด',docs:'เอกสารสินเชื่อบ้านเดิม + รายได้ + ทะเบียนบ้าน',note:'เทียบข้อเสนอหลายธนาคารก่อน'}
+};
+function show(href,prov){var p=PROV[prov]||{};document.getElementById('ist-body').innerHTML='<ul style="margin:6px 0;padding-left:18px"><li><b>เหมาะถ้า:</b> '+(p.fit||'ตรงกับความต้องการของคุณ')+'</li><li><b>เอกสารที่มักต้องเตรียม:</b> '+(p.docs||'บัตรประชาชน + เอกสารรายได้')+'</li><li><b>อนุมัติ:</b> ตามการพิจารณาของผู้ให้บริการ — เช็กระยะเวลา/เงื่อนไขล่าสุดที่หน้าสมัคร</li>'+(p.note?'<li>'+p.note+'</li>':'')+'</ul>';var c=document.getElementById('interstitial-continue');c.href=href;c.setAttribute('data-provider',prov);document.getElementById('interstitial').style.display='flex';gev('interstitial_view',{provider:prov,path:location.pathname,channel:CH});}
+window.__istHide=function(){document.getElementById('interstitial').style.display='none';};
+document.addEventListener('click',function(e){try{var a=e.target.closest&&e.target.closest('a[href*="atth.me"]');if(!a)return;if(a.classList.contains('interstitial-go'))return;var prov=a.getAttribute('data-provider')||'';if(!CARDLOAN[prov])return;e.preventDefault();e.stopPropagation();show(a.href,prov);}catch(err){}},true);
+var cont=document.getElementById('interstitial-continue');if(cont)cont.addEventListener('click',function(){gev('interstitial_continue',{provider:this.getAttribute('data-provider')||'',path:location.pathname,channel:CH});setTimeout(window.__istHide,120);});
+})();
+</script>"""
+
 FOOTER = f"""<footer><div class="wrap">
 <b style="color:#e0b23c">{SITE}</b><div class="small">
 เนื้อหาในเว็บนี้จัดทำเพื่อให้ข้อมูลทั่วไป ไม่ใช่คำแนะนำทางการเงิน การลงทุน หรือสินเชื่อ
 โปรดศึกษาเงื่อนไข/ดอกเบี้ย/ค่าธรรมเนียมจากผู้ให้บริการก่อนตัดสินใจ ·
 เว็บไซต์มีลิงก์พันธมิตร (affiliate) ซึ่งเราอาจได้รับค่าตอบแทนเมื่อคุณสมัครผ่านลิงก์ โดยไม่มีค่าใช้จ่ายเพิ่มกับคุณ<br>
 © 2026 {SITE} · <a href="/disclaimer.html">นโยบายความเป็นส่วนตัว & การเปิดเผยข้อมูล</a>
-</div></div></footer></body></html>"""
+</div></div></footer>{SITE_JS}</body></html>"""
 
 # end-of-article entry to the quiz (internal link; no affiliate, no PII)
 QUIZ_CTA = '<div style="margin:26px 0;padding:15px 18px;background:#fff7e6;border:1px solid #f0d9a0;border-radius:12px;text-align:center"><a href="/quiz" style="color:#6b5b2a;font-weight:700;text-decoration:none;font-size:15px">🧭 ไม่แน่ใจว่าตัวไหนเหมาะกับคุณ? ทำ Quiz 30 วิ หาคำตอบ →</a></div>'
@@ -986,7 +1018,7 @@ for slug,title,desc,body,faqs,camp in ART:
     ld.append({"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
         {"@type":"ListItem","position":1,"name":"หน้าแรก","item":BASE+"/"},
         {"@type":"ListItem","position":2,"name":_name,"item":f"{BASE}/{slug}"}]})
-    _il=[(s,t) for s,t in [("loan-cash-2026.html","💸 เทียบสินเชื่อทั้งหมด (จำนำทะเบียน/รวมหนี้/รีไฟแนนซ์)"),("links","🔗 ลิงก์รวม สมัครบัตร/สินเชื่อ/ออมเงิน"),("","🏠 หน้าแรก เงินเดือนสมองทอง")] if s!=slug]
+    _il=[(s,t) for s,t in [("loan-cash-2026.html","💸 เทียบสินเชื่อทั้งหมด (จำนำทะเบียน/รวมหนี้/รีไฟแนนซ์)"),("links","🔗 ลิงก์รวม สมัครบัตร/สินเชื่อ/ออมเงิน"),("quiz","🧭 ทำ Quiz หาบัตร/สินเชื่อที่เหมาะ (30 วิ)"),("","🏠 หน้าแรก เงินเดือนสมองทอง")] if s!=slug]
     _nav='<div class="related"><h2>อ่านต่อ / ลิงก์ที่เกี่ยวข้อง</h2><div class="cluster">'+"".join(f'<a href="/{s}">{t}</a>' for s,t in _il)+'</div></div>'
     _ogimg="og-loan.png" if slug in {"loan-cash-2026.html","title-loan-2026.html","debt-consolidation-2026.html","car-for-cash-2026.html","personal-loan-2026.html","cash-card-easy-2026.html","refinance-home-2026.html"} else "og-default.png"
     open(f"{OUT}/{slug}","w",encoding="utf-8").write(head(title,desc,slug,ld,og_image=_ogimg)+f'<main class="wrap">{body}{share_bar(slug,_name)}{QUIZ_CTA}{_nav}</main>'+FOOTER)
