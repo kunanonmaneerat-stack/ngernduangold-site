@@ -16,6 +16,7 @@ if GA_ID:
 else:
     GA_SNIPPET=""
 TODAY = "2026-06-14"
+BUILD_DATE = os.environ.get("SITE_BUILD_DATE") or datetime.datetime.now().strftime("%Y-%m-%d")  # sitemap lastmod / dateModified — bumps each deploy
 OUT = "site"
 os.makedirs(OUT, exist_ok=True)
 for _s,_d in [("cover_banner.png","og-default.png"),("cover_banner_loan.png","og-loan.png"),("logo.png","logo.png")]:
@@ -206,7 +207,7 @@ def faq_block(faqs):
 
 def article_ld(title, desc, slug, faqs):
     a={"@context":"https://schema.org","@type":"Article","headline":title,"description":desc,
-       "datePublished":TODAY,"dateModified":TODAY,"inLanguage":"th",
+       "datePublished":TODAY,"dateModified":BUILD_DATE,"inLanguage":"th",
        "author":{"@type":"Organization","name":SITE},"publisher":{"@type":"Organization","name":SITE},
        "mainEntityOfPage":{"@type":"WebPage","@id":f"{BASE}/{slug}"}}
     out=[a]
@@ -1077,7 +1078,7 @@ open(f"{OUT}/contact.html","w",encoding="utf-8").write(head("ติดต่อ�
 urls=[("",("1.0")),("links","0.9"),("quiz","0.9"),("about.html","0.4"),("contact.html","0.4"),("disclaimer.html","0.3")]+[(s,"0.8") for s,*_ in ART]
 sm='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
 for u,pr in urls:
-    sm+=f"<url><loc>{BASE}/{u}</loc><lastmod>{TODAY}</lastmod><priority>{pr}</priority></url>\n"
+    sm+=f"<url><loc>{BASE}/{u}</loc><lastmod>{BUILD_DATE}</lastmod><priority>{pr}</priority></url>\n"
 sm+="</urlset>\n"
 open(f"{OUT}/sitemap.xml","w",encoding="utf-8").write(sm)
 open(f"{OUT}/robots.txt","w",encoding="utf-8").write(f"User-agent: *\nAllow: /\nSitemap: {BASE}/sitemap.xml\n")
