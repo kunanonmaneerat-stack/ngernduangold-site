@@ -979,13 +979,25 @@ slug_ins="insurance-compare-2026.html"
 body_ins=f"""<h1 id="top">ประกันที่มนุษย์เงินเดือนควรรู้ 2026 — เดินทาง / รถ / อุบัติเหตุ / โรคร้าย เทียบก่อนเลือก</h1>
 <div class="meta">อัปเดต: {TODAY} · หมวด ประกัน · ข้อมูลเพื่อการศึกษา</div>
 <p>ประกันคือเครื่องมือ "โอนความเสี่ยง" ไม่ให้เหตุไม่คาดฝันมากระทบเงินเก็บที่อุตส่าห์สะสม บทความนี้สรุป 4 ชนิดที่มนุษย์เงินเดือนเจอบ่อย — ประกันเดินทาง รถยนต์ อุบัติเหตุ (PA) และโรคร้ายแรง (CI) — ว่าแต่ละแบบคุ้มครองอะไร เหมาะกับใคร และควรเช็กอะไรก่อนเลือก โดยไม่ขายฝันและไม่การันตีการเคลม</p>
+<p style="background:#fff7e6;border:1px solid #f0d9a0;border-radius:10px;padding:10px 14px;margin:14px 0"><a href="#car" style="color:#6b5b2a;font-weight:700;text-decoration:none">🚗 มาเรื่องประกันรถ? → ข้ามไปเทียบความคุ้มครอง ชั้น 1 / 2+ / 3+ + ขอใบเสนอราคา ↓</a></p>
 {toc([('compare','ตารางเทียบ 4 ชนิด'),('travel','ประกันเดินทาง'),('car','ประกันรถยนต์'),('pa','ประกันอุบัติเหตุ (PA)'),('ci','ประกันโรคร้ายแรง (CI)'),('check','เช็ก 5 ข้อก่อนซื้อ'),('faq','คำถามที่พบบ่อย')])}
 <h2 id="compare">ตารางเทียบ 4 ชนิด</h2>
 {ins_compare_table()}
 <h2 id="travel">ประกันเดินทาง</h2>
 <p>คุ้มครองช่วงที่คุณเดินทาง เช่น ค่ารักษาพยาบาลฉุกเฉินในต่างประเทศ อุบัติเหตุ เที่ยวบินดีเลย์ หรือกระเป๋าสูญหาย เหมาะกับคนที่บินบ่อยหรือไปต่างประเทศ ควรซื้อก่อนออกเดินทาง และเลือกวงเงินค่ารักษาให้พอกับประเทศปลายทาง (ค่ารักษาบางประเทศสูงมาก) เทียบแผนและข้อยกเว้นก่อน</p>
-<h2 id="car">ประกันรถยนต์ (ชั้น 1/2/3)</h2>
-<p>ต่างกันที่ความคุ้มครอง — ชั้น 1 ครอบคลุมมากสุด รวมความเสียหายของรถเราแม้ไม่มีคู่กรณี ชั้นรองลงมา (2/3 และแบบ 2+/3+) คุ้มครองน้อยลงตามลำดับ เลือกตามอายุรถ การใช้งาน และงบเบี้ย ดูค่าเสียหายส่วนแรก (deductible) และอู่/ศูนย์ในเครือก่อนตัดสินใจ</p>
+<h2 id="car">ประกันรถยนต์ — เทียบความคุ้มครอง ชั้น 1 / 2+ / 3+</h2>
+<p>ความต่างหลักอยู่ที่ <b>ความคุ้มครองรถของเราเอง</b> (ทุกชั้นคุ้มครองคู่กรณีอยู่แล้ว) — ดูว่าชั้นไหนคุ้มอะไร แล้วเลือกตามการใช้งานจริงและงบเบี้ย:</p>
+<div class="ctw"><table class="ctable">
+<tr><th>ความคุ้มครอง</th><th>ชั้น 1</th><th>ชั้น 2+</th><th>ชั้น 3+</th></tr>
+<tr><td>รถเราเสียหายจาก<b>ชนกับยานพาหนะ</b> (มีคู่กรณีเป็นรถ)</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>รถเราเสียหาย<b>ไม่มีคู่กรณี / ชนเอง</b> (ชนเสา ขูด คว่ำ)</td><td>✅</td><td>❌</td><td>❌</td></tr>
+<tr><td><b>รถสูญหาย / ไฟไหม้</b></td><td>✅</td><td>✅</td><td>❌</td></tr>
+<tr><td><b>ภัยธรรมชาติ</b> (น้ำท่วม ฯลฯ)</td><td>✅</td><td>บางแผน*</td><td>❌</td></tr>
+<tr><td><b>คู่กรณี</b> — ชีวิต/ทรัพย์สินบุคคลภายนอก</td><td>✅</td><td>✅</td><td>✅</td></tr>
+</table></div>
+<p style="font-size:13px;color:#5b5b66">*ความคุ้มครอง/วงเงิน/เงื่อนไขจริงต่างกันตามกรมธรรม์แต่ละบริษัท — เทียบที่ผู้ให้บริการก่อนซื้อ · ข้อมูลเพื่อการศึกษา ไม่การันตีการเคลม</p>
+<p><b>รถเข้าปีที่ 3-4 ควรต่อชั้น 1 หรือลง 2+?</b> ถ้าขับระวังและไม่ค่อยเคลม การลง 2+ ช่วยประหยัดเบี้ยได้ แต่แลกกับ<b>ไม่คุ้มกรณีชนเอง/ไม่มีคู่กรณี</b> ถ้ายังอยากอุ่นใจแบบชั้น 1 ลองวิธีลดเบี้ยก่อน: <b>เทียบหลายเจ้า</b> · ปรับ<b>ค่าเสียหายส่วนแรก (deductible)</b> · <b>ระบุชื่อผู้ขับ</b> · ติดกล้องหน้ารถ — เบี้ยจริงขึ้นกับรุ่นรถ อายุรถ และประวัติ เช็กกับผู้ให้บริการ</p>
+{ins_cta('axamotor','compare','🚗 เทียบเบี้ยจริง / ขอใบเสนอราคา ประกันรถ AXA →')}
 <h2 id="pa">ประกันอุบัติเหตุ (PA)</h2>
 <p>จ่ายค่ารักษาหรือเงินชดเชยกรณีเกิดอุบัติเหตุ เบี้ยมักไม่สูง เหมาะเป็นตัวเสริมจากประกันสุขภาพ โดยเฉพาะคนที่เดินทาง/ทำงานนอกสถานที่บ่อย ดูวงเงินต่ออุบัติเหตุและข้อยกเว้นให้ชัดก่อนเลือก</p>
 <h2 id="ci">ประกันโรคร้ายแรง (CI)</h2>
@@ -1060,7 +1072,7 @@ body_q3+='<p style="background:#faf7ef;border:1px solid var(--line);border-radiu
 ART.append((slug_q3,"ลางานไปเที่ยวต่างประเทศ Q3 2026 — เช็กลิสต์ + เลือกประกันเดินทางไม่ให้โดนเทตอนเคลม | "+SITE,"เตรียมลาพักร้อนไปเที่ยวต่างประเทศช่วง Q3 — เช็กลิสต์ก่อนลางาน เอกสาร วงเงินค่ารักษา ข้อยกเว้นที่มักโดนปฏิเสธเคลม และซื้อประกันเดินทางก่อนกี่วัน ข้อมูลเพื่อการศึกษา",body_q3,faqs_q3,"insurance"))
 
 # write articles
-ARTICLE_HERO_IMG = {}   # slug -> end-of-article infographic url (งาน3 scaffold, data-gated; Cowork fills top surfaces from GA4)
+ARTICLE_HERO_IMG = {"insurance-compare-2026.html": "/insure-hero.svg"}   # slug -> end-of-article illustration (data-gated; Cowork fills top surfaces from GA4)
 for slug,title,desc,body,faqs,camp in ART:
     _name=title.split(" | ")[0]
     ld=article_ld(_name,desc,slug,faqs)
@@ -1070,7 +1082,7 @@ for slug,title,desc,body,faqs,camp in ART:
     _il=[(s,t) for s,t in [("loan-cash-2026.html","💸 เทียบสินเชื่อทั้งหมด (จำนำทะเบียน/รวมหนี้/รีไฟแนนซ์)"),("links","🔗 ลิงก์รวม สมัครบัตร/สินเชื่อ/ออมเงิน"),("quiz","🧭 ทำ Quiz หาบัตร/สินเชื่อที่เหมาะ (30 วิ)"),("","🏠 หน้าแรก เงินเดือนสมองทอง")] if s!=slug]
     _nav='<div class="related"><h2>อ่านต่อ / ลิงก์ที่เกี่ยวข้อง</h2><div class="cluster">'+"".join(f'<a href="/{s}">{t}</a>' for s,t in _il)+'</div></div>'
     _ogimg="og-loan.png" if slug in {"loan-cash-2026.html","title-loan-2026.html","debt-consolidation-2026.html","car-for-cash-2026.html","personal-loan-2026.html","cash-card-easy-2026.html","refinance-home-2026.html"} else "og-default.png"
-    _info = (f'<img class="artinfo" loading="lazy" src="{ARTICLE_HERO_IMG[slug]}" alt="อินโฟกราฟิกสรุป {_name}" width="800" height="420">' if slug in ARTICLE_HERO_IMG else "")
+    _info = (f'<figure style="margin:18px 0"><img class="artinfo" loading="lazy" src="{ARTICLE_HERO_IMG[slug]}" alt="ภาพประกอบ {_name}" width="800" height="420"><figcaption style="font-size:10.5px;color:#8a8a95;text-align:right;margin:2px 4px 0">ภาพประกอบ</figcaption></figure>' if slug in ARTICLE_HERO_IMG else "")
     open(f"{OUT}/{slug}","w",encoding="utf-8").write(head(title,desc,slug,ld,og_image=_ogimg)+f'<main class="wrap">{body}{_info}{share_bar(slug,_name)}{QUIZ_CTA}{_nav}</main>'+FOOTER)
 
 # homepage
