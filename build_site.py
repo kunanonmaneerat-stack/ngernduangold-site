@@ -55,10 +55,10 @@ def utm(base, merchant, slug, channel="website", medium="article"):
     return f"{base}{sep}utm_source={channel}&utm_medium={medium}&utm_campaign={prov}&utm_content={sub}"
 
 CSS = """
-:root{--bg:#0f0f12;--gold:#e0b23c;--ink:#1a1a1f;--muted:#5b5b66;--line:#e7e7ea;--card:#fff}
+:root{--bg:#0F172A;--bg-2:#1E293B;--bg-soft:#F8FAFC;--gold:#C6A15A;--gold-lt:#D8B45C;--gold-deep:#8A6E2B;--gold-soft:rgba(198,161,90,.14);--ink:#1E293B;--muted:#64748B;--line:#E2E8F0;--card:#fff;--font-head:'Noto Serif Thai',Georgia,serif;--font-body:'IBM Plex Sans Thai','Sarabun',system-ui,'Segoe UI',sans-serif;--lh:1.85}
 *{box-sizing:border-box}
-body{margin:0;font-family:'Sarabun',system-ui,'Segoe UI',sans-serif;color:var(--ink);background:#fafafa;line-height:1.75}
-a{color:#b8860b}
+body{margin:0;font-family:var(--font-body);color:var(--ink);background:var(--bg-soft);line-height:var(--lh);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:var(--gold-deep)}
 header.top{background:var(--bg);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:9}
 header.top .wrap{max-width:880px;margin:auto;display:flex;align-items:center;gap:10px}
 header.top .logo{width:26px;height:26px;border-radius:6px;object-fit:cover}
@@ -66,12 +66,13 @@ header.top b{color:var(--gold);font-size:18px}
 header.top nav{margin-left:auto;display:flex;gap:16px;font-size:14px}
 header.top nav a{color:#ddd;text-decoration:none}
 .wrap{max-width:880px;margin:auto;padding:0 20px}
-.hero{background:linear-gradient(180deg,#16161a,#0f0f12);color:#fff;padding:48px 20px;text-align:center}
+.hero{background:linear-gradient(160deg,var(--bg-2),var(--bg));color:#fff;padding:52px 20px;text-align:center}
 .hero h1{font-size:30px;margin:0 0 8px;color:#fff}
 .hero p{color:#c8c8d0;margin:0;max-width:620px;margin-inline:auto}
 main{padding:32px 0 8px}
-h1{font-size:28px;line-height:1.35}
-h2{font-size:22px;margin-top:34px;border-left:4px solid var(--gold);padding-left:12px}
+h1,h2,h3,.hero h1{font-family:var(--font-head);font-weight:700;letter-spacing:-.005em}
+h1{font-size:clamp(25px,5vw,32px);line-height:1.32}
+h2{font-size:clamp(20px,3.6vw,24px);margin-top:38px;border-left:4px solid var(--gold);padding-left:12px}
 h3{font-size:18px;margin-top:22px}
 .meta{color:var(--muted);font-size:14px;margin:6px 0 18px}
 .toc{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:18px 0}
@@ -83,7 +84,7 @@ h3{font-size:18px;margin-top:22px}
 .cta.free{box-shadow:0 0 0 2px #1f9d55 inset,0 4px 14px rgba(224,178,60,.35)}
 .card{display:block;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:14px 0;text-decoration:none;color:var(--ink);transition:.15s}
 .card:hover{border-color:var(--gold);transform:translateY(-2px)}
-.card .tag{display:inline-block;font-size:12px;color:var(--gold);background:#2a2410;border-radius:20px;padding:2px 10px;margin-bottom:8px}
+.card .tag{display:inline-block;font-size:12px;color:var(--gold-deep);background:var(--gold-soft);border-radius:20px;padding:2px 11px;margin-bottom:8px;font-weight:600}
 .card h3{margin:0 0 6px}
 .card p{margin:0;color:var(--muted);font-size:15px}
 .faq{background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px 20px;margin:14px 0}
@@ -100,7 +101,7 @@ footer a{color:#ccc}
 footer .small{color:#777;margin-top:10px;line-height:1.6}
 .ctw{overflow-x:auto;margin:18px 0}
 .ctable{width:100%;border-collapse:collapse;font-size:14px;min-width:540px;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}
-.ctable th{background:#1a1a1f;color:#fff;padding:10px 12px;text-align:left;font-size:13px}
+.ctable th{background:var(--bg);color:#fff;padding:10px 12px;text-align:left;font-size:13px}
 .ctable td{padding:10px 12px;border-top:1px solid var(--line);vertical-align:top}
 .ctable tr:nth-child(even) td{background:#faf7ef}
 .ctable .go{display:inline-block;background:var(--gold);color:#1a1a1f;font-weight:700;padding:7px 14px;border-radius:8px;text-decoration:none;white-space:nowrap;font-size:13px}
@@ -109,9 +110,9 @@ footer .small{color:#777;margin-top:10px;line-height:1.6}
 .cluster a:hover{border-color:var(--gold)}
 @media(max-width:600px){.hero h1{font-size:24px}h1{font-size:23px}}
 .cmp{margin:22px 0;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.05)}
-.cmp-cap{background:#1a1a1f;color:#fff;font-weight:700;padding:12px 16px;font-size:15px}
+.cmp-cap{background:var(--bg);color:#fff;font-weight:700;padding:12px 16px;font-size:15px}
 .cmp-t{width:100%;border-collapse:collapse;font-size:14px}
-.cmp-t th{background:#2a2410;color:var(--gold);text-align:left;padding:9px 12px;font-size:12.5px;position:sticky;top:0}
+.cmp-t th{background:var(--bg-2);color:var(--gold);text-align:left;padding:9px 12px;font-size:12.5px;position:sticky;top:0}
 .cmp-t td{padding:11px 12px;border-top:1px solid var(--line);vertical-align:top}
 .cmp-t tr.best td{background:#fffbe9}
 .cmp-best{display:inline-block;background:#1f9d55;color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:1px 7px;margin-left:6px;white-space:nowrap}
@@ -132,7 +133,7 @@ def head(title, desc, slug, jsonld_list, og_type="article", og_image="og-default
     canon = f"{BASE}/{slug}" if slug else BASE + "/"
     ld = "\n".join(f'<script type="application/ld+json">{json.dumps(j,ensure_ascii=False)}</script>' for j in jsonld_list)
     return f"""<!doctype html><html lang="th"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0f0f12"><meta name="robots" content="index,follow,max-image-preview:large">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0F172A"><meta name="robots" content="index,follow,max-image-preview:large">
 <title>{html.escape(title)}</title>
 <link rel="icon" type="image/png" href="/logo.png"><link rel="apple-touch-icon" href="/logo.png">
 <meta name="description" content="{html.escape(desc)}">
@@ -142,7 +143,7 @@ def head(title, desc, slug, jsonld_list, og_type="article", og_image="og-default
 <meta property="og:site_name" content="{SITE}"><meta name="twitter:card" content="summary_large_image">
 <meta property="og:image" content="{BASE}/{og_image}"><meta property="og:image:width" content="1640"><meta property="og:image:height" content="664"><meta property="og:image:alt" content="{html.escape(SITE)}"><meta name="twitter:image" content="{BASE}/{og_image}">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;700&family=Noto+Serif+Thai:wght@400;700&display=swap" rel="stylesheet">
 <style>{CSS}</style>{ld}{GA_SNIPPET}</head><body>
 <header class="top"><div class="wrap"><img src="/logo.png" alt="{SITE}" class="logo" width="26" height="26" decoding="async"><b>{SITE}</b>
 <nav><a href="/">หน้าแรก</a><a href="/about.html">เกี่ยวกับเรา</a><a href="/contact.html">ติดต่อ</a><a href="/disclaimer.html">นโยบาย</a></nav></div></header>"""
@@ -152,7 +153,7 @@ SITE_JS = """<div id="interstitial" style="display:none;position:fixed;inset:0;b
 <div style="background:#fff;max-width:440px;width:100%;border-radius:16px;padding:22px 20px;box-shadow:0 12px 40px rgba(0,0,0,.3)">
 <div style="font-weight:700;font-size:17px;color:#1a1a1f;margin-bottom:6px">ก่อนไปสมัคร — เช็กให้ชัด 1 นาที ✅</div>
 <div id="ist-body" style="font-size:14px;color:#3a3a44;line-height:1.7"></div>
-<a id="interstitial-continue" class="interstitial-go go" rel="sponsored noopener nofollow" target="_blank" href="#" style="display:block;background:#e0b23c;color:#1a1a1f;font-weight:700;text-align:center;padding:14px;border-radius:12px;text-decoration:none;margin:14px 0 8px;font-size:16px">ไปหน้าสมัครต่อ →</a>
+<a id="interstitial-continue" class="interstitial-go go" rel="sponsored noopener nofollow" target="_blank" href="#" style="display:block;background:var(--gold);color:#1a1a1f;font-weight:700;text-align:center;padding:14px;border-radius:12px;text-decoration:none;margin:14px 0 8px;font-size:16px">ไปหน้าสมัครต่อ →</a>
 <a href="javascript:void(0)" onclick="window.__istHide&&window.__istHide()" style="display:block;text-align:center;color:#5b5b66;font-size:13px;text-decoration:none">✕ ปิด / ดูบทความเทียบเพิ่มก่อน</a>
 <div style="font-size:11.5px;color:#8a8a95;margin-top:10px;line-height:1.6">* เช็กเงื่อนไข/อนุมัติ/ดอกเบี้ย/ค่าธรรมเนียมล่าสุดที่หน้าสมัคร · ไม่การันตีการอนุมัติ</div>
 </div></div>
@@ -180,7 +181,7 @@ var cont=document.getElementById('interstitial-continue');if(cont)cont.addEventL
 </script>"""
 
 FOOTER = f"""<footer><div class="wrap">
-<b style="color:#e0b23c">{SITE}</b><div class="small">
+<b style="color:var(--gold)">{SITE}</b><div class="small">
 เนื้อหาในเว็บนี้จัดทำเพื่อให้ข้อมูลทั่วไป ไม่ใช่คำแนะนำทางการเงิน การลงทุน หรือสินเชื่อ
 โปรดศึกษาเงื่อนไข/ดอกเบี้ย/ค่าธรรมเนียมจากผู้ให้บริการก่อนตัดสินใจ ·
 เว็บไซต์มีลิงก์พันธมิตร (affiliate) ซึ่งเราอาจได้รับค่าตอบแทนเมื่อคุณสมัครผ่านลิงก์ โดยไม่มีค่าใช้จ่ายเพิ่มกับคุณ<br>
@@ -1171,39 +1172,39 @@ def bmini(url, merchant, text):
     u = utm(url, merchant, "links", channel="website", medium="linkhub")
     return f'<a class="hubmini" rel="sponsored noopener nofollow" target="_blank" data-provider="{_pcode(merchant)}" href="{u}">{text}</a>'
 hub_style = """<style>
-body{background:#0f0f12}
+body{background:var(--bg)}
 .hub{max-width:520px;margin:0 auto;padding:30px 20px 48px;text-align:center}
 .hub img.logo{width:88px;height:88px;border-radius:20px;display:block;margin:0 auto 14px;box-shadow:0 6px 22px rgba(224,178,60,.25)}
 .hub h1{color:#fff;font-size:26px;margin:0 0 6px}
 .hub .tag{color:#c8c8d0;font-size:15px;margin:0 auto 26px;max-width:440px;line-height:1.6}
-.hubbtn{display:block;background:linear-gradient(180deg,#e7be4a,#e0b23c);color:#1a1a1f;font-weight:700;text-decoration:none;padding:16px 18px;border-radius:14px;margin:13px 0;font-size:17px;box-shadow:0 4px 16px rgba(224,178,60,.30);transition:.15s}
+.hubbtn{display:block;background:linear-gradient(180deg,var(--gold-lt),var(--gold));color:#1a1a1f;font-weight:700;text-decoration:none;padding:16px 18px;border-radius:14px;margin:13px 0;font-size:17px;box-shadow:0 4px 16px rgba(224,178,60,.30);transition:.15s}
 .hubbtn:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(224,178,60,.45)}
 .hubbtn small{display:block;font-weight:400;font-size:13px;opacity:.82;margin-top:3px}
-.hubbtn.alt{background:transparent;color:#e0b23c;border:1.5px solid #e0b23c;box-shadow:none}
+.hubbtn.alt{background:transparent;color:var(--gold);border:1.5px solid var(--gold);box-shadow:none}
 .hubbtn.alt:hover{background:rgba(224,178,60,.08)}
 .hubdisc{color:#8a8a95;font-size:12.5px;margin-top:24px;line-height:1.6}
 .hubdisc a{color:#c79a32}
 .hubsoc-lb{color:#c8c8d0;font-size:13px;margin:26px 0 6px;font-weight:600}
 .hubsoc{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:0 0 4px}
-.hubsoc a{color:#e0b23c;border:1px solid rgba(224,178,60,.5);border-radius:20px;padding:6px 14px;text-decoration:none;font-size:13px;font-weight:600}
+.hubsoc a{color:var(--gold);border:1px solid rgba(224,178,60,.5);border-radius:20px;padding:6px 14px;text-decoration:none;font-size:13px;font-weight:600}
 .hubsoc a:hover{background:rgba(224,178,60,.10)}
-.hubsec{color:#e0b23c;font-weight:700;font-size:15.5px;text-align:left;margin:24px 0 2px;padding-top:12px;border-top:1px solid rgba(224,178,60,.20);scroll-margin-top:74px}
+.hubsec{color:var(--gold);font-weight:700;font-size:15.5px;text-align:left;margin:24px 0 2px;padding-top:12px;border-top:1px solid rgba(224,178,60,.20);scroll-margin-top:74px}
 .hubsec small{display:block;color:#9a9aa6;font-weight:400;font-size:12.5px;margin-top:2px}
 .hublbl{color:#aaa;font-size:12.5px;text-align:left;margin:9px 0 2px}
 .hubrow{display:flex;flex-wrap:wrap;gap:7px;margin:4px 0}
 .artlink,.hubmini{flex:1 1 calc(50% - 7px);border-radius:11px;padding:11px 8px;text-decoration:none;font-size:13.5px;text-align:center;font-weight:600}
 .artlink{color:#c8c8d0;border:1px solid rgba(255,255,255,.16)}
-.artlink:hover{background:rgba(224,178,60,.08);color:#e0b23c}
+.artlink:hover{background:rgba(224,178,60,.08);color:var(--gold)}
 .hubmini{color:#1a1a1f;background:rgba(224,178,60,.88)}
-.hubmini:hover{background:#e0b23c}
+.hubmini:hover{background:var(--gold)}
 .hubpick{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0 4px}
 .pickcard{display:block;background:rgba(255,255,255,.04);border:1.5px solid rgba(224,178,60,.30);border-radius:14px;padding:14px 10px;text-decoration:none;transition:.15s;text-align:center}
-.pickcard:hover{background:rgba(224,178,60,.10);border-color:#e0b23c;transform:translateY(-2px)}
+.pickcard:hover{background:rgba(224,178,60,.10);border-color:var(--gold);transform:translateY(-2px)}
 .pickcard .ic{font-size:25px;display:block;margin-bottom:4px}
 .pickcard b{display:block;color:#fff;font-size:14.5px;margin-bottom:2px}
 .pickcard span{display:block;color:#9a9aa6;font-size:11.5px;line-height:1.35}
 .cardimg{width:100%;height:auto;border-radius:12px;margin:4px 0 8px;display:block}
-.morebtn{display:none;width:100%;background:transparent;border:1px dashed rgba(224,178,60,.45);color:#e0b23c;border-radius:11px;padding:10px;margin:8px 0 2px;font-size:13.5px;font-weight:700;cursor:pointer;text-align:center;font-family:inherit}
+.morebtn{display:none;width:100%;background:transparent;border:1px dashed rgba(224,178,60,.45);color:var(--gold);border-radius:11px;padding:10px;margin:8px 0 2px;font-size:13.5px;font-weight:700;cursor:pointer;text-align:center;font-family:inherit}
 .morebtn:hover{background:rgba(224,178,60,.08)}
 .morewrap.is-collapsed{display:none}
 </style>"""
@@ -1237,8 +1238,8 @@ def ins_group():
 links_body = hub_style + f'''<div class="hub">
 <img class="logo" src="/logo.png" alt="{SITE}" width="88" height="88" decoding="async">
 <h1>{SITE}</h1>
-<p class="tag">บัตรเครดิต • สินเชื่อ • ออมเงิน ฉบับมนุษย์เงินเดือน — เทียบของจริง อนุมัติไว สมัครออนไลน์<br><b style="color:#e7be4a">เลือกตามสถานการณ์คุณ 👇</b></p>
-<a class="hubbtn" href="/quiz" style="background:linear-gradient(180deg,#3a3a44,#2a2a32);color:#e7be4a">🧭 ไม่รู้เริ่มตรงไหน? ทำ Quiz 30 วิ →<small style="color:#c8c8d0">ตอบ 2 คำถาม จับคู่บัตร/สินเชื่อ/ออม ที่เหมาะกับคุณ</small></a>
+<p class="tag">บัตรเครดิต • สินเชื่อ • ออมเงิน ฉบับมนุษย์เงินเดือน — เทียบของจริง อนุมัติไว สมัครออนไลน์<br><b style="color:var(--gold-lt)">เลือกตามสถานการณ์คุณ 👇</b></p>
+<a class="hubbtn" href="/quiz" style="background:linear-gradient(180deg,#3a3a44,#2a2a32);color:var(--gold-lt)">🧭 ไม่รู้เริ่มตรงไหน? ทำ Quiz 30 วิ →<small style="color:#c8c8d0">ตอบ 2 คำถาม จับคู่บัตร/สินเชื่อ/ออม ที่เหมาะกับคุณ</small></a>
 <p class="hublbl" style="text-align:center;color:#c8c8d0;margin-top:14px">…หรือเลือกหมวดที่ตรงกับคุณ 👇</p>
 <div class="hubpick">
 <a class="pickcard" href="#cards"><span class="ic">💳</span><b>บัตรเครดิต</b><span>ใบแรก · เงินคืน · ผ่อน 0%</span></a>
