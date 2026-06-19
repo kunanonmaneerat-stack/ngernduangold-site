@@ -1157,7 +1157,7 @@ body{background:#0f0f12}
 .hubsoc{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:0 0 4px}
 .hubsoc a{color:#e0b23c;border:1px solid rgba(224,178,60,.5);border-radius:20px;padding:6px 14px;text-decoration:none;font-size:13px;font-weight:600}
 .hubsoc a:hover{background:rgba(224,178,60,.10)}
-.hubsec{color:#e0b23c;font-weight:700;font-size:15.5px;text-align:left;margin:24px 0 2px;padding-top:12px;border-top:1px solid rgba(224,178,60,.20)}
+.hubsec{color:#e0b23c;font-weight:700;font-size:15.5px;text-align:left;margin:24px 0 2px;padding-top:12px;border-top:1px solid rgba(224,178,60,.20);scroll-margin-top:74px}
 .hubsec small{display:block;color:#9a9aa6;font-weight:400;font-size:12.5px;margin-top:2px}
 .hublbl{color:#aaa;font-size:12.5px;text-align:left;margin:9px 0 2px}
 .hubrow{display:flex;flex-wrap:wrap;gap:7px;margin:4px 0}
@@ -1166,11 +1166,19 @@ body{background:#0f0f12}
 .artlink:hover{background:rgba(224,178,60,.08);color:#e0b23c}
 .hubmini{color:#1a1a1f;background:rgba(224,178,60,.88)}
 .hubmini:hover{background:#e0b23c}
+.hubpick{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0 4px}
+.pickcard{display:block;background:rgba(255,255,255,.04);border:1.5px solid rgba(224,178,60,.30);border-radius:14px;padding:14px 10px;text-decoration:none;transition:.15s;text-align:center}
+.pickcard:hover{background:rgba(224,178,60,.10);border-color:#e0b23c;transform:translateY(-2px)}
+.pickcard .ic{font-size:25px;display:block;margin-bottom:4px}
+.pickcard b{display:block;color:#fff;font-size:14.5px;margin-bottom:2px}
+.pickcard span{display:block;color:#9a9aa6;font-size:11.5px;line-height:1.35}
 </style>"""
 # channel-attribution JS (kept OUT of the f-string because it contains { } braces):
 # rewrites hub atth.me links so a visitor arriving via ?utm_source=pantip gets the
 # AccessTrade sub-id channel = pantip (utm_source + utm_content {pantip}_links_{provider}).
 LINKS_CHANNEL_JS = """<script>(function(){try{var ch=(new URLSearchParams(location.search).get("utm_source")||"").replace(/[^a-z0-9]/gi,"").toLowerCase().slice(0,20);if(!ch||ch==="website")return;document.querySelectorAll('a.hubbtn[href*="atth.me"], a.hubmini[href*="atth.me"]').forEach(function(a){var u=new URL(a.href),prov=u.searchParams.get("utm_campaign")||"";u.searchParams.set("utm_source",ch);var pc=(u.searchParams.get("utm_content")||"").split("_");if(pc.length>=3){pc[0]=ch;u.searchParams.set("utm_content",pc.join("_"));}else{u.searchParams.set("utm_content",ch+"_links_"+prov);}a.href=u.toString();});}catch(e){}})();</script>"""
+# basket-pick micro-event (no-PII: basket key + channel only) — measures land -> choose-path funnel vs affiliate_click
+PICK_JS = """<script>(function(){try{var ch=(new URLSearchParams(location.search).get("utm_source")||"website").replace(/[^a-z0-9]/gi,"").toLowerCase().slice(0,20)||"website";document.querySelectorAll("a.pickcard").forEach(function(a){a.addEventListener("click",function(){try{if(window.gtag)gtag("event","money_basket_pick",{basket:(a.getAttribute("href")||"").replace("#",""),channel:ch});}catch(e){}});});}catch(e){}})();</script>"""
 # 🛡️ insurance line — types approved on AccessTrade but atth.me links NOT pulled yet.
 # Cowork: pull each link from the AccessTrade dashboard ("รับลิงก์สำหรับโปรโมท") then fill below.
 # Per entry: {"type":"car|travel|pa|ci|health|life|home","provider":"<canon>","label":"...","url":"https://atth.me/..."}
@@ -1187,8 +1195,15 @@ links_body = hub_style + f'''<div class="hub">
 <h1>{SITE}</h1>
 <p class="tag">บัตรเครดิต • สินเชื่อ • ออมเงิน ฉบับมนุษย์เงินเดือน — เทียบของจริง อนุมัติไว สมัครออนไลน์<br><b style="color:#e7be4a">เลือกตามสถานการณ์คุณ 👇</b></p>
 <a class="hubbtn" href="/quiz" style="background:linear-gradient(180deg,#3a3a44,#2a2a32);color:#e7be4a">🧭 ไม่รู้เริ่มตรงไหน? ทำ Quiz 30 วิ →<small style="color:#c8c8d0">ตอบ 2 คำถาม จับคู่บัตร/สินเชื่อ/ออม ที่เหมาะกับคุณ</small></a>
+<p class="hublbl" style="text-align:center;color:#c8c8d0;margin-top:14px">…หรือเลือกหมวดที่ตรงกับคุณ 👇</p>
+<div class="hubpick">
+<a class="pickcard" href="#cards"><span class="ic">💳</span><b>บัตรเครดิต</b><span>ใบแรก · เงินคืน · ผ่อน 0%</span></a>
+<a class="pickcard" href="#loans"><span class="ic">💸</span><b>เงินด่วน / ปลดหนี้</b><span>จำนำทะเบียน · รวมหนี้ · สินเชื่อ</span></a>
+<a class="pickcard" href="#save"><span class="ic">🏦</span><b>ออม / รีไฟแนนซ์</b><span>ดอกสูง · ลดภาระบ้าน</span></a>
+<a class="pickcard" href="#insure"><span class="ic">🛡️</span><b>ประกัน</b><span>เดินทาง · รถ · อุบัติเหตุ</span></a>
+</div>
 
-<div class="hubsec">💳 อยากได้บัตรเครดิต<small>เงินคืน/ของกำนัล · สมัครออนไลน์ รู้ผลไว</small></div>
+<div class="hubsec" id="cards">💳 อยากได้บัตรเครดิต<small>เงินคืน/ของกำนัล · สมัครออนไลน์ รู้ผลไว</small></div>
 {bcta(KRUNGSRI,"krungsri","💳 สมัครบัตรเครดิต Krungsri","เงินคืนสูง · สมัครออนไลน์ รับของกำนัล")}
 <p class="hublbl">เลือกเคสของคุณ (อ่าน + ลิงก์สมัครในบทความ):</p>
 <div class="hubrow">
@@ -1199,7 +1214,7 @@ links_body = hub_style + f'''<div class="hub">
 <a class="artlink" href="/lifestyle-credit-card-2026">💳 สายไลฟ์สไตล์ กินหรู/โรงแรม/เลานจ์</a>
 </div>
 
-<div class="hubsec">💸 ต้องใช้เงินด่วน / ปลดหนี้<small>เทียบหลายเจ้า · รถยังใช้ได้ · สมัครออนไลน์</small></div>
+<div class="hubsec" id="loans">💸 ต้องใช้เงินด่วน / ปลดหนี้<small>เทียบหลายเจ้า · รถยังใช้ได้ · สมัครออนไลน์</small></div>
 {bcta(SRISAWAD,"srisawad","💸 สินเชื่อจำนำทะเบียนรถ","รถยังใช้ได้ · รู้ผลไว เทียบดอกก่อนเซ็น")}
 {bcta(HAPPYDEBT,"happycash","🔗 รวมหนี้ก้อนเดียว ดอกถูกลง","รวมบัตร/สินเชื่อหลายใบ เหลือจ่ายที่เดียว")}
 {bcta(KTCPROUD,"ktcproud","💵 สินเชื่อส่วนบุคคล KTC PROUD","วงเงินก้อน ไม่ต้องค้ำ · ผ่อนรายเดือน")}
@@ -1209,10 +1224,10 @@ links_body = hub_style + f'''<div class="hub">
 {bmini(KTCPBM,"ktcphboom","⚡ KTC พี่เบิ้ม")}
 </div>
 
-<div class="hubsec">🛡️ ประกัน<small>คุ้มครองความเสี่ยง · เทียบก่อนเลือก · ไม่การันตีการเคลม</small></div>
+<div class="hubsec" id="insure">🛡️ ประกัน<small>คุ้มครองความเสี่ยง · เทียบก่อนเลือก · ไม่การันตีการเคลม</small></div>
 <a class="hubbtn alt" href="/insurance-compare-2026">🛡️ เทียบประกัน 4 ชนิด (เดินทาง/รถ/PA/โรคร้าย)<small>educational · เทียบความคุ้มครองก่อนเลือก</small></a>
 {ins_group()}
-<div class="hubsec">🏦 อยากออม / ลดภาระบ้าน<small>ดอกสูงกว่าออมทรัพย์ · รีไฟแนนซ์ลดดอก</small></div>
+<div class="hubsec" id="save">🏦 อยากออม / ลดภาระบ้าน<small>ดอกสูงกว่าออมทรัพย์ · รีไฟแนนซ์ลดดอก</small></div>
 {bcta(KEPT,"kept","🏦 ออมเงินดอกสูง Kept by Krungsri","สมัครฟรี · ไม่เช็คเครดิต ดอกสูงกว่าออมทรัพย์")}
 {bcta(REFI,"refinance","🏠 รีไฟแนนซ์บ้าน ลดดอกเบี้ย","ผ่อนบ้าน >3 ปี เทียบลดดอก/ลดงวด")}
 
@@ -1226,7 +1241,7 @@ links_body = hub_style + f'''<div class="hub">
 <a href="https://www.youtube.com/@ngernduangold" target="_blank" rel="noopener">YouTube</a>
 </div>
 <p class="hubdisc">* หน้านี้มีลิงก์พันธมิตร (affiliate) เราอาจได้รับค่าตอบแทนเมื่อคุณสมัครผ่านลิงก์ โดยไม่มีค่าใช้จ่ายเพิ่มกับคุณ · ข้อมูลเพื่อการศึกษา ไม่การันตีอนุมัติ/อัตราดอกเบี้ย เงื่อนไขเป็นไปตามผู้ให้บริการ กดตรวจล่าสุดที่หน้าสมัคร · <a href="/disclaimer.html">นโยบาย</a></p>
-</div>''' + LINKS_CHANNEL_JS
+</div>''' + LINKS_CHANNEL_JS + PICK_JS
 links_ld = [{"@context":"https://schema.org","@type":"WebPage","name":SITE+" — ลิงก์รวม","url":BASE+"/links","inLanguage":"th"}]
 open(f"{OUT}/links.html","w",encoding="utf-8").write(head(SITE+" — ลิงก์รวม บัตรเครดิต สินเชื่อ ออมเงิน","รวมลิงก์สมัครบัตรเครดิต สินเชื่อ และบัญชีออมเงินดอกสูง คัดมาให้มนุษย์เงินเดือน พร้อมบทความรีวิวก่อนสมัคร","links",links_ld,"website")+links_body+FOOTER)
 print("links.html written")
