@@ -243,6 +243,7 @@ INSURANCE = [
     {"type":"travel","provider":"msig","label":"ประกันเดินทาง MSIG Travel Easy Plus — คุ้มครองค่ารักษาสูง/เลื่อนไฟลท์/กระเป๋า","url":"https://atth.me/000bqk002a0x"},
     {"type":"travel","provider":"scb","label":"ประกันเดินทาง SCB protect — ทั้งในและต่างประเทศ","url":"https://atth.me/00db8m002a0x"},
     {"type":"pa","provider":"axapa","label":"ประกันอุบัติเหตุ AXA (PA) — ค่ารักษา/เงินชดเชยจากอุบัติเหตุ","url":"https://atth.me/go/PhAKgrKX"},
+    {"type":"car","provider":"axamotor","label":"ประกันรถยนต์ AXA — เทียบแผน/ซื้อออนไลน์ (ชั้น 1/2+/3)","url":"https://atth.me/0038ag002a0x"},
 ]
 _INS_TYPE_TH = {"car":"ประกันรถ","travel":"ประกันเดินทาง","pa":"ประกันอุบัติเหตุ (PA)","ci":"ประกันโรคร้ายแรง (CI)","health":"ประกันสุขภาพ","life":"ประกันชีวิต","home":"ประกันบ้าน/อัคคีภัย"}
 # educational comparison rows (approved types) — data-gated affiliate button per type from INSURANCE

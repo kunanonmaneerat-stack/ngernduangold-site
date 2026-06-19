@@ -212,6 +212,7 @@ def main():
         results.append(run_quiz(a.base))
         results.append(run_quiz(a.base, "protect", "travel"))
         results.append(run_quiz(a.base, "protect", "pa"))
+        results.append(run_quiz(a.base, "protect", "car"))
         results.append(run_events(a.base))
     except ImportError:
         print("❌ Playwright ไม่ได้ติดตั้ง — `pip install playwright && python -m playwright install chromium`")
