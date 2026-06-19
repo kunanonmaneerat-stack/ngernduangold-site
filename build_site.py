@@ -91,6 +91,7 @@ h3{font-size:18px;margin-top:22px}
 .faq details:last-child{border-bottom:0}
 .faq summary{font-weight:600;cursor:pointer}
 .related{margin-top:30px}
+.artinfo{width:100%;height:auto;border-radius:12px;margin:18px 0;display:block}
 ul.docs li{margin:4px 0}
 .disc{background:#fff7e6;border:1px solid #f0d9a0;border-radius:10px;padding:12px 16px;font-size:14px;color:#6b5b2a;margin:20px 0}
 footer{background:var(--bg);color:#aaa;margin-top:40px;padding:26px 20px;font-size:13px}
@@ -1059,6 +1060,7 @@ body_q3+='<p style="background:#faf7ef;border:1px solid var(--line);border-radiu
 ART.append((slug_q3,"ลางานไปเที่ยวต่างประเทศ Q3 2026 — เช็กลิสต์ + เลือกประกันเดินทางไม่ให้โดนเทตอนเคลม | "+SITE,"เตรียมลาพักร้อนไปเที่ยวต่างประเทศช่วง Q3 — เช็กลิสต์ก่อนลางาน เอกสาร วงเงินค่ารักษา ข้อยกเว้นที่มักโดนปฏิเสธเคลม และซื้อประกันเดินทางก่อนกี่วัน ข้อมูลเพื่อการศึกษา",body_q3,faqs_q3,"insurance"))
 
 # write articles
+ARTICLE_HERO_IMG = {}   # slug -> end-of-article infographic url (งาน3 scaffold, data-gated; Cowork fills top surfaces from GA4)
 for slug,title,desc,body,faqs,camp in ART:
     _name=title.split(" | ")[0]
     ld=article_ld(_name,desc,slug,faqs)
@@ -1068,7 +1070,8 @@ for slug,title,desc,body,faqs,camp in ART:
     _il=[(s,t) for s,t in [("loan-cash-2026.html","💸 เทียบสินเชื่อทั้งหมด (จำนำทะเบียน/รวมหนี้/รีไฟแนนซ์)"),("links","🔗 ลิงก์รวม สมัครบัตร/สินเชื่อ/ออมเงิน"),("quiz","🧭 ทำ Quiz หาบัตร/สินเชื่อที่เหมาะ (30 วิ)"),("","🏠 หน้าแรก เงินเดือนสมองทอง")] if s!=slug]
     _nav='<div class="related"><h2>อ่านต่อ / ลิงก์ที่เกี่ยวข้อง</h2><div class="cluster">'+"".join(f'<a href="/{s}">{t}</a>' for s,t in _il)+'</div></div>'
     _ogimg="og-loan.png" if slug in {"loan-cash-2026.html","title-loan-2026.html","debt-consolidation-2026.html","car-for-cash-2026.html","personal-loan-2026.html","cash-card-easy-2026.html","refinance-home-2026.html"} else "og-default.png"
-    open(f"{OUT}/{slug}","w",encoding="utf-8").write(head(title,desc,slug,ld,og_image=_ogimg)+f'<main class="wrap">{body}{share_bar(slug,_name)}{QUIZ_CTA}{_nav}</main>'+FOOTER)
+    _info = (f'<img class="artinfo" loading="lazy" src="{ARTICLE_HERO_IMG[slug]}" alt="อินโฟกราฟิกสรุป {_name}" width="800" height="420">' if slug in ARTICLE_HERO_IMG else "")
+    open(f"{OUT}/{slug}","w",encoding="utf-8").write(head(title,desc,slug,ld,og_image=_ogimg)+f'<main class="wrap">{body}{_info}{share_bar(slug,_name)}{QUIZ_CTA}{_nav}</main>'+FOOTER)
 
 # homepage
 TAGS={"credit-card-krungsri-2026.html":"บัตรเครดิต","kept-savings-2026.html":"ออมเงิน","first-credit-card-student-2026.html":"นักศึกษา","credit-card-easy-approval-2026.html":"บัตรเครดิต","cash-card-vs-credit-card-2026.html":"บัตรเครดิต","krungsri-credit-card-rejected-2026.html":"บัตรเครดิต","credit-card-salary-15000-2026.html":"บัตรเครดิต","kept-interest-rate-2026.html":"ออมเงิน","credit-card-documents-2026.html":"บัตรเครดิต","credit-card-freelance-2026.html":"บัตรเครดิต","credit-card-cashback-2026.html":"บัตรเครดิต","credit-card-installment-0-2026.html":"บัตรเครดิต","high-yield-savings-2026.html":"ออมเงิน","loan-cash-2026.html":"สินเชื่อ","title-loan-2026.html":"สินเชื่อ","debt-consolidation-2026.html":"สินเชื่อ","cash-card-easy-2026.html":"สินเชื่อ","personal-loan-2026.html":"สินเชื่อ","refinance-home-2026.html":"สินเชื่อ","car-for-cash-2026.html":"สินเชื่อ","emergency-fund-2026.html":"ออมเงิน","how-to-save-money-2026.html":"ออมเงิน","salary-budgeting-2026.html":"ออมเงิน","insurance-compare-2026.html":"ประกัน","travel-insurance-vacation-2026.html":"ประกัน","lifestyle-credit-card-2026.html":"บัตรเครดิต"}
@@ -1172,13 +1175,23 @@ body{background:#0f0f12}
 .pickcard .ic{font-size:25px;display:block;margin-bottom:4px}
 .pickcard b{display:block;color:#fff;font-size:14.5px;margin-bottom:2px}
 .pickcard span{display:block;color:#9a9aa6;font-size:11.5px;line-height:1.35}
+.cardimg{width:100%;height:auto;border-radius:12px;margin:4px 0 8px;display:block}
+.morebtn{display:none;width:100%;background:transparent;border:1px dashed rgba(224,178,60,.45);color:#e0b23c;border-radius:11px;padding:10px;margin:8px 0 2px;font-size:13.5px;font-weight:700;cursor:pointer;text-align:center;font-family:inherit}
+.morebtn:hover{background:rgba(224,178,60,.08)}
+.morewrap.is-collapsed{display:none}
 </style>"""
 # channel-attribution JS (kept OUT of the f-string because it contains { } braces):
 # rewrites hub atth.me links so a visitor arriving via ?utm_source=pantip gets the
 # AccessTrade sub-id channel = pantip (utm_source + utm_content {pantip}_links_{provider}).
 LINKS_CHANNEL_JS = """<script>(function(){try{var ch=(new URLSearchParams(location.search).get("utm_source")||"").replace(/[^a-z0-9]/gi,"").toLowerCase().slice(0,20);if(!ch||ch==="website")return;document.querySelectorAll('a.hubbtn[href*="atth.me"], a.hubmini[href*="atth.me"]').forEach(function(a){var u=new URL(a.href),prov=u.searchParams.get("utm_campaign")||"";u.searchParams.set("utm_source",ch);var pc=(u.searchParams.get("utm_content")||"").split("_");if(pc.length>=3){pc[0]=ch;u.searchParams.set("utm_content",pc.join("_"));}else{u.searchParams.set("utm_content",ch+"_links_"+prov);}a.href=u.toString();});}catch(e){}})();</script>"""
-# basket-pick micro-event (no-PII: basket key + channel only) — measures land -> choose-path funnel vs affiliate_click
-PICK_JS = """<script>(function(){try{var ch=(new URLSearchParams(location.search).get("utm_source")||"website").replace(/[^a-z0-9]/gi,"").toLowerCase().slice(0,20)||"website";document.querySelectorAll("a.pickcard").forEach(function(a){a.addEventListener("click",function(){try{if(window.gtag)gtag("event","money_basket_pick",{basket:(a.getAttribute("href")||"").replace("#",""),channel:ch});}catch(e){}});});}catch(e){}})();</script>"""
+# money-page micro-events (no-PII: basket key + channel only): money_basket_pick (chooser nav) +
+# moneypage_card_expand (ดูทั้งหมด). Collapse = progressive enhancement: no-JS shows everything (href/SEO safe), JS collapses + reveals toggle.
+PICK_JS = """<script>(function(){try{var ch=(new URLSearchParams(location.search).get("utm_source")||"website").replace(/[^a-z0-9]/gi,"").toLowerCase().slice(0,20)||"website";document.querySelectorAll("a.pickcard").forEach(function(a){a.addEventListener("click",function(){try{if(window.gtag)gtag("event","money_basket_pick",{basket:(a.getAttribute("href")||"").replace("#",""),channel:ch});}catch(e){}});});document.querySelectorAll(".morewrap").forEach(function(w){w.classList.add("is-collapsed");});document.querySelectorAll(".morebtn").forEach(function(b){b.style.display="block";b.addEventListener("click",function(){var bk=b.getAttribute("data-basket")||"";var w=document.querySelector('.morewrap[data-basket="'+bk+'"]');if(!w)return;if(w.classList.contains("is-collapsed")){w.classList.remove("is-collapsed");b.textContent="ย่อกลับ ▴";try{if(window.gtag)gtag("event","moneypage_card_expand",{basket:bk,channel:ch});}catch(e){}}else{w.classList.add("is-collapsed");b.textContent=b.getAttribute("data-label")||"ดูทั้งหมด ▾";}});});}catch(e){}})();</script>"""
+# 🖼️ gen-AI visual slots (งาน3 scaffold) — data-gated: render nothing until Cowork supplies an image. Add 'basket'/'slug' -> url to activate.
+HUB_BASKET_IMG = {}   # money-page card hero infographic per basket: cards/loans/insure/save
+def bimg(basket):
+    u = HUB_BASKET_IMG.get(basket)
+    return f'<img class="cardimg" loading="lazy" src="{u}" alt="อินโฟกราฟิก {basket}" width="480" height="220">' if u else ""
 # 🛡️ insurance line — types approved on AccessTrade but atth.me links NOT pulled yet.
 # Cowork: pull each link from the AccessTrade dashboard ("รับลิงก์สำหรับโปรโมท") then fill below.
 # Per entry: {"type":"car|travel|pa|ci|health|life|home","provider":"<canon>","label":"...","url":"https://atth.me/..."}
@@ -1204,7 +1217,9 @@ links_body = hub_style + f'''<div class="hub">
 </div>
 
 <div class="hubsec" id="cards">💳 อยากได้บัตรเครดิต<small>เงินคืน/ของกำนัล · สมัครออนไลน์ รู้ผลไว</small></div>
-{bcta(KRUNGSRI,"krungsri","💳 สมัครบัตรเครดิต Krungsri","เงินคืนสูง · สมัครออนไลน์ รับของกำนัล")}
+{bimg("cards")}{bcta(KRUNGSRI,"krungsri","💳 สมัครบัตรเครดิต Krungsri","เงินคืนสูง · สมัครออนไลน์ รับของกำนัล")}
+<button class="morebtn" data-basket="cards" data-label="ดูบัตรตามเคสของคุณ (5 แบบ) ▾">ดูบัตรตามเคสของคุณ (5 แบบ) ▾</button>
+<div class="morewrap" data-basket="cards">
 <p class="hublbl">เลือกเคสของคุณ (อ่าน + ลิงก์สมัครในบทความ):</p>
 <div class="hubrow">
 <a class="artlink" href="/credit-card-salary-15000-2026">เงินเดือน 15,000 สมัครใบไหน</a>
@@ -1213,22 +1228,30 @@ links_body = hub_style + f'''<div class="hub">
 <a class="artlink" href="/credit-card-installment-0-2026">ผ่อน 0% ใช้ให้คุ้ม</a>
 <a class="artlink" href="/lifestyle-credit-card-2026">💳 สายไลฟ์สไตล์ กินหรู/โรงแรม/เลานจ์</a>
 </div>
+</div>
 
 <div class="hubsec" id="loans">💸 ต้องใช้เงินด่วน / ปลดหนี้<small>เทียบหลายเจ้า · รถยังใช้ได้ · สมัครออนไลน์</small></div>
-{bcta(SRISAWAD,"srisawad","💸 สินเชื่อจำนำทะเบียนรถ","รถยังใช้ได้ · รู้ผลไว เทียบดอกก่อนเซ็น")}
+{bimg("loans")}{bcta(SRISAWAD,"srisawad","💸 สินเชื่อจำนำทะเบียนรถ","รถยังใช้ได้ · รู้ผลไว เทียบดอกก่อนเซ็น")}
 {bcta(HAPPYDEBT,"happycash","🔗 รวมหนี้ก้อนเดียว ดอกถูกลง","รวมบัตร/สินเชื่อหลายใบ เหลือจ่ายที่เดียว")}
+<button class="morebtn" data-basket="loans" data-label="ดูสินเชื่อทั้งหมด (KTC PROUD/รถแลกเงิน/บัตรกดเงินสด) ▾">ดูสินเชื่อทั้งหมด (KTC PROUD/รถแลกเงิน/บัตรกดเงินสด) ▾</button>
+<div class="morewrap" data-basket="loans">
 {bcta(KTCPROUD,"ktcproud","💵 สินเชื่อส่วนบุคคล KTC PROUD","วงเงินก้อน ไม่ต้องค้ำ · ผ่อนรายเดือน")}
 <p class="hublbl">เทียบเจ้าอื่น (จำนำทะเบียน / บัตรกดเงินสด):</p>
 <div class="hubrow">
 {bmini(CAR4CASH,"car4cash","🚗 รถแลกเงิน Car4Cash")}
 {bmini(KTCPBM,"ktcphboom","⚡ KTC พี่เบิ้ม")}
 </div>
+</div>
 
 <div class="hubsec" id="insure">🛡️ ประกัน<small>คุ้มครองความเสี่ยง · เทียบก่อนเลือก · ไม่การันตีการเคลม</small></div>
-<a class="hubbtn alt" href="/insurance-compare-2026">🛡️ เทียบประกัน 4 ชนิด (เดินทาง/รถ/PA/โรคร้าย)<small>educational · เทียบความคุ้มครองก่อนเลือก</small></a>
+{bimg("insure")}<a class="hubbtn alt" href="/insurance-compare-2026">🛡️ เทียบประกัน 4 ชนิด (เดินทาง/รถ/PA/โรคร้าย)<small>educational · เทียบความคุ้มครองก่อนเลือก</small></a>
+<button class="morebtn" data-basket="insure" data-label="ดูลิงก์สมัครประกันทั้งหมด (เดินทาง/รถ/PA) ▾">ดูลิงก์สมัครประกันทั้งหมด (เดินทาง/รถ/PA) ▾</button>
+<div class="morewrap" data-basket="insure">
 {ins_group()}
+</div>
+
 <div class="hubsec" id="save">🏦 อยากออม / ลดภาระบ้าน<small>ดอกสูงกว่าออมทรัพย์ · รีไฟแนนซ์ลดดอก</small></div>
-{bcta(KEPT,"kept","🏦 ออมเงินดอกสูง Kept by Krungsri","สมัครฟรี · ไม่เช็คเครดิต ดอกสูงกว่าออมทรัพย์")}
+{bimg("save")}{bcta(KEPT,"kept","🏦 ออมเงินดอกสูง Kept by Krungsri","สมัครฟรี · ไม่เช็คเครดิต ดอกสูงกว่าออมทรัพย์")}
 {bcta(REFI,"refinance","🏠 รีไฟแนนซ์บ้าน ลดดอกเบี้ย","ผ่อนบ้าน >3 ปี เทียบลดดอก/ลดงวด")}
 
 <a class="hubbtn alt" href="/">📚 บทความ + รีวิวการเงินทั้งหมด (อ่านก่อนสมัคร)</a>
