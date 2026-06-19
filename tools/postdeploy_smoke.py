@@ -30,7 +30,7 @@ for _s in (sys.stdout, sys.stderr):
 GA_ID = "G-17PPE0M1B8"
 CANON = {"krungsri", "kept", "srisawad", "carforcash", "ktcphboom",
          "happycash", "ktcproud", "refinance", "loan",
-         "scbprotect", "scb", "anc", "tuneprotect", "msig", "thanachart", "fwd", "viriyah"}
+         "scbprotect", "scb", "axapa", "axamotor", "gettgo", "klook", "anc", "tuneprotect", "msig", "thanachart", "fwd", "viriyah"}
 BASE = "https://ngernduangold.netlify.app"
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HERE)

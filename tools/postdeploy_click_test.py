@@ -23,7 +23,7 @@ for _s in (sys.stdout, sys.stderr):
 
 CANON = {"krungsri", "kept", "srisawad", "carforcash", "ktcphboom",
          "happycash", "ktcproud", "refinance", "loan",
-         "scbprotect", "scb", "anc", "tuneprotect", "msig", "thanachart", "fwd", "viriyah"}
+         "scbprotect", "scb", "axapa", "axamotor", "gettgo", "klook", "anc", "tuneprotect", "msig", "thanachart", "fwd", "viriyah"}
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HERE)
 
@@ -210,6 +210,7 @@ def main():
         results = run(a.base, TARGETS)
         results.append(run_quiz(a.base))
         results.append(run_quiz(a.base, "protect", "travel"))
+        results.append(run_quiz(a.base, "protect", "pa"))
         results.append(run_events(a.base))
     except ImportError:
         print("❌ Playwright ไม่ได้ติดตั้ง — `pip install playwright && python -m playwright install chromium`")
