@@ -19,7 +19,7 @@ TODAY = "2026-06-14"
 BUILD_DATE = os.environ.get("SITE_BUILD_DATE") or datetime.datetime.now().strftime("%Y-%m-%d")  # sitemap lastmod / dateModified — bumps each deploy
 OUT = "site"
 os.makedirs(OUT, exist_ok=True)
-for _s,_d in [("cover_banner.png","og-default.png"),("cover_banner_loan.png","og-loan.png"),("logo.png","logo.png")]:
+for _s,_d in [("cover_banner.png","og-default.png"),("cover_banner_loan.png","og-loan.png"),("logo.png","logo.png"),("insure-hero.svg","insure-hero.svg")]:
     if os.path.exists(_s):
         try: shutil.copy(_s, f"{OUT}/{_d}")
         except Exception: pass
@@ -1188,10 +1188,14 @@ LINKS_CHANNEL_JS = """<script>(function(){try{var ch=(new URLSearchParams(locati
 # moneypage_card_expand (ดูทั้งหมด). Collapse = progressive enhancement: no-JS shows everything (href/SEO safe), JS collapses + reveals toggle.
 PICK_JS = """<script>(function(){try{var ch=(new URLSearchParams(location.search).get("utm_source")||"website").replace(/[^a-z0-9]/gi,"").toLowerCase().slice(0,20)||"website";document.querySelectorAll("a.pickcard").forEach(function(a){a.addEventListener("click",function(){try{if(window.gtag)gtag("event","money_basket_pick",{basket:(a.getAttribute("href")||"").replace("#",""),channel:ch});}catch(e){}});});document.querySelectorAll(".morewrap").forEach(function(w){w.classList.add("is-collapsed");});document.querySelectorAll(".morebtn").forEach(function(b){b.style.display="block";b.addEventListener("click",function(){var bk=b.getAttribute("data-basket")||"";var w=document.querySelector('.morewrap[data-basket="'+bk+'"]');if(!w)return;if(w.classList.contains("is-collapsed")){w.classList.remove("is-collapsed");b.textContent="ย่อกลับ ▴";try{if(window.gtag)gtag("event","moneypage_card_expand",{basket:bk,channel:ch});}catch(e){}}else{w.classList.add("is-collapsed");b.textContent=b.getAttribute("data-label")||"ดูทั้งหมด ▾";}});});}catch(e){}})();</script>"""
 # 🖼️ gen-AI visual slots (งาน3 scaffold) — data-gated: render nothing until Cowork supplies an image. Add 'basket'/'slug' -> url to activate.
-HUB_BASKET_IMG = {}   # money-page card hero infographic per basket: cards/loans/insure/save
+HUB_BASKET_IMG = {"insure": "/insure-hero.svg"}   # money-page card hero per basket (cards/loans/insure/save); CC-authored SVG (0 text/number/logo) or Cowork gen-AI URL. insure first = Step1 pipeline proof
+_BASKET_ALT = {"cards":"บัตรเครดิต","loans":"สินเชื่อ/ปลดหนี้","insure":"ประกัน","save":"ออมเงิน"}
 def bimg(basket):
     u = HUB_BASKET_IMG.get(basket)
-    return f'<img class="cardimg" loading="lazy" src="{u}" alt="อินโฟกราฟิก {basket}" width="480" height="220">' if u else ""
+    if not u:
+        return ""
+    return (f'<figure style="margin:0"><img class="cardimg" loading="lazy" src="{u}" alt="ภาพประกอบหมวด{_BASKET_ALT.get(basket,basket)}" width="480" height="220">'
+            f'<figcaption style="font-size:10.5px;color:#8a8a95;text-align:right;margin:-4px 4px 6px">ภาพประกอบ</figcaption></figure>')
 # 🛡️ insurance line — types approved on AccessTrade but atth.me links NOT pulled yet.
 # Cowork: pull each link from the AccessTrade dashboard ("รับลิงก์สำหรับโปรโมท") then fill below.
 # Per entry: {"type":"car|travel|pa|ci|health|life|home","provider":"<canon>","label":"...","url":"https://atth.me/..."}
