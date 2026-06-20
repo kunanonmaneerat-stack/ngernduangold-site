@@ -3,3 +3,6 @@ __pycache__/
 *.mp4
 fonts/
 frame_check.png
+.env
+*.key
+secrets*
