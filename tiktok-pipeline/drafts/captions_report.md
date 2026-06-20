@@ -21,5 +21,5 @@ _21 clips · ผ่าน 21/21 · mode: template/approved_
 - ✅ **vid_score.mp4** (approved(week1), follow)
 - ✅ **vid_side.mp4** (template, follow)
 - ✅ **vid_tax.mp4** (approved(week1), follow)
-- ✅ **vid_titleloan.mp4** (template, follow)
+- ✅ **vid_titleloan.mp4** (template, bio)
 - ✅ **vid_track.mp4** (template, follow)

@@ -26,6 +26,8 @@ META = {
     "vid_tax":        ("วางแผนภาษีสิ้นปี ใช้สิทธิลดหย่อน",      "/quiz",                             "follow"),
     "vid_books":      ("หนังสือการเงินน่าอ่านสำหรับมือใหม่",    "/how-to-save-money-2026",           "follow"),
     "vid_side":       ("รายได้เสริมมนุษย์เงินเดือน",            "/how-to-save-money-2026",           "follow"),
+    "vid_titleloan":  ("จำนำทะเบียนรถ เงินก้อนไว รถยังใช้ได้",  "/title-loan-2026",                  "bio"),
+    "vid_track":      ("จดรายรับรายจ่าย คุมเงินให้อยู่",        "/salary-budgeting-2026",            "follow"),
 }
 
 def duration(path):
