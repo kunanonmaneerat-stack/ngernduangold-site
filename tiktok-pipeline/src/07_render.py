@@ -9,8 +9,8 @@ import argparse, json, subprocess, sys, pathlib
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
 import config as C
 
-NAVY = (15, 23, 42); NAVY2 = (30, 41, 59); GOLD = (224, 201, 166); GOLDA = (197, 168, 128)
-OFF = (245, 248, 250); BLUE = (226, 232, 240); MUT = (148, 163, 184)
+NAVY = (15, 23, 42); NAVY2 = (30, 41, 59); GOLD = (197, 168, 128); GOLDA = (176, 148, 108)  # #0F172A / #C5A880
+OFF = (248, 250, 252); BLUE = (226, 232, 240); MUT = (148, 163, 184)                          # #F8FAFC
 
 SAMPLE = {"out": "clip001_credit.mp4", "w": 1080, "h": 1920, "fps": 20, "dur": 21.0,
           "brand": ["เงินเดือนสมองทอง", "ไม่ขายฝัน"],

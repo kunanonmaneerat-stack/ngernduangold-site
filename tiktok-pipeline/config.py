@@ -3,6 +3,13 @@
 # OR run with --dry-run (deterministic rule-based fallback, no LLM) to test the orchestration.
 import os, sys, json, re, pathlib
 
+# Windows console may be cp874 (Thai) and crash on '·'/emoji in prints — force UTF-8, never raise.
+for _s in (sys.stdout, sys.stderr):
+    try:
+        _s.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 ROOT     = pathlib.Path(__file__).resolve().parent
 INPUT    = ROOT / "input"
 DRAFTS   = ROOT / "drafts"
