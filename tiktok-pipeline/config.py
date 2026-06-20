@@ -23,7 +23,7 @@ for _d in (INPUT, DRAFTS, READY, CAPTIONS):
 
 QWEN_API_KEY  = os.environ.get("QWEN_API_KEY", "").strip()
 QWEN_BASE_URL = os.environ.get("QWEN_BASE_URL", "https://openrouter.ai/api/v1").strip().rstrip("/")
-QWEN_MODEL    = os.environ.get("QWEN_MODEL", "qwen/qwen-2.5-72b-instruct").strip()
+QWEN_MODEL    = os.environ.get("QWEN_MODEL", "qwen/qwen3-next-80b-a3b-instruct:free").strip()  # $0 default; OpenRouter free models rotate — verify at /api/v1/models (pricing.prompt=="0")
 HAS_KEY       = bool(QWEN_API_KEY)
 
 NO_KEY_HELP = """\
