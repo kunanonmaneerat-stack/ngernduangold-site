@@ -10,7 +10,8 @@ KEPT = "https://atth.me/00d9uk002a0x"
 GA_ID = os.environ.get("SITE_GA","")
 if GA_ID:
     _g = '<script async src="https://www.googletagmanager.com/gtag/js?id='+GA_ID+'"></script>'
-    _g += '<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config","'+GA_ID+'");'
+    # data-hygiene: localhost / 127.0.0.1 / ?notrack|?nt|?debug=1 -> GA official opt-out (no hits sent) so dev+QA+Playwright don't pollute the funnel. dataLayer still populates (verification intact). Production hostname w/o flag = unaffected.
+    _g += '<script>var _NT=/^(localhost|127\\.0\\.0\\.1|\\[::1\\])$/.test(location.hostname)||/[?&](notrack|nt|debug)=1/.test(location.search);if(_NT){window["ga-disable-'+GA_ID+'"]=true;}window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config","'+GA_ID+'");'
     _g += 'document.addEventListener("click",function(e){var a=e.target&&e.target.closest?e.target.closest("a"):null;if(!a)return;var rel=a.getAttribute("rel")||"",cl=" "+(a.className||"")+" ";if(/sponsored/.test(rel)||cl.indexOf(" hubbtn ")>=0||cl.indexOf(" cta ")>=0||cl.indexOf(" go ")>=0){try{gtag("event","affiliate_click",{link_url:a.href,link_text:(a.textContent||"").trim().slice(0,80),page:location.pathname,campaign:((a.href.match(/utm_campaign=([^&]+)/)||[])[1]||""),sub_id:((a.href.match(/utm_content=([^&]+)/)||[])[1]||""),channel:((a.href.match(/utm_source=([^&]+)/)||[])[1]||""),provider:(a.getAttribute("data-provider")||"")})}catch(_){} }else if(cl.indexOf(" shr ")>=0){try{gtag("event","share",{method:(a.getAttribute("data-method")||""),page:location.pathname})}catch(_){} }});</script>'
     GA_SNIPPET=_g
 else:
