@@ -41,6 +41,13 @@ def main():
               "- ถ้าวิวเฉลี่ย < ~200 **และ** affiliate_click ไม่ขยับ → ปล่อยช่องวิดีโอ คงเว็บ+Pantip (อย่าจมเวลาต่อ)"]
     pathlib.Path(C.READY / "UPLOAD-CHECKLIST.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"[04_manifest] {len(manifest)} คลิป → ready-for-cowork/production-manifest.json + UPLOAD-CHECKLIST.md")
+    # Task F: chain caption refresh if a clip registry exists (best-effort, won't break manifest)
+    if (C.ROOT / "clip_registry.json").exists():
+        import subprocess
+        try:
+            subprocess.run([sys.executable, str(C.ROOT / "src" / "05_captions.py"), "--dry-run"], check=False)
+        except Exception:
+            pass
 
 if __name__ == "__main__":
     main()

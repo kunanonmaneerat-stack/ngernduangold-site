@@ -1,0 +1,233 @@
+[
+  {
+    "clip": "vid_books.mp4",
+    "topic_th": "หนังสือการเงินน่าอ่านสำหรับมือใหม่",
+    "article_slug": "/how-to-save-money-2026",
+    "bio_utm": "?utm_source=tiktok&utm_medium=bio",
+    "cta": "follow",
+    "caption_file": "captions/vid_books.txt",
+    "status": "ready",
+    "duration_s": 17.6,
+    "claims_flagged": []
+  },
+  {
+    "clip": "vid_compound.mp4",
+    "topic_th": "ดอกเบี้ยทบต้น พลังของการออมยาว",
+    "article_slug": "/high-yield-savings-2026",
+    "bio_utm": "?utm_source=tiktok&utm_medium=bio",
+    "cta": "follow",
+    "caption_file": "captions/vid_compound.txt",
+    "status": "ready",
+    "duration_s": 17.6,
+    "claims_flagged": []
+  },
+  {
+    "clip": "vid_credit.mp4",
+    "topic_th": "บัตรเครดิตคืนเงิน เลือกให้คุ้ม",
+    "article_slug": "/credit-card-cashback-2026",
+    "bio_utm": "?utm_source=tiktok&utm_medium=bio",
+    "cta": "bio",
+    "caption_file": "captions/vid_credit.txt",
+    "status": "ready",
+    "duration_s": 21.0,
+    "claims_flagged": []
+  },
+  {
+    "clip": "vid_debt.mp4",
+    "topic_th": "ปลดหนี้บัตรหลายใบ รวมเป็นก้อนเดียว",
+    "article_slug": "/debt-consolidation-2026",
+    "bio_utm": "?utm_source=tiktok&utm_medium=bio",
+    "cta": "follow",
+    "caption_file": "captions/vid_debt.txt",
+    "status": "ready",
+    "duration_s": 17.6,
+    "claims_flagged": []
+  },
+  {
+    "clip": "vid_docs.mp4",
+    "topic_th": "เอกสารสมัครบัตร/สินเชื่อ เตรียมอะไร",
+    "article_slug": "/credit-card-documents-2026",
+    "bio_utm": "?utm_source=tiktok&utm_medium=bio",
+    "cta": "bio",
+    "caption_file": "captions/vid_docs.txt",
+    "status": "ready",
+    "duration_s": 21.0,
+    "claims_flagged": []
+  },
+  {
+    "clip": "vid_easyapprove.mp4",
+    "topic_th": "เพิ่มโอกาสอนุมัติบัตร/สินเชื่อ",
+    "article_slug": "/credit-card-easy-approval-2026",
+    "bio_utm": "?utm_source=tiktok&utm_medium=bio",
+    "cta": "bio",
+    "caption_file": "captions/vid_easyapprove.txt",
+    "status": "ready",
+    "duration_s": 21.0,
+    "claims_flagged": []
+  },
+  {
+    "clip": "vid_em.mp4",
+    "topic_th": "เงินสำรองฉุกเฉิน ควรมีกี่เดือน",
+    "article_slug": "/emergency-fund-2026",
+    "bio_utm": "?utm_source=tiktok&utm_medium=bio",
+    "cta": "follow",
+    "caption_file": "captions/vid_em.txt",
+    "status": "ready",
+    "duration_s": 17.6,
+    "claims_flagged": []
+  },
+  {
+    "clip": "vid_freelance.mp4",
+    "topic_th": "ฟรีแลนซ์สมัครบัตรเครดิตยังไง",
+    "article_slug": "/credit-card-freelance-2026",
+    "bio_utm": "?utm_source=tiktok&utm_medium=bio",
+    "cta": "bio",
+    "caption_file": "captions/vid_freelance.txt",
+    "status": "ready",
+    "duration_s": 21.0,
+    "claims_flagged": []
+  },
+  {
+    "clip": "vid_index.mp4",
+    "topic_th": "กองทุนดัชนีคืออะไร เริ่มยังไง",
+    "article_slug": "/quiz",
+    "bio_utm": "?utm_source=tiktok&utm_medium=bio",
+    "cta": "follow",
+    "caption_file": "captions/vid_index.txt",
+    "status": "ready",
+    "duration_s": 17.6,
+    "claims_flagged": []
+  },
+  {
+    "clip": "vid_install0.mp4",
+    "topic_th": "ผ่อน 0% ใช้ให้คุ้ม ไม่เสียดอก",
+    "article_slug": "/credit-card-installment-0-2026",
+    "bio_utm": "?utm_source=tiktok&utm_medium=bio",
+    "cta": "bio",
+    "caption_file": "captions/vid_install0.txt",
+    "status": "ready",
+    "duration_s": 21.0,
+    "claims_flagged": []
+  },
+  {
+    "clip": "vid_insure.mp4",
+    "topic_th": "ประกันที่มนุษย์เงินเดือนควรรู้",
+    "article_slug": "/insurance-compare-2026",
+    "bio_utm": "?utm_source=tiktok&utm_medium=bio",
+    "cta": "bio",
+    "caption_file": "captions/vid_insure.txt",
+    "status": "ready",
+    "duration_s": 17.6,
+    "claims_flagged": []
+  },
+  {
+    "clip": "vid_invest.mp4",
+    "topic_th": "เริ่มลงทุนต้องเริ่มยังไง",
+    "article_slug": "/quiz",
+    "bio_utm": "?utm_source=tiktok&utm_medium=bio",
+    "cta": "follow",
+    "caption_file": "captions/vid_invest.txt",
+    "status": "ready",
+    "duration_s": 17.6,
+    "claims_flagged": []
+  },
+  {
+    "clip": "vid_invest2.mp4",
+    "topic_th": "ลงทุนต่อยอด เข้าใจความเสี่ยงก่อน",
+    "article_slug": "/quiz",
+    "bio_utm": "?utm_source=tiktok&utm_medium=bio",
+    "cta": "follow",
+    "caption_file": "captions/vid_invest2.txt",
+    "status": "ready",
+    "duration_s": 17.6,
+    "claims_flagged": []
+  },
+  {
+    "clip": "vid_retire.mp4",
+    "topic_th": "วางแผนเกษียณ เริ่มเร็วได้เปรียบ",
+    "article_slug": "/quiz",
+    "bio_utm": "?utm_source=tiktok&utm_medium=bio",
+    "cta": "follow",
+    "caption_file": "captions/vid_retire.txt",
+    "status": "ready",
+    "duration_s": 17.6,
+    "claims_flagged": []
+  },
+  {
+    "clip": "vid_salary15k.mp4",
+    "topic_th": "เงินเดือน 15,000 สมัครบัตรให้ผ่าน",
+    "article_slug": "/credit-card-salary-15000-2026",
+    "bio_utm": "?utm_source=tiktok&utm_medium=bio",
+    "cta": "bio",
+    "caption_file": "captions/vid_salary15k.txt",
+    "status": "ready",
+    "duration_s": 21.0,
+    "claims_flagged": []
+  },
+  {
+    "clip": "vid_save.mp4",
+    "topic_th": "ออมเงินให้อยู่ เงินเดือนน้อยก็เก็บได้",
+    "article_slug": "/how-to-save-money-2026",
+    "bio_utm": "?utm_source=tiktok&utm_medium=bio",
+    "cta": "follow",
+    "caption_file": "captions/vid_save.txt",
+    "status": "ready",
+    "duration_s": 17.6,
+    "claims_flagged": []
+  },
+  {
+    "clip": "vid_score.mp4",
+    "topic_th": "เครดิตสกอร์/เครดิตบูโร เข้าใจง่าย",
+    "article_slug": "/krungsri-credit-card-rejected-2026",
+    "bio_utm": "?utm_source=tiktok&utm_medium=bio",
+    "cta": "follow",
+    "caption_file": "captions/vid_score.txt",
+    "status": "ready",
+    "duration_s": 17.6,
+    "claims_flagged": []
+  },
+  {
+    "clip": "vid_side.mp4",
+    "topic_th": "รายได้เสริมมนุษย์เงินเดือน",
+    "article_slug": "/how-to-save-money-2026",
+    "bio_utm": "?utm_source=tiktok&utm_medium=bio",
+    "cta": "follow",
+    "caption_file": "captions/vid_side.txt",
+    "status": "ready",
+    "duration_s": 17.6,
+    "claims_flagged": []
+  },
+  {
+    "clip": "vid_tax.mp4",
+    "topic_th": "วางแผนภาษีสิ้นปี ใช้สิทธิลดหย่อน",
+    "article_slug": "/quiz",
+    "bio_utm": "?utm_source=tiktok&utm_medium=bio",
+    "cta": "follow",
+    "caption_file": "captions/vid_tax.txt",
+    "status": "ready",
+    "duration_s": 17.6,
+    "claims_flagged": []
+  },
+  {
+    "clip": "vid_titleloan.mp4",
+    "topic_th": "titleloan",
+    "article_slug": "/quiz",
+    "bio_utm": "?utm_source=tiktok&utm_medium=bio",
+    "cta": "follow",
+    "caption_file": "captions/vid_titleloan.txt",
+    "status": "ready",
+    "duration_s": 21.0,
+    "claims_flagged": []
+  },
+  {
+    "clip": "vid_track.mp4",
+    "topic_th": "track",
+    "article_slug": "/quiz",
+    "bio_utm": "?utm_source=tiktok&utm_medium=bio",
+    "cta": "follow",
+    "caption_file": "captions/vid_track.txt",
+    "status": "ready",
+    "duration_s": 17.6,
+    "claims_flagged": []
+  }
+]

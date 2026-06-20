@@ -3,11 +3,15 @@
 # OR run with --dry-run (deterministic rule-based fallback, no LLM) to test the orchestration.
 import os, sys, json, re, pathlib
 
-ROOT   = pathlib.Path(__file__).resolve().parent
-INPUT  = ROOT / "input"
-DRAFTS = ROOT / "drafts"
-READY  = ROOT / "ready-for-cowork"
-for _d in (INPUT, DRAFTS, READY):
+ROOT     = pathlib.Path(__file__).resolve().parent
+INPUT    = ROOT / "input"
+DRAFTS   = ROOT / "drafts"
+READY    = ROOT / "ready-for-cowork"
+CAPTIONS = ROOT / "captions"
+# clip library: set TIKTOK_CLIPS_DIR to Cowork's outputs folder; default = repo/clips
+CLIPS_DIR = pathlib.Path(os.environ.get("TIKTOK_CLIPS_DIR", str(ROOT / "clips")))
+FONTS_DIR = pathlib.Path(os.environ.get("TIKTOK_FONTS_DIR", str(ROOT / "fonts")))
+for _d in (INPUT, DRAFTS, READY, CAPTIONS):
     _d.mkdir(exist_ok=True)
 
 QWEN_API_KEY  = os.environ.get("QWEN_API_KEY", "").strip()

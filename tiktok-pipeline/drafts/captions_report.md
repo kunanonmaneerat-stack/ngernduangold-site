@@ -1,0 +1,25 @@
+# 🛡️ Caption Generation + Compliance
+_21 clips · ผ่าน 21/21 · mode: template/approved_
+
+
+- ✅ **vid_books.mp4** (template, follow)
+- ✅ **vid_compound.mp4** (template, follow)
+- ✅ **vid_credit.mp4** (approved(week1), bio)
+- ✅ **vid_debt.mp4** (approved(week1), follow)
+- ✅ **vid_docs.mp4** (template, bio)
+- ✅ **vid_easyapprove.mp4** (approved(week1), bio)
+- ✅ **vid_em.mp4** (template, follow)
+- ✅ **vid_freelance.mp4** (template, bio)
+- ✅ **vid_index.mp4** (template, follow)
+- ✅ **vid_install0.mp4** (template, bio)
+- ✅ **vid_insure.mp4** (template, bio)
+- ✅ **vid_invest.mp4** (approved(week1), follow)
+- ✅ **vid_invest2.mp4** (template, follow)
+- ✅ **vid_retire.mp4** (template, follow)
+- ✅ **vid_salary15k.mp4** (template, bio)
+- ✅ **vid_save.mp4** (approved(week1), follow)
+- ✅ **vid_score.mp4** (approved(week1), follow)
+- ✅ **vid_side.mp4** (template, follow)
+- ✅ **vid_tax.mp4** (approved(week1), follow)
+- ✅ **vid_titleloan.mp4** (template, follow)
+- ✅ **vid_track.mp4** (template, follow)

@@ -41,3 +41,40 @@ python src/01_research.py --dry-run ; python src/02_script.py --dry-run ; python
 bio = `ngernduangold.netlify.app/links?utm_source=tiktok&utm_medium=bio&utm_campaign=ttwarmup`.
 หน้า `/links` มี JS (`LINKS_CHANNEL_JS`) อ่าน `utm_source` → rewrite ปุ่ม affiliate เป็น sub_id `tiktok_links_{provider}` อัตโนมัติ; คลิกยิง event `affiliate_click{channel:tiktok, sub_id:tiktok_links_*}`.
 **ดูใน GA4:** Reports → Traffic acquisition (filter `session source = tiktok`) + Events → `affiliate_click` (param `channel=tiktok` / `sub_id` ขึ้นต้น `tiktok_`). เทียบกับ 4-week kill-criterion ใน UPLOAD-CHECKLIST.md.
+
+---
+
+## 🎬 Handoff #2 — production ครบวงจร $0 (registry + caption + schedule + render free)
+
+> **render คลิปฟรี 100% ด้วย PIL + ffmpeg** (ไม่ใช้ AI credit / virality_predictor ที่กินเครดิต). คลังคลิป ~21 ไฟล์มีอยู่แล้ว.
+
+### ไฟล์/สคริปต์เพิ่ม
+- `clip_registry.json` (source of truth) — สร้างจาก `src/00_registry.py` (สแกน `vid_*.mp4` + ffprobe duration + map topic→slug + cta)
+- `captions/<clip>.txt` — สร้างจาก `src/05_captions.py` (week1 approved verbatim + template-gen ที่เหลือ + compliance 2 ชั้น)
+- `ready-for-cowork/posting-schedule.csv` — `src/make_schedule.py` (14 วัน owner tracker + kill-criterion)
+- `src/06_burn_disclosure.py` — **opt-in** burn disclosure 3 วิท้ายคลิป (default ไม่รัน · ต้อง `pip install pillow`)
+- `src/07_render.py` — render คลิปใหม่จาก render-spec JSON (ต้อง `pip install pillow numpy` + `fonts/`)
+
+### env
+```powershell
+$env:TIKTOK_CLIPS_DIR="<โฟลเดอร์คลัง vid_*.mp4 ของ Cowork>"   # ให้ 00/05/06 หาคลิปเจอ
+$env:TIKTOK_FONTS_DIR="<โฟลเดอร์ Bold/Reg/XBold .ttf>"         # ให้ 06/07 หาฟอนต์เจอ (Sarabun)
+```
+
+### Flow A — คลังเดิม → caption + schedule (ทำได้ทันที ฟรี)
+```powershell
+python src/00_registry.py ; python src/05_captions.py ; python src/make_schedule.py
+```
+→ ได้ `clip_registry.json` + `captions/*.txt` (compliant) + `posting-schedule.csv` → เจ้าของอัปมือตามตาราง (caption ก็อปจาก `captions/<clip>.txt`)
+
+### Flow B — ผลิตคลิปใหม่ (เมื่อมี Qwen key · ฟรี ไม่ใช้ AI credit)
+```powershell
+python src/01_research.py ; python src/02_script.py ; python src/03_compliance.py     # สคริปต์ผ่าน compliance
+# (adapter: scripts_clean.json -> render-spec JSON ต่อคลิป) แล้ว:
+python src/07_render.py --spec <spec.json> --out captions_clip.mp4                     # render ฟรี PIL+ffmpeg
+python src/00_registry.py ; python src/05_captions.py                                 # ลงทะเบียน + caption
+```
+> `04_manifest.py` จะเรียก `05_captions` ต่อท้ายอัตโนมัติถ้ามี `clip_registry.json` (best-effort).
+
+### กฎเหล็ก (เหมือนเดิม): $0 · ไม่ fabricate · **ไม่ใส่ลิงก์ในคลิป/แคปชัน** (bio เท่านั้น) · ไม่ automate posting · ไม่เติมเครดิต/งบ · ⭐/ตัวเลข = อ้างอิงจริงเท่านั้น
+

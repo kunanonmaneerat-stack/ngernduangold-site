@@ -1,0 +1,16 @@
+﻿# kill-criterion: วัน 30 view เฉลี่ย <300 ทุกคลิป = ทบทวน · วัน 60 ยังติดเพดาน 0-200 = หยุด TikTok กลับ Pantip/Threads
+date,day,clip,topic,cta,caption_file,posted(Y/N),views,likes,follows,profile_clicks,notes
+2026-06-27,8,vid_credit.mp4,บัตรเครดิตคืนเงิน เลือกให้คุ้ม,bio,captions/vid_credit.txt,,,,,,
+2026-06-28,9,vid_score.mp4,เครดิตสกอร์/เครดิตบูโร เข้าใจง่าย,follow,captions/vid_score.txt,,,,,,
+2026-06-29,10,vid_easyapprove.mp4,เพิ่มโอกาสอนุมัติบัตร/สินเชื่อ,bio,captions/vid_easyapprove.txt,,,,,,
+2026-06-30,11,vid_debt.mp4,ปลดหนี้บัตรหลายใบ รวมเป็นก้อนเดียว,follow,captions/vid_debt.txt,,,,,,
+2026-07-01,12,vid_save.mp4,ออมเงินให้อยู่ เงินเดือนน้อยก็เก็บได้,follow,captions/vid_save.txt,,,,,,
+2026-07-02,13,vid_invest.mp4,เริ่มลงทุนต้องเริ่มยังไง,follow,captions/vid_invest.txt,,,,,,
+2026-07-03,14,vid_tax.mp4,วางแผนภาษีสิ้นปี ใช้สิทธิลดหย่อน,follow,captions/vid_tax.txt,,,,,,
+2026-07-04,15,vid_books.mp4,หนังสือการเงินน่าอ่านสำหรับมือใหม่,follow,captions/vid_books.txt,,,,,,
+2026-07-05,16,vid_compound.mp4,ดอกเบี้ยทบต้น พลังของการออมยาว,follow,captions/vid_compound.txt,,,,,,
+2026-07-06,17,vid_docs.mp4,เอกสารสมัครบัตร/สินเชื่อ เตรียมอะไร,bio,captions/vid_docs.txt,,,,,,
+2026-07-07,18,vid_em.mp4,เงินสำรองฉุกเฉิน ควรมีกี่เดือน,follow,captions/vid_em.txt,,,,,,
+2026-07-08,19,vid_freelance.mp4,ฟรีแลนซ์สมัครบัตรเครดิตยังไง,bio,captions/vid_freelance.txt,,,,,,
+2026-07-09,20,vid_index.mp4,กองทุนดัชนีคืออะไร เริ่มยังไง,follow,captions/vid_index.txt,,,,,,
+2026-07-10,21,vid_install0.mp4,ผ่อน 0% ใช้ให้คุ้ม ไม่เสียดอก,bio,captions/vid_install0.txt,,,,,,
