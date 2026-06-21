@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Generate a static Thai personal-finance affiliate SEO site -> ./site/"""
-import os, html, json, datetime, shutil
+import os, html, json, datetime, shutil, re
 
 BASE = os.environ.get("SITE_BASE", "https://example.com")  # patched after deploy
 SITE = "เงินเดือนสมองทอง"
@@ -12,7 +12,7 @@ if GA_ID:
     _g = '<script async src="https://www.googletagmanager.com/gtag/js?id='+GA_ID+'"></script>'
     # data-hygiene: localhost / 127.0.0.1 / ?notrack|?nt|?debug=1 -> GA official opt-out (no hits sent) so dev+QA+Playwright don't pollute the funnel. dataLayer still populates (verification intact). Production hostname w/o flag = unaffected.
     _g += '<script>var _NT=/^(localhost|127\\.0\\.0\\.1|\\[::1\\])$/.test(location.hostname)||/[?&](notrack|nt|debug)=1/.test(location.search);if(_NT){window["ga-disable-'+GA_ID+'"]=true;}window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config","'+GA_ID+'");'
-    _g += 'document.addEventListener("click",function(e){var a=e.target&&e.target.closest?e.target.closest("a"):null;if(!a)return;var rel=a.getAttribute("rel")||"",cl=" "+(a.className||"")+" ";if(/sponsored/.test(rel)||cl.indexOf(" hubbtn ")>=0||cl.indexOf(" cta ")>=0||cl.indexOf(" go ")>=0){try{gtag("event","affiliate_click",{link_url:a.href,link_text:(a.textContent||"").trim().slice(0,80),page:location.pathname,campaign:((a.href.match(/utm_campaign=([^&]+)/)||[])[1]||""),sub_id:((a.href.match(/utm_content=([^&]+)/)||[])[1]||""),channel:((a.href.match(/utm_source=([^&]+)/)||[])[1]||""),provider:(a.getAttribute("data-provider")||"")})}catch(_){} }else if(cl.indexOf(" shr ")>=0){try{gtag("event","share",{method:(a.getAttribute("data-method")||""),page:location.pathname})}catch(_){} }});</script>'
+    _g += 'document.addEventListener("click",function(e){var a=e.target&&e.target.closest?e.target.closest("a"):null;if(!a)return;var rel=a.getAttribute("rel")||"",cl=" "+(a.className||"")+" ";if(/sponsored/.test(rel)||(a.href&&a.href.indexOf("atth.me")>=0)||cl.indexOf(" hubbtn ")>=0||cl.indexOf(" cta ")>=0||cl.indexOf(" go ")>=0){try{gtag("event","affiliate_click",{link_url:a.href,link_text:(a.textContent||"").trim().slice(0,80),page:location.pathname,campaign:((a.href.match(/utm_campaign=([^&]+)/)||[])[1]||""),sub_id:((a.href.match(/utm_content=([^&]+)/)||[])[1]||""),channel:((a.href.match(/utm_source=([^&]+)/)||[])[1]||""),provider:(a.getAttribute("data-provider")||"")})}catch(_){} }else if(cl.indexOf(" shr ")>=0){try{gtag("event","share",{method:(a.getAttribute("data-method")||""),page:location.pathname})}catch(_){} }});</script>'
     GA_SNIPPET=_g
 else:
     GA_SNIPPET=""
@@ -134,15 +134,48 @@ footer .small{color:#777;margin-top:10px;line-height:1.6}
 .shr[data-method="threads"]{background:#000}
 .shr[data-method="line"]{background:#06c755}
 .shr:hover{filter:brightness(1.08)}
+html{scroll-behavior:smooth}
+::selection{background:var(--gold-soft);color:var(--ink)}
+a,.card,.cta,.shr,.cmp .go,.ctable .go,.cluster a,.card h3,header.top nav a,footer a,.toc a{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease,filter .18s ease,color .15s ease}
+:focus-visible{outline:2.5px solid var(--gold);outline-offset:2px;border-radius:6px}
+.hero h1{position:relative;display:inline-block}
+.hero h1:after{content:"";display:block;width:64px;height:3px;margin:14px auto 0;background:linear-gradient(90deg,var(--gold),var(--gold-lt));border-radius:3px}
+.cta:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(197,168,128,.5)}
+.cta:active{transform:translateY(0)}
+.card:hover{box-shadow:0 10px 26px rgba(15,23,42,.12)}
+.card:hover h3{color:var(--gold-deep)}
+header.top nav a:hover,footer a:hover,.toc a:hover,.cluster a:hover{color:var(--gold)}
+.shr:hover{transform:translateY(-1px)}
 @media(max-width:640px){.cmp-t,.cmp-t tbody,.cmp-t tr,.cmp-t td{display:block;width:100%}.cmp-t thead{display:none}.cmp-t tr{border-top:6px solid #f1f1f4;padding:6px 0}.cmp-t tr:first-child{border-top:0}.cmp-t td{border:0;padding:5px 14px;display:flex;justify-content:space-between;gap:14px}.cmp-t td:before{content:attr(data-l);font-weight:600;color:var(--muted);flex:0 0 36%}.cmp-t td[data-l=""]{justify-content:center;padding-top:10px}.cmp-t td[data-l=""]:before{display:none}}
+.trustband{background:var(--gold-soft);border-bottom:1px solid var(--line)}
+.trustband .wrap{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 22px;padding:8px 20px;font-size:12.5px;color:var(--muted);line-height:1.5}
+.trustband span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.trustband b{color:var(--gold-deep);font-weight:700}
+.hero{position:relative;overflow:hidden}
+.hero>*{position:relative;z-index:1}
+.hero:before{content:"";position:absolute;inset:0;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240' fill='none' stroke='%23C5A880' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='30,180 85,130 130,155 205,70'/><polyline points='180,70 205,70 205,95'/><circle cx='85' cy='130' r='4' fill='%23C5A880' stroke='none'/><circle cx='130' cy='155' r='4' fill='%23C5A880' stroke='none'/><circle cx='205' cy='70' r='5' fill='%23C5A880' stroke='none'/></svg>");background-repeat:no-repeat;background-position:right -10px top -6px;background-size:210px;opacity:.45;pointer-events:none}
+header.top nav a{padding:5px 2px}
+@media(max-width:600px){header.top nav{gap:13px}.trustband .wrap{font-size:11.5px;gap:4px 13px;padding:7px 14px}.hero:before{background-size:140px;opacity:.35}}
 """
 
 def head(title, desc, slug, jsonld_list, og_type="article", og_image="og-default.png"):
     canon = f"{BASE}/{slug}" if slug else BASE + "/"
     ld = "\n".join(f'<script type="application/ld+json">{json.dumps(j,ensure_ascii=False)}</script>' for j in jsonld_list)
+    # SEO <title>: keyword-first = primary phrase before first em-dash/pipe; append brand only if it still reads short.
+    # Thai tone/vowel marks are ~zero-width, so estimate visual length excluding them (len() over-counts Thai).
+    _zw = "่้๊๋ัิีึืุู็์ําฺ"
+    _vlen = lambda s: sum(0 if c in _zw else 1 for c in s)
+    _primary = re.split(r"\s[—|]\s", title)[0].strip()
+    _brand = " | " + SITE
+    if _vlen(_primary + _brand) <= 60:
+        seo_title = _primary + _brand
+    elif _vlen(_primary) <= 60:
+        seo_title = _primary
+    else:
+        seo_title = _primary[:58].rstrip() + "…"
     return f"""<!doctype html><html lang="th"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0F172A"><meta name="robots" content="index,follow,max-image-preview:large">
-<title>{html.escape(title)}</title>
+<title>{html.escape(seo_title)}</title>
 <link rel="icon" type="image/png" href="/logo.png"><link rel="apple-touch-icon" href="/logo.png">
 <meta name="description" content="{html.escape(desc)}">
 <link rel="canonical" href="{canon}">
@@ -154,7 +187,8 @@ def head(title, desc, slug, jsonld_list, og_type="article", og_image="og-default
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;700&family=Noto+Serif+Thai:wght@600&display=swap" rel="stylesheet">
 <style>{CSS}</style>{ld}{GA_SNIPPET}</head><body>
 <header class="top"><div class="wrap"><img src="/logo.png" alt="{SITE}" class="logo" width="26" height="26" decoding="async"><b>{SITE}</b>
-<nav><a href="/">หน้าแรก</a><a href="/about.html">เกี่ยวกับเรา</a><a href="/contact.html">ติดต่อ</a><a href="/disclaimer.html">นโยบาย</a></nav></div></header>"""
+<nav><a href="/">หน้าแรก</a><a href="/about.html">เกี่ยวกับเรา</a><a href="/contact.html">ติดต่อ</a><a href="/disclaimer.html">นโยบาย</a></nav></div></header>
+<div class="trustband"><div class="wrap"><span>🗓 <b>อัปเดต 2026</b></span><span>🔗 อ้างอิงหน้าทางการของผู้ให้บริการ</span><span>⚖️ เทียบหลายเจ้าก่อนตัดสินใจ</span></div></div>"""
 
 # global JS on every page: interstitial (card+loan) + micro-conversion events. $0, no-PII (path+channel only).
 SITE_JS = """<div id="interstitial" style="display:none;position:fixed;inset:0;background:rgba(15,15,18,.72);z-index:9999;align-items:center;justify-content:center;padding:18px">
@@ -185,11 +219,13 @@ function show(href,prov){var p=PROV[prov]||{};document.getElementById('ist-body'
 window.__istHide=function(){document.getElementById('interstitial').style.display='none';};
 document.addEventListener('click',function(e){try{var a=e.target.closest&&e.target.closest('a[href*="atth.me"]');if(!a)return;if(a.classList.contains('interstitial-go'))return;var prov=a.getAttribute('data-provider')||'';if(!CARDLOAN[prov])return;e.preventDefault();e.stopPropagation();show(a.href,prov);}catch(err){}},true);
 var cont=document.getElementById('interstitial-continue');if(cont)cont.addEventListener('click',function(){gev('interstitial_continue',{provider:this.getAttribute('data-provider')||'',path:location.pathname,channel:CH});setTimeout(window.__istHide,120);});
+try{var ICON={'บัตรเครดิต':'💳','บัตรกดเงินสด':'💵','ออมเงิน':'🏦','ออม':'🏦','สินเชื่อ':'💵','รีไฟแนนซ์':'🏠','บ้าน':'🏠','ประกัน':'🛡️','ลงทุน':'📈','รวมหนี้':'🧮','หนี้':'🧮','รถ':'🚗'};document.querySelectorAll('.card .tag').forEach(function(t){if(t.getAttribute('data-ic')==='1')return;var k=(t.textContent||'').trim();var e=ICON[k];if(!e){for(var key in ICON){if(k.indexOf(key)>=0){e=ICON[key];break;}}}if(e){t.setAttribute('data-ic','1');t.textContent=e+' '+k;}});}catch(e){}
 })();
 </script>"""
 
 FOOTER = f"""<footer><div class="wrap">
 <b style="color:var(--gold)">{SITE}</b><div class="small">
+<b style="color:#cfc19a">✓ เรียบเรียงและตรวจทานเนื้อหาก่อนเผยแพร่ · อ้างอิงเงื่อนไขจากหน้าทางการของผู้ให้บริการ · ระบุวันที่อัปเดตในแต่ละหน้า</b><br>
 เนื้อหาในเว็บนี้จัดทำเพื่อให้ข้อมูลทั่วไป ไม่ใช่คำแนะนำทางการเงิน การลงทุน หรือสินเชื่อ
 โปรดศึกษาเงื่อนไข/ดอกเบี้ย/ค่าธรรมเนียมจากผู้ให้บริการก่อนตัดสินใจ ·
 เว็บไซต์มีลิงก์พันธมิตร (affiliate) ซึ่งเราอาจได้รับค่าตอบแทนเมื่อคุณสมัครผ่านลิงก์ โดยไม่มีค่าใช้จ่ายเพิ่มกับคุณ<br>
