@@ -240,13 +240,13 @@ def cta(merchant, url, slug, text):
     cls = 'cta free' if free else 'cta'
     badge = '<span class="freebadge">สมัครฟรี</span>' if free else ''
     sub = ('ไม่มีค่าใช้จ่าย · ไม่เช็กเครดิต · ดอกสูงกว่าบัญชีออมทรัพย์ทั่วไป' if free
-           else 'ไปหน้าสมัครทางการ · เช็ก/สมัครฟรี ไม่มีค่าใช้จ่าย · *เงื่อนไขเป็นไปตามผู้ให้บริการ')
+           else 'สมัครออนไลน์ตรงกับผู้ให้บริการ · ปลอดภัย ไม่มีค่าใช้จ่าย · *เงื่อนไข/การอนุมัติเป็นไปตามผู้ให้บริการ')
     return f'<a class="{cls}" rel="sponsored noopener nofollow" target="_blank" data-provider="{_pcode(merchant)}" href="{utm(url,merchant,slug)}">{badge}{text}<small>{sub}</small></a>'
 
 def cta_ls(page, text):
     # lifestyle credit-card CTA -> Krungsri, channel=lifestyle => sub_id lifestyle_{page}_krungsri
     u = utm(KRUNGSRI, "Krungsri", page, channel="lifestyle", medium="article")
-    return f'<a class="cta" rel="sponsored noopener nofollow" target="_blank" data-provider="krungsri" href="{u}">{text}<small>ไปหน้าสมัครทางการ · เช็กสิทธิ์/โปร/เงื่อนไขล่าสุดที่หน้าบัตร</small></a>'
+    return f'<a class="cta" rel="sponsored noopener nofollow" target="_blank" data-provider="krungsri" href="{u}">{text}<small>สมัครออนไลน์ตรงกับผู้ให้บริการ · ปลอดภัย · เช็กสิทธิ์/โปร/เงื่อนไขล่าสุดที่หน้าบัตร</small></a>'
 
 def faq_block(faqs):
     items = "".join(f"<details><summary>{html.escape(q)}</summary><div>{a}</div></details>" for q,a in faqs)
@@ -1566,7 +1566,7 @@ HOME_TRUST = """<div class="htrust">
 <div><b>ไม่ขายตรง</b><small>ข้อมูลเพื่อการศึกษา · มีลิงก์พันธมิตร</small></div>
 </div><p class="hnote">* ตัวเลขเป็น \u201cช่วง\u201d ไม่การันตีอนุมัติ/ดอกเบี้ย/ผลตอบแทน · ยึดแนวทาง Responsible Lending ของ ธปท. · เช็กเงื่อนไขล่าสุดรายเจ้าก่อนตัดสินใจ</p>"""
 HOME_CTA = """<div class="hcta"><h2>ไม่รู้เริ่มตรงไหน?</h2><p>ตอบ 2 คำถาม ~30 วิ จับคู่บัตร/สินเชื่อ/ออม ที่เหมาะกับคุณ</p><a class="qbtn" href="/quiz">\U0001F9ED ทำ Quiz เลย \u2192</a></div>"""
-HOME_FEATURED = """<div class="hfeat"><h2>\U0001F525 คู่มือแนะนำ</h2><div class="hfeat-g"><a href="/credit-bureau-check-2026.html">เช็กเครดิตบูโรก่อนสมัคร</a><a href="/pay-off-credit-card-debt-2026.html">วิธีปลดหนี้บัตรเครดิต</a><a href="/credit-card-interest-2026.html">ดอกเบี้ยบัตร/จ่ายขั้นต่ำ</a><a href="/loan-online-legal-2026.html">แอปกู้เงินถูกกฎหมาย</a><a href="/tax-deduction-salary-2026.html">ลดหย่อนภาษีมนุษย์เงินเดือน</a><a href="/health-insurance-salary-2026.html">ประกันสุขภาพเลือกยังไง</a><a href="/mutual-fund-beginner-2026.html">กองทุนรวม + DCA มือใหม่</a><a href="/retirement-planning-salary-2026.html">วางแผนเกษียณ</a><a href="/credit-card-salary-30000-2026.html">เงินเดือน 30,000 สมัครบัตรอะไรได้</a></div></div>"""
+HOME_FEATURED = """<div class="hfeat"><h2>\U0001F525 คู่มือแนะนำ</h2><div class="hfeat-g"><a href="/credit-card-salary-30000-2026.html">เงินเดือน 30,000 สมัครบัตรอะไรได้</a><a href="/credit-bureau-check-2026.html">เช็กเครดิตบูโรก่อนสมัคร</a><a href="/credit-card-interest-2026.html">ดอกเบี้ยบัตร/จ่ายขั้นต่ำ</a><a href="/pay-off-credit-card-debt-2026.html">วิธีปลดหนี้บัตรเครดิต</a><a href="/loan-online-legal-2026.html">แอปกู้เงินถูกกฎหมาย</a><a href="/tax-deduction-salary-2026.html">ลดหย่อนภาษีมนุษย์เงินเดือน</a><a href="/health-insurance-salary-2026.html">ประกันสุขภาพเลือกยังไง</a><a href="/mutual-fund-beginner-2026.html">กองทุนรวม + DCA มือใหม่</a><a href="/retirement-planning-salary-2026.html">วางแผนเกษียณ</a></div></div>"""
 home=head(f"{SITE} — {TAGLINE}","สรุปการเงินมนุษย์เงินเดือน บัตรเครดิต ออมเงิน ลงทุน ย่อยง่าย พร้อมรีวิวและคู่มือสมัครออนไลน์ 2026","",home_ld,"website")
 home+=f'<div class="hero"><h1>{SITE}</h1><p>{TAGLINE}<br>คู่มือ + รีวิวการเงิน ย่อยง่าย สำหรับคนอยากให้เงินเดือนงอกเงย</p></div>'
 home+=HOME_UP_CSS
@@ -1630,6 +1630,15 @@ sm+="</urlset>\n"
 open(f"{OUT}/sitemap.xml","w",encoding="utf-8").write(sm)
 open(f"{OUT}/robots.txt","w",encoding="utf-8").write(f"User-agent: *\nAllow: /\nSitemap: {BASE}/sitemap.xml\n")
 open(f"{OUT}/google068178fb9e4f38c9.html","w",encoding="utf-8").write("google-site-verification: google068178fb9e4f38c9.html")  # GSC ownership - keep on every rebuild
+# ---- branded /go/ short links (Netlify redirects) for bio/social: protect link reach + AccessTrade channel attribution ----
+_GO = {
+  "card":  KRUNGSRI + "?utm_source=bio&utm_medium=social&utm_campaign=krungsri&utm_content=go_card",
+  "save":  KEPT     + "?utm_source=bio&utm_medium=social&utm_campaign=kept&utm_content=go_save",
+  "loan":  SRISAWAD + "?utm_source=bio&utm_medium=social&utm_campaign=srisawad&utm_content=go_loan",
+  "debt":  HAPPYDEBT + "?utm_source=bio&utm_medium=social&utm_campaign=happydebt&utm_content=go_debt",
+  "title": CAR4CASH + "?utm_source=bio&utm_medium=social&utm_campaign=car4cash&utm_content=go_title",
+}
+open(f"{OUT}/_redirects","w",encoding="utf-8").write("".join(f"/go/{k}  {v}  301!\n" for k,v in _GO.items()))
 print("built site/ ->", sorted(os.listdir(OUT)))
 
 # ---- links hub (link-in-bio) ----
