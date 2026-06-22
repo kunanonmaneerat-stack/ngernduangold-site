@@ -1166,9 +1166,36 @@ def card_html(s,t,d,b):
 cards="".join(card_html(s,t,d,b) for (s,t,d,b,f,c) in ART)
 home_ld=[{"@context":"https://schema.org","@type":"WebSite","name":SITE,"url":BASE+"/","inLanguage":"th"},
  {"@context":"https://schema.org","@type":"Organization","name":SITE,"url":BASE+"/","logo":BASE+"/logo.png","sameAs":["https://www.facebook.com/583765282304956","https://www.threads.net/@ngernduangold","https://www.instagram.com/ngernduangold","https://www.tiktok.com/@ngernduangold","https://www.youtube.com/@ngernduangold"]}]
+HOME_UP_CSS = """<style>
+.hcats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:24px 0 6px}
+.hcat{display:block;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 14px;text-decoration:none;color:var(--ink);transition:.16s}
+.hcat:hover{transform:translateY(-3px);border-color:var(--gold);box-shadow:0 8px 22px rgba(15,23,42,.08)}
+.hcat .i{font-size:22px}.hcat b{display:block;margin-top:6px;font-size:16px}.hcat small{color:var(--muted);font-size:12.5px;display:block;margin-top:2px}
+.htrust{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;background:var(--bg-soft);border:1px solid var(--line);border-radius:18px;padding:20px;margin:28px 0 6px;text-align:center}
+.htrust b{display:block;color:var(--gold-deep);font-size:15px}.htrust small{color:var(--muted);font-size:12.5px}
+.hnote{color:#8a8a95;font-size:12px;text-align:center;margin:8px 0 0;line-height:1.7}
+.hcta{margin:28px 0 6px;background:linear-gradient(135deg,var(--gold-soft),transparent);border:1px solid var(--gold);border-radius:20px;padding:28px 20px;text-align:center}
+.hcta h2{margin:0 0 6px}.hcta p{color:var(--muted);margin:0 0 16px}
+.hcta a.qbtn{display:inline-block;background:linear-gradient(180deg,var(--gold-lt),var(--gold));color:#1a1a1f;font-weight:700;text-decoration:none;padding:12px 24px;border-radius:12px;box-shadow:0 4px 16px rgba(224,178,60,.3)}
+.hcta a.qbtn:hover{transform:translateY(-2px)}
+@media(max-width:600px){.hcats{grid-template-columns:repeat(2,1fr)}.htrust{grid-template-columns:1fr}}
+</style>"""
+HOME_CATS = """<div class="hcats">
+<a class="hcat" href="/credit-card-easy-approval-2026.html"><span class="i">\U0001F4B3</span><b>บัตรเครดิต</b><small>ใบแรก · เงินคืน · ผ่อน 0%</small></a>
+<a class="hcat" href="/high-yield-savings-2026.html"><span class="i">\U0001F3E6</span><b>ออมเงิน</b><small>เริ่มจากน้อย · ดอกสูง</small></a>
+<a class="hcat" href="/loan-cash-2026.html"><span class="i">\U0001F4B5</span><b>สินเชื่อ</b><small>รวมหนี้ · ทะเบียนรถ</small></a>
+<a class="hcat" href="/insurance-compare-2026.html"><span class="i">\U0001F6E1\uFE0F</span><b>ประกัน</b><small>เดินทาง · รถ · สุขภาพ</small></a>
+</div>"""
+HOME_TRUST = """<div class="htrust">
+<div><b>เป็นกลาง</b><small>จัดอันดับตามความเหมาะกับคุณ ไม่ใช่ค่าคอมมิชชัน</small></div>
+<div><b>เทียบเงื่อนไขล่าสุด</b><small>ชี้จุดที่ต้องดูก่อนตัดสินใจ ไม่ฟันธงแทนคุณ</small></div>
+<div><b>ไม่ขายตรง</b><small>ข้อมูลเพื่อการศึกษา · มีลิงก์พันธมิตร</small></div>
+</div><p class="hnote">* ตัวเลขเป็น \u201cช่วง\u201d ไม่การันตีอนุมัติ/ดอกเบี้ย/ผลตอบแทน · ยึดแนวทาง Responsible Lending ของ ธปท. · เช็กเงื่อนไขล่าสุดรายเจ้าก่อนตัดสินใจ</p>"""
+HOME_CTA = """<div class="hcta"><h2>ไม่รู้เริ่มตรงไหน?</h2><p>ตอบ 2 คำถาม ~30 วิ จับคู่บัตร/สินเชื่อ/ออม ที่เหมาะกับคุณ</p><a class="qbtn" href="/quiz">\U0001F9ED ทำ Quiz เลย \u2192</a></div>"""
 home=head(f"{SITE} — {TAGLINE}","สรุปการเงินมนุษย์เงินเดือน บัตรเครดิต ออมเงิน ลงทุน ย่อยง่าย พร้อมรีวิวและคู่มือสมัครออนไลน์ 2026","",home_ld,"website")
 home+=f'<div class="hero"><h1>{SITE}</h1><p>{TAGLINE}<br>คู่มือ + รีวิวการเงิน ย่อยง่าย สำหรับคนอยากให้เงินเดือนงอกเงย</p></div>'
-home+=f'<main class="wrap"><h2>บทความล่าสุด</h2>{cards}</main>'+FOOTER
+home+=HOME_UP_CSS
+home+=f'<main class="wrap">{HOME_CATS}<h2>บทความล่าสุด</h2>{cards}{HOME_TRUST}{HOME_CTA}</main>'+FOOTER
 open(f"{OUT}/index.html","w",encoding="utf-8").write(home)
 
 # disclaimer page
