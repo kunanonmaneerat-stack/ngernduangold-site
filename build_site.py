@@ -1551,6 +1551,7 @@ HOME_UP_CSS = """<style>
 .hcta h2{margin:0 0 6px}.hcta p{color:var(--muted);margin:0 0 16px}
 .hcta a.qbtn{display:inline-block;background:linear-gradient(180deg,var(--gold-lt),var(--gold));color:#1a1a1f;font-weight:700;text-decoration:none;padding:12px 24px;border-radius:12px;box-shadow:0 4px 16px rgba(224,178,60,.3)}
 .hcta a.qbtn:hover{transform:translateY(-2px)}
+.hfeat{margin:26px 0 6px}.hfeat h2{margin:0 0 12px;font-size:20px}.hfeat-g{display:flex;flex-wrap:wrap;gap:10px}.hfeat-g a{display:inline-block;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:9px 16px;text-decoration:none;color:var(--ink);font-size:14px;font-weight:600;transition:.16s}.hfeat-g a:hover{border-color:var(--gold);color:var(--gold-deep);transform:translateY(-2px)}
 @media(max-width:600px){.hcats{grid-template-columns:repeat(2,1fr)}.htrust{grid-template-columns:1fr}}
 </style>"""
 HOME_CATS = """<div class="hcats">
@@ -1565,10 +1566,11 @@ HOME_TRUST = """<div class="htrust">
 <div><b>ไม่ขายตรง</b><small>ข้อมูลเพื่อการศึกษา · มีลิงก์พันธมิตร</small></div>
 </div><p class="hnote">* ตัวเลขเป็น \u201cช่วง\u201d ไม่การันตีอนุมัติ/ดอกเบี้ย/ผลตอบแทน · ยึดแนวทาง Responsible Lending ของ ธปท. · เช็กเงื่อนไขล่าสุดรายเจ้าก่อนตัดสินใจ</p>"""
 HOME_CTA = """<div class="hcta"><h2>ไม่รู้เริ่มตรงไหน?</h2><p>ตอบ 2 คำถาม ~30 วิ จับคู่บัตร/สินเชื่อ/ออม ที่เหมาะกับคุณ</p><a class="qbtn" href="/quiz">\U0001F9ED ทำ Quiz เลย \u2192</a></div>"""
+HOME_FEATURED = """<div class="hfeat"><h2>\U0001F525 คู่มือแนะนำ</h2><div class="hfeat-g"><a href="/credit-bureau-check-2026.html">เช็กเครดิตบูโรก่อนสมัคร</a><a href="/pay-off-credit-card-debt-2026.html">วิธีปลดหนี้บัตรเครดิต</a><a href="/credit-card-interest-2026.html">ดอกเบี้ยบัตร/จ่ายขั้นต่ำ</a><a href="/loan-online-legal-2026.html">แอปกู้เงินถูกกฎหมาย</a><a href="/tax-deduction-salary-2026.html">ลดหย่อนภาษีมนุษย์เงินเดือน</a><a href="/health-insurance-salary-2026.html">ประกันสุขภาพเลือกยังไง</a><a href="/mutual-fund-beginner-2026.html">กองทุนรวม + DCA มือใหม่</a><a href="/retirement-planning-salary-2026.html">วางแผนเกษียณ</a><a href="/credit-card-salary-30000-2026.html">เงินเดือน 30,000 สมัครบัตรอะไรได้</a></div></div>"""
 home=head(f"{SITE} — {TAGLINE}","สรุปการเงินมนุษย์เงินเดือน บัตรเครดิต ออมเงิน ลงทุน ย่อยง่าย พร้อมรีวิวและคู่มือสมัครออนไลน์ 2026","",home_ld,"website")
 home+=f'<div class="hero"><h1>{SITE}</h1><p>{TAGLINE}<br>คู่มือ + รีวิวการเงิน ย่อยง่าย สำหรับคนอยากให้เงินเดือนงอกเงย</p></div>'
 home+=HOME_UP_CSS
-home+=f'<main class="wrap">{HOME_CATS}<h2>บทความล่าสุด</h2>{cards}{HOME_TRUST}{HOME_CTA}</main>'+FOOTER
+home+=f'<main class="wrap">{HOME_CATS}{HOME_FEATURED}<h2>บทความล่าสุด</h2>{cards}{HOME_TRUST}{HOME_CTA}</main>'+FOOTER
 open(f"{OUT}/index.html","w",encoding="utf-8").write(home)
 
 # disclaimer page
