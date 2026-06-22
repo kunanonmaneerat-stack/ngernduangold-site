@@ -1,0 +1,124 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>เงินเดือนสมองทอง — โฮมเพจยกระดับ (preview)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Noto+Serif+Thai:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f0f12;--bg2:#16161b;--card:#1c1c24;--line:#2a2a32;--gold:#C5A880;--gold-lt:#D8C29A;--gold-deep:#e0b23c;--cream:#f3ecd9;--ink:#f1f1f4;--muted:#9a9aa6;--soft:rgba(197,168,128,.12);
+--fhead:'Noto Serif Thai',Georgia,serif;--fbody:'IBM Plex Sans Thai',system-ui,'Segoe UI',sans-serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(1200px 600px at 70% -10%,rgba(224,178,60,.10),transparent 60%),var(--bg);color:var(--ink);font-family:var(--fbody);line-height:1.85;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:0 18px}
+a{color:inherit;text-decoration:none}
+/* header */
+header.top{position:sticky;top:0;z-index:30;background:rgba(15,15,18,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+header .wrap{display:flex;align-items:center;gap:16px;height:58px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--fhead);font-weight:700;font-size:18px}
+.brand .mark{width:30px;height:30px;border-radius:9px;background:linear-gradient(145deg,var(--gold-lt),var(--gold-deep));display:grid;place-items:center;color:#1a1a1f;font-weight:800}
+nav.main{margin-left:auto;display:flex;gap:20px;font-size:15px;color:var(--muted)}
+nav.main a:hover{color:var(--gold-lt)}
+.search{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;border:1px solid var(--line);color:var(--muted)}
+@media(max-width:760px){nav.main{display:none}}
+/* hero */
+.hero{padding:64px 0 30px;text-align:center}
+.hero h1{font-family:var(--fhead);font-size:clamp(30px,5vw,46px);line-height:1.25;margin:0 0 12px;background:linear-gradient(180deg,#fff,var(--gold-lt));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.sub{color:var(--muted);font-size:18px;max-width:640px;margin:0 auto 22px}
+.cbar{display:flex;gap:8px;max-width:560px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:8px}
+.cbar input{flex:1;background:transparent;border:0;outline:0;color:var(--ink);font-family:inherit;font-size:16px;padding:10px 12px}
+.cbar input::placeholder{color:#6b6b78}
+.cbar .go{background:linear-gradient(180deg,var(--gold-lt),var(--gold-deep));color:#1a1a1f;font-weight:700;border:0;border-radius:11px;padding:0 20px;font-size:15px;cursor:pointer}
+.trust-line{margin-top:14px;color:var(--muted);font-size:14px}
+.trust-line b{color:var(--gold-lt)}
+/* category cards */
+.sec{padding:34px 0}
+.sec h2{font-family:var(--fhead);font-size:24px;margin:0 0 4px}
+.sec .lead{color:var(--muted);margin:0 0 20px;font-size:15px}
+.cats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.cat{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px 16px;transition:.16s;display:block}
+.cat:hover{transform:translateY(-3px);border-color:var(--gold);box-shadow:0 10px 28px rgba(0,0,0,.35)}
+.cat .ic{width:44px;height:44px;border-radius:12px;background:var(--soft);display:grid;place-items:center;font-size:22px;margin-bottom:12px}
+.cat b{font-size:17px}.cat small{display:block;color:var(--muted);margin-top:4px;font-size:13.5px}
+@media(max-width:760px){.cats{grid-template-columns:repeat(2,1fr)}}
+/* articles */
+.arts{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.art{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;transition:.16s}
+.art:hover{transform:translateY(-3px);border-color:var(--gold)}
+.art .th{height:120px;background:linear-gradient(135deg,#23202a,#15141a) center/cover;border-bottom:1px solid var(--line)}
+.art .bd{padding:14px 15px}
+.art h3{font-size:16px;margin:0 0 6px;line-height:1.4}
+.art p{color:var(--muted);font-size:13.5px;margin:0 0 8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.art .rt{color:#6b6b78;font-size:12px}
+@media(max-width:760px){.arts{grid-template-columns:1fr}}
+/* trust strip */
+.trust{background:linear-gradient(180deg,var(--bg2),transparent);border:1px solid var(--line);border-radius:20px;padding:24px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;text-align:center}
+.trust .it b{display:block;color:var(--gold-lt);font-size:16px;margin-bottom:2px}
+.trust .it small{color:var(--muted);font-size:13.5px}
+.note{margin-top:14px;color:#7a7a86;font-size:12.5px;text-align:center}
+@media(max-width:760px){.trust{grid-template-columns:1fr;gap:14px}}
+/* cta band */
+.cta-band{margin:38px 0;background:linear-gradient(135deg,rgba(224,178,60,.16),rgba(197,168,128,.05));border:1px solid var(--gold);border-radius:22px;padding:30px 24px;text-align:center}
+.cta-band h2{font-family:var(--fhead);font-size:24px;margin:0 0 8px}
+.cta-band p{color:var(--cream);opacity:.85;margin:0 0 18px}
+.cta-band .btn{display:inline-block;background:linear-gradient(180deg,var(--gold-lt),var(--gold-deep));color:#1a1a1f;font-weight:700;padding:13px 26px;border-radius:13px;box-shadow:0 6px 20px rgba(224,178,60,.32)}
+.cta-band .btn:hover{transform:translateY(-2px)}
+/* footer */
+footer{border-top:1px solid var(--line);margin-top:40px;padding:28px 0;color:var(--muted);font-size:13.5px}
+footer .cols{display:flex;flex-wrap:wrap;gap:10px 26px}
+footer a:hover{color:var(--gold-lt)}
+footer .disc{margin-top:14px;color:#6b6b78;font-size:12px;line-height:1.7}
+</style></head><body>
+
+<header class="top"><div class="wrap">
+<a class="brand"><span class="mark">฿</span> เงินเดือนสมองทอง</a>
+<nav class="main"><a href="#">บัตรเครดิต</a><a href="#">ออมเงิน</a><a href="#">สินเชื่อ</a><a href="#">ประกัน</a><a href="#">บทความ</a></nav>
+<div class="search">🔍</div>
+</div></header>
+
+<main class="wrap">
+<section class="hero">
+<h1>การเงินมนุษย์เงินเดือน<br>ย่อยง่าย เทียบก่อนตัดสินใจ</h1>
+<p class="sub">บัตรเครดิต ออมเงิน สินเชื่อ ประกัน — อ่านเข้าใจใน 30 วิ แล้วเทียบเงื่อนไขล่าสุดด้วยตัวเอง</p>
+<form class="cbar" onsubmit="return false"><input placeholder="ค้นหา: รวมหนี้ · บัตรใบแรก · ออมเงิน · ทะเบียนรถ"><button class="go">เทียบเลย</button></form>
+<div class="trust-line">📊 <b>ข้อมูลย่อยง่าย เทียบก่อนตัดสินใจ</b> · เป็นกลาง ไม่ขายตรง</div>
+</section>
+
+<section class="sec">
+<div class="cats">
+<a class="cat"><div class="ic">💳</div><b>บัตรเครดิต</b><small>เลือกใบแรก · คืนเงิน · ผ่อน 0%</small></a>
+<a class="cat"><div class="ic">🐷</div><b>ออมเงิน</b><small>เริ่มจากน้อย · ดอกเบี้ยสูง</small></a>
+<a class="cat"><div class="ic">🏦</div><b>สินเชื่อ</b><small>รวมหนี้ · ทะเบียนรถ · ส่วนบุคคล</small></a>
+<a class="cat"><div class="ic">🛡️</div><b>ประกัน</b><small>เดินทาง · รถ · สุขภาพ · โรคร้าย</small></a>
+</div>
+</section>
+
+<section class="sec">
+<h2>บทความแนะนำ</h2>
+<p class="lead">อ่านก่อนตัดสินใจ ลดพลาด เพิ่มความมั่นใจ</p>
+<div class="arts">
+<a class="art"><div class="th"></div><div class="bd"><h3>จ่ายขั้นต่ำบัตรทุกเดือน แต่ยอดไม่ลด — แก้ยังไง</h3><p>เข้าใจว่าทำไมจ่ายขั้นต่ำแล้วหนี้แทบไม่ขยับ + ทางเลือกรวมหนี้</p><span class="rt">อ่าน 3 นาที</span></div></a>
+<a class="art"><div class="th"></div><div class="bd"><h3>เงินเดือนชนเดือน เริ่มออมยังไงให้อยู่</h3><p>เคล็ดออมก่อนใช้ + ตั้งโอนอัตโนมัติวันเงินเข้า เริ่มแค่ 5–10%</p><span class="rt">อ่าน 3 นาที</span></div></a>
+<a class="art"><div class="th"></div><div class="bd"><h3>เงินสำรองฉุกเฉินควรมีเท่าไร</h3><p>เป้า 3–6 เดือนของรายจ่ายจำเป็น + วิธีเริ่มทีละนิด</p><span class="rt">อ่าน 2 นาที</span></div></a>
+</div>
+</section>
+
+<section class="sec">
+<div class="trust">
+<div class="it"><b>เป็นกลาง</b><small>จัดอันดับตามความเหมาะกับคุณ ไม่ใช่ค่าคอมมิชชัน</small></div>
+<div class="it"><b>เทียบเงื่อนไขล่าสุด</b><small>ชี้จุดที่ต้องดูก่อนเซ็น ไม่ฟันธงแทนคุณ</small></div>
+<div class="it"><b>ไม่ขายตรง</b><small>ข้อมูลเพื่อการศึกษา ลิงก์ไปหน้าผู้ให้บริการทางการ</small></div>
+</div>
+<p class="note">* ตัวเลขเป็น “ช่วง” ไม่การันตีการอนุมัติ/ดอกเบี้ย/ผลตอบแทน · ยึดแนวทาง Responsible Lending ของ ธปท. · เช็กเงื่อนไขล่าสุดรายเจ้าก่อนตัดสินใจ</p>
+</section>
+
+<section class="cta-band">
+<h2>อยากรู้ว่าอันไหนเหมาะกับคุณ?</h2>
+<p>คอมเมนต์หรือทัก DM คำว่า “เช็กสิทธิ์” รับตัวเทียบฟรี — ไม่มีลิงก์ขายในโพสต์</p>
+<a class="btn" href="#">ทำ Quiz 30 วิ จับคู่ให้คุณ →</a>
+</section>
+</main>
+
+<footer><div class="wrap">
+<div class="cols"><a href="#">เกี่ยวกับเรา</a><a href="#">ติดต่อ</a><a href="#">ข้อจำกัดความรับผิด</a><a href="#">ลิงก์รวม</a><a href="#">sitemap</a></div>
+<div class="disc">เว็บนี้มีลิงก์พันธมิตร (affiliate) — หากสมัครผ่านลิงก์ เราอาจได้ค่าตอบแทนโดยไม่มีค่าใช้จ่ายเพิ่มกับคุณ · เนื้อหาเพื่อการศึกษา ไม่ใช่คำแนะนำทางการเงินเฉพาะบุคคล · ผลิตภัณฑ์/เงื่อนไขเป็นไปตามผู้ให้บริการ</div>
+</div></footer>
+</body></html>

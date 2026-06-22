@@ -1,0 +1,19 @@
+Design a modern, trustworthy HOMEPAGE for a Thai personal-finance content & affiliate website.
+
+BRAND: "เงินเดือนสมองทอง" (Ngern Duan Gold (Golden Salary Brain) — Thai personal-finance guide). Tagline (Thai): "การเงินมนุษย์เงินเดือน · บัตรเครดิต ออมเงิน ลงทุน ย่อยง่าย".
+AUDIENCE: Thai salaried workers (20-40) on mobile, comparing credit cards, savings, loans, insurance. They want clarity and trust, not hype.
+
+ART DIRECTION: premium but friendly fintech. Keep the brand's signature GOLD-on-DARK identity but make it cleaner, lighter on the eyes, and faster-feeling. Palette: gold #C5A880 / #D8C29A / #c79a32 / #e0b23c, cream #f3ecd9 / #faf7ef, ink #0f0f12 / #1a1a1f / #1c1c24, slate #0F172A / #1E293B / #64748B / #F8FAFC. Use gold as accent (CTAs, highlights, icons) — not as large fills. Generous whitespace, soft rounded cards (16-20px radius), subtle depth/shadows, one clear accent per section. Mobile-first, fast, accessible (AA contrast). Thai-language UI text, large readable Thai type, clear visual hierarchy.
+
+PAGE SECTIONS (top to bottom):
+1. Sticky slim header: logo "เงินเดือนสมองทอง", nav (บัตรเครดิต · ออมเงิน · สินเชื่อ · ประกัน · บทความ), search icon.
+2. Hero: bold headline value prop + 1-line subhead, a prominent search/compare bar, and a trust line ("ข้อมูลย่อยง่าย เทียบก่อนตัดสินใจ"). Calm gold gradient accent, not loud.
+3. Category cards (4): บัตรเครดิต / ออมเงิน / สินเชื่อ / ประกัน — each an icon, short label, 1-line benefit. Tap-friendly.
+4. Featured articles (3-4 cards): thumbnail, Thai title, 2-line teaser, reading time.
+5. "ทำไมต้องเชื่อเรา" trust strip: 3 mini points (เป็นกลาง · เทียบเงื่อนไขล่าสุด · ไม่ขายตรง) + ธปท. Responsible-Lending note.
+6. Soft CTA band: "คอมเมนต์/ทัก DM 'เช็กสิทธิ์' รับตัวเทียบฟรี" with a friendly button (link goes to DM/bio, not inline).
+7. Footer: about, disclaimer, affiliate-disclosure line, sitemap links.
+
+CONSTRAINTS: responsive (mobile + desktop), light-and-dark friendly, no stock-photo clutter, finance-compliant tone (ranges not guarantees, no specific bank/product names in hero). Output clean semantic HTML + CSS that a developer can drop into a static site.
+
+Generate the homepage now, then I will iterate on the category cards and hero.
