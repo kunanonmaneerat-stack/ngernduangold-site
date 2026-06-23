@@ -248,6 +248,29 @@ def cta_ls(page, text):
     u = utm(KRUNGSRI, "Krungsri", page, channel="lifestyle", medium="article")
     return f'<a class="cta" rel="sponsored noopener nofollow" target="_blank" data-provider="krungsri" href="{u}">{text}<small>สมัครออนไลน์ตรงกับผู้ให้บริการ · ปลอดภัย · เช็กสิทธิ์/โปร/เงื่อนไขล่าสุดที่หน้าบัตร</small></a>'
 
+def top_offer(camp, slug):
+    """CTA above-the-fold ตาม intent ของบทความ (จาก camp). หมวดที่ไม่มี affiliate ตรง -> ไม่ใส่ (เลี่ยงยัดมั่ว)."""
+    c = (camp or "").lower()
+    sl = (slug or "").lower()
+    if any(k in sl for k in ("mutual-fund", "retirement", "ssf", "rmf", "tax-deduction")):
+        return f'<div style="margin:14px 0 8px">{cta("Kept", KEPT, slug, "ก่อนลงทุน/ลดหย่อนภาษี — พักเงินบัญชีออมดอกสูง Kept · สมัครฟรี")}</div>'
+    if "kept" in c or "saving" in c or "save" in c:
+        m, u, t = "Kept", KEPT, "เปิดบัญชี Kept ออมดอกสูง · สมัครฟรี ไม่มีค่าใช้จ่าย"
+    elif "title" in c or "carforcash" in c or "car-for-cash" in c:
+        m, u, t = "Srisawad", SRISAWAD, "จำนำทะเบียนรถ — เช็กวงเงิน/ดอกเบี้ย ออนไลน์"
+    elif "debt" in c:
+        m, u, t = "HappyCash", HAPPYDEBT, "สินเชื่อรวมหนี้ — ยุบหลายก้อนเหลือก้อนเดียว เช็กเลย"
+    elif "refi" in c:
+        m, u, t = "Refinance", REFI, "เทียบรีไฟแนนซ์บ้าน — ลดดอกก้อนใหญ่"
+    elif "personalloan" in c or "loan" in c:
+        m, u, t = "KTC Proud", KTCPROUD, "สินเชื่อส่วนบุคคล ไม่ต้องค้ำ — เช็ก/สมัครออนไลน์"
+    elif "krungsri" in c or "card" in c:
+        m, u, t = "Krungsri", KRUNGSRI, "สมัครบัตรเครดิตกรุงศรีออนไลน์"
+    else:
+        return ""
+    return f'<div style="margin:14px 0 8px">{cta(m, u, slug, t)}</div>'
+
+
 def faq_block(faqs):
     items = "".join(f"<details><summary>{html.escape(q)}</summary><div>{a}</div></details>" for q,a in faqs)
     return f'<div class="faq">{items}</div>'
@@ -1528,7 +1551,7 @@ for slug,title,desc,body,faqs,camp in ART:
     _nav='<div class="related"><h2>อ่านต่อ / ลิงก์ที่เกี่ยวข้อง</h2><div class="cluster">'+"".join(f'<a href="/{s}">{t}</a>' for s,t in _il)+'</div></div>'
     _ogimg="og-loan.png" if slug in {"loan-cash-2026.html","title-loan-2026.html","debt-consolidation-2026.html","car-for-cash-2026.html","personal-loan-2026.html","cash-card-easy-2026.html","refinance-home-2026.html"} else "og-default.png"
     _info = (f'<figure style="margin:18px 0"><img class="artinfo" loading="lazy" src="{ARTICLE_HERO_IMG[slug]}" alt="ภาพประกอบ {_name}" width="800" height="420"><figcaption style="font-size:10.5px;color:#8a8a95;text-align:right;margin:2px 4px 0">ภาพประกอบ</figcaption></figure>' if slug in ARTICLE_HERO_IMG else "")
-    open(f"{OUT}/{slug}","w",encoding="utf-8").write(head(title,desc,slug,ld,og_image=_ogimg)+f'<main class="wrap">{body}{_info}{_ASOF}{share_bar(slug,_name)}{QUIZ_CTA}{_nav}</main>'+FOOTER)
+    open(f"{OUT}/{slug}","w",encoding="utf-8").write(head(title,desc,slug,ld,og_image=_ogimg)+f'<main class="wrap">{top_offer(camp,slug)}{body}{_info}{_ASOF}{share_bar(slug,_name)}{QUIZ_CTA}{_nav}</main>'+FOOTER)
 
 # homepage
 TAGS={"credit-card-krungsri-2026.html":"บัตรเครดิต","kept-savings-2026.html":"ออมเงิน","first-credit-card-student-2026.html":"นักศึกษา","credit-card-easy-approval-2026.html":"บัตรเครดิต","cash-card-vs-credit-card-2026.html":"บัตรเครดิต","krungsri-credit-card-rejected-2026.html":"บัตรเครดิต","credit-card-salary-15000-2026.html":"บัตรเครดิต","kept-interest-rate-2026.html":"ออมเงิน","credit-card-documents-2026.html":"บัตรเครดิต","credit-card-freelance-2026.html":"บัตรเครดิต","credit-card-cashback-2026.html":"บัตรเครดิต","credit-card-installment-0-2026.html":"บัตรเครดิต","high-yield-savings-2026.html":"ออมเงิน","loan-cash-2026.html":"สินเชื่อ","title-loan-2026.html":"สินเชื่อ","debt-consolidation-2026.html":"สินเชื่อ","cash-card-easy-2026.html":"สินเชื่อ","personal-loan-2026.html":"สินเชื่อ","refinance-home-2026.html":"สินเชื่อ","car-for-cash-2026.html":"สินเชื่อ","emergency-fund-2026.html":"ออมเงิน","how-to-save-money-2026.html":"ออมเงิน","salary-budgeting-2026.html":"ออมเงิน","insurance-compare-2026.html":"ประกัน","travel-insurance-vacation-2026.html":"ประกัน","lifestyle-credit-card-2026.html":"บัตรเครดิต","credit-bureau-check-2026.html":"บัตรเครดิต","credit-card-salary-20000-2026.html":"บัตรเครดิต","loan-online-legal-2026.html":"สินเชื่อ","credit-card-interest-2026.html":"บัตรเครดิต","pay-off-credit-card-debt-2026.html":"สินเชื่อ","credit-card-salary-30000-2026.html":"บัตรเครดิต","tax-deduction-salary-2026.html":"ภาษี","health-insurance-salary-2026.html":"ประกัน","mutual-fund-beginner-2026.html":"ลงทุน","retirement-planning-salary-2026.html":"ลงทุน"}
