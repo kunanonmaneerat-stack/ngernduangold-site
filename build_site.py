@@ -287,6 +287,42 @@ def clip_block(slug):
             '▶ คลิปสรุปสั้น 8 วิ · ปิดเสียงไว้ กดลำโพงเพื่อฟัง</figcaption></figure>')
 
 
+_CATB = {"cards": ("\U0001F4B3", "บัตรเครดิต"), "savings": ("\U0001F3E6", "ออมเงิน"),
+         "loans": ("\U0001F4B5", "สินเชื่อ"), "tax": ("\U0001F9FE", "ลดหย่อนภาษี"),
+         "insurance": ("\U0001F6E1️", "ประกัน"), "invest": ("\U0001F4C8", "ลงทุน")}
+def _slug_cat(s):
+    if "tax" in s: return "tax"
+    if any(k in s for k in ("insurance", "health", "travel-insurance")): return "insurance"
+    if any(k in s for k in ("mutual-fund", "retirement", "invest")): return "invest"
+    if any(k in s for k in ("loan", "debt", "refinance", "title", "car-for-cash", "cash-card")): return "loans"
+    if any(k in s for k in ("saving", "kept", "emergency", "budget", "how-to-save", "money")): return "savings"
+    if any(k in s for k in ("credit-card", "credit-bureau", "card", "lifestyle")): return "cards"
+    return ""
+def hero_banner(slug):
+    """SVG hero แบนเนอร์ต่อหมวด (on-brand ทอง-เข้ม) สำหรับบทความที่ไม่มีคลิป -> หน้าตาไม่โล่ง."""
+    s = (slug or "").split("?")[0].replace(".html", "")
+    if s in CLIP_SLUGS:
+        return ""
+    cat = _slug_cat(s)
+    if not cat:
+        return ""
+    ic, lb = _CATB[cat]
+    return ('<figure style="margin:14px 0 4px">'
+            '<svg viewBox="0 0 800 168" width="100%" style="display:block;border-radius:14px" '
+            'preserveAspectRatio="xMidYMid slice" role="img" aria-label="' + lb + '">'
+            '<defs><linearGradient id="hb" x1="0" y1="0" x2="1" y2="1">'
+            '<stop offset="0" stop-color="#0F172A"/><stop offset="1" stop-color="#1E293B"/></linearGradient></defs>'
+            '<rect width="800" height="168" fill="url(#hb)"/>'
+            '<circle cx="700" cy="34" r="120" fill="#C5A880" opacity="0.10"/>'
+            '<polyline points="44,128 150,108 250,116 350,86 450,96 560,60 660,70 762,38" '
+            'fill="none" stroke="#e0b23c" stroke-width="3" opacity="0.5"/>'
+            '<text x="54" y="104" font-size="62">' + ic + '</text>'
+            '<text x="150" y="78" font-size="30" font-weight="700" fill="#f3ecd9" '
+            'font-family="\'Noto Serif Thai\',serif">' + lb + '</text>'
+            '<text x="152" y="106" font-size="15" fill="#C5A880">เงินเดือนสมองทอง · คู่มือย่อยง่าย</text>'
+            '</svg></figure>')
+
+
 def faq_block(faqs):
     items = "".join(f"<details><summary>{html.escape(q)}</summary><div>{a}</div></details>" for q,a in faqs)
     return f'<div class="faq">{items}</div>'
@@ -1572,7 +1608,7 @@ for slug,title,desc,body,faqs,camp in ART:
     _nav='<div class="related"><h2>อ่านต่อ / ลิงก์ที่เกี่ยวข้อง</h2><div class="cluster">'+"".join(f'<a href="/{s}">{t}</a>' for s,t in _il)+'</div></div>'
     _ogimg="og-loan.png" if slug in {"loan-cash-2026.html","title-loan-2026.html","debt-consolidation-2026.html","car-for-cash-2026.html","personal-loan-2026.html","cash-card-easy-2026.html","refinance-home-2026.html"} else "og-default.png"
     _info = (f'<figure style="margin:18px 0"><img class="artinfo" loading="lazy" src="{ARTICLE_HERO_IMG[slug]}" alt="ภาพประกอบ {_name}" width="800" height="420"><figcaption style="font-size:10.5px;color:#8a8a95;text-align:right;margin:2px 4px 0">ภาพประกอบ</figcaption></figure>' if slug in ARTICLE_HERO_IMG else "")
-    open(f"{OUT}/{slug}","w",encoding="utf-8").write(head(title,desc,slug,ld,og_image=_ogimg)+f'<main class="wrap">{top_offer(camp,slug)}{clip_block(slug)}{body}{_info}{_ASOF}{share_bar(slug,_name)}{QUIZ_CTA}{_nav}</main>'+FOOTER)
+    open(f"{OUT}/{slug}","w",encoding="utf-8").write(head(title,desc,slug,ld,og_image=_ogimg)+f'<main class="wrap">{top_offer(camp,slug)}{clip_block(slug)}{hero_banner(slug)}{body}{_info}{_ASOF}{share_bar(slug,_name)}{QUIZ_CTA}{_nav}</main>'+FOOTER)
 
 # homepage
 TAGS={"credit-card-krungsri-2026.html":"บัตรเครดิต","kept-savings-2026.html":"ออมเงิน","first-credit-card-student-2026.html":"นักศึกษา","credit-card-easy-approval-2026.html":"บัตรเครดิต","cash-card-vs-credit-card-2026.html":"บัตรเครดิต","krungsri-credit-card-rejected-2026.html":"บัตรเครดิต","credit-card-salary-15000-2026.html":"บัตรเครดิต","kept-interest-rate-2026.html":"ออมเงิน","credit-card-documents-2026.html":"บัตรเครดิต","credit-card-freelance-2026.html":"บัตรเครดิต","credit-card-cashback-2026.html":"บัตรเครดิต","credit-card-installment-0-2026.html":"บัตรเครดิต","high-yield-savings-2026.html":"ออมเงิน","loan-cash-2026.html":"สินเชื่อ","title-loan-2026.html":"สินเชื่อ","debt-consolidation-2026.html":"สินเชื่อ","cash-card-easy-2026.html":"สินเชื่อ","personal-loan-2026.html":"สินเชื่อ","refinance-home-2026.html":"สินเชื่อ","car-for-cash-2026.html":"สินเชื่อ","emergency-fund-2026.html":"ออมเงิน","how-to-save-money-2026.html":"ออมเงิน","salary-budgeting-2026.html":"ออมเงิน","insurance-compare-2026.html":"ประกัน","travel-insurance-vacation-2026.html":"ประกัน","lifestyle-credit-card-2026.html":"บัตรเครดิต","credit-bureau-check-2026.html":"บัตรเครดิต","credit-card-salary-20000-2026.html":"บัตรเครดิต","loan-online-legal-2026.html":"สินเชื่อ","credit-card-interest-2026.html":"บัตรเครดิต","pay-off-credit-card-debt-2026.html":"สินเชื่อ","credit-card-salary-30000-2026.html":"บัตรเครดิต","tax-deduction-salary-2026.html":"ภาษี","health-insurance-salary-2026.html":"ประกัน","mutual-fund-beginner-2026.html":"ลงทุน","retirement-planning-salary-2026.html":"ลงทุน"}
