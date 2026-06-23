@@ -61,10 +61,10 @@ CSS = """
 body{margin:0;font-family:var(--font-body);color:var(--ink);background:var(--bg-soft);line-height:var(--lh);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 a{color:var(--gold-deep)}
 header.top{background:var(--bg);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:9}
-header.top .wrap{max-width:880px;margin:auto;display:flex;align-items:center;gap:10px}
+header.top .wrap{max-width:880px;margin:auto;display:flex;flex-wrap:wrap;align-items:center;gap:10px}
 header.top .logo{width:26px;height:26px;border-radius:6px;object-fit:cover}
 header.top b{color:var(--gold);font-size:18px}
-header.top nav{margin-left:auto;display:flex;gap:16px;font-size:14px}
+header.top nav{margin-left:auto;display:flex;gap:15px;font-size:13.5px;overflow-x:auto;max-width:100%}
 header.top nav a{color:#ddd;text-decoration:none}
 .wrap{max-width:880px;margin:auto;padding:0 20px}
 main.wrap{max-width:68ch}
@@ -186,8 +186,8 @@ def head(title, desc, slug, jsonld_list, og_type="article", og_image="og-default
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;700&family=Noto+Serif+Thai:wght@600&display=swap" rel="stylesheet">
 <style>{CSS}</style>{ld}{GA_SNIPPET}</head><body>
-<header class="top"><div class="wrap"><img src="/logo.png" alt="{SITE}" class="logo" width="26" height="26" decoding="async"><b>{SITE}</b>
-<nav><a href="/">หน้าแรก</a><a href="/about.html">เกี่ยวกับเรา</a><a href="/contact.html">ติดต่อ</a><a href="/disclaimer.html">นโยบาย</a></nav></div></header>
+<header class="top"><div class="wrap"><a href="/" style="display:inline-flex;align-items:center;gap:7px;text-decoration:none"><img src="/logo.png" alt="{SITE}" class="logo" width="26" height="26" decoding="async"><b>{SITE}</b></a>
+<nav><a href="/credit-card-easy-approval-2026.html">บัตรเครดิต</a><a href="/high-yield-savings-2026.html">ออมเงิน</a><a href="/loan-cash-2026.html">สินเชื่อ</a><a href="/insurance-compare-2026.html">ประกัน</a><a href="/links">ลิงก์รวม</a></nav></div></header>
 <div class="trustband"><div class="wrap"><span>🗓 <b>อัปเดต 2026</b></span><span>🔗 อ้างอิงหน้าทางการของผู้ให้บริการ</span><span>⚖️ เทียบหลายเจ้าก่อนตัดสินใจ</span></div></div>"""
 
 # global JS on every page: interstitial (card+loan) + micro-conversion events. $0, no-PII (path+channel only).
