@@ -254,6 +254,8 @@ def top_offer(camp, slug):
     sl = (slug or "").lower()
     if any(k in sl for k in ("health-insurance", "insurance-compare")):
         return f'<div style="margin:14px 0 8px">{ins_cta("tuneprotect", slug, "เช็กแผนประกันสุขภาพ Tune Protect — เหมาจ่ายค่ารักษา ซื้อออนไลน์ →")}</div>'
+    if any(k in sl for k in ("life-insurance", "tax-life")):
+        return f'<div style="margin:14px 0 8px">{ins_cta("fwd", slug, "เช็กแผนประกันชีวิต FWD ลดหย่อนภาษีได้ — สมัครออนไลน์ ไม่ต้องตรวจสุขภาพ →")}</div>'
     if any(k in sl for k in ("mutual-fund", "retirement", "ssf", "rmf", "tax-deduction")):
         return f'<div style="margin:14px 0 8px">{cta("Kept", KEPT, slug, "ก่อนลงทุน/ลดหย่อนภาษี — พักเงินบัญชีออมดอกสูง Kept · สมัครฟรี")}</div>'
     if "kept" in c or "saving" in c or "save" in c:
@@ -291,8 +293,8 @@ _CATB = {"cards": ("\U0001F4B3", "บัตรเครดิต"), "savings": (
          "loans": ("\U0001F4B5", "สินเชื่อ"), "tax": ("\U0001F9FE", "ลดหย่อนภาษี"),
          "insurance": ("\U0001F6E1️", "ประกัน"), "invest": ("\U0001F4C8", "ลงทุน")}
 def _slug_cat(s):
-    if "tax" in s: return "tax"
     if any(k in s for k in ("insurance", "health", "travel-insurance")): return "insurance"
+    if "tax" in s: return "tax"
     if any(k in s for k in ("mutual-fund", "retirement", "invest")): return "invest"
     if any(k in s for k in ("loan", "debt", "refinance", "title", "car-for-cash", "cash-card")): return "loans"
     if any(k in s for k in ("saving", "kept", "emergency", "budget", "how-to-save", "money")): return "savings"
@@ -1531,6 +1533,38 @@ ART.append((slug37,"พักเงินที่ไหนได้ดอกส
  body37,faq37,"kept"))
 
 
+slug38="life-insurance-tax-2026.html"
+body38=f"""<h1 id="top">ประกันชีวิตลดหย่อนภาษี 2026 — ลดได้เท่าไหร่ แบบไหนเข้าเกณฑ์ เลือกยังไง</h1>
+<div class="meta">อัปเดตล่าสุด: 23 มิ.ย. 2026 · หมวด ประกัน</div>
+<p>ประกันชีวิตได้ 2 เด้ง — <b>คุ้มครองชีวิต + ลดหย่อนภาษี</b> แต่ต้องเลือกแบบให้เข้าเกณฑ์ บทความนี้สรุปว่า<b>ลดหย่อนได้เท่าไหร่ แบบไหนใช้ได้ เงื่อนไขอะไร และเลือกยังไงให้ตรงเป้า</b> ฉบับมนุษย์เงินเดือนเข้าใจง่าย — <b>ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำภาษี/ประกัน โปรดยืนยันกับกรมสรรพากรและบริษัทประกัน</b></p>
+{toc([('howmuch','ลดหย่อนได้เท่าไหร่'),('cond','เงื่อนไขที่ต้องเข้า'),('choose','เลือกแบบไหนให้ตรงเป้า'),('steps','ทำยังไงให้ได้สิทธิ'),('faq','คำถามที่พบบ่อย')])}
+<h2 id="howmuch">ลดหย่อนได้เท่าไหร่ (ตามเกณฑ์ปัจจุบัน)</h2>
+<ul><li><b>เบี้ยประกันชีวิตทั่วไป</b> — ลดหย่อนตามที่จ่ายจริง <b>สูงสุด 100,000 บาท/ปี</b></li><li><b>เบี้ยประกันสุขภาพตนเอง</b> — เพิ่มได้สูงสุด 25,000 บาท แต่<b>รวมกับประกันชีวิตทั่วไปแล้วไม่เกิน 100,000</b></li><li><b>เบี้ยประกันชีวิตแบบบำนาญ</b> — ลดหย่อน <b>15% ของเงินได้ สูงสุด 200,000 บาท</b> (และเมื่อรวมกับ RMF/SSF/กองทุนสำรองเลี้ยงชีพ/กบข. ต้องไม่เกิน 500,000)</li><li><b>เบี้ยประกันสุขภาพบิดามารดา</b> — เพิ่มได้สูงสุด 15,000 บาท</li></ul>
+<p>ตัวเลขนี้เป็น<b>กรอบตามเกณฑ์ปัจจุบัน</b> อาจปรับได้ตามประกาศกรมสรรพากร — ก่อนยื่นภาษีควรเช็กล่าสุดเสมอ</p>
+<h2 id="cond">เงื่อนไขที่ต้องเข้า</h2>
+<ul><li>กรมธรรม์ต้อง<b>คุ้มครองตั้งแต่ 10 ปีขึ้นไป</b> และทำกับ<b>บริษัทประกันในไทย</b></li><li>ถ้าแบบมีเงินคืนระหว่างทาง เงินคืนต้อง<b>ไม่เกิน 20% ของเบี้ยรายปี</b> จึงใช้สิทธิได้</li><li>แบบบำนาญมีเงื่อนไขอายุรับเงินบำนาญ (เช่น เริ่มรับ 55 ปีขึ้นไป) ตามที่กรมธรรม์กำหนด</li></ul>
+{ins_cta('fwd','life-insurance-tax','เช็กแผนประกันชีวิต FWD ที่ลดหย่อนภาษีได้ — สมัครออนไลน์ ไม่ต้องตรวจสุขภาพ →')}
+<h2 id="choose">เลือกแบบไหนให้ตรงเป้า</h2>
+<p>เริ่มจาก<b>เป้าหมายหลัก</b>ของคุณ:</p>
+<ul><li><b>เน้นคุ้มครองชีวิต + ลดภาษี</b> → ประกันชีวิตทั่วไป (ตลอดชีพ/ชั่วระยะเวลา) เบี้ยคุ้ม ทุนประกันสูง</li><li><b>เน้นวางแผนเกษียณ + ลดภาษีก้อนใหญ่</b> → ประกันชีวิตแบบ<b>บำนาญ</b> (ลดได้ถึง 200,000 ในเพดานเกษียณ) ดูคู่กับ <a href="/retirement-planning-salary-2026.html">วางแผนเกษียณ</a></li><li><b>กังวลค่ารักษา</b> → เสริม<b>ประกันสุขภาพ</b> ดู <a href="/health-insurance-salary-2026.html">ประกันสุขภาพเลือกยังไง</a> · กลัวโรคร้าย → <a href="/insurance-compare-2026.html">เทียบประกันโรคร้าย (CI)</a></li></ul>
+<p>อย่าซื้อเกินกำลังเบี้ยแค่เพื่อลดภาษี — <b>เบี้ยที่จ่ายไหวยาว ๆ</b> สำคัญกว่า เพราะกรมธรรม์ต้องถือยาว ดูภาพรวมสิทธิลดหย่อนทั้งหมดที่ <a href="/tax-deduction-salary-2026.html">ลดหย่อนภาษีมนุษย์เงินเดือน</a></p>
+<h2 id="steps">ทำยังไงให้ได้สิทธิ</h2>
+<ol><li>เลือกแบบ + ทุนประกันที่<b>จ่ายเบี้ยไหวต่อเนื่อง</b></li><li>ตอนทำกรมธรรม์ <b>แจ้งความยินยอมให้บริษัทส่งข้อมูลเบี้ยให้กรมสรรพากร</b> (ใช้สิทธิลดหย่อนได้สะดวก)</li><li>เก็บกรมธรรม์/หนังสือรับรองเบี้ยไว้ตอนยื่นภาษี</li><li>กรอกค่าลดหย่อนตอนยื่น ภ.ง.ด.90/91</li></ol>
+<p style="text-align:center;color:#5b5b66;font-size:13px">ไม่แน่ใจว่าควรเริ่มแบบไหน ลอง <a href="/quiz">ทำ Quiz 30 วิ</a> ดูแนวที่เหมาะกับเป้าหมายคุณ</p>
+<h2 id="faq">คำถามที่พบบ่อย</h2>
+"""
+faq38=[("ประกันชีวิตลดหย่อนภาษีได้สูงสุดเท่าไหร่?","ประกันชีวิตทั่วไปลดหย่อนตามจ่ายจริงสูงสุด 100,000 บาท (รวมเบี้ยประกันสุขภาพตนเองไม่เกิน 100,000) ส่วนแบบบำนาญลดได้ 15% ของเงินได้ สูงสุด 200,000 ภายใต้เพดานกลุ่มเกษียณ 500,000 — ตัวเลขตามเกณฑ์ปัจจุบัน ควรยืนยันกับกรมสรรพากร"),
+       ("ประกันแบบไหนถึงใช้ลดหย่อนได้?","กรมธรรม์ต้องคุ้มครองตั้งแต่ 10 ปีขึ้นไป ทำกับบริษัทในไทย และถ้ามีเงินคืนระหว่างทางต้องไม่เกิน 20% ของเบี้ยรายปี ประกันอุบัติเหตุล้วน ๆ บางแบบอาจไม่เข้าเกณฑ์ — เช็กเงื่อนไขกับบริษัทก่อนซื้อ"),
+       ("ซื้อประกันแค่เพื่อลดภาษีคุ้มไหม?","ควรเลือกจากความจำเป็น (คุ้มครอง/เกษียณ) เป็นหลัก แล้วได้ลดภาษีเป็นโบนัส อย่าซื้อเบี้ยเกินกำลังเพราะกรมธรรม์ต้องถือยาว ถ้าจ่ายต่อไม่ไหวแล้วเวนคืนก่อนกำหนดอาจขาดทุนและถูกเรียกภาษีคืน"),
+       ("ต้องเตรียมอะไรตอนยื่นภาษี?","เก็บหนังสือรับรองการชำระเบี้ยจากบริษัทประกัน และแจ้งยินยอมให้บริษัทส่งข้อมูลให้กรมสรรพากรตั้งแต่ตอนทำกรมธรรม์ จะกรอกลดหย่อนตอนยื่น ภ.ง.ด.90/91 ได้สะดวก")]
+body38+=faq_block(faq38)
+body38+='<div class="disc">*ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำด้านภาษีหรือการเลือกประกันเฉพาะบุคคล สิทธิลดหย่อน เพดาน และเงื่อนไขเป็นไปตามประกาศกรมสรรพากรและกรมธรรม์ของแต่ละบริษัท อาจเปลี่ยนแปลงได้ โปรดยืนยันกับกรมสรรพากร/บริษัทประกันก่อนตัดสินใจ ไม่การันตีการอนุมัติ/การเคลม</div>'
+body38+='<div class="related"><h2>บทความที่เกี่ยวข้อง</h2><a class="card" href="/tax-deduction-salary-2026.html"><span class="tag">ภาษี</span><h3>ลดหย่อนภาษีมนุษย์เงินเดือน</h3><p>รวมสิทธิลดหย่อนทั้งหมด</p></a><a class="card" href="/insurance-compare-2026.html"><span class="tag">ประกัน</span><h3>เทียบประกัน 4 ชนิด</h3><p>สุขภาพ/ชีวิต/โรคร้าย/เดินทาง</p></a></div>'
+ART.append((slug38,"ประกันชีวิตลดหย่อนภาษี 2026 — ลดได้เท่าไหร่ แบบไหนเข้าเกณฑ์ เลือกยังไง | "+SITE,
+ "ประกันชีวิตลดหย่อนภาษี 2026 ลดได้สูงสุดเท่าไหร่ (ทั่วไป 100,000 · บำนาญ 200,000) แบบไหนเข้าเกณฑ์ เงื่อนไข 10 ปี และวิธีเลือกให้ตรงเป้า — ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำภาษี",
+ body38,faq38,"insurance"))
+
+
 # 29) เงินเดือน 30,000 สมัครบัตร/สินเชื่อ + บัตรพรีเมียม (ปิดชุดเทียร์ 15k/20k/30k; broaden → ออม/ประกัน)
 slug29="credit-card-salary-30000-2026.html"
 body29=f"""<h1 id="top">เงินเดือน 30,000 สมัครบัตรเครดิต/สินเชื่ออะไรได้บ้าง 2026 — แตะบัตรพรีเมียม + ต่อยอดเงินเหลือ</h1>
@@ -1739,7 +1773,7 @@ for slug,title,desc,body,faqs,camp in ART:
     open(f"{OUT}/{slug}","w",encoding="utf-8").write(head(title,desc,slug,ld,og_image=_ogimg)+f'<main class="wrap">{top_offer(camp,slug)}{clip_block(slug)}{hero_banner(slug)}{body}{_info}{_ASOF}{share_bar(slug,_name)}{QUIZ_CTA}{_nav}</main>'+FOOTER)
 
 # homepage
-TAGS={"credit-card-krungsri-2026.html":"บัตรเครดิต","kept-savings-2026.html":"ออมเงิน","first-credit-card-student-2026.html":"นักศึกษา","credit-card-easy-approval-2026.html":"บัตรเครดิต","cash-card-vs-credit-card-2026.html":"บัตรเครดิต","krungsri-credit-card-rejected-2026.html":"บัตรเครดิต","credit-card-salary-15000-2026.html":"บัตรเครดิต","kept-interest-rate-2026.html":"ออมเงิน","credit-card-documents-2026.html":"บัตรเครดิต","credit-card-freelance-2026.html":"บัตรเครดิต","credit-card-cashback-2026.html":"บัตรเครดิต","credit-card-installment-0-2026.html":"บัตรเครดิต","high-yield-savings-2026.html":"ออมเงิน","loan-cash-2026.html":"สินเชื่อ","title-loan-2026.html":"สินเชื่อ","debt-consolidation-2026.html":"สินเชื่อ","cash-card-easy-2026.html":"สินเชื่อ","personal-loan-2026.html":"สินเชื่อ","refinance-home-2026.html":"สินเชื่อ","car-for-cash-2026.html":"สินเชื่อ","emergency-fund-2026.html":"ออมเงิน","how-to-save-money-2026.html":"ออมเงิน","salary-budgeting-2026.html":"ออมเงิน","insurance-compare-2026.html":"ประกัน","travel-insurance-vacation-2026.html":"ประกัน","lifestyle-credit-card-2026.html":"บัตรเครดิต","credit-bureau-check-2026.html":"บัตรเครดิต","credit-card-salary-20000-2026.html":"บัตรเครดิต","loan-online-legal-2026.html":"สินเชื่อ","credit-card-interest-2026.html":"บัตรเครดิต","pay-off-credit-card-debt-2026.html":"สินเชื่อ","move-informal-debt-2026.html":"สินเชื่อ","debt-clinic-sam-2026.html":"สินเชื่อ","credit-card-debt-lawsuit-2026.html":"สินเชื่อ","park-money-high-interest-2026.html":"ออมเงิน","credit-card-salary-30000-2026.html":"บัตรเครดิต","tax-deduction-salary-2026.html":"ภาษี","health-insurance-salary-2026.html":"ประกัน","mutual-fund-beginner-2026.html":"ลงทุน","retirement-planning-salary-2026.html":"ลงทุน"}
+TAGS={"credit-card-krungsri-2026.html":"บัตรเครดิต","kept-savings-2026.html":"ออมเงิน","first-credit-card-student-2026.html":"นักศึกษา","credit-card-easy-approval-2026.html":"บัตรเครดิต","cash-card-vs-credit-card-2026.html":"บัตรเครดิต","krungsri-credit-card-rejected-2026.html":"บัตรเครดิต","credit-card-salary-15000-2026.html":"บัตรเครดิต","kept-interest-rate-2026.html":"ออมเงิน","credit-card-documents-2026.html":"บัตรเครดิต","credit-card-freelance-2026.html":"บัตรเครดิต","credit-card-cashback-2026.html":"บัตรเครดิต","credit-card-installment-0-2026.html":"บัตรเครดิต","high-yield-savings-2026.html":"ออมเงิน","loan-cash-2026.html":"สินเชื่อ","title-loan-2026.html":"สินเชื่อ","debt-consolidation-2026.html":"สินเชื่อ","cash-card-easy-2026.html":"สินเชื่อ","personal-loan-2026.html":"สินเชื่อ","refinance-home-2026.html":"สินเชื่อ","car-for-cash-2026.html":"สินเชื่อ","emergency-fund-2026.html":"ออมเงิน","how-to-save-money-2026.html":"ออมเงิน","salary-budgeting-2026.html":"ออมเงิน","insurance-compare-2026.html":"ประกัน","travel-insurance-vacation-2026.html":"ประกัน","lifestyle-credit-card-2026.html":"บัตรเครดิต","credit-bureau-check-2026.html":"บัตรเครดิต","credit-card-salary-20000-2026.html":"บัตรเครดิต","loan-online-legal-2026.html":"สินเชื่อ","credit-card-interest-2026.html":"บัตรเครดิต","pay-off-credit-card-debt-2026.html":"สินเชื่อ","move-informal-debt-2026.html":"สินเชื่อ","debt-clinic-sam-2026.html":"สินเชื่อ","credit-card-debt-lawsuit-2026.html":"สินเชื่อ","park-money-high-interest-2026.html":"ออมเงิน","life-insurance-tax-2026.html":"ประกัน","credit-card-salary-30000-2026.html":"บัตรเครดิต","tax-deduction-salary-2026.html":"ภาษี","health-insurance-salary-2026.html":"ประกัน","mutual-fund-beginner-2026.html":"ลงทุน","retirement-planning-salary-2026.html":"ลงทุน"}
 CTX={"credit-card-salary-15000-2026.html":"เงินเดือนน้อย","first-credit-card-student-2026.html":"เด็กจบใหม่","credit-card-easy-approval-2026.html":"อนุมัติง่าย","credit-card-freelance-2026.html":"ฟรีแลนซ์","krungsri-credit-card-rejected-2026.html":"เคยไม่ผ่าน","credit-card-installment-0-2026.html":"ผ่อน 0%","credit-card-cashback-2026.html":"เงินคืน","kept-savings-2026.html":"ออมดอกสูง","kept-interest-rate-2026.html":"ออมดอกสูง","high-yield-savings-2026.html":"ออมดอกสูง","emergency-fund-2026.html":"เงินสำรอง","how-to-save-money-2026.html":"เริ่มออม","salary-budgeting-2026.html":"แบ่งเงินเดือน","title-loan-2026.html":"มีรถ","car-for-cash-2026.html":"มีรถ","debt-consolidation-2026.html":"ปลดหนี้","loan-cash-2026.html":"เงินด่วน","personal-loan-2026.html":"ไม่ต้องค้ำ","cash-card-easy-2026.html":"บัตรกดเงินสด","refinance-home-2026.html":"มีบ้าน","travel-insurance-vacation-2026.html":"ก่อนเที่ยว","insurance-compare-2026.html":"เทียบประกัน","lifestyle-credit-card-2026.html":"สายไลฟ์สไตล์","credit-bureau-check-2026.html":"เช็กเครดิต","credit-card-salary-20000-2026.html":"เงินเดือน 20,000","loan-online-legal-2026.html":"กู้ออนไลน์","credit-card-interest-2026.html":"ดอกเบี้ยบัตร","pay-off-credit-card-debt-2026.html":"ปลดหนี้บัตร","credit-card-salary-30000-2026.html":"เงินเดือน 30,000","tax-deduction-salary-2026.html":"ลดหย่อนภาษี","health-insurance-salary-2026.html":"ประกันสุขภาพ","mutual-fund-beginner-2026.html":"เริ่มลงทุน","retirement-planning-salary-2026.html":"วางแผนเกษียณ"}
 def card_html(s,t,d,b):
     ctx = f'<span class="tag tag-ctx">{CTX[s]}</span>' if s in CTX else ""
