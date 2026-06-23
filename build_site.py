@@ -252,6 +252,8 @@ def top_offer(camp, slug):
     """CTA above-the-fold ตาม intent ของบทความ (จาก camp). หมวดที่ไม่มี affiliate ตรง -> ไม่ใส่ (เลี่ยงยัดมั่ว)."""
     c = (camp or "").lower()
     sl = (slug or "").lower()
+    if any(k in sl for k in ("health-insurance", "insurance-compare")):
+        return f'<div style="margin:14px 0 8px">{ins_cta("tuneprotect", slug, "เช็กแผนประกันสุขภาพ Tune Protect — เหมาจ่ายค่ารักษา ซื้อออนไลน์ →")}</div>'
     if any(k in sl for k in ("mutual-fund", "retirement", "ssf", "rmf", "tax-deduction")):
         return f'<div style="margin:14px 0 8px">{cta("Kept", KEPT, slug, "ก่อนลงทุน/ลดหย่อนภาษี — พักเงินบัญชีออมดอกสูง Kept · สมัครฟรี")}</div>'
     if "kept" in c or "saving" in c or "save" in c:
@@ -314,6 +316,9 @@ INSURANCE = [
     {"type":"travel","provider":"scb","label":"ประกันเดินทาง SCB protect — ทั้งในและต่างประเทศ","url":"https://atth.me/00db8m002a0x"},
     {"type":"pa","provider":"axapa","label":"ประกันอุบัติเหตุ AXA (PA) — ค่ารักษา/เงินชดเชยจากอุบัติเหตุ","url":"https://atth.me/go/PhAKgrKX"},
     {"type":"car","provider":"axamotor","label":"ประกันรถยนต์ AXA — เทียบแผน/ซื้อออนไลน์ (ชั้น 1/2+/3)","url":"https://atth.me/0038ag002a0x"},
+    {"type":"health","provider":"tuneprotect","label":"ประกันสุขภาพ Tune Protect — เหมาจ่ายค่ารักษา ซื้อออนไลน์","url":"https://atth.me/00bofm002a0x"},
+    {"type":"life","provider":"fwd","label":"ประกันชีวิต FWD Easy E-Life — สมัครออนไลน์ ไม่ต้องตรวจสุขภาพ","url":"https://atth.me/004brg002a0x"},
+    {"type":"ci","provider":"scbprotect","label":"ประกันโรคร้ายแรง SCB protect — คุ้มครองโรคร้าย เบี้ยเริ่มต้นไม่สูง","url":"https://atth.me/00dgll002a0x"},
 ]
 _INS_TYPE_TH = {"car":"ประกันรถ","travel":"ประกันเดินทาง","pa":"ประกันอุบัติเหตุ (PA)","ci":"ประกันโรคร้ายแรง (CI)","health":"ประกันสุขภาพ","life":"ประกันชีวิต","home":"ประกันบ้าน/อัคคีภัย"}
 # educational comparison rows (approved types) — data-gated affiliate button per type from INSURANCE
@@ -322,6 +327,8 @@ _INS_ROWS = [
     ("car","ประกันรถยนต์","รถชน/สูญหาย/ความเสียหายต่อบุคคลภายนอก (ชั้น 1/2/3)","คนมีรถ เลือกชั้นตามการใช้งาน/อายุรถ","ชั้นความคุ้มครอง + ค่าเสียหายส่วนแรก (deductible)"),
     ("pa","ประกันอุบัติเหตุ (PA)","ค่ารักษา/เงินชดเชยจากอุบัติเหตุ เบี้ยไม่สูง","คนทำงาน/เดินทางบ่อย เสริมจากประกันสุขภาพ","วงเงินต่ออุบัติเหตุ + ข้อยกเว้น"),
     ("ci","ประกันโรคร้ายแรง (CI)","จ่ายเงินก้อนเมื่อตรวจพบโรคร้ายที่กรมธรรม์คุ้มครอง","คนกังวลค่ารักษาโรคร้าย/มีประวัติครอบครัว","รายการโรคที่คุ้มครอง + เงื่อนไขการจ่าย"),
+    ("health","ประกันสุขภาพ","ค่ารักษาพยาบาล IPD/OPD/เหมาจ่าย เมื่อเจ็บป่วย","คนอยากเสริมจากประกันสังคม/สวัสดิการ","วงเงินเหมาจ่าย + ความคุ้มครอง OPD/IPD"),
+    ("life","ประกันชีวิต","คุ้มครองชีวิต + บางแบบลดหย่อนภาษี/มีเงินคืน","คนมีภาระ/อยากวางแผนภาษี-มรดก","ทุนประกัน + ผลประโยชน์/สิทธิลดหย่อนภาษี"),
 ]
 def ins_compare_table():
     bytype = {}
