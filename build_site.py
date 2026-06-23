@@ -273,6 +273,20 @@ def top_offer(camp, slug):
     return f'<div style="margin:14px 0 8px">{cta(m, u, slug, t)}</div>'
 
 
+CLIP_SLUGS = {"credit-bureau-check-2026", "debt-consolidation-2026", "emergency-fund-2026",
+             "first-credit-card-student-2026", "refinance-home-2026", "salary-budgeting-2026", "title-loan-2026"}
+def clip_block(slug):
+    """ฝังคลิปสั้น Veo (8 วิ) บนบทความที่ตรงหมวด -> เพิ่ม dwell time/ความน่าสนใจ. หน้าที่ไม่มีคลิป = ไม่ใส่."""
+    s = (slug or "").split("?")[0].replace(".html", "")
+    if s not in CLIP_SLUGS:
+        return ""
+    return ('<figure style="margin:16px auto;max-width:300px">'
+            '<video style="width:100%;border-radius:14px;display:block;background:#000" '
+            'autoplay muted loop playsinline controls preload="metadata" src="/clips/' + s + '.mp4"></video>'
+            '<figcaption style="font-size:11px;color:#8a8a95;text-align:center;margin-top:5px">'
+            '▶ คลิปสรุปสั้น 8 วิ · ปิดเสียงไว้ กดลำโพงเพื่อฟัง</figcaption></figure>')
+
+
 def faq_block(faqs):
     items = "".join(f"<details><summary>{html.escape(q)}</summary><div>{a}</div></details>" for q,a in faqs)
     return f'<div class="faq">{items}</div>'
@@ -1558,7 +1572,7 @@ for slug,title,desc,body,faqs,camp in ART:
     _nav='<div class="related"><h2>อ่านต่อ / ลิงก์ที่เกี่ยวข้อง</h2><div class="cluster">'+"".join(f'<a href="/{s}">{t}</a>' for s,t in _il)+'</div></div>'
     _ogimg="og-loan.png" if slug in {"loan-cash-2026.html","title-loan-2026.html","debt-consolidation-2026.html","car-for-cash-2026.html","personal-loan-2026.html","cash-card-easy-2026.html","refinance-home-2026.html"} else "og-default.png"
     _info = (f'<figure style="margin:18px 0"><img class="artinfo" loading="lazy" src="{ARTICLE_HERO_IMG[slug]}" alt="ภาพประกอบ {_name}" width="800" height="420"><figcaption style="font-size:10.5px;color:#8a8a95;text-align:right;margin:2px 4px 0">ภาพประกอบ</figcaption></figure>' if slug in ARTICLE_HERO_IMG else "")
-    open(f"{OUT}/{slug}","w",encoding="utf-8").write(head(title,desc,slug,ld,og_image=_ogimg)+f'<main class="wrap">{top_offer(camp,slug)}{body}{_info}{_ASOF}{share_bar(slug,_name)}{QUIZ_CTA}{_nav}</main>'+FOOTER)
+    open(f"{OUT}/{slug}","w",encoding="utf-8").write(head(title,desc,slug,ld,og_image=_ogimg)+f'<main class="wrap">{top_offer(camp,slug)}{clip_block(slug)}{body}{_info}{_ASOF}{share_bar(slug,_name)}{QUIZ_CTA}{_nav}</main>'+FOOTER)
 
 # homepage
 TAGS={"credit-card-krungsri-2026.html":"บัตรเครดิต","kept-savings-2026.html":"ออมเงิน","first-credit-card-student-2026.html":"นักศึกษา","credit-card-easy-approval-2026.html":"บัตรเครดิต","cash-card-vs-credit-card-2026.html":"บัตรเครดิต","krungsri-credit-card-rejected-2026.html":"บัตรเครดิต","credit-card-salary-15000-2026.html":"บัตรเครดิต","kept-interest-rate-2026.html":"ออมเงิน","credit-card-documents-2026.html":"บัตรเครดิต","credit-card-freelance-2026.html":"บัตรเครดิต","credit-card-cashback-2026.html":"บัตรเครดิต","credit-card-installment-0-2026.html":"บัตรเครดิต","high-yield-savings-2026.html":"ออมเงิน","loan-cash-2026.html":"สินเชื่อ","title-loan-2026.html":"สินเชื่อ","debt-consolidation-2026.html":"สินเชื่อ","cash-card-easy-2026.html":"สินเชื่อ","personal-loan-2026.html":"สินเชื่อ","refinance-home-2026.html":"สินเชื่อ","car-for-cash-2026.html":"สินเชื่อ","emergency-fund-2026.html":"ออมเงิน","how-to-save-money-2026.html":"ออมเงิน","salary-budgeting-2026.html":"ออมเงิน","insurance-compare-2026.html":"ประกัน","travel-insurance-vacation-2026.html":"ประกัน","lifestyle-credit-card-2026.html":"บัตรเครดิต","credit-bureau-check-2026.html":"บัตรเครดิต","credit-card-salary-20000-2026.html":"บัตรเครดิต","loan-online-legal-2026.html":"สินเชื่อ","credit-card-interest-2026.html":"บัตรเครดิต","pay-off-credit-card-debt-2026.html":"สินเชื่อ","credit-card-salary-30000-2026.html":"บัตรเครดิต","tax-deduction-salary-2026.html":"ภาษี","health-insurance-salary-2026.html":"ประกัน","mutual-fund-beginner-2026.html":"ลงทุน","retirement-planning-salary-2026.html":"ลงทุน"}
@@ -1669,6 +1683,14 @@ _GO = {
   "title": CAR4CASH + "?utm_source=bio&utm_medium=social&utm_campaign=car4cash&utm_content=go_title",
 }
 open(f"{OUT}/_redirects","w",encoding="utf-8").write("".join(f"/go/{k}  {v}  301!\n" for k,v in _GO.items()))
+import shutil as _sh
+_mc = os.path.join(os.path.dirname(os.path.abspath(__file__)), "media", "clips")
+if os.path.isdir(_mc):
+    os.makedirs(f"{OUT}/clips", exist_ok=True)
+    for _f in os.listdir(_mc):
+        if _f.endswith(".mp4"):
+            _sh.copy(os.path.join(_mc, _f), f"{OUT}/clips/{_f}")
+    print("copied clips ->", len([x for x in os.listdir(_mc) if x.endswith(".mp4")]))
 print("built site/ ->", sorted(os.listdir(OUT)))
 
 # ---- links hub (link-in-bio) ----
