@@ -20,7 +20,7 @@ TODAY = "2026-06-14"
 BUILD_DATE = os.environ.get("SITE_BUILD_DATE") or datetime.datetime.now().strftime("%Y-%m-%d")  # sitemap lastmod / dateModified — bumps each deploy
 OUT = "site"
 os.makedirs(OUT, exist_ok=True)
-for _s,_d in [("cover_banner.png","og-default.png"),("cover_banner_loan.png","og-loan.png"),("logo.png","logo.png"),("insure-hero.svg","insure-hero.svg")]:
+for _s,_d in [("cover_banner.png","og-default.png"),("cover_banner_loan.png","og-loan.png"),("logo.png","logo.png"),("insure-hero.svg","insure-hero.svg"),("car-insurance-infographic.html","car-insurance-infographic.html")]:
     if os.path.exists(_s):
         try: shutil.copy(_s, f"{OUT}/{_d}")
         except Exception: pass

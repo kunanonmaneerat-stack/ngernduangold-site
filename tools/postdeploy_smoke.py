@@ -93,6 +93,8 @@ def pages_local(src):
         content = open(os.path.join(src, fn), encoding="utf-8", errors="replace").read()
         if content.startswith("google-site-verification:"):
             continue  # GSC ownership token, not a content page (sitemap/--live exclude it too)
+        if 'content="noindex"' in content or '<!--smoke-skip-->' in content:
+            continue  # utility/visual page (e.g. infographic), not a content article
         out[fn] = content
     return out
 
