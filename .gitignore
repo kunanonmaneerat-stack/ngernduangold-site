@@ -25,3 +25,10 @@ automation-log/video-out/
 automation-log/_unzip/
 automation-log/video-ingest.json
 automation-log/cowork-inbox/cc-status-*.md
+secrets/postiz-key.txt
+run_postiz.cmd
+build_site.py.head
+build_site.py.truncated_*
+build_site.py.bak*
+
+_insert_*.py
