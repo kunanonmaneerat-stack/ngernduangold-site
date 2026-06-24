@@ -2083,7 +2083,7 @@ for slug,title,desc,body,faqs,camp in ART:
     _nav='<div class="related"><h2>อ่านต่อ / ลิงก์ที่เกี่ยวข้อง</h2><div class="cluster">'+"".join(f'<a href="/{s}">{t}</a>' for s,t in _il)+'</div></div>'
     _sl=_SIBOF.get(slug,[])
     _sib=('<div class="related"><h2>เรื่องอื่นในหมวด'+(TAGS.get(slug) or '')+'</h2><div class="cluster">'+''.join(f'<a href="/{_s2}">{_t2}</a>' for _s2,_t2 in _sl)+'</div></div>') if len(_sl)>=2 else ''
-    _ogimg="og-loan.png" if slug in {"loan-cash-2026.html","title-loan-2026.html","debt-consolidation-2026.html","car-for-cash-2026.html","personal-loan-2026.html","cash-card-easy-2026.html","refinance-home-2026.html"} else "og-default.png"
+    _ogimg="og-loan.png" if slug in {"loan-cash-2026.html","title-loan-2026.html","debt-consolidation-2026.html","car-for-cash-2026.html","personal-loan-2026.html","cash-card-easy-2026.html","refinance-home-2026.html","car-title-loan-compare-2026.html","home-land-for-cash-2026.html","motorcycle-title-loan-2026.html","car-refinance-2026.html","freelance-loan-2026.html","loan-online-legal-2026.html"} else "og-default.png"
     _info = (f'<figure style="margin:18px 0"><img class="artinfo" loading="lazy" src="{ARTICLE_HERO_IMG[slug]}" alt="ภาพประกอบ {_name}" width="800" height="420"><figcaption style="font-size:10.5px;color:#8a8a95;text-align:right;margin:2px 4px 0">ภาพประกอบ</figcaption></figure>' if slug in ARTICLE_HERO_IMG else "")
     open(f"{OUT}/{slug}","w",encoding="utf-8").write(head(title,desc,slug,ld,og_image=_ogimg)+f'<main class="wrap">{top_offer(camp,slug)}{clip_block(slug)}{hero_banner(slug)}{body}{_info}{_ASOF}{share_bar(slug,_name)}{QUIZ_CTA}{_sib}{_nav}</main>'+FOOTER)
 
