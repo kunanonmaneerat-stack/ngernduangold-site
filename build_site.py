@@ -2123,7 +2123,7 @@ HOME_TRUST = """<div class="htrust">
 </div><p class="hnote">* ตัวเลขเป็น \u201cช่วง\u201d ไม่การันตีอนุมัติ/ดอกเบี้ย/ผลตอบแทน · ยึดแนวทาง Responsible Lending ของ ธปท. · เช็กเงื่อนไขล่าสุดรายเจ้าก่อนตัดสินใจ</p>"""
 HOME_CTA = """<div class="hcta"><h2>ไม่รู้เริ่มตรงไหน?</h2><p>ตอบ 2 คำถาม ~30 วิ จับคู่บัตร/สินเชื่อ/ออม ที่เหมาะกับคุณ</p><a class="qbtn" href="/quiz">\U0001F9ED ทำ Quiz เลย \u2192</a></div>"""
 HOME_FEATURED = """<div class="hfeat"><h2>\U0001F525 คู่มือแนะนำ</h2><div class="hfeat-g"><a href="/credit-card-salary-30000-2026.html">เงินเดือน 30,000 สมัครบัตรอะไรได้</a><a href="/credit-bureau-check-2026.html">เช็กเครดิตบูโรก่อนสมัคร</a><a href="/credit-card-interest-2026.html">ดอกเบี้ยบัตร/จ่ายขั้นต่ำ</a><a href="/pay-off-credit-card-debt-2026.html">วิธีปลดหนี้บัตรเครดิต</a><a href="/loan-online-legal-2026.html">แอปกู้เงินถูกกฎหมาย</a><a href="/tax-deduction-salary-2026.html">ลดหย่อนภาษีมนุษย์เงินเดือน</a><a href="/health-insurance-salary-2026.html">ประกันสุขภาพเลือกยังไง</a><a href="/mutual-fund-beginner-2026.html">กองทุนรวม + DCA มือใหม่</a><a href="/retirement-planning-salary-2026.html">วางแผนเกษียณ</a></div></div>"""
-home=head(f"{SITE} — {TAGLINE}","สรุปการเงินมนุษย์เงินเดือน บัตรเครดิต ออมเงิน ลงทุน ย่อยง่าย พร้อมรีวิวและคู่มือสมัครออนไลน์ 2026","",home_ld,"website")
+home=head("การเงินมนุษย์เงินเดือน บัตร·สินเชื่อ·ออม·ประกัน","สรุปการเงินมนุษย์เงินเดือน บัตรเครดิต ออมเงิน ลงทุน ย่อยง่าย พร้อมรีวิวและคู่มือสมัครออนไลน์ 2026","",home_ld,"website")
 home+=f'<div class="hero"><h1>{SITE}</h1><p>{TAGLINE}<br>คู่มือ + รีวิวการเงิน ย่อยง่าย สำหรับคนอยากให้เงินเดือนงอกเงย</p></div>'
 home+=HOME_UP_CSS
 home+=f'<main class="wrap">{HOME_CATS}{HOME_FEATURED}<h2>บทความล่าสุด</h2>{cards}{HOME_TRUST}{HOME_CTA}</main>'+FOOTER
@@ -2343,7 +2343,7 @@ links_body = hub_style + f'''<div class="hub">
 <p class="hubdisc">* หน้านี้มีลิงก์พันธมิตร (affiliate) เราอาจได้รับค่าตอบแทนเมื่อคุณสมัครผ่านลิงก์ โดยไม่มีค่าใช้จ่ายเพิ่มกับคุณ · ข้อมูลเพื่อการศึกษา ไม่การันตีอนุมัติ/อัตราดอกเบี้ย เงื่อนไขเป็นไปตามผู้ให้บริการ กดตรวจล่าสุดที่หน้าสมัคร · <a href="/disclaimer.html">นโยบาย</a></p>
 </div>''' + LINKS_CHANNEL_JS + PICK_JS
 links_ld = [{"@context":"https://schema.org","@type":"WebPage","name":SITE+" — ลิงก์รวม","url":BASE+"/links","inLanguage":"th"}]
-open(f"{OUT}/links.html","w",encoding="utf-8").write(head(SITE+" — ลิงก์รวม บัตรเครดิต สินเชื่อ ออมเงิน","รวมลิงก์สมัครบัตรเครดิต สินเชื่อ และบัญชีออมเงินดอกสูง คัดมาให้มนุษย์เงินเดือน พร้อมบทความรีวิวก่อนสมัคร","links",links_ld,"website")+links_body+FOOTER)
+open(f"{OUT}/links.html","w",encoding="utf-8").write(head("ลิงก์รวม สมัครบัตรเครดิต สินเชื่อ ออมเงินดอกสูง","รวมลิงก์สมัครบัตรเครดิต สินเชื่อ และบัญชีออมเงินดอกสูง คัดมาให้มนุษย์เงินเดือน พร้อมบทความรีวิวก่อนสมัคร","links",links_ld,"website")+links_body+FOOTER)
 print("links.html written")
 
 # ---- quiz (client-side rules · NO runtime API · NO PII stored/sent · no evasion) ----
