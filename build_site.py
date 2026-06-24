@@ -260,6 +260,8 @@ def top_offer(camp, slug):
         return f'<div style="margin:14px 0 8px">{ins_cta("scbprotect", slug, "เช็กแผนประกันโรคร้ายแรง SCB protect — คุ้มครองโรคร้าย เบี้ยเริ่มต้นไม่สูง →")}</div>'
     if "car-insurance" in sl:
         return f'<div style="margin:14px 0 8px">{ins_cta("axamotor", slug, "เช็กแผนประกันรถยนต์ AXA — เทียบชั้น 1/2+/3 ซื้อ/ต่อออนไลน์ →")}</div>'
+    if "car-refinance" in sl:
+        return f'<div style="margin:14px 0 8px">{cta("Srisawad", SRISAWAD, slug, "ยังผ่อนรถอยู่? เช็กรีไฟแนนซ์รถ — ลดดอก/ลดค่างวด เทียบเงื่อนไขออนไลน์กับศรีสวัสดิ์ →")}</div>'
     if "motorcycle-title" in sl:
         return f'<div style="margin:14px 0 8px">{cta("Srisawad", SRISAWAD, slug, "จำนำทะเบียนมอเตอร์ไซค์ — ยังขับได้ตามปกติ เช็กวงเงิน/ดอกเบี้ยออนไลน์กับศรีสวัสดิ์ →")}</div>'
     if any(k in sl for k in ("home-land-for-cash", "property-for-cash", "land-for-cash")):
@@ -1828,6 +1830,42 @@ ART.append((slugMB,"จำนำทะเบียนมอเตอร์ไซ
  bodyMB,faqMB,"title"))
 
 
+# 56) รีไฟแนนซ์รถ standalone — completes secured-loan cluster; Srisawad + Car4Cash
+slugRF="car-refinance-2026.html"
+bodyRF=f"""<h1 id="top">รีไฟแนนซ์รถ 2026 — ยังผ่อนรถอยู่ ลดดอก/ลดค่างวดยังไง ต่างจากจำนำทะเบียน</h1>
+<div class="meta">อัปเดตล่าสุด: 24 มิ.ย. 2026 · หมวด สินเชื่อ</div>
+<p>กำลัง<b>ผ่อนรถอยู่</b>แต่ค่างวดหนักหรือดอกแพง? "รีไฟแนนซ์รถ" คือการ<b>ทำสัญญาสินเชื่อใหม่เพื่อปิดของเดิม</b> ให้<b>ดอกถูกลง ค่างวดเบาลง</b> (บางกรณีได้เงินส่วนต่างเพิ่ม) บทความนี้สรุป<b>รีไฟแนนซ์รถคืออะไร · เมื่อไหร่ควรทำ · ต่างจากจำนำทะเบียน/รถแลกเงินยังไง · วงเงิน-ดอกดูจากอะไร · และเช็กอะไรก่อนเซ็น</b> — <b>ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำทางการเงิน เงื่อนไข/ดอกเบี้ย/การอนุมัติเป็นไปตามผู้ให้บริการ ยึดแนวทาง Responsible Lending ของ ธปท.</b></p>
+{toc([('what','รีไฟแนนซ์รถคืออะไร'),('when','เมื่อไหร่ควรรีไฟแนนซ์รถ'),('vs','ต่างจากจำนำทะเบียน/รถแลกเงิน'),('rate','วงเงิน/ดอกเบี้ย ดูจากอะไร'),('docs','เอกสาร/ขั้นตอน'),('check','เช็กก่อนรีไฟแนนซ์'),('faq','คำถามที่พบบ่อย')])}
+<h2 id="what">รีไฟแนนซ์รถคืออะไร</h2>
+<p>คือการขอ<b>สินเชื่อก้อนใหม่มาปิดสินเชื่อรถเดิมที่ยังผ่อนอยู่</b> เพื่อให้ได้<b>เงื่อนไขที่ดีกว่า</b> — ดอกถูกลง ค่างวดต่อเดือนเบาลง หรือยืดงวดให้พอจ่ายไหว บางกรณีถ้ามูลค่ารถสูงกว่ายอดหนี้คงเหลือมาก อาจ<b>ได้เงินส่วนต่างเพิ่ม</b>มาใช้ด้วย จุดต่างสำคัญคือ<b>รีไฟแนนซ์ใช้กับรถที่ยังผ่อนอยู่</b> ไม่ใช่รถที่ปลอดภาระแล้ว</p>
+{cta('Srisawad',SRISAWAD,'carrefi','ยังผ่อนรถอยู่? เช็กรีไฟแนนซ์รถ — ลดดอก/ลดค่างวด เทียบเงื่อนไขออนไลน์ ศรีสวัสดิ์ (ลิงก์พันธมิตร) →')}
+<h2 id="when">เมื่อไหร่ควรรีไฟแนนซ์รถ</h2>
+<ul><li><b>ดอกเบี้ยสัญญาเดิมสูง</b> และมีที่ใหม่ดอกถูกกว่าชัดเจน</li><li><b>ค่างวดหนักเกินไป</b> อยากยืดงวดให้เบาลงพอจ่ายไหว</li><li><b>ผ่อนมาสักระยะ</b> ยอดหนี้ลดลง/มูลค่ารถยังดี ทำให้เงื่อนไขใหม่ดีขึ้น</li><li><b>ต้องการเงินก้อนเพิ่ม</b> และมูลค่ารถสูงกว่ายอดคงเหลือ (cash-out)</li></ul>
+<h2 id="vs">ต่างจากจำนำทะเบียน/รถแลกเงิน</h2>
+<ul><li><b>รีไฟแนนซ์รถ</b> = รถ<b>ยังผ่อนอยู่</b> → ทำสัญญาใหม่ลดภาระ</li><li><b>จำนำทะเบียน/รถแลกเงิน</b> = รถ<b>ปลอดภาระแล้ว</b> → เอาเล่มค้ำได้เงินก้อน ดูที่ <a href="/title-loan-2026.html">จำนำทะเบียนรถ</a> และ <a href="/car-for-cash-2026.html">รถแลกเงิน</a></li><li>งงว่าจะเลือกแบบไหน? อ่านสรุปครบที่ <a href="/car-title-loan-compare-2026.html">เทียบรถแลกเงิน vs จำนำทะเบียน vs รีไฟแนนซ์รถ</a></li></ul>
+<h2 id="rate">วงเงิน/ดอกเบี้ย ดูจากอะไร</h2>
+<ul><li><b>ยอดหนี้คงเหลือ</b>ของสัญญาเดิม และ<b>มูลค่ารถปัจจุบัน</b> (รุ่น/ปี/สภาพ)</li><li><b>ประวัติการผ่อน</b>และความสามารถในการชำระ</li><li><b>ประเภทดอกเบี้ย</b> — ดูดอกแบบ<b>ลดต้นลดดอก</b>และดอกรวมตลอดสัญญา ไม่ใช่แค่ค่างวดต่อเดือน</li></ul>
+<p style="font-size:13px;color:#5b5b66">*ตัวเลขวงเงิน/ดอกเบี้ยจริงเช็กล่าสุดที่ผู้ให้บริการ — บทความนี้ไม่ระบุอัตราเพื่อเลี่ยงข้อมูลคลาดเคลื่อน</p>
+{cta('Car4Cash',CAR4CASH,'carrefi','เทียบรีไฟแนนซ์/รถแลกเงิน — เช็กวงเงินจากรถคุณ →')}
+<h2 id="docs">เอกสาร/ขั้นตอนคร่าว ๆ</h2>
+<ul><li><b>เอกสาร:</b> บัตรประชาชน · สัญญา/ใบเสร็จผ่อนรถเดิม · เล่มทะเบียนรถ · เอกสารรายได้</li><li><b>ขั้นตอน:</b> ยื่นเรื่อง → ประเมินรถ + ยอดคงเหลือ → แจ้งเงื่อนไขใหม่ → อนุมัติ + ปิดสัญญาเดิม → ผ่อนกับเจ้าใหม่</li></ul>
+<h2 id="check">เช็กก่อนรีไฟแนนซ์ (สำคัญ)</h2>
+<ul><li><b>ดอกรวมตลอดสัญญา</b> ไม่ใช่แค่ค่างวดต่อเดือน — ยืดงวดอาจค่างวดเบาแต่ดอกรวมมากขึ้น</li><li><b>ค่าใช้จ่ายในการปิดสัญญาเดิม</b> + ค่าธรรมเนียมที่ใหม่ คุ้มกับดอกที่ลดไหม</li><li><b>ยังครอบครอง/ใช้รถได้ปกติ</b> และผู้ให้บริการมีใบอนุญาต</li><li><b>ผ่อนไหวจริง</b> — รถคือหลักประกัน อย่ารีไฟแนนซ์เพื่อยืดหนี้จนเสียวินัย</li></ul>
+<p style="text-align:center;color:#5b5b66;font-size:13px">ไม่แน่ใจว่าควรรีไฟแนนซ์หรือทางอื่นดีกว่า ลอง <a href="/quiz">ทำ Quiz 30 วิ</a> ดูแนวทางเบื้องต้น</p>
+<h2 id="faq">คำถามที่พบบ่อย</h2>
+"""
+faqRF=[("รีไฟแนนซ์รถต่างจากจำนำทะเบียนยังไง?","รีไฟแนนซ์รถใช้กับรถที่ยังผ่อนอยู่ เพื่อทำสัญญาใหม่ให้ดอก/ค่างวดเบาลง ส่วนจำนำทะเบียนใช้กับรถที่ปลอดภาระแล้ว เอาเล่มค้ำเพื่อได้เงินก้อน เลือกตามว่ารถยังผ่อนอยู่หรือผ่อนหมดแล้ว"),
+       ("รีไฟแนนซ์รถแล้วได้เงินก้อนเพิ่มไหม?","อาจได้ถ้ามูลค่ารถปัจจุบันสูงกว่ายอดหนี้คงเหลือมาก (เรียกว่า cash-out) แต่ขึ้นกับนโยบายผู้ให้บริการและการประเมิน ควรสอบถามและคำนวณดอกรวมที่เพิ่มขึ้นก่อนตัดสินใจ"),
+       ("ค่างวดเบาลงแปลว่าคุ้มเสมอไหม?","ไม่เสมอ การยืดงวดทำให้ค่างวดต่อเดือนเบาลงแต่ดอกรวมตลอดสัญญาอาจมากขึ้น ควรดูดอกรวมและค่าใช้จ่ายในการปิดสัญญาเดิมประกอบ ไม่ใช่ดูแค่ค่างวดต่อเดือน"),
+       ("รีไฟแนนซ์รถแล้วยังขับรถได้ไหม?","ได้ตามปกติ กรรมสิทธิ์/การใช้งานไม่เปลี่ยน เพียงเปลี่ยนผู้ให้สินเชื่อและเงื่อนไขการผ่อน ควรเลือกผู้ให้บริการที่มีใบอนุญาตและอ่านสัญญาให้ครบก่อนเซ็น")]
+bodyRF+=faq_block(faqRF)
+bodyRF+='<div class="disc">*ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำทางการเงินเฉพาะบุคคล เงื่อนไข วงเงิน ดอกเบี้ย และการอนุมัติเป็นไปตามผู้ให้บริการและดุลพินิจของผู้ให้กู้ ยึดแนวทาง Responsible Lending ของ ธปท. เปรียบเทียบดอกรวมตลอดสัญญาและค่าใช้จ่ายปิดสัญญาเดิมก่อนตัดสินใจ กู้เท่าที่จำเป็นและผ่อนไหว อ่านสัญญาก่อนเซ็น</div>'
+bodyRF+='<div class="related"><h2>บทความที่เกี่ยวข้อง</h2><a class="card" href="/car-title-loan-compare-2026.html"><span class="tag">สินเชื่อ</span><h3>เทียบรถแลกเงิน 3 แบบ</h3><p>จำนำทะเบียน vs รีไฟแนนซ์</p></a><a class="card" href="/title-loan-2026.html"><span class="tag">สินเชื่อ</span><h3>จำนำทะเบียนรถ</h3><p>รถปลอดภาระ ต้องการเงินด่วน</p></a></div>'
+ART.append((slugRF,"รีไฟแนนซ์รถ 2026 — ยังผ่อนรถอยู่ ลดดอก/ลดค่างวดยังไง ต่างจากจำนำทะเบียน | "+SITE,
+ "รีไฟแนนซ์รถ 2026 ยังผ่อนรถอยู่ลดดอก/ลดค่างวดยังไง ต่างจากจำนำทะเบียน/รถแลกเงินยังไง เมื่อไหร่ควรทำ วงเงิน/ดอกดูจากอะไร และเช็กอะไรก่อนเซ็น — ข้อมูลเพื่อการศึกษา",
+ bodyRF,faqRF,"title"))
+
+
 # 29) เงินเดือน 30,000 สมัครบัตร/สินเชื่อ + บัตรพรีเมียม (ปิดชุดเทียร์ 15k/20k/30k; broaden → ออม/ประกัน)
 slug29="credit-card-salary-30000-2026.html"
 body29=f"""<h1 id="top">เงินเดือน 30,000 สมัครบัตรเครดิต/สินเชื่ออะไรได้บ้าง 2026 — แตะบัตรพรีเมียม + ต่อยอดเงินเหลือ</h1>
@@ -2011,7 +2049,7 @@ ART.append((slug33,"วางแผนเกษียณมนุษย์เง
 
 
 # write articles
-TAGS={"credit-card-krungsri-2026.html":"บัตรเครดิต","kept-savings-2026.html":"ออมเงิน","first-credit-card-student-2026.html":"นักศึกษา","credit-card-easy-approval-2026.html":"บัตรเครดิต","cash-card-vs-credit-card-2026.html":"บัตรเครดิต","krungsri-credit-card-rejected-2026.html":"บัตรเครดิต","credit-card-salary-15000-2026.html":"บัตรเครดิต","kept-interest-rate-2026.html":"ออมเงิน","credit-card-documents-2026.html":"บัตรเครดิต","credit-card-freelance-2026.html":"บัตรเครดิต","credit-card-cashback-2026.html":"บัตรเครดิต","credit-card-installment-0-2026.html":"บัตรเครดิต","high-yield-savings-2026.html":"ออมเงิน","loan-cash-2026.html":"สินเชื่อ","title-loan-2026.html":"สินเชื่อ","debt-consolidation-2026.html":"สินเชื่อ","cash-card-easy-2026.html":"สินเชื่อ","personal-loan-2026.html":"สินเชื่อ","refinance-home-2026.html":"สินเชื่อ","car-for-cash-2026.html":"สินเชื่อ","emergency-fund-2026.html":"ออมเงิน","how-to-save-money-2026.html":"ออมเงิน","salary-budgeting-2026.html":"ออมเงิน","insurance-compare-2026.html":"ประกัน","travel-insurance-vacation-2026.html":"ประกัน","lifestyle-credit-card-2026.html":"บัตรเครดิต","credit-bureau-check-2026.html":"บัตรเครดิต","credit-card-salary-20000-2026.html":"บัตรเครดิต","loan-online-legal-2026.html":"สินเชื่อ","credit-card-interest-2026.html":"บัตรเครดิต","pay-off-credit-card-debt-2026.html":"สินเชื่อ","move-informal-debt-2026.html":"สินเชื่อ","debt-clinic-sam-2026.html":"สินเชื่อ","credit-card-debt-lawsuit-2026.html":"สินเชื่อ","park-money-high-interest-2026.html":"ออมเงิน","life-insurance-tax-2026.html":"ประกัน","critical-illness-insurance-2026.html":"ประกัน","car-insurance-2026.html":"ประกัน","freelance-loan-2026.html":"สินเชื่อ","debt-restructuring-2026.html":"สินเชื่อ","car-title-loan-compare-2026.html":"สินเชื่อ","home-land-for-cash-2026.html":"สินเชื่อ","motorcycle-title-loan-2026.html":"สินเชื่อ","credit-card-salary-30000-2026.html":"บัตรเครดิต","tax-deduction-salary-2026.html":"ภาษี","health-insurance-salary-2026.html":"ประกัน","mutual-fund-beginner-2026.html":"ลงทุน","retirement-planning-salary-2026.html":"ลงทุน"}
+TAGS={"credit-card-krungsri-2026.html":"บัตรเครดิต","kept-savings-2026.html":"ออมเงิน","first-credit-card-student-2026.html":"นักศึกษา","credit-card-easy-approval-2026.html":"บัตรเครดิต","cash-card-vs-credit-card-2026.html":"บัตรเครดิต","krungsri-credit-card-rejected-2026.html":"บัตรเครดิต","credit-card-salary-15000-2026.html":"บัตรเครดิต","kept-interest-rate-2026.html":"ออมเงิน","credit-card-documents-2026.html":"บัตรเครดิต","credit-card-freelance-2026.html":"บัตรเครดิต","credit-card-cashback-2026.html":"บัตรเครดิต","credit-card-installment-0-2026.html":"บัตรเครดิต","high-yield-savings-2026.html":"ออมเงิน","loan-cash-2026.html":"สินเชื่อ","title-loan-2026.html":"สินเชื่อ","debt-consolidation-2026.html":"สินเชื่อ","cash-card-easy-2026.html":"สินเชื่อ","personal-loan-2026.html":"สินเชื่อ","refinance-home-2026.html":"สินเชื่อ","car-for-cash-2026.html":"สินเชื่อ","emergency-fund-2026.html":"ออมเงิน","how-to-save-money-2026.html":"ออมเงิน","salary-budgeting-2026.html":"ออมเงิน","insurance-compare-2026.html":"ประกัน","travel-insurance-vacation-2026.html":"ประกัน","lifestyle-credit-card-2026.html":"บัตรเครดิต","credit-bureau-check-2026.html":"บัตรเครดิต","credit-card-salary-20000-2026.html":"บัตรเครดิต","loan-online-legal-2026.html":"สินเชื่อ","credit-card-interest-2026.html":"บัตรเครดิต","pay-off-credit-card-debt-2026.html":"สินเชื่อ","move-informal-debt-2026.html":"สินเชื่อ","debt-clinic-sam-2026.html":"สินเชื่อ","credit-card-debt-lawsuit-2026.html":"สินเชื่อ","park-money-high-interest-2026.html":"ออมเงิน","life-insurance-tax-2026.html":"ประกัน","critical-illness-insurance-2026.html":"ประกัน","car-insurance-2026.html":"ประกัน","freelance-loan-2026.html":"สินเชื่อ","debt-restructuring-2026.html":"สินเชื่อ","car-title-loan-compare-2026.html":"สินเชื่อ","home-land-for-cash-2026.html":"สินเชื่อ","motorcycle-title-loan-2026.html":"สินเชื่อ","car-refinance-2026.html":"สินเชื่อ","credit-card-salary-30000-2026.html":"บัตรเครดิต","tax-deduction-salary-2026.html":"ภาษี","health-insurance-salary-2026.html":"ประกัน","mutual-fund-beginner-2026.html":"ลงทุน","retirement-planning-salary-2026.html":"ลงทุน"}
 _CATLIST={}
 for (_s2,_t2,_d2,_b2,_f2,_c2) in ART:
     _c=TAGS.get(_s2)
