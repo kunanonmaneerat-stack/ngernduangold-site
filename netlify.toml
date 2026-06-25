@@ -4,6 +4,10 @@
 [build]
   command = "python3 build_site.py && python3 tools/postdeploy_smoke.py --src site"
   publish = "site"
+  # Skip rebuilds when a commit only touches non-site folders (automation/scraping/video pipeline).
+  # Exit 0 => Netlify ignores the build. Any change to build_site.py, *.html, media/, tools/, assets,
+  # or this file still rebuilds (those live outside the excluded dirs). Saves build minutes.
+  ignore = "git diff --quiet HEAD^ HEAD -- . ':(exclude)automation-log' ':(exclude)pipeline' ':(exclude)tiktok-pipeline'"
 
 [build.environment]
   SITE_BASE = "https://ngernduangold.com"
