@@ -32,3 +32,9 @@ build_site.py.truncated_*
 build_site.py.bak*
 
 _insert_*.py
+pipeline/_draft.txt
+
+# local working/scratch - never commit (repo PUBLIC)
+pipeline/_*
+pipeline/article-posts*.json
+pipeline/*_out.json

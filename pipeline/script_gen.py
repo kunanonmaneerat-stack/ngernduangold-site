@@ -9,6 +9,10 @@ The clip itself is built by the EXISTING ffmpeg engine (tiktok-weekly-content-en
 script only produces text scripts; it does NOT generate paid video.
 """
 import os, sys, json, datetime
+try:  # cp874-safe UTF-8 stdout/stderr (idempotent)
+    import sys as _sys; _sys.stdout.reconfigure(encoding="utf-8", errors="replace"); _sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import free_ai
 

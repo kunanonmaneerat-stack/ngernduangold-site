@@ -12,6 +12,10 @@ flow (ต่อจาก art_to_stitch -> Stitch -> preview):
 ใช้:  py pipeline/stylist.py  [path/to/preview.html]
 """
 import os, sys, re, glob, datetime
+try:  # cp874-safe: UTF-8 stdout/stderr so Thai/emoji prints never crash on Windows console (idempotent)
+    import sys as _sys; _sys.stdout.reconfigure(encoding="utf-8", errors="replace"); _sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

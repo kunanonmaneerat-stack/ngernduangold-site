@@ -6,6 +6,10 @@ Fail-closed: if there is no GOOGLE_AI_STUDIO_KEY the script SKIPS cleanly (exit 
 call, no crash) so the scheduler keeps running. NO evasion logic.
 """
 import os, sys, json, datetime
+try:  # cp874-safe UTF-8 stdout/stderr (idempotent)
+    import sys as _sys; _sys.stdout.reconfigure(encoding="utf-8", errors="replace"); _sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import free_ai
 
