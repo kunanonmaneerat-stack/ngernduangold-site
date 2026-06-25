@@ -13,6 +13,10 @@ import:
   from log_run import log_run; log_run("queue-keeper","ok","เติม 6 โพสต์",{"added":6})
 """
 import json, os, sys, re, argparse, datetime
+try:  # cp874-safe UTF-8 stdout/stderr (idempotent)
+    import sys as _sys; _sys.stdout.reconfigure(encoding="utf-8", errors="replace"); _sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 

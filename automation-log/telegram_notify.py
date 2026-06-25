@@ -15,6 +15,10 @@ CLI:
   python telegram_notify.py --text "ข้อความ"   # send arbitrary text (HTML)
 """
 import os, sys, json, argparse, urllib.request
+try:  # cp874-safe UTF-8 stdout/stderr (idempotent)
+    import sys as _sys; _sys.stdout.reconfigure(encoding="utf-8", errors="replace"); _sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
 
 ENV_FILE = r"C:\Users\nL_ku\ga4-admin\telegram.env"   # non-repo (not public) — owner fills
 
