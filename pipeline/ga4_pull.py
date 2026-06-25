@@ -13,7 +13,7 @@ LOG = os.path.join(ROOT, "automation-log", "ga4_pull.log")
 DAYS = 28
 QUIZ_PATH = os.environ.get("GA4_QUIZ_PATH", "/quiz")
 CONV_EVENT = os.environ.get("GA4_CONV_EVENT", "affiliate_click")
-SCOPES = ["https://www.googleapis.com/auth/analytics.readonly"]
+SCOPES = ["https://www.googleapis.com/auth/analytics.readonly", "https://www.googleapis.com/auth/webmasters.readonly"]  # shared token with gsc_pull: keep BOTH so refresh-rewrite never strips webmasters
 
 
 def _get(name, default=""):
