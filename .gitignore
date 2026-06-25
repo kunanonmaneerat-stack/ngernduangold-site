@@ -38,3 +38,8 @@ pipeline/_draft.txt
 pipeline/_*
 pipeline/article-posts*.json
 pipeline/*_out.json
+
+# leak guard: pantip batch drafts/scraped + PII handoff (added by reconcile 2026-06-25)
+automation-log/_pantip_*
+automation-log/cowork-handoff-*.md
+automation-log/_*batch*
