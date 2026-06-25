@@ -79,6 +79,38 @@ def posted(channel: str, topic: str = "", link: str = "") -> bool:
         msg += "\n" + link
     return notify(msg)
 
+
+def from_log(routine):
+    """Send a Telegram update built ONLY from the latest run-log entry for `routine`
+    (single source of truth = proof-of-run, written from real results). Never raises.
+    Telegram numbers == logged numbers -- no hand-typed/guessed values. ASCII-only code;
+    Thai content comes from the log entry (data), not code literals."""
+    import glob
+    here = os.path.dirname(os.path.abspath(__file__))
+    entry = None
+    for fn in sorted(glob.glob(os.path.join(here, "[0-9][0-9][0-9][0-9]-[0-9][0-9].jsonl"))):
+        try:
+            for line in open(fn, encoding="utf-8"):
+                line = line.strip()
+                if not line:
+                    continue
+                e = json.loads(line)
+                if e.get("routine") == routine:
+                    entry = e
+        except Exception:
+            continue
+    if not entry:
+        return notify("[run-log] " + routine + ": no entry found (cannot verify)")
+    st = str(entry.get("status", "?"))
+    m = entry.get("metrics") or {}
+    mtxt = " | ".join(str(k) + "=" + str(v) for k, v in m.items()) if isinstance(m, dict) and m else ""
+    parts = ["[" + st.upper() + "] <b>" + routine + "</b>", str(entry.get("summary", ""))]
+    if mtxt:
+        parts.append("metrics: " + mtxt)
+    parts.append("at " + str(entry.get("ts", ""))[:16] + " (from run-log)")
+    return notify("\n".join(parts))
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--text")
@@ -86,19 +118,20 @@ if __name__ == "__main__":
     ap.add_argument("--approval", help="what needs approval (sends APPROVAL NEEDED ping)")
     ap.add_argument("--detail", default="", help="draft summary / context")
     ap.add_argument("--link", default="", help="optional link / permalink")
-    ap.add_argument("--posted", help="channel just posted to (sends ✅ done-notify)")
+    ap.add_argument("--posted", help="channel just posted to (sends done-notify)")
     ap.add_argument("--topic", default="", help="topic/headline for the done-notify")
+    ap.add_argument("--from-log", dest="from_log", help="routine name -> send update built from latest run-log (verified source of truth; no hand-typed numbers)")
     a = ap.parse_args()
     if a.test:
-        ok = notify("🔔 ngernduangold alerts ออนไลน์แล้ว — ระบบแจ้งเตือน Telegram พร้อมใช้งาน")
-        print("TEST sent:", ok)
-        sys.exit(0 if ok else 1)
+        ok = notify("ngernduangold alerts online -- Telegram notifier ready")
+        print("TEST sent:", ok); sys.exit(0 if ok else 1)
     if a.posted:
         ok = posted(a.posted, a.topic, a.link)
-        print("POSTED-notify sent:", ok)
-        sys.exit(0 if ok else 1)
+        print("POSTED-notify sent:", ok); sys.exit(0 if ok else 1)
+    if a.from_log:
+        ok = from_log(a.from_log)
+        print("FROM-LOG sent:", ok); sys.exit(0 if ok else 1)
     if a.approval:
         ok = approval(a.approval, a.detail, a.link)
-        print("APPROVAL sent:", ok)
-        sys.exit(0 if ok else 1)
-    print("sent:", notify(a.text)) if a.text else print("usage: --text '...' | --posted '<channel>' [--topic .. --link ..] | --approval '...' | --test")
+        print("APPROVAL sent:", ok); sys.exit(0 if ok else 1)
+    print("sent:", notify(a.text)) if a.text else print("usage: --text '...' | --posted '<ch>' | --from-log '<routine>' | --approval '...' | --test")

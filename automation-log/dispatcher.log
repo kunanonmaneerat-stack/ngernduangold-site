@@ -454,3 +454,14 @@ CC STATUS -> C:\Users\nL_ku\ngernduangold-site\automation-log\cowork-inbox\cc-st
            ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4e5' in position 0: character maps to <undefined>
 [Wed 06/24/2026  8:32:12.23] run_daily end exit=1 
+[Thu 06/25/2026  7:00:02.50] run_daily start 
+queued: หนี้บัตรเครดิตหลายใบ จ่ายขั้นต่ำทุกเดือนแต | draft qwen-plus | final qwen-plus
+queued: ผ่อนรถอยู่แต่เริ่มผ่อนไม่ไหว ควรขายดาวน์ ร | draft qwen-plus | final ?
+queued: ฟรีแลนซ์รายได้ไม่ประจำ อยากได้บัตร/สินเชื่ | draft ? | final ?
+queued: เงินเดือน 15000 อยากได้บัตรเครดิตใบแรก สมั | draft ? | final ?
+queued: เงินเดือนชนเดือนทุกที เก็บเงินไม่อยู่ เริ่ | draft ? | final ?
+queued: สมัครบัตร/สินเชื่อไม่ผ่านบ่อย ควรเช็กเครดิ | draft ? | final ?
+queued: ผ่อนบ้านมาเกิน 3 ปี อยากรีไฟแนนซ์ลดดอก ดูอ | draft ? | final ?
+---
+ngernduangold daily queue: 7/7 draft ตรวจ 5 ชั้นแล้ว พร้อม approve -> automation-log/council-2026-06-25.md (ลิงก์ DM/bio เท่านั้น คนกดโพสต์)
+notify skipped: Command '['C:\\Users\\nL_ku\\AppData\\Local\\hermes\\hermes-agent\\venv\\Scripts
