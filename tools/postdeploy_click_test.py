@@ -202,7 +202,7 @@ def run_events(base):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--base", default="https://ngernduangold.netlify.app")
+    ap.add_argument("--base", default="https://ngernduangold.com")
     ap.add_argument("--report", nargs="?",
                     const=os.path.join(REPO, "automation-log", "clicktest-latest.md"))
     ap.add_argument("--telegram-on-fail", action="store_true")

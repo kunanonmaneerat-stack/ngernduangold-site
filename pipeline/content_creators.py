@@ -7,7 +7,7 @@ import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import free_llm, comply_gate
 
-QUIZ = "ngernduangold.netlify.app/quiz"
+QUIZ = "ngernduangold.com/quiz"
 KW = "เช็กสิทธิ์"
 
 CREATORS = {

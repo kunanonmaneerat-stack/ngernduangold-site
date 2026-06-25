@@ -31,7 +31,7 @@ def main():
              "- [ ] เวลาแนะนำ **19:00–21:00** · **1 คลิป/วัน** (ความถี่ต่ำ — อย่ายิงรัวจนโดน spam-flag)",
              "- [ ] ตอบคอมเมนต์เองช่วงแรก (native engagement ช่วยปลด throttle)", "",
              "## bio",
-             "- [ ] หลัง warm-up วันที่ 8 → ใส่ลิงก์ `ngernduangold.netlify.app/links` ใน bio (UTM tiktok ติดอัตโนมัติ)", "",
+             "- [ ] หลัง warm-up วันที่ 8 → ใส่ลิงก์ `ngernduangold.com/links` ใน bio (UTM tiktok ติดอัตโนมัติ)", "",
              "## คลิปรอบนี้"]
     for m in manifest:
         nw = f" · ⚠️เช็กตัวเลข {len(m['number_warnings'])}" if m.get("number_warnings") else ""

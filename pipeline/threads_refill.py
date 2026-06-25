@@ -12,7 +12,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.path.join(ROOT, "pipeline", "article-posts-refill.json")
 STATE = os.path.join(ROOT, "automation-log", "threads-refill-state.txt")
-B = "https://ngernduangold.netlify.app/"
+B = "https://ngernduangold.com/"
 
 
 def u(slug):

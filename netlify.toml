@@ -6,6 +6,21 @@
   publish = "site"
 
 [build.environment]
-  SITE_BASE = "https://ngernduangold.netlify.app"
+  SITE_BASE = "https://ngernduangold.com"
   SITE_GA = "G-17PPE0M1B8"
   PYTHON_VERSION = "3.11"
+
+# Force a single canonical host (apex). The default *.netlify.app domain and the
+# www subdomain 301 to https://ngernduangold.com so SEO consolidates on the
+# primary domain. (Equivalent to setting the Netlify "primary domain".)
+[[redirects]]
+  from = "https://ngernduangold.netlify.app/*"
+  to = "https://ngernduangold.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.ngernduangold.com/*"
+  to = "https://ngernduangold.com/:splat"
+  status = 301
+  force = true

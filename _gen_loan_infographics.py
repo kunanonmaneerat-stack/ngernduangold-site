@@ -51,7 +51,7 @@ TPL = """<!doctype html><html lang="th"><head><meta charset="utf-8">
   <div class="note"><span class="ic">⚠️</span><span>{note}</span></div>
   <div class="foot">
     <div class="cta"><div class="t1">อ่านเต็ม + เทียบเงื่อนไขจริง</div>
-      <div class="t2">ngernduangold.netlify.app <span class="arrow">→</span></div></div>
+      <div class="t2">ngernduangold.com <span class="arrow">→</span></div></div>
     <div class="disc">{disc}</div>
   </div>
 </body></html>"""
