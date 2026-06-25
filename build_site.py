@@ -2196,7 +2196,7 @@ _GO = {
 }
 open(f"{OUT}/_redirects","w",encoding="utf-8").write("".join(f"/go/{k}  {v}  301!\n" for k,v in _GO.items()))
 import shutil as _sh
-_mc = os.path.join(os.path.dirname(os.path.abspath(__file__)), "media", "clips")
+_mc = os.path.join(os.path.dirname(os.path.abspath(__file__)), "media", "clips-web")
 if os.path.isdir(_mc):
     os.makedirs(f"{OUT}/clips", exist_ok=True)
     for _f in os.listdir(_mc):
