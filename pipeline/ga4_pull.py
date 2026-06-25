@@ -90,6 +90,14 @@ def _credentials():
         return None
 
 
+def _host_exclude():
+    """Exclude synthetic localhost test traffic from every report (build once, reuse)."""
+    from google.analytics.data_v1beta.types import Filter, FilterExpression
+    return FilterExpression(not_expression=FilterExpression(
+        filter=Filter(field_name="hostName",
+                      in_list_filter=Filter.InListFilter(values=["127.0.0.1", "localhost"]))))
+
+
 def pull():
     pid = _get("GA4_PROPERTY_ID")
     if not pid:
@@ -106,6 +114,7 @@ def pull():
         return None
     try:
         client = BetaAnalyticsDataClient(credentials=creds)
+        hx = _host_exclude()
         dr = [DateRange(start_date="%ddaysAgo" % DAYS, end_date="today")]
         prop = "properties/%s" % pid
         agg = {}
@@ -114,7 +123,7 @@ def pull():
             return agg.setdefault(c, {"sessions": 0, "quiz_start": 0, "conversion": 0})
 
         rep = client.run_report(RunReportRequest(
-            property=prop, date_ranges=dr,
+            property=prop, date_ranges=dr, dimension_filter=hx,
             dimensions=[Dimension(name="sessionSource"), Dimension(name="sessionMedium")],
             metrics=[Metric(name="sessions")]))
         for row in rep.rows:
@@ -122,7 +131,7 @@ def pull():
             slot(c)["sessions"] += int(row.metric_values[0].value or 0)
 
         rep2 = client.run_report(RunReportRequest(
-            property=prop, date_ranges=dr,
+            property=prop, date_ranges=dr, dimension_filter=hx,
             dimensions=[Dimension(name="sessionSource"), Dimension(name="pagePath")],
             metrics=[Metric(name="screenPageViews")]))
         for row in rep2.rows:
@@ -133,7 +142,7 @@ def pull():
 
         try:
             rep3 = client.run_report(RunReportRequest(
-                property=prop, date_ranges=dr,
+                property=prop, date_ranges=dr, dimension_filter=hx,
                 dimensions=[Dimension(name="sessionSource"), Dimension(name="eventName")],
                 metrics=[Metric(name="eventCount")]))
             for row in rep3.rows:
@@ -173,6 +182,7 @@ def pull_pages():
         return None
     try:
         client = BetaAnalyticsDataClient(credentials=creds)
+        hx = _host_exclude()
         dr = [DateRange(start_date="%ddaysAgo" % DAYS, end_date="today")]
         prop = "properties/%s" % pid
         pages = {}
@@ -181,14 +191,14 @@ def pull_pages():
             return pages.setdefault(p, {"views": 0, "conversion": 0})
 
         rep = client.run_report(RunReportRequest(
-            property=prop, date_ranges=dr,
+            property=prop, date_ranges=dr, dimension_filter=hx,
             dimensions=[Dimension(name="pagePath")],
             metrics=[Metric(name="screenPageViews")]))
         for row in rep.rows:
             slot(row.dimension_values[0].value or "/")["views"] += int(row.metric_values[0].value or 0)
         try:
             rep2 = client.run_report(RunReportRequest(
-                property=prop, date_ranges=dr,
+                property=prop, date_ranges=dr, dimension_filter=hx,
                 dimensions=[Dimension(name="pagePath"), Dimension(name="eventName")],
                 metrics=[Metric(name="eventCount")]))
             for row in rep2.rows:
@@ -208,6 +218,49 @@ def pull_pages():
         return None
 
 
+def pull_funnel():
+    """One report -> ga4-funnel.csv: quiz_start -> quiz_complete -> recommendation_view -> affiliate_click."""
+    pid = _get("GA4_PROPERTY_ID")
+    if not pid:
+        return None
+    try:
+        from google.analytics.data_v1beta import BetaAnalyticsDataClient
+        from google.analytics.data_v1beta.types import RunReportRequest, DateRange, Dimension, Metric
+    except Exception:
+        return None
+    creds = _credentials()
+    if creds is None:
+        return None
+    try:
+        client = BetaAnalyticsDataClient(credentials=creds)
+        hx = _host_exclude()
+        dr = [DateRange(start_date="%ddaysAgo" % DAYS, end_date="today")]
+        prop = "properties/%s" % pid
+        counts = {}
+        rep = client.run_report(RunReportRequest(
+            property=prop, date_ranges=dr, dimension_filter=hx,
+            dimensions=[Dimension(name="eventName")],
+            metrics=[Metric(name="eventCount")]))
+        for row in rep.rows:
+            counts[row.dimension_values[0].value or ""] = int(row.metric_values[0].value or 0)
+        stages = ["quiz_start", "quiz_complete", "recommendation_view", "affiliate_click"]
+        out = [("stage", "count", "step_conv_pct")]
+        prev = None
+        for st in stages:
+            n = counts.get(st, 0)
+            pct = "" if not prev else round(n / prev * 100, 1)
+            out.append((st, n, pct))
+            prev = n
+        out_funnel = os.path.join(ROOT, "automation-log", "ga4-funnel.csv")
+        with open(out_funnel, "w", newline="", encoding="utf-8") as f:
+            csv.writer(f).writerows(out)
+        _log("OK -> ga4-funnel.csv | " + " -> ".join("%s=%d" % (s, counts.get(s, 0)) for s in stages))
+        return {"file": out_funnel, "counts": {s: counts.get(s, 0) for s in stages}}
+    except Exception as e:
+        _log("GA4 funnel pull failed (%s)" % e)
+        return None
+
+
 if __name__ == "__main__":
     try:
         sys.stdout.reconfigure(encoding="utf-8")
@@ -215,3 +268,4 @@ if __name__ == "__main__":
         pass
     pull()
     pull_pages()
+    pull_funnel()
