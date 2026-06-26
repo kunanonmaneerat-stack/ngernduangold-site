@@ -20,6 +20,21 @@ TODAY = "2026-06-14"
 BUILD_DATE = os.environ.get("SITE_BUILD_DATE") or datetime.datetime.now().strftime("%Y-%m-%d")  # sitemap lastmod / dateModified — bumps each deploy
 OUT = "site"
 os.makedirs(OUT, exist_ok=True)
+
+def gate_stitch():
+    """Block the build if any Stitch/AI component under components/stitch has a comply_gate FAIL
+    (hardcoded rate/%/fee/approval-time or fake reviews). Numbers must be {{placeholders}})."""
+    import sys, subprocess
+    here = os.path.dirname(os.path.abspath(__file__))
+    comp_dir = os.path.join(here, "components", "stitch")
+    scanner = os.path.join(here, "tools", "comply_gate_stitch.py")
+    if not (os.path.isdir(comp_dir) and os.path.exists(scanner)):
+        return
+    if subprocess.run([sys.executable, scanner, comp_dir]).returncode != 0:
+        raise SystemExit("BUILD ABORTED: comply_gate_stitch FAIL in components/stitch "
+                         "(turn hardcoded numbers into {{placeholders}}, remove fake reviews)")
+gate_stitch()
+
 for _s,_d in [("cover_banner.png","og-default.png"),("cover_banner_loan.png","og-loan.png"),("logo.png","logo.png"),("insure-hero.svg","insure-hero.svg"),("car-insurance-infographic.html","car-insurance-infographic.html"),("debt-payoff-infographic.html","debt-payoff-infographic.html"),("budget-503020-infographic.html","budget-503020-infographic.html"),("home-land-for-cash-infographic.html","home-land-for-cash-infographic.html"),("motorcycle-title-loan-infographic.html","motorcycle-title-loan-infographic.html"),("car-refinance-infographic.html","car-refinance-infographic.html")]:
     if os.path.exists(_s):
         try: shutil.copy(_s, f"{OUT}/{_d}")
