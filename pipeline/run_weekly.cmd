@@ -1,4 +1,6 @@
 @echo off
+set PYTHONUTF8=1
+set PYTHONIOENCODING=utf-8
 REM ngernduangold — weekly growth review loop
 REM GA4 (source+page) + GSC (keywords) -> weekly_growth_review -> winners + double-down actions
 REM ปลอดภัย: อ่าน GA4/GSC + เขียน report เท่านั้น (ไม่โพสต์/ไม่ deploy/ไม่ลบ)

@@ -61,7 +61,11 @@ def _call(url, model, key, prompt, system, max_tokens, temperature):
     with urllib.request.urlopen(req, timeout=90) as r:
         d = json.load(r)
         m = d["choices"][0]["message"]
-        return (m.get("content") or m.get("reasoning_content") or "").strip()
+        txt = (m.get("content") or m.get("reasoning_content") or "")
+        if "\ufffd" in txt:  # provider returned a lossy/truncated multibyte char; strip the marker so it never reaches written files
+            import sys as _s; _s.stderr.write("[free_llm] WARN stripped U+FFFD from " + str(model) + " response\n")
+            txt = txt.replace("\ufffd", "")
+        return txt.strip()
 
 
 def generate(prompt, system="", max_tokens=2000, temperature=0.4, verbose=False):

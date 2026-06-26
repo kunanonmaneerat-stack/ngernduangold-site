@@ -95,6 +95,8 @@ def _write_queue(topic, final, rep):
         f.write("### ✅ คำตอบ (ตรวจแล้ว — รอ approve ก่อนโพสต์)\n" + final + "\n\n")
         f.write("<details><summary>รายงานการตรวจ</summary>\n\n**Compliance:** " + rep['compliance'] +
                 "\n\n**Value:** " + rep['value'] + "\n\n**Review:** " + rep['review'] + "\n</details>\n\n---\n\n")
+    if "\ufffd" in open(p, encoding="utf-8").read():
+        import sys as _s; _s.stderr.write("[content_council] WARN U+FFFD in " + p + "\n")
     return p
 
 

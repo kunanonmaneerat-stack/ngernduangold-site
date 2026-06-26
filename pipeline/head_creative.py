@@ -42,6 +42,8 @@ def main():
             v = '✅ PASS' if r['ok'] else '⚠️ ' + '; '.join(r['issues'])
             f.write('## ' + r['platform'] + '  — ' + v + '  (' + str(r['model']) + ')\n\n')
             f.write((r['content'] or '').strip() + '\n\n---\n\n')
+    if "\ufffd" in open(p, encoding="utf-8").read():
+        import sys as _s; _s.stderr.write("[head_creative] WARN U+FFFD in " + p + "\n")
     cc_bridge.ping('Head creative: brief 5 แพลตฟอร์มพร้อม (' + str(passes) + '/5 PASS) -> creative-brief-' + ts + '.md')
     print('creative brief ->', p, '| pass', passes, '/', len(platform_agents.PLATFORMS))
 

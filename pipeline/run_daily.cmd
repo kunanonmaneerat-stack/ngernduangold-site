@@ -1,4 +1,6 @@
 @echo off
+set PYTHONUTF8=1
+set PYTHONIOENCODING=utf-8
 REM ngernduangold — daily content + measure + schedule loop (Cowork handoff)
 REM dispatcher -> daily_content -> ga4_pull -> traffic_analyst -> post_agent(+timing) -> hermes_digest
 REM ปลอดภัย: ผลิต draft + วัดผล + ตารางคิว เท่านั้น ไม่โพสต์/ไม่ commit/ไม่ deploy
