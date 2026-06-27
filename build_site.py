@@ -2356,7 +2356,7 @@ _GO = {
   "debt":  HAPPYDEBT + "?utm_source=bio&utm_medium=social&utm_campaign=happydebt&utm_content=go_debt",
   "title": CAR4CASH + "?utm_source=bio&utm_medium=social&utm_campaign=car4cash&utm_content=go_title",
 }
-open(f"{OUT}/_redirects","w",encoding="utf-8").write("".join(f"/go/{k}  {v}  301!\n" for k,v in _GO.items()))
+open(f"{OUT}/_redirects","w",encoding="utf-8").write("".join(f"/go/{k}  {v}  301!\n" for k,v in _GO.items()) + "/quiz.html   /quiz   301!" + chr(10) + "/links.html  /links  301!" + chr(10))  # canonical dedup: .html twin -> declared pretty canonical
 import shutil as _sh
 _mc = os.path.join(os.path.dirname(os.path.abspath(__file__)), "media", "clips-web")
 if os.path.isdir(_mc):
