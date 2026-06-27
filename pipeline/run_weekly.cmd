@@ -12,6 +12,5 @@ echo [%date% %time%] comply_gate_stitch scan (components\stitch) >> "%LOG%"
 if errorlevel 1 echo [%date% %time%] !! comply_gate_stitch FAIL - fix components\stitch before deploy >> "%LOG%"
 echo [%date% %time%] run_weekly start >> "%LOG%"
 "%PY%" "%BASE%\ga4_pull.py" >> "%LOG%" 2>&1
-"%PY%" "%BASE%\gsc_pull.py" >> "%LOG%" 2>&1
 "%PY%" "%BASE%\weekly_growth_review.py" >> "%LOG%" 2>&1
 echo [%date% %time%] run_weekly end exit=%errorlevel% >> "%LOG%"

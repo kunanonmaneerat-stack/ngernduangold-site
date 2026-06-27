@@ -123,7 +123,8 @@ def main():
         L.append("| # | ช่อง | sessions | conv | conv-rate |")
         L.append("|--|--|--|--|--|")
         for i, r in enumerate(src_rank[:8], 1):
-            L.append("| %d | %s | %d | %d | %.1f%% |" % (i, r.get("source", "?"), r["_sess"], r["_conv"], r["_cvr"]))
+            _cvrs = ("%.1f%%" % r["_cvr"]) if r["_sess"] >= 10 else "— (n ต่ำ)"  # guard noise when n small
+            L.append("| %d | %s | %d | %d | %s |" % (i, r.get("source", "?"), r["_sess"], r["_conv"], _cvrs))
         best = src_rank[0]
         L.append("")
         L.append("ทำต่อ: ช่อง %s แปลงดีสุด (%d conv) — เพิ่มความถี่/คอนเทนต์ช่องนี้ก่อน"
