@@ -1,6 +1,6 @@
 """weekly_growth_review.py — Loop วัดผลรายสัปดาห์ (Gemini idea #5/#6).
 อ่าน GA4 (source+page) + GSC (keywords) -> จัดอันดับ winner -> "ขยายผล (double-down)" actions.
-ปลอดภัย: อ่าน csv + เขียน report เท่านั้น (ไม่โพสต์/ไม่ deploy/ไม่ลบ).
+ปลอดภัย: refresh GSC (read-only, property ngernduangold.com) + อ่าน csv + เขียน report (ไม่โพสต์/ไม่ deploy/ไม่ลบ).
 ใช้:  py pipeline/weekly_growth_review.py
 """
 import os, sys, csv, datetime
@@ -11,6 +11,7 @@ LOG = os.path.join(ROOT, "automation-log")
 GA4 = os.path.join(LOG, "ga4-metrics.csv")
 PAGES = os.path.join(LOG, "ga4-pages.csv")
 GSC = os.path.join(LOG, "gsc-queries.csv")
+GSCP = os.path.join(LOG, "gsc-pages.csv")
 INBOX = os.path.join(LOG, "cowork-inbox")
 
 VIEW_MIN_LEAK = 5
@@ -52,9 +53,19 @@ def topic(path):
 
 def main():
     ts = datetime.datetime.now().strftime("%Y%m%d")
+    # refresh GSC (.com property) best-effort so the weekly report always uses fresh data,
+    # independent of cron ordering. Non-fatal: if auth/network fails -> fall back to existing csv.
+    try:
+        if HERE not in sys.path:
+            sys.path.insert(0, HERE)
+        import gsc_pull
+        gsc_pull.pull()
+    except Exception as e:
+        print("gsc refresh skipped (%s) — ใช้ csv เดิม" % e)
     src = _rows(GA4)
     pages = _rows(PAGES)
     gsc = _rows(GSC)
+    gscp = _rows(GSCP)
 
     tot_sess = sum(_i(r, "sessions") for r in src)
     tot_conv = sum(_i(r, "conversion") for r in src)
@@ -75,14 +86,25 @@ def main():
 
     strike = []
     top_q = []
+    top_pages_imp = []
+    weak_pages = []
     if gsc:
         for r in gsc:
             r["_pos"] = _f(r, "position")
             r["_imp"] = _i(r, "impressions")
             r["_clk"] = _i(r, "clicks")
-        strike = sorted([r for r in gsc if 5.5 <= r["_pos"] <= 20.5 and r["_imp"] >= 5],
-                        key=lambda r: -r["_imp"])[:8]
+        # near-ranking / striking distance: อันดับ ~5-20, impression>0 (หนึ่งก้าวจากหน้า 1)
+        strike = sorted([r for r in gsc if 5.0 <= r["_pos"] <= 20.0 and r["_imp"] >= 1],
+                        key=lambda r: -r["_imp"])[:10]
         top_q = sorted(gsc, key=lambda r: -r["_clk"])[:8]
+    if gscp:
+        for r in gscp:
+            r["_pos"] = _f(r, "position")
+            r["_imp"] = _i(r, "impressions")
+            r["_clk"] = _i(r, "clicks")
+        top_pages_imp = sorted([r for r in gscp if r["_imp"] >= 1], key=lambda r: -r["_imp"])[:8]
+        weak_pages = sorted([r for r in gscp if r["_imp"] >= 1 and r["_pos"] > 20.0],
+                            key=lambda r: -r["_imp"])[:8]
 
     out = os.path.join(LOG, "weekly-growth-%s.md" % ts)
     L = []
@@ -137,7 +159,7 @@ def main():
     L.append("## SEO คีย์เวิร์ด (GSC)")
     if gsc:
         if strike:
-            L.append("Striking distance (อันดับ 6-20 ดันขึ้นหน้า 1 ได้):")
+            L.append("Striking distance — คีย์ใกล้ขึ้นหน้า 1 (อันดับ ~5-20, impression>0):")
             L.append("| คีย์เวิร์ด | imp | clicks | pos |")
             L.append("|--|--|--|--|")
             for r in strike:
@@ -147,8 +169,35 @@ def main():
         if top_q:
             L.append("")
             L.append("คีย์ที่ได้คลิกจริง: " + ", ".join("%s(%d)" % (r.get("query", "?"), r["_clk"]) for r in top_q if r["_clk"] > 0)[:300])
+    elif os.path.exists(GSC):
+        L.append("_ดึง GSC สำเร็จแล้ว (property ngernduangold.com) แต่ยังไม่มีแถวคีย์เวิร์ด — property เพิ่ง verify + GSC latency ~2-3 วัน ข้อมูลจะทยอยมาใน ~1 สัปดาห์_")
     else:
         L.append("_ยังไม่มี gsc-queries.csv — รัน gsc_pull.py (เพิ่ม scope) หรือ export Performance จาก Search Console_")
+    L.append("")
+
+    L.append("## SEO หน้าเว็บ (GSC page-level)")
+    if gscp:
+        if top_pages_imp:
+            L.append("หน้าได้ impression สูงสุด (โอกาสทราฟฟิก — ดันต่อ):")
+            L.append("| หน้า | imp | clicks | pos |")
+            L.append("|--|--|--|--|")
+            for r in top_pages_imp:
+                L.append("| %s | %d | %d | %.1f |" % (topic(r.get("page", "")), r["_imp"], r["_clk"], r["_pos"]))
+            L.append("")
+        if weak_pages:
+            L.append("หน้า indexed แต่ยังอ่อน (impression>0, อันดับ >20 -> เสริมเนื้อหา/internal link):")
+            L.append("| หน้า | imp | clicks | pos |")
+            L.append("|--|--|--|--|")
+            for r in weak_pages:
+                L.append("| %s | %d | %d | %.1f |" % (topic(r.get("page", "")), r["_imp"], r["_clk"], r["_pos"]))
+            L.append("")
+            L.append("ทำต่อ: Google เห็นหน้าเหล่านี้แล้วแต่อันดับยังต่ำ — เพิ่ม internal link จากหน้าอื่น + เสริมเนื้อหา/คีย์ที่ตรง")
+        if not top_pages_imp and not weak_pages:
+            L.append("_gsc-pages.csv ยังไม่มีแถว (property เพิ่ง verify / GSC latency ~2-3 วัน) — กลับมาดูใน ~1 สัปดาห์_")
+    elif os.path.exists(GSCP):
+        L.append("_ดึง GSC page-level สำเร็จแล้วแต่ยังไม่มีแถว — property เพิ่ง verify + GSC latency ~2-3 วัน กลับมาดูใน ~1 สัปดาห์_")
+    else:
+        L.append("_ยังไม่มี gsc-pages.csv — รัน gsc_pull.py (ดึง page dimension)_")
     L.append("")
     L.append("---")
     L.append("_auto by weekly_growth_review.py · ข้อมูลจริง GA4/GSC · ไม่ใช่การเดา_")

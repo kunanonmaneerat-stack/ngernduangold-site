@@ -15,6 +15,7 @@ import os, sys, csv, datetime
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.path.join(ROOT, "automation-log", "gsc-queries.csv")
+OUTP = os.path.join(ROOT, "automation-log", "gsc-pages.csv")
 SITE = os.environ.get("GSC_SITE", "https://ngernduangold.com/")
 DAYS = 28
 SCOPES = ["https://www.googleapis.com/auth/webmasters.readonly"]
@@ -100,7 +101,23 @@ def pull():
         with open(OUT, "w", newline="", encoding="utf-8") as f:
             csv.writer(f).writerows(out)
         _log("OK -> gsc-queries.csv | queries=%d" % (len(out) - 1))
-        return {"file": OUT, "queries": len(out) - 1}
+        # page-dimension report -> gsc-pages.csv (top pages by impressions / indexed-but-weak)
+        pages_n = 0
+        try:
+            pbody = {"startDate": start, "endDate": end, "dimensions": ["page"], "rowLimit": 200}
+            presp = svc.searchanalytics().query(siteUrl=site, body=pbody).execute()
+            pout = [("page", "clicks", "impressions", "ctr", "position")]
+            for r in presp.get("rows", []):
+                pg = (r.get("keys") or ["?"])[0]
+                pout.append((pg, int(r.get("clicks", 0)), int(r.get("impressions", 0)),
+                             round(r.get("ctr", 0) * 100, 2), round(r.get("position", 0), 1)))
+            with open(OUTP, "w", newline="", encoding="utf-8") as f:
+                csv.writer(f).writerows(pout)
+            pages_n = len(pout) - 1
+            _log("OK -> gsc-pages.csv | pages=%d" % pages_n)
+        except Exception as e:
+            _log("page-dim pull ไม่สำเร็จ (%s) — ข้ามเฉพาะ gsc-pages.csv" % e)
+        return {"file": OUT, "queries": len(out) - 1, "pages_file": OUTP, "pages": pages_n}
     except Exception as e:
         _log("ดึง GSC ล้มเหลว (%s) — เช็ก scope/สิทธิ์ property หรือใช้ export มือ" % e)
         return None
