@@ -61,7 +61,7 @@ def check_page(html):
         a = _attrs(tag)
         href = unescape(a.get("href", ""))
         rel = a.get("rel", "").lower()
-        m = re.search(r"atth\.me/([0-9A-Za-z]+)", href)
+        m = re.search(r"atth\.me/((?:go/)?[0-9A-Za-z]+)", href)
         code = m.group(1) if m else "?"
         if not m:
             fails.append("ปุ่ม atth.me href ว่าง/ไม่มี code: " + href[:40]); continue

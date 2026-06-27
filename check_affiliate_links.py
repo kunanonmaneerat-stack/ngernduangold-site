@@ -12,7 +12,7 @@ try:
 except FileNotFoundError:
     print("ERR: run this from the outputs/ folder (build_site.py not found)"); sys.exit(2)
 
-links = sorted(set(re.findall(r"https://atth\.me/[0-9A-Za-z]+", src)))
+links = sorted(set(re.findall(r"https://atth\.me/(?:go/)?[0-9A-Za-z]+", src)))
 if not links:
     print("WARN: no atth.me links found in build_site.py"); sys.exit(2)
 
