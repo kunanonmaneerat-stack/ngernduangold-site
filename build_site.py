@@ -2447,6 +2447,7 @@ links_body = hub_style + f'''<div class="hub">
 <h1>{SITE}</h1>
 <p class="tag">บัตรเครดิต • สินเชื่อ • ออมเงิน ฉบับมนุษย์เงินเดือน — เทียบของจริง อนุมัติไว สมัครออนไลน์<br><b style="color:var(--gold-lt)">เลือกตามสถานการณ์คุณ 👇</b></p>
 <a class="hubbtn" href="/quiz" style="background:linear-gradient(180deg,#3a3a44,#2a2a32);color:var(--gold-lt)">🧭 ไม่รู้เริ่มตรงไหน? ทำ Quiz 30 วิ →<small style="color:#c8c8d0">ตอบ 2 คำถาม จับคู่บัตร/สินเชื่อ/ออม ที่เหมาะกับคุณ</small></a>
+<a class="hubbtn" href="https://ngernduangold.gumroad.com/l/debt-payoff-planner" target="_blank" rel="noopener" style="background:linear-gradient(180deg,#c8941a,#a87a12);color:#1a1305">📘 คู่มือ + Worksheet ปลดหนี้บัตรเครดิต — 129฿<small style="color:#3a2c08">e-book 9 หน้า + Excel กรอกได้ · จาก "จ่ายขั้นต่ำไม่จบ" สู่ "ปลดหนี้เป็นระบบ" · คู่มือของเราเอง</small></a>
 <p class="hublbl" style="text-align:center;color:#c8c8d0;margin-top:14px">…หรือเลือกหมวดที่ตรงกับคุณ 👇</p>
 <div class="hubpick">
 <a class="pickcard" href="#cards"><span class="ic">💳</span><b>บัตรเครดิต</b><span>ใบแรก · เงินคืน · ผ่อน 0%</span></a>
