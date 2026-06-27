@@ -71,6 +71,13 @@ INTEGRATION_TO_CHANNEL = {
 ASSET_TO_KEY = {
     "1tBSoLqqVS": "titleloan",
 }
+# post_dispatcher.py EXPECTED slug (often the parent dir of the mp4, e.g.
+# video-out/debt-consolidate/01.mp4) -> canonical content_queue clip_key. The basename
+# is just a scene number ("01") so without this the dispatcher slug resolves to None.
+SLUG_TO_KEY = {
+    "debt-consolidate": "debt", "credit-score": "score", "save-paycheck": "save",
+    "title-loan": "titleloan", "emergency-fund": "em",
+}
 # valid clip_keys come from content_queue.json; this static fallback lets --check work even
 # when the AppData session copy isn't reachable. Keep aligned with content_queue.json.
 KNOWN_CLIP_KEYS = {
@@ -113,6 +120,11 @@ def resolve_clip_key(x):
         return stem[4:]
     if stem in KNOWN_CLIP_KEYS:
         return stem
+    # dispatcher slug: check the input, the stem, and every path component (the slug is
+    # usually the parent dir, e.g. .../video-out/debt-consolidate/01.mp4 -> "debt").
+    for cand in [s, stem] + s.replace("\\", "/").split("/"):
+        if cand in SLUG_TO_KEY:
+            return SLUG_TO_KEY[cand]
     # topic slug variants e.g. "title-loan" -> "titleloan"
     flat = stem.replace("-", "").replace("_", "")
     for k in KNOWN_CLIP_KEYS:
