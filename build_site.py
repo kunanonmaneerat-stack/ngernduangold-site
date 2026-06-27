@@ -7,6 +7,8 @@ SITE = "เงินเดือนสมองทอง"
 TAGLINE = "การเงินมนุษย์เงินเดือน · บัตรเครดิต ออมเงิน ลงทุน ย่อยง่าย"
 KRUNGSRI = "https://atth.me/00dayn002a0x"
 KEPT = "https://atth.me/00d9uk002a0x"
+GSC_VERIFY = os.environ.get("SITE_GSC_VERIFY","")  # GSC URL-prefix HTML-tag verification for ngernduangold.com (public token, NOT a secret)
+GSC_META = '<meta name="google-site-verification" content="'+GSC_VERIFY+'">' if GSC_VERIFY else ''
 GA_ID = os.environ.get("SITE_GA","")
 if GA_ID:
     _g = '<script async src="https://www.googletagmanager.com/gtag/js?id='+GA_ID+'"></script>'
@@ -189,7 +191,7 @@ def head(title, desc, slug, jsonld_list, og_type="article", og_image="og-default
     else:
         seo_title = _primary[:58].rstrip() + "…"
     return f"""<!doctype html><html lang="th"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0F172A"><meta name="robots" content="index,follow,max-image-preview:large">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0F172A"><meta name="robots" content="index,follow,max-image-preview:large">{GSC_META}
 <title>{html.escape(seo_title)}</title>
 <link rel="icon" type="image/png" href="/logo.png"><link rel="apple-touch-icon" href="/logo.png">
 <meta name="description" content="{html.escape(desc)}">
