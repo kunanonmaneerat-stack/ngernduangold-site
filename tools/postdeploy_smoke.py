@@ -54,6 +54,12 @@ def check_page(html):
         fails.append("ไม่มี og:image")
     if "og:title" not in html:
         fails.append("ไม่มี og:title")
+    # FTC clear-and-conspicuous: affiliate disclosure must appear BEFORE the first affiliate CTA anchor
+    m_aff = re.search(r'<a\b[^>]*atth\.me/[^>]*>', html)
+    if m_aff:
+        _dp = [p for p in (html.find("มีลิงก์พันธมิตร"), html.find("ได้รับค่าตอบแทน")) if p >= 0]
+        if not _dp or min(_dp) > m_aff.start():
+            fails.append("affiliate disclosure ไม่อยู่เหนือ CTA แรก (FTC clear & conspicuous)")
     for tag in re.findall(r"<a\b[^>]*>", html):
         if "atth.me" not in tag:
             continue
