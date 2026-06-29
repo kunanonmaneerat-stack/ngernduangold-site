@@ -1,0 +1,10 @@
+{"ts": "2026-06-28T22:47:30", "provider": "gemini", "model": "gemini-2.0-flash", "ok": false, "note": "ERROR:404 This model models/gemini-2.0-flash is no longer available. Please update your code to use a newer model for the latest features and impr"}
+{"ts": "2026-06-28T22:48:03", "provider": "gemini", "model": "gemini-2.5-flash", "ok": true, "note": ""}
+{"ts": "2026-06-28T22:48:09", "provider": "gemini", "model": "gemini-2.5-flash-lite", "ok": true, "note": ""}
+{"ts": "2026-06-28T22:49:43", "provider": "gemini", "model": "gemini-2.5-flash-lite", "ok": true, "note": ""}
+{"ts": "2026-06-28T22:53:50", "provider": "gemini", "model": "gemini-3.5-flash", "ok": true, "note": ""}
+{"ts": "2026-06-28T22:54:18", "provider": "gemini", "model": "gemini-3.5-flash", "ok": true, "note": ""}
+{"ts": "2026-06-28T23:10:29", "provider": "gemini", "model": "veo-3", "ok": false, "note": "PAID/disallowed model refused (zero-budget, NO fallback): veo-3"}
+{"ts": "2026-06-28T23:10:32", "provider": "gemini", "model": "gemini-3.5-flash", "ok": true, "note": ""}
+{"ts": "2026-06-28T23:10:33", "provider": "gemini", "model": "gemini-3.1-flash-lite", "ok": true, "note": ""}
+{"ts": "2026-06-28T23:10:49", "provider": "gemini", "model": "gemini-3.5-flash", "ok": true, "note": ""}
