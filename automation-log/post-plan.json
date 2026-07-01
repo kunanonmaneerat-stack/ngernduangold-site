@@ -1,5 +1,5 @@
 {
-  "updated": "20260629-0744",
+  "updated": "20260702-0501",
   "clips": 36,
   "in_lib": 36,
   "hours": {
@@ -9,7 +9,7 @@
   },
   "plan": [
     {
-      "day": "2026-06-30",
+      "day": "2026-07-03",
       "topic": "หนี้บัตร/รวมหนี้",
       "label": "01-hook ความรู้สึกติดกับดัก",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/debt-consolidate/01.mp4",
@@ -21,7 +21,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-07-01",
+      "day": "2026-07-04",
       "topic": "หนี้บัตร/รวมหนี้",
       "label": "02-problem ยอดไม่ลด",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/debt-consolidate/02.mp4",
@@ -33,7 +33,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-07-02",
+      "day": "2026-07-05",
       "topic": "หนี้บัตร/รวมหนี้",
       "label": "03-solution ทางเลือก",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/debt-consolidate/03.mp4",
@@ -45,7 +45,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-07-03",
+      "day": "2026-07-06",
       "topic": "หนี้บัตร/รวมหนี้",
       "label": "04-caution รับผิดชอบ",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/debt-consolidate/04.mp4",
@@ -57,7 +57,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-07-04",
+      "day": "2026-07-07",
       "topic": "หนี้บัตร/รวมหนี้",
       "label": "05-action เช็กสิทธิ์",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/debt-consolidate/05.mp4",
@@ -69,7 +69,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-07-05",
+      "day": "2026-07-08",
       "topic": "เงินเดือนชนเดือน/ออม",
       "label": "01-hook เงินหายวันเดียว",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/save-paycheck/01.mp4",
@@ -81,7 +81,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-07-06",
+      "day": "2026-07-09",
       "topic": "เงินเดือนชนเดือน/ออม",
       "label": "02-เขียนโน้ตหักก่อนใช้",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/save-paycheck/02.mp4",
@@ -93,7 +93,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-07-07",
+      "day": "2026-07-10",
       "topic": "เงินเดือนชนเดือน/ออม",
       "label": "03-ตั้งโอนอัตโนมัติ",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/save-paycheck/03.mp4",
@@ -105,7 +105,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-07-08",
+      "day": "2026-07-11",
       "topic": "เงินเดือนชนเดือน/ออม",
       "label": "04-ยิ้มถือสมุด",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/save-paycheck/04.mp4",
@@ -117,7 +117,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-07-09",
+      "day": "2026-07-12",
       "topic": "เงินเดือนชนเดือน/ออม",
       "label": "05-เหรียญหยอด",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/save-paycheck/05.mp4",
@@ -129,7 +129,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-07-10",
+      "day": "2026-07-13",
       "topic": "เงินเดือนชนเดือน/ออม",
       "label": "06-planner เปิด",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/save-paycheck/06.mp4",
@@ -141,7 +141,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-07-11",
+      "day": "2026-07-14",
       "topic": "สินเชื่อทะเบียนรถ",
       "label": "01-hook นั่งในรถกังวล",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/title-loan/01.mp4",
@@ -153,7 +153,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-07-12",
+      "day": "2026-07-15",
       "topic": "สินเชื่อทะเบียนรถ",
       "label": "02-นับเงินไม่พอ",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/title-loan/02.mp4",
@@ -165,7 +165,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-07-13",
+      "day": "2026-07-16",
       "topic": "สินเชื่อทะเบียนรถ",
       "label": "03-ใช้รถได้ระหว่างกู้",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/title-loan/03.mp4",
@@ -177,7 +177,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-07-14",
+      "day": "2026-07-17",
       "topic": "สินเชื่อทะเบียนรถ",
       "label": "04-เทียบดอกเบี้ย",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/title-loan/04.mp4",
@@ -189,7 +189,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-07-15",
+      "day": "2026-07-18",
       "topic": "สินเชื่อทะเบียนรถ",
       "label": "05-เช็กสิทธิ์",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/title-loan/05.mp4",
@@ -201,7 +201,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-07-16",
+      "day": "2026-07-19",
       "topic": "เงินสำรองฉุกเฉิน",
       "label": "01-hook บิลไม่คาดฝัน",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/emergency-fund/01.mp4",
@@ -213,7 +213,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-07-17",
+      "day": "2026-07-20",
       "topic": "เงินสำรองฉุกเฉิน",
       "label": "02-กระเป๋าว่าง",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/emergency-fund/02.mp4",
@@ -225,7 +225,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-07-18",
+      "day": "2026-07-21",
       "topic": "เงินสำรองฉุกเฉิน",
       "label": "03-หยอดเงินใส่โหล",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/emergency-fund/03.mp4",
@@ -237,7 +237,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-07-19",
+      "day": "2026-07-22",
       "topic": "เงินสำรองฉุกเฉิน",
       "label": "04-วางแผนทีละขั้น",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/emergency-fund/04.mp4",
@@ -249,7 +249,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-07-20",
+      "day": "2026-07-23",
       "topic": "เงินสำรองฉุกเฉิน",
       "label": "05-แอปออมเงิน",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/emergency-fund/05.mp4",
@@ -261,7 +261,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-07-21",
+      "day": "2026-07-24",
       "topic": "บัตรเครดิตใบแรก",
       "label": "01-hook ถือบัตรเปล่า",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/first-card/01.mp4",
@@ -273,7 +273,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-07-22",
+      "day": "2026-07-25",
       "topic": "บัตรเครดิตใบแรก",
       "label": "02-อ่าน fine print",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/first-card/02.mp4",
@@ -285,7 +285,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-07-23",
+      "day": "2026-07-26",
       "topic": "บัตรเครดิตใบแรก",
       "label": "03-จดข้อควรรู้",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/first-card/03.mp4",
@@ -297,7 +297,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-07-24",
+      "day": "2026-07-27",
       "topic": "บัตรเครดิตใบแรก",
       "label": "04-จ่ายเต็มตามรอบ",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/first-card/04.mp4",
@@ -309,7 +309,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-07-25",
+      "day": "2026-07-28",
       "topic": "บัตรเครดิตใบแรก",
       "label": "05-เทียบ/เช็กสิทธิ์",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/first-card/05.mp4",
@@ -321,7 +321,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-07-26",
+      "day": "2026-07-29",
       "topic": "รีไฟแนนซ์บ้าน",
       "label": "01-hook กองเอกสารกู้บ้าน",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/refinance/01.mp4",
@@ -333,7 +333,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-07-27",
+      "day": "2026-07-30",
       "topic": "รีไฟแนนซ์บ้าน",
       "label": "02-ดอกเบี้ยพุ่ง",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/refinance/02.mp4",
@@ -345,7 +345,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-07-28",
+      "day": "2026-07-31",
       "topic": "รีไฟแนนซ์บ้าน",
       "label": "03-เทียบสัญญา",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/refinance/03.mp4",
@@ -357,7 +357,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-07-29",
+      "day": "2026-08-01",
       "topic": "รีไฟแนนซ์บ้าน",
       "label": "04-เช็กลิสต์ค่าธรรมเนียม",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/refinance/04.mp4",
@@ -369,7 +369,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-07-30",
+      "day": "2026-08-02",
       "topic": "รีไฟแนนซ์บ้าน",
       "label": "05-เทียบ/เช็กสิทธิ์",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/refinance/05.mp4",
@@ -381,7 +381,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-07-31",
+      "day": "2026-08-03",
       "topic": "เครดิตบูโร/สกอร์",
       "label": "01-hook ดูสกอร์ในมือถือ",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/credit-score/01.mp4",
@@ -393,7 +393,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-08-01",
+      "day": "2026-08-04",
       "topic": "เครดิตบูโร/สกอร์",
       "label": "02-จดหมายปฏิเสธ",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/credit-score/02.mp4",
@@ -405,7 +405,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-08-02",
+      "day": "2026-08-05",
       "topic": "เครดิตบูโร/สกอร์",
       "label": "03-อ่านรายงานเครดิต",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/credit-score/03.mp4",
@@ -417,7 +417,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-08-03",
+      "day": "2026-08-06",
       "topic": "เครดิตบูโร/สกอร์",
       "label": "04-จ่ายตรงเวลา",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/credit-score/04.mp4",
@@ -429,7 +429,7 @@
       "cta": "คอมเมนต์ เช็กสิทธิ์"
     },
     {
-      "day": "2026-08-04",
+      "day": "2026-08-07",
       "topic": "เครดิตบูโร/สกอร์",
       "label": "05-เช็กสกอร์ในแอป",
       "file": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/credit-score/05.mp4",

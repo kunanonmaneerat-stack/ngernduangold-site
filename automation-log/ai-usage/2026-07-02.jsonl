@@ -1,0 +1,2 @@
+{"ts": "2026-07-02T04:39:53", "provider": "gemini", "model": "veo-3", "ok": false, "note": "PAID/disallowed model refused (zero-budget, NO fallback): veo-3"}
+{"ts": "2026-07-02T04:40:24", "provider": "gemini", "model": "gemini-3.5-flash", "ok": true, "note": ""}
