@@ -10,7 +10,8 @@ HARD RULES (blueprint 2026-06-18, enforced in code):
     once the cap is hit the call is refused (it does NOT escalate to a paid tier).
   * NO anti-fingerprint / metadata-scrub / bot-evasion logic — intentionally absent (ToS-safe).
 
-Key resolution order: env GOOGLE_AI_STUDIO_KEY | GEMINI_API_KEY, then ga4-admin/.env (KEY=VALUE).
+Key resolution order: env GOOGLE_API_KEY | GOOGLE_AI_STUDIO_KEY | GEMINI_API_KEY,
+then gemini_key.txt (plain one-line), then ga4-admin/.env (KEY=VALUE).
 If no key -> generate() returns (None, "NO_KEY") so every caller FAILS CLOSED:
 it skips, never pays, never crashes. stdlib only; google-generativeai is imported lazily
 (only when a key is actually present), so this module + --selftest run with zero deps.
@@ -21,13 +22,33 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HERE)
 USAGE_DIR = os.path.join(REPO, "automation-log", "ai-usage")   # committed = proof of $0 to Cowork
 ENV_FILE = r"C:\Users\nL_ku\ga4-admin\.env"                     # non-repo, owner-managed
+KEY_FILE = r"C:\Users\nL_ku\gemini_key.txt"                     # non-repo, owner-managed (plain one-line key, matches run_gemini.bat)
 
 # Free-tier models we are allowed to call (AI Studio free). Keep flash-class only.
-FREE_MODELS = {"gemini-2.0-flash", "gemini-2.0-flash-lite", "gemini-1.5-flash", "gemini-1.5-flash-8b"}
+FREE_MODELS = {"gemini-3.5-flash", "gemini-3.1-flash-lite",
+               "gemini-2.5-flash", "gemini-2.5-flash-lite"}
+# NOTE: gemini-2.0-flash / 2.0-flash-lite / 1.5-flash* removed 2026-06-28 — Google retired them
+# (calls returned 404 "no longer available"). Default workhorse is gemini-3.5-flash (TIERS below).
 # Any model whose name contains one of these = PAID / disallowed -> hard refuse.
 PAID_MARKERS = ("veo", "imagen", "qwen", "wan2", "dashscope", "gpt-", "claude-", "-pro", "ultra")
 # Conservative daily request cap, kept under the AI Studio free RPD so we never spill into billing.
 FREE_DAILY_REQUESTS = 1200
+
+# Task-fit intelligence tiers: a caller passes a tier alias (or an explicit model name).
+# Match the model to the job — cheap for high-volume/trivial, smart for the work that matters.
+# Owner ceiling = 3.5-flash (no Pro). To enable Pro later: point "max" at gemini-2.5-pro
+# AND add "gemini-2.5-pro" to FREE_MODELS below (it is the only change needed).
+TIERS = {
+    "cheap": "gemini-3.1-flash-lite",   # high-volume / trivial / healthcheck pings
+    "smart": "gemini-3.5-flash",        # default workhorse: trend research, creative scripts, vision QA
+    "max":   "gemini-3.5-flash",        # current ceiling == smart (Pro disabled by owner choice)
+}
+DEFAULT_TIER = "smart"
+
+
+def resolve_model(name):
+    """Tier alias ('cheap'/'smart'/'max') -> model name; explicit model names pass through unchanged."""
+    return TIERS.get(name, name)
 
 
 def _now():
@@ -35,13 +56,21 @@ def _now():
 
 
 def _load_key():
-    k = os.getenv("GOOGLE_AI_STUDIO_KEY") or os.getenv("GEMINI_API_KEY")
+    k = (os.getenv("GOOGLE_API_KEY") or os.getenv("GOOGLE_AI_STUDIO_KEY")
+         or os.getenv("GEMINI_API_KEY"))
     if k:
         return k
+    # plain one-line key file (matches run_gemini.bat: GOOGLE_API_KEY <- gemini_key.txt)
+    try:
+        v = open(KEY_FILE, encoding="utf-8-sig").read().strip().strip('"').strip("'")
+        if v:
+            return v
+    except FileNotFoundError:
+        pass
     try:
         for line in open(ENV_FILE, encoding="utf-8-sig"):
             s = line.strip()
-            if s.startswith(("GOOGLE_AI_STUDIO_KEY", "GEMINI_API_KEY")) and "=" in s:
+            if s.startswith(("GOOGLE_API_KEY", "GOOGLE_AI_STUDIO_KEY", "GEMINI_API_KEY")) and "=" in s:
                 v = s.split("=", 1)[1].strip().strip('"').strip("'")
                 if v:
                     return v
@@ -93,9 +122,11 @@ def allow(provider, model):
     return (True, "ok")
 
 
-def generate(prompt, model="gemini-2.0-flash", images=None):
+def generate(prompt, model=DEFAULT_TIER, images=None):
     """Returns (text, status). status: 'ok' | 'NO_KEY' | 'BLOCKED:..' | 'ERROR:..'.
-    Never raises, never escalates to a paid model."""
+    `model` may be a tier alias ('cheap'/'smart'/'max') or an explicit model name.
+    Never raises, never escalates to a disallowed model."""
+    model = resolve_model(model)
     key = _load_key()
     if not key:
         return (None, "NO_KEY")
@@ -126,13 +157,16 @@ if __name__ == "__main__":
         # Verify guard logic WITHOUT any network/key.
         assert is_paid("veo-3") and is_paid("qwen-vl-max") and is_paid("imagen-3"), "paid must be blocked"
         assert is_paid("gemini-1.5-pro"), "-pro must count as paid"
-        assert not is_paid("gemini-2.0-flash"), "flash must be free"
+        assert not is_paid("gemini-2.5-flash"), "flash must be free"
         assert allow("gemini", "veo-3")[0] is False
         assert allow("gemini", "gemini-1.5-pro")[0] is False
         assert allow("gemini", "imagen-3")[0] is False
-        txt, st = generate("hello")            # no key in this env -> must be NO_KEY, no crash, no pay
-        assert st in ("NO_KEY", "BLOCKED", "ERROR") or st == "ok"
-        print("selftest OK · paid-blocked ✓ · no-key fail-closed ✓ · key_present:", bool(_load_key()))
+        assert resolve_model("smart") == "gemini-3.5-flash", "smart tier"
+        assert resolve_model("cheap") == "gemini-3.1-flash-lite", "cheap tier"
+        assert resolve_model("gemini-3.5-flash") == "gemini-3.5-flash", "explicit passthrough"
+        txt, st = generate("x", model="veo-3")   # disallowed -> BLOCKED, never calls network / pays
+        assert st.startswith("BLOCKED"), st
+        print("selftest OK · tiers", TIERS, "· key_present:", bool(_load_key()))
     else:
         print("gemini requests today:", used_today("gemini"), "/", FREE_DAILY_REQUESTS,
               "· key_present:", bool(_load_key()))
