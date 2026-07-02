@@ -1,0 +1,1 @@
+{"ts": "2026-07-02T08:33:19+07:00", "routine": "ngernduangold-delivery-heartbeat", "status": "partial", "summary": "verify 07-01: 2/5 live (FB,IG) + YT 3 new clips; Threads MISS 06-30+07-01 (engine-disabled, not token); heartbeat skipped 3d, backfilled via Meta MCP", "metrics": {"live": 2, "miss": 1, "pending_manual": 1, "yt_new_clips": 3, "skipped_rounds": 3}}
