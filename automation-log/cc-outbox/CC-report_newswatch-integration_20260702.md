@@ -16,3 +16,6 @@ executed: 2026-07-02 เย็น · zero-budget ✓ การ์ด free_ai ไ
 - QA: build ok · canonical/index,follow/sitemap ✓ · smoke **61/61 PASS** (หน้าใหม่นับแล้ว) · หมายเหตุ: เจอ+แก้ stitch false-positive class เดิม (เครดิต ชิด </h3>) ด้วย reword
 - PUSH แยกท้ายสุดตามกติกา ignore-rule (commit build_site.py = HEAD สุดท้าย) -> Netlify build -> live-verify แนบท้าย
 ## หมายเหตุ: EBOOK-UPDATE-PACK อยู่ _social-stage (gitignored ตาม design — media/drafts local; Cowork เห็น pack ผ่านเครื่อง owner/รายงานนี้สรุปครบแล้ว)
+
+## LIVE VERIFY (FINAL) ✅
+/close-debt-fast-2026.html = LIVE ~นาทีแรกหลัง push (HTTP 200, 43464 bytes) · H1 ✓ · e-book banner ✓ · bot.or.th/cleardebt ✓ · ตัวเลขสะกดคำ ("ไม่มีดอกเบี้ย") ✓ — deploy สมบูรณ์ (ignore-rule lesson ใช้ผล: build_site.py เป็น HEAD สุดท้าย -> build รันจริง)
