@@ -1,0 +1,4 @@
+purchase_date,product,price_thb,buyer_email,source
+# ตรวจจริงจากหน้า gumroad.com/customers 2 ก.ค. 2569 18:4x โดย Cowork: ยังไม่มีรายการขาย (0 orders ตั้งแต่เปิดตัว 28 มิ.ย.)
+# นัยสำคัญ: affiliate_click 69/28วัน แต่ e-book 0 ยอด — reach ต่ำ (269 sessions/28d) ยังสรุปไม่ได้ว่าหน้าขายมีปัญหา
+# อัปเดตไฟล์นี้: export ใหม่ได้ที่ gumroad.com/customers > Export เมื่อมียอดจริง

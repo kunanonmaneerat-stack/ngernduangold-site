@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-02 11:20 — sprint day 1 โพสต์แล้ว: FB (+ลิงก์ title-loan คอมเมนต์แรก) + Threads · /links การ์ดใหม่ verified LIVE",
+  "updated": "2026-07-02 19:20 — ลุยตามระบบ: re-arm task flow-batch-resume → 3 ก.ค. 10:00 gen 4 ฉากที่ขาด (kp04/kp05/eb01/eb02) + โหลดดิบ 15 + เขียน RAW-READY ให้ CC ประกอบเอง · CC ทำ flow-fb-master ครบ (link-health 7/7=200 wire เข้า run_daily 05:02) · งาน A รอ RAW-READY (ถูกต้อง)",
   "product": "e-book แผนปลดหนี้บัตรเครดิต 59฿",
   "channels": [
     {
@@ -45,10 +45,14 @@
   ],
   "pending": [
     "✅ วันนี้ (2 ก.ค.) FB+Threads โพสต์แล้วโดย Cowork — คิวเหลือ 3-8 ก.ค. (Cowork โพสต์รายวันหลังเจ้าของยืนยันในแชต) + POST-PACK_week_20260706-0712 (IG/TikTok/YT)",
-    "🔄 Flow ฟื้นแล้วคืบจริง (13:30): เสร็จ ~4 (tl01 รถ, tl05 เช็กลิสต์, tl06 มือถือ +1) · queued 3 · tl07 กำลังทำ · เหลือส่ง 8 (kp01-05, eb01-02, tl08) — UI chat มีบั๊ก state หลัง type ยาว (บทเรียนอยู่ใน task prompt) · task 'flow-batch-resume' เลื่อนเป็น 14:30 พร้อมวิธีเลี่ยงบั๊กครบ จะส่ง 8 ตัวสุดท้าย+sync เครดิต+dashboard เอง",
+    "🎬 Flow (2 ก.ค. 17:00): ส่ง prompt ครบ 11 ฉาก (tl01-08, kp01-03) · เครดิตเหลือ 259 · ขาด gen 4 ฉาก (kp04/kp05/eb01/eb02) → task flow-batch-resume RE-ARMED ยิง 3 ก.ค. 10:00 (gen 4 + โหลดดิบ 15 + เขียน cowork-inbox/RAW-READY_flow-20260703.md ให้ CC) · ถ้า Flow รวน task เลื่อนตัวเอง +3ชม. เอง — ไม่ต้อง grind มือ",
+    "🔗 CC flow-fb-master (pushed cff626c): งาน B ครบ — link-health 7/7=200 wire เข้า run_daily 05:02 (ก่อน 08:00) + ledger protocol พร้อม · งาน A (ประกอบ _final_) WAITING RAW-READY ตามคำสั่ง",
     "เจ้าของ: อ่าน+โพสต์กระทู้ Pantip 2 ร่าง (social-review/pantip/draft-thread_*.md) มือเท่านั้น",
-    "เจ้าของ: ลง TikTok จากมือถือ (แคปชันใน POST-PACK_ig-tiktok_20260628.md)",
-    "เจ้าของ: ตัดสินใจ fold หน้าแรก Stitch (ธง CC ค้างตั้งแต่ 22 มิ.ย.)",
-    "เจ้าของ: export ยอดขาย Gumroad CSV → automation-log/gumroad-sales.csv"
+    "✅ TikTok e-book โพสต์แล้ว (2 ก.ค. ~18:4x โดย Cowork ผ่านเว็บ TikTok Studio): คลิป ebook-promo-9x16 1080P + แคปชันเต็ม + AI-label เปิด + ผ่าน qa_gate (0/2) — ขึ้นจริงในหน้า content",
+    "✅ Stitch fold: DEFER (Cowork ตัดสิน 2 ก.ค. ตาม GA4 — homepage 0 conv, reach คือคอขวด) → DECISION-stitch-fold_20260702.md · เก็บ preview ไว้ revisit เมื่อ reach ดีขึ้น · ปิดธงที่ค้างมา 10 วัน",
+    "✅ Gumroad CSV: ตรวจแล้ว (2 ก.ค.) ยังไม่มียอดขาย 0 orders → automation-log/gumroad-sales.csv (มี note) · export ใหม่เมื่อมียอดจริง",
+    "✅ CreatorFlow แก้แล้ว (2 ก.ค. โดย Cowork): DM link netlify.app/quiz → ngernduangold.com/quiz + เปิด 'Only send this DM once per person' (กัน DM ซ้ำ=ลดสแปม) · Update สำเร็จ status ยัง Live · หมายเหตุ: แผน Free ไม่มี timer delay ≥30วิ (ข้อจำกัดแพลน — opening-DM เป็น Pro)",
+    "📚 NEWSWATCH ครบวงจรแล้ว (2 ก.ค.): FACTS_current.md + task จันทร์ 10:36 · CC ทำ A-E เสร็จ: ร่างเก่าติดป้าย OUTDATED, comply_gate เตือน stale-facts, dashboard โชว์อายุ facts, หน้า SEO /close-debt-fast-2026.html LIVE",
+    "📘 E-BOOK v1.1 ✅ LIVE บน GUMROAD แล้ว (Cowork replace เสร็จ 2 ก.ค. ~18:00, verified หลัง reload): ไฟล์ใหม่ 'แผนปลดหนี้บัตรเครดิต-ฉบับสมบูรณ์ (อัปเดต ก.ค. 69)' 611KB แทนตัวเก่า 554KB (ลบแล้ว) · Worksheet คงเดิม · Stamp PDF ยังเปิด · ผู้ซื้อเดิมโหลดใหม่ได้จากลิงก์เดิมทันที → โพสต์ประกาศ 'อัปเดตฟรี' ใน _social-stage พร้อมลงแล้ว (ผ่าน qa_gate ก่อนตามระบบ)"
   ]
 }
