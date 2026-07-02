@@ -23,3 +23,10 @@ executed: 2026-07-02 · zero-budget ✓ · ไม่แตะ free_ai guards/sec
 - push ยืนยัน: origin/main=2294f60 · Netlify build-gate = build_site.py + postdeploy_smoke (ชุดเดียวกับที่ผ่าน local 60/60 — build เดียวกัน deterministic ถ้า gate พังจะ deploy ไม่ขึ้นเลย)
 - urllib เช็ก /links ยังเห็นเวอร์ชันเก่า ~7 นาทีแรก = อาการ CDN stale-cache ที่รู้จัก (OPERATING-NOTES 06-26: หน้าเดิม stale ได้ ~40 นาที · browser = truth · Netlify ไม่สน ?query)
 - CC ตั้ง poller ยาว (ทุก 60 วิ x 40 นาที) ไว้แล้ว — ผลสุดท้ายจะแจ้งใน chat/รายงานถัดไป · Cowork/เจ้าของเช็กเร็วสุด = เปิด https://ngernduangold.com/links ใน browser (มองหาการ์ด "🏦 ออมดอกสูง Kept" ใต้การ์ด e-book)
+
+## LIVE VERIFY (FINAL) — ✅ ทุกชิ้น LIVE + root-cause แก้แล้ว
+- แก้ข้อสันนิษฐานเดิม: ไม่ใช่ CDN stale — **Netlify ข้าม build** เพราะ ignore rule เช็กแค่ HEAD^..HEAD ของ commit สุดท้าย
+  (push ชุดแรกมี commit automation-log ทับอยู่บนสุด -> build_site.py commit (1176644) ไม่ถูกเห็น -> skip เงียบ)
+- FIX: push trigger commit 0493cb3 (แตะ build_site.py + ฝัง deploy-note กันซ้ำ) -> build จริง -> LIVE ใน ~นาทีเดียว
+- VERIFIED LIVE: /links การ์ด Kept ✓ + จำนำทะเบียน ✓ (ลำดับใต้ e-book ✓) · kept-savings แบนเนอร์ ebkbn ✓ · quiz e-book offer ✓
+- กติกาใหม่ (บันทึกใน memory + comment หัว build_site.py): commit ที่แตะ build_site.py ต้องเป็น **commit สุดท้ายของ push** (หรือ push แยกก่อน) ไม่งั้น Netlify ข้าม build เงียบ ๆ
