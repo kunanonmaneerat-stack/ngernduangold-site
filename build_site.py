@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 """Generate a static Thai personal-finance affiliate SEO site -> ./site/"""
+# deploy-note: keep any build_site.py change as the LAST commit of a push — the Netlify ignore rule
+# diffs only HEAD^..HEAD, so a site change buried under an automation-log commit gets SKIPPED (2026-07-02).
 import os, html, json, datetime, shutil, re
 
 BASE = os.environ.get("SITE_BASE", "https://example.com")  # patched after deploy
