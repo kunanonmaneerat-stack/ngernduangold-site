@@ -121,3 +121,15 @@ TO SHIP (owner): git add build_site.py site/ && git commit -m "home: feature Kep
   -> ฝั่ง CC/local ไม่ต้องตั้ง monitor ใหม่ซ้ำ · traffic_monitor.py อัปเกรดแล้ว: อ่าน GA4 จริง (ga4-funnel/pages/metrics.csv)
   + ช่องครบ fb/ig/tiktok/pantip/threads/yt/pinterest (ช่องที่ metrics.csv ไม่ track = n/a) + บรรทัด Sales
   (Gumroad ไม่มี API ฟรี -> เจ้าของ export CSV วาง automation-log/gumroad-sales.csv คอลัมน์ date,units,amount_thb)
+
+## 2026-07-02 (บ่าย) PANTIP FINAL WARNING + POSTING-POLICY บังคับใช้ระดับโค้ด (CC antispam-enforcement)
+- 🚨 Pantip แจ้ง FINAL WARNING ทางการ (เห็นบนฟอร์มตั้งกระทู้ 2 ก.ค.): **ผิดซ้ำครั้งเดียว = แบนถาวร**
+  -> ❄️ FREEZE ถึงอย่างน้อย 16 ก.ค. (แนะ 30 ก.ค.) · source of truth การโพสต์ทุกช่อง = automation-log/POSTING-POLICY_antispam_20260702.md
+- GUARDS ระดับโค้ด (ไม่พึ่งความจำ): (1) post_ledger มี text-dedup แล้ว — normalize(ตัด URL/อีโมจิ/ช่องว่าง)+sha1+similarity>=0.9 ย้อน 30 วัน/ช่อง,
+  record_text_post fail-closed, unit test 6/6 (pipeline/test_text_dedup.py) (2) comply_gate.check_post(text, channel) = เช็กเนื้อหา+dedup ในตัว
+  (3) qa_gate.posting_quota(channel) + CLI `python pipeline/qa_gate.py --quota <ch>`: โควตา <=2/วัน (pinterest <=5) + ห่างขั้นต่ำ 3 ชม.
+  + **Pantip hard-block FROZEN until 2026-07-16** (exit 2 เสมอ ปลดได้เฉพาะเจ้าของแก้ policy file)
+- โพสต์ข้อความทุกครั้ง: เช็กก่อนด้วย comply_gate.check_post + qa_gate --quota แล้วบันทึกด้วย post_ledger.record_text_post (backfill 2 ก.ค. แล้ว: fb+threads+pin x2)
+- AUTO-DM audit: CreatorFlow "Comments->DM" **ACTIVE ตั้งแต่ 21 มิ.ย.** (keyword เช็กสิทธิ์ = opt-in ผู้ใช้เริ่มเอง ok, เพดาน 500 DM/เดือน)
+  ⚠️ เหลือ 2 อย่างที่ต้องทำใน CreatorFlow dashboard (เจ้าของเท่านั้น CC เข้าไม่ถึง): ตั้ง delay >=30 วิ + จำกัด follow-up ไม่เกิน 1 ครั้ง
+  ⚠️ BUG พบ: ปุ่ม DM ยังลิงก์ ngernduangold.netlify.app/quiz (โดเมนเก่า) -> แก้เป็น ngernduangold.com/quiz

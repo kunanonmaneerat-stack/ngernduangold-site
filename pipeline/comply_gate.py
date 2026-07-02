@@ -62,6 +62,25 @@ def check(text):
     return (len(issues) == 0, issues)
 
 
+def check_post(text, channel=None):
+    """check() + text-dedup ต่อช่อง (POSTING-POLICY_antispam_20260702).
+    channel=None -> เช็กเนื้อหาอย่างเดียว. duplicate -> GATE_FAIL พร้อมชี้โพสต์เดิมที่ชน."""
+    ok, issues = check(text)
+    if channel:
+        try:
+            _al = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "automation-log")
+            if _al not in sys.path:
+                sys.path.insert(0, _al)
+            import post_ledger
+            dup, reason, _prior = post_ledger.is_duplicate_text(channel, text)
+            if dup:
+                ok = False
+                issues.append("GATE_FAIL duplicate-text (" + post_ledger.norm_channel(channel) + "): " + reason)
+        except Exception as e:  # infra พัง = เตือนดังๆ (การตัดสิน dup ทำไม่ได้ อย่าเงียบ)
+            issues.append("WARN text-dedup check unavailable (" + str(e)[:80] + ") - ตรวจ post_ledger ก่อนโพสต์เอง")
+    return ok, issues
+
+
 def fix(text, issues):
     import free_llm
     prompt = ("เขียนคอนเทนต์นี้ใหม่ให้สุภาพ เป็นกลาง: " + RULE +

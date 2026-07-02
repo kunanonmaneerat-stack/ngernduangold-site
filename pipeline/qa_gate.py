@@ -26,6 +26,53 @@ CHECKLIST = """ตรวจคลิป/เฟรมนี้ตาม checklist
 ตก = pass:false + ระบุข้อใน fails."""
 
 
+# ---- POSTING-POLICY quota gate (POSTING-POLICY_antispam_20260702) ----
+QUOTA_PER_DAY = {"pinterest": 5}     # ช่องอื่นใช้ค่า default
+QUOTA_DEFAULT = 2                    # <=2 โพสต์/วัน/ช่อง
+MIN_GAP_HOURS = 3                    # เว้นขั้นต่ำ 3 ชม. ในช่องเดียวกัน
+PANTIP_FROZEN_UNTIL = "2026-07-16"   # hard-block: เอาออกได้เฉพาะเจ้าของแก้ POSTING-POLICY เอง
+
+
+def posting_quota(channel):
+    """(ok, reason) — อ่าน post-ledger ของวันนี้: Pantip hard-block + โควตา/วัน + ห่างขั้นต่ำ 3 ชม.
+    FAIL จะบอกเวลาที่โพสต์ได้ครั้งถัดไปเสมอ."""
+    import datetime as _dt
+    _al = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "automation-log")
+    if _al not in sys.path:
+        sys.path.insert(0, _al)
+    import post_ledger as PL
+    ch = PL.norm_channel(channel)
+    now = PL.now_local()
+    if ch == "pantip" and now.date().isoformat() < PANTIP_FROZEN_UNTIL:
+        return False, ("FROZEN until 2026-07-16 (POSTING-POLICY) — Pantip FINAL WARNING: "
+                       "ห้ามโพสต์ทุกกรณี ปลดล็อกได้เฉพาะเจ้าของแก้ POSTING-POLICY_antispam_20260702.md เอง")
+    stamps = []
+    for r in PL.iter_ledger():
+        if r.get("type") == "status" or PL.norm_channel(r.get("channel")) != ch:
+            continue
+        eff = r.get("scheduled_for") or str(r.get("ts", ""))[:10]
+        if eff != now.date().isoformat():
+            continue
+        try:
+            t = _dt.datetime.fromisoformat(str(r.get("ts") or r.get("posted_at")))
+            if t.tzinfo is None:
+                t = t.replace(tzinfo=PL.TZ)
+            stamps.append(t)
+        except Exception:
+            pass
+    cap = QUOTA_PER_DAY.get(ch, QUOTA_DEFAULT)
+    if len(stamps) >= cap:
+        nxt = (now + _dt.timedelta(days=1)).replace(hour=8, minute=0, second=0, microsecond=0)
+        return False, "โควตาเต็ม (%d/%d วันนี้ ช่อง %s) — โพสต์ได้อีกครั้ง: %s" % (len(stamps), cap, ch, nxt.strftime("%Y-%m-%d %H:%M"))
+    if stamps:
+        last = max(stamps)
+        gap_h = (now - last).total_seconds() / 3600.0
+        if gap_h < MIN_GAP_HOURS:
+            nxt = last + _dt.timedelta(hours=MIN_GAP_HOURS)
+            return False, "ยังไม่ครบ 3 ชม.จากโพสต์ก่อน (%.1f ชม.) — โพสต์ได้อีกครั้ง: %s" % (gap_h, nxt.strftime("%H:%M"))
+    return True, "ok (%d/%d วันนี้ · gap ผ่าน)" % (len(stamps), cap)
+
+
 def check(frame_path):
     if not os.path.exists(frame_path):
         return {"pass": False, "fails": ["frame not found: " + frame_path], "status": "NO_FILE"}
@@ -49,8 +96,12 @@ def check(frame_path):
 
 
 def main():
+    if len(sys.argv) >= 3 and sys.argv[1] == "--quota":
+        ok, reason = posting_quota(sys.argv[2])
+        print(("OK " if ok else "FAIL ") + reason)
+        return 0 if ok else 2
     if len(sys.argv) < 2:
-        print("usage: python qa_gate.py <frame.png>")
+        print("usage: python qa_gate.py <frame.png> | --quota <channel>")
         return 0
     res = check(sys.argv[1])
     print(json.dumps(res, ensure_ascii=False))

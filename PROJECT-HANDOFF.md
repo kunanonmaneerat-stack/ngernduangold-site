@@ -115,3 +115,9 @@ add a GSC property for ngernduangold.com (currently the netlify.app property; qu
 - METRICS: pipeline/traffic_monitor.py อ่าน GA4 จริงแล้ว (funnel/sources/pages) + ช่อง yt/pinterest/threads
   + Sales line (manual gumroad-sales.csv) — รายงาน clicks=0 เดิมคือ metrics.csv ไม่ใช่ GA4
 - MONITORING: Cowork scheduled check เช้า 08:00 (read-only YT/IG/funnel) — อย่าตั้ง monitor ซ้ำฝั่ง CC
+
+## 2026-07-02 (บ่าย) PANTIP FINAL WARNING — enforcement in code
+- Pantip FINAL WARNING ทางการ: ผิดซ้ำ = แบนถาวร -> FREEZE >=16 ก.ค. · กติกาโพสต์ทุกช่อง = POSTING-POLICY_antispam_20260702.md
+- Guards: post_ledger text-dedup (30 วัน/ช่อง, sim>=0.9) + comply_gate.check_post + qa_gate.posting_quota (<=2/วัน, gap 3 ชม., pinterest<=5)
+  + Pantip hard-block ในโค้ด (FROZEN until 2026-07-16 — ปลดได้เฉพาะเจ้าของแก้ policy file) · ร่าง Pantip 2 ไฟล์ de-branded แล้ว (FROZEN)
+- AUTO-DM (CreatorFlow) active ตั้งแต่ 21 มิ.ย. — owner ต้องตั้ง delay>=30วิ + follow-up<=1 + แก้ลิงก์ /quiz จาก netlify.app -> .com ใน dashboard

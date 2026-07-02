@@ -45,7 +45,7 @@ HONEST LIMITS (do not overclaim -- see POST-PROTOCOL.md "Residual gaps")
 
 stdlib only. PUBLIC repo -> rows carry NO revenue/PII, only channel/clip/date/postId.
 """
-import os, sys, json, time, re, hashlib, argparse, datetime
+import os, sys, json, time, re, hashlib, argparse, datetime, difflib
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 LEDGER = os.path.join(HERE, "post-ledger.jsonl")
@@ -158,9 +158,11 @@ def _date_of(when):
     return datetime.date.fromisoformat(str(when)[:10])
 
 
-def iter_ledger(path=LEDGER):
+def iter_ledger(path=None):
     """Yield one dict per line; silently skip blank or truncated final lines
-    (interrupt-safe READS). Missing file => empty."""
+    (interrupt-safe READS). Missing file => empty. path=None -> current LEDGER
+    (resolved at CALL time so tests/monkeypatch of LEDGER work)."""
+    path = path or LEDGER
     if not os.path.exists(path):
         return
     with open(path, encoding="utf-8") as f:
@@ -174,15 +176,18 @@ def iter_ledger(path=LEDGER):
                 continue                            # half-written final line -> skip
 
 
-def load_index(path=LEDGER, since_days=None):
+def load_index(path=None, since_days=None):
     """Build dedup structures. Resolves status rows (latest wins per dedup_key)."""
     cutoff = None
     if since_days is not None:
         cutoff = now_local().date() - datetime.timedelta(days=since_days)
+    path = path or LEDGER
     keys, by_clip, by_day, status = set(), {}, {}, {}
     for r in iter_ledger(path):
         if r.get("type") == "status":
             status[r.get("dedup_key")] = r.get("status")
+            continue
+        if r.get("type") == "text":            # text-post rows live in their own index (is_duplicate_text)
             continue
         sf = r.get("scheduled_for")
         try:
@@ -311,6 +316,74 @@ def recent_formats(path=LEDGER, n=3):
     fmts = [r.get("fmt") for r in iter_ledger(path)
             if r.get("type") != "status" and r.get("fmt")]
     return fmts[-n:]
+
+
+# ---- text-post dedup (POSTING-POLICY_antispam_20260702: no duplicate text per channel) ----
+TEXT_DUP_DAYS = 30
+TEXT_SIM_THRESHOLD = 0.9
+
+def normalize_text(text):
+    """Normalize before hashing/compare: drop URLs, then keep only letters+digits (casefolded).
+    isalnum() keeps Thai; spaces/emoji/punctuation vanish so cosmetic edits don't dodge dedup."""
+    t = re.sub(r"https?://\S+|www\.\S+|atth\.me/\S+", "", str(text or ""))
+    return "".join(ch for ch in t.casefold() if ch.isalnum())
+
+
+def text_hash(text):
+    return hashlib.sha1(normalize_text(text).encode("utf-8")).hexdigest()
+
+
+def iter_text_rows(days=TEXT_DUP_DAYS, path=None):
+    cutoff = now_local() - datetime.timedelta(days=days)
+    for r in iter_ledger(path or LEDGER):
+        if r.get("type") != "text":
+            continue
+        try:
+            ts = datetime.datetime.fromisoformat(str(r.get("ts")))
+            if ts.tzinfo is None:
+                ts = ts.replace(tzinfo=TZ)
+        except Exception:
+            continue
+        if ts >= cutoff:
+            yield r
+
+
+def is_duplicate_text(channel, text, days=TEXT_DUP_DAYS, path=None):
+    """(dup, reason, prior_row). Duplicate = same channel within `days` AND
+    (exact normalized-hash match OR difflib similarity >= 0.9)."""
+    ch = norm_channel(channel)
+    norm = normalize_text(text)
+    if not norm:
+        return False, "", None
+    h = hashlib.sha1(norm.encode("utf-8")).hexdigest()
+    for r in iter_text_rows(days, path):
+        if norm_channel(r.get("channel")) != ch:
+            continue
+        if r.get("text_hash") == h:
+            return True, "exact duplicate of %s post @%s: %s" % (ch, r.get("ts"), r.get("text_first80", "")), r
+        prior = r.get("text_norm") or ""
+        if prior:
+            sim = difflib.SequenceMatcher(None, norm, prior).ratio()
+            if sim >= TEXT_SIM_THRESHOLD:
+                return True, "%.0f%% similar to %s post @%s: %s" % (sim * 100, ch, r.get("ts"), r.get("text_first80", "")), r
+    return False, "", None
+
+
+def record_text_post(channel, text, when="", source="manual", note=""):
+    """Append one text-post row (channel, text_hash, text_first80, ts). Fail-closed on duplicate."""
+    dup, reason, _ = is_duplicate_text(channel, text)
+    if dup:
+        return {"appended": False, "reason": "DUPLICATE: " + reason}
+    norm = normalize_text(text)
+    row = {"type": "text", "channel": norm_channel(channel),
+           "text_hash": hashlib.sha1(norm.encode("utf-8")).hexdigest(),
+           "text_norm": norm, "text_first80": str(text).replace("\n", " ")[:80],
+           "ts": when or now_local().isoformat(timespec="seconds"), "source": source}
+    if note:
+        row["note"] = note
+    _public_safe(row)
+    _append(row)
+    return {"appended": True, "text_hash": row["text_hash"]}
 
 
 def claim(channel, clip_key, when, source="adhoc", window_days=WINDOW_DAYS):
