@@ -18,3 +18,8 @@ executed: 2026-07-02 · zero-budget ✓ · ไม่แตะ free_ai guards/sec
 
 ## launch-status.json อัปเดตแล้ว (pending ใหม่: stage คิว/gen Flow/โพสต์ Pantip) — Cowork regen dashboard ได้เลย
 ## LIVE VERIFY (หลัง push): ดูบรรทัดท้ายรายงานนี้ (CC เติมผล live check /links)
+
+## LIVE VERIFY (interim, ~15 นาทีหลัง push)
+- push ยืนยัน: origin/main=2294f60 · Netlify build-gate = build_site.py + postdeploy_smoke (ชุดเดียวกับที่ผ่าน local 60/60 — build เดียวกัน deterministic ถ้า gate พังจะ deploy ไม่ขึ้นเลย)
+- urllib เช็ก /links ยังเห็นเวอร์ชันเก่า ~7 นาทีแรก = อาการ CDN stale-cache ที่รู้จัก (OPERATING-NOTES 06-26: หน้าเดิม stale ได้ ~40 นาที · browser = truth · Netlify ไม่สน ?query)
+- CC ตั้ง poller ยาว (ทุก 60 วิ x 40 นาที) ไว้แล้ว — ผลสุดท้ายจะแจ้งใน chat/รายงานถัดไป · Cowork/เจ้าของเช็กเร็วสุด = เปิด https://ngernduangold.com/links ใน browser (มองหาการ์ด "🏦 ออมดอกสูง Kept" ใต้การ์ด e-book)
