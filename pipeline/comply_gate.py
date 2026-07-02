@@ -59,7 +59,13 @@ def check(text):
         issues.append("มีตัวเลข % แต่ไม่มีคำกำกับให้เช็ก/ประมาณ")
     if re.search(r"\b0\s*%", text):
         issues.append("เคลม 0% ตรงๆ เสี่ยงการันตี -> ใส่เงื่อนไข/ช่วงเวลา + 'เช็กกับธนาคาร'")
-    return (len(issues) == 0, issues)
+    # STALE-FACTS warn (ไม่ block — FACTS_current.md 2026-07-02): ตัวเลข/มาตรการที่ตกยุคแล้ว
+    warns = []
+    if re.search(r"ขั้นต่ำ\s*5\s*(-\s*10\s*)?%", text):
+        warns.append("WARN stale-fact: 'จ่ายขั้นต่ำ 5%' ตกยุค — ปัจจุบัน 8% ถึง 31 ธ.ค. 69 (ดู knowledge-base/FACTS_current.md)")
+    if re.search(r"คุณสู้.{0,3}เราช่วย", text) and re.search(r"ลงทะเบียน|สมัครได้|รีบสมัคร|สมัครเลย", text):
+        warns.append("WARN stale-fact: 'คุณสู้ เราช่วย' ปิดรับแล้ว (30 ก.ย. 68) — ห้ามชวนสมัคร ใช้เล่าอ้างอิงอดีตเท่านั้น")
+    return (len(issues) == 0, issues + warns)
 
 
 def check_post(text, channel=None):

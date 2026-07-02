@@ -83,6 +83,23 @@ def _launch():
                  'border-radius:50%%;background:%s;margin-right:6px"></span>%s</span>'
                  '<span class="bv" style="text-align:left">%s</span></div>'
                  ) % (col, html.escape(c.get("name", "?")), html.escape(c.get("note", "")))
+    # facts-freshness (order-newswatch 2026-07-02): อ่าน "ตรวจล่าสุด: **YYYY-MM-DD**" จาก FACTS_current.md
+    try:
+        import re as _re, datetime as _dt
+        fp = os.path.join(AL, "knowledge-base", "FACTS_current.md")
+        m = _re.search(r"ตรวจล่าสุด:\s*\*\*(\d{4}-\d{2}-\d{2})\*\*", open(fp, encoding="utf-8").read()) if os.path.exists(fp) else None
+        if m:
+            fd = _dt.date.fromisoformat(m.group(1))
+            age = (_dt.date.today() - fd).days
+            fcol = "#e0a93c" if age > 14 else "#3ddc97"
+            fnote = " (เกิน 14 วัน — รัน newswatch/อัปเดต FACTS)" if age > 14 else ""
+            rows += ('<div class="bar" style="grid-template-columns:130px 1fr">'
+                     '<span class="bl"><span style="display:inline-block;width:8px;height:8px;'
+                     'border-radius:50%%;background:%s;margin-right:6px"></span>📚 facts</span>'
+                     '<span class="bv" style="text-align:left;color:%s">ตรวจล่าสุด %s · อายุ %d วัน%s</span></div>'
+                     ) % (fcol, fcol, m.group(1), age, fnote)
+    except Exception:
+        pass
     pend = "".join("<tr><td>%s</td></tr>" % html.escape(x) for x in s.get("pending", []))
     card = ('<div class="card"><h2>🚀 Launch — %s <span style="color:#5b6673;font-weight:400">'
             '(อัปเดต %s · แก้ที่ automation-log/launch-status.json)</span></h2>%s'
