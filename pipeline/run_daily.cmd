@@ -16,6 +16,8 @@ echo [%date% %time%] daily_content start >> "%LOG%"
 "%PY%" "%BASE%\daily_content.py" >> "%LOG%" 2>&1
 echo [%date% %time%] ga4_pull start >> "%LOG%"
 "%PY%" "%BASE%\ga4_pull.py" >> "%LOG%" 2>&1
+echo [%date% %time%] fb_queue_linkcheck (order-flow-fb-master B1) >> "%LOG%"
+"%PY%" "%BASE%\fb_queue_linkcheck.py" >> "%LOG%" 2>&1
 echo [%date% %time%] traffic_analyst start >> "%LOG%"
 "%PY%" "%BASE%\traffic_analyst.py" >> "%LOG%" 2>&1
 echo [%date% %time%] post_agent start (timing -> queue) >> "%LOG%"
