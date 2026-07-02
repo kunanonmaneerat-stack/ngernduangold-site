@@ -26,7 +26,7 @@ RULES = """กฎการเขียนสคริปต์คลิปสั
 
 def gen_for_topic(topic, intent, money_page):
     prompt = f"หัวข้อ: {topic}\nintent: {intent}\nmoney_page: {money_page}\n\n{RULES}"
-    return free_ai.generate(prompt, model="gemini-2.0-flash")
+    return free_ai.generate(prompt, model="smart")  # creative scripts that get published
 
 
 def main():
@@ -36,7 +36,7 @@ def main():
     trends = [f for f in trends if f.startswith("trends-")]
     if not trends:
         # still verify the key path / fail-closed even with no trends file
-        _, st = free_ai.generate("ping", model="gemini-2.0-flash")
+        _, st = free_ai.generate("ping", model="cheap")  # trivial healthcheck -> cheapest tier
         if st == "NO_KEY":
             print("SKIP script_gen: no GOOGLE_AI_STUDIO_KEY (fail-closed). Run trend_ingest after owner adds key.")
         else:

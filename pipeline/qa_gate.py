@@ -35,7 +35,7 @@ def check(frame_path):
     except Exception as e:
         # fall back: pass the path note; if no key it will skip anyway
         img = None
-    txt, st = free_ai.generate(CHECKLIST, model="gemini-2.0-flash", images=([img] if img else None))
+    txt, st = free_ai.generate(CHECKLIST, model="smart", images=([img] if img else None))  # vision QA gate
     if st == "NO_KEY":
         return {"pass": None, "fails": [], "status": "SKIP_NO_KEY"}
     if st != "ok" or not txt:

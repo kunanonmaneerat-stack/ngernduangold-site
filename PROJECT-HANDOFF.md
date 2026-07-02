@@ -85,3 +85,33 @@ DONE: domain migration + canonical; Netlify build-ignore fix; GSC token scope fi
 4 hybrid Reels rendered (sound + no watermark); 1 TikTok Reel (debt) posted; 3 scheduled tasks live; OPERATING-NOTES + this doc.
 PENDING / NEXT: add IG Reels + FB to the video schedule; write scripts for refinance/salary/title-loan; confirm Netlify usage;
 add a GSC property for ngernduangold.com (currently the netlify.app property; queries=0); KPI to watch = quiz_start.
+
+## 10. 2026-06-26 update - dual-system reality + control-plane handoff
+- BIG PICTURE: this project already runs on a LARGE existing automation - ~30 Cowork scheduled tasks under
+  C:\Users\nL_ku\Claude\Scheduled\ (list via the scheduled-tasks tool). Main poster = 'ngernduangold-social-ops-daily'
+  @08:02 (Pantip <=5/day + 1 Threads/day, comply_gate, content_council). Plus channel-heartbeat @21:00,
+  weekly-review (Mon), GSC reindex, Pinterest, loop-architect, agent-auditor, evening-check, etc.
+  -> Cowork role = CONTROL-PLANE (verify/analyze) + uptime + drive-backup. Do NOT add Cowork posting tasks that
+     duplicate social-ops (caused double-post risk 06-26; 3 were paused).
+- NO-BOT-POST POLICY (critical): auto bot-posting was deliberately DISABLED (tiktok-weekly-content-engine,
+  daily-pantip-threads-engine) because Postiz bot-post + Threads 8/day = spam-flag / shadowban = social death.
+  Posting must be MANUAL / low-frequency / no-link.
+- PANTIP: log in as BRAND member 9373300 (NOT personal 8912721) or social-ops fail-closes (skips, leaves
+  drafts in automation-log/_pantip_POST_NOW_*.md). Design = owner posts Pantip from own account.
+- BROWSER PERMS: Chrome-MCP navigating to a NEW domain (facebook.com, pantip.com) pops a per-domain Allow
+  prompt the user can deny; IG was already approved. Don't hammer denied perms.
+- WEB CLIPS (done 06-26): watermark-free web versions in media/clips-web/ + build_site.py _mc -> "clips-web";
+  serves clean /clips/*.mp4 (commit 2741fd4, deployed, debt verified live). Originals stay in media/clips for Reels.
+- SUB_ID / AccessTrade (06-26): "sub_id not reaching AT" alarm is likely a MISDIAGNOSIS - utm_source + utm_medium
+  ARE AccessTrade's Sub ID (official docs) and the site sends both; empty Sub ID tab = 0 conversions, not a bug.
+  See automation-log/_finding_subid_20260626.md. Real lever = conversion rate.
+- COWORK TASKS NOW: kept = ngernduangold-uptime-monitor (6h) + ngernduangold-drive-backup (22:00).
+  Paused 06-26 = ngernduangold-daily-cycle, ngernduangold-video-post, ngernduangold-ig-reels-post.
+## 2026-07-02 state sync (Cowork audit -> CC)
+- PANTIP PAUSED FOR SALES CONTENT: กระทู้ 44143972 ถูกลบ (ขายของ/โฆษณา) + mod-warning 29 มิ.ย.
+  -> ห้ามกระทู้มีลิงก์ขาย/ราคา จนกว่าเจ้าของสั่ง (value-first เท่านั้น)
+- LAUNCH: IG Reel e-book LIVE = DaRaYRLD80W (2 ก.ค., cross-post FB+IG) · สถานะ launch อ่าน/แก้ที่
+  automation-log/launch-status.json (dashboard การ์ด 🚀 Launch render จากไฟล์นี้ผ่าน dashboard_agent._launch())
+- METRICS: pipeline/traffic_monitor.py อ่าน GA4 จริงแล้ว (funnel/sources/pages) + ช่อง yt/pinterest/threads
+  + Sales line (manual gumroad-sales.csv) — รายงาน clicks=0 เดิมคือ metrics.csv ไม่ใช่ GA4
+- MONITORING: Cowork scheduled check เช้า 08:00 (read-only YT/IG/funnel) — อย่าตั้ง monitor ซ้ำฝั่ง CC
