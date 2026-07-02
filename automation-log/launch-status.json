@@ -1,19 +1,54 @@
 {
-  "updated": "2026-07-02 06:50",
+  "updated": "2026-07-02 (CC revenue-sprint P1-P3 done)",
   "product": "e-book แผนปลดหนี้บัตรเครดิต 59฿",
   "channels": [
-    {"name": "Gumroad + /links", "st": "ok", "note": "ปุ่ม 59฿ → $1.77 live · GA4 affiliate_click 69 (28 วัน)"},
-    {"name": "YouTube", "st": "ok", "note": "เปิดตัว 28 มิ.ย. · คิวตั้งเวลา 18:00 ถึง 5 ก.ค. — หลังจากนั้นต้องเติมคิว"},
-    {"name": "Instagram", "st": "ok", "note": "Reel e-book DaRaYRLD80W (2 ก.ค.) + คลิปรายวัน 20:00"},
-    {"name": "Facebook", "st": "ok", "note": "Reel e-book + แคปชันครบ (ลบตัวซ้ำไร้แคปชันแล้ว)"},
-    {"name": "Pinterest", "st": "ok", "note": "14 พิน บอร์ดการเงินมนุษย์เงินเดือน → /links"},
-    {"name": "Threads", "st": "ok", "note": "โพสต์เปิดตัว 59฿ (29 มิ.ย.) + คอนเทนต์ต่อเนื่อง"},
-    {"name": "TikTok", "st": "todo", "note": "รอเจ้าของลงจากมือถือ — คลิป _social-stage/ebook-promo-9x16.mp4"},
-    {"name": "Pantip", "st": "down", "note": "กระทู้ 44143972 โดนลบ (ขายของ) + บัญชีเคยโดน mod-warning → พักช่องทาง"}
+    {
+      "name": "Gumroad + /links",
+      "st": "ok",
+      "note": "ปุ่ม 59฿ → $1.77 live · GA4 affiliate_click 69 (28 วัน)"
+    },
+    {
+      "name": "YouTube",
+      "st": "ok",
+      "note": "เปิดตัว 28 มิ.ย. · คิวตั้งเวลา 18:00 ถึง 5 ก.ค. — หลังจากนั้นต้องเติมคิว"
+    },
+    {
+      "name": "Instagram",
+      "st": "ok",
+      "note": "Reel e-book DaRaYRLD80W (2 ก.ค.) + คลิปรายวัน 20:00"
+    },
+    {
+      "name": "Facebook",
+      "st": "ok",
+      "note": "Reel e-book + แคปชันครบ (ลบตัวซ้ำไร้แคปชันแล้ว)"
+    },
+    {
+      "name": "Pinterest",
+      "st": "ok",
+      "note": "14 พิน บอร์ดการเงินมนุษย์เงินเดือน → /links"
+    },
+    {
+      "name": "Threads",
+      "st": "ok",
+      "note": "โพสต์เปิดตัว 59฿ (29 มิ.ย.) + คอนเทนต์ต่อเนื่อง"
+    },
+    {
+      "name": "TikTok",
+      "st": "todo",
+      "note": "รอเจ้าของลงจากมือถือ — คลิป _social-stage/ebook-promo-9x16.mp4"
+    },
+    {
+      "name": "Pantip",
+      "st": "down",
+      "note": "กระทู้ 44143972 โดนลบ (ขายของ) + บัญชีเคยโดน mod-warning → พักช่องทาง"
+    }
   ],
   "pending": [
+    "เจ้าของ/Cowork: ตั้งคิวจาก _social-stage — QUEUE_fb-threads_20260702-0708 (FB/Threads วันนี้เริ่มได้) + POST-PACK_week_20260706-0712 (IG/TikTok/YT 6-12 ก.ค.)",
+    "Cowork/เจ้าของ: gen Flow batch ตาม FLOW-PLAN_15clips_20260702 (tl 8 / kp 5 / eb 2) + ตรวจลายน้ำก่อน stage",
+    "เจ้าของ: อ่าน+โพสต์กระทู้ Pantip 2 ร่าง (social-review/pantip/draft-thread_*.md) มือเท่านั้น",
     "เจ้าของ: ลง TikTok จากมือถือ (แคปชันใน POST-PACK_ig-tiktok_20260628.md)",
     "เจ้าของ: ตัดสินใจ fold หน้าแรก Stitch (ธง CC ค้างตั้งแต่ 22 มิ.ย.)",
-    "CC: รัน order-metrics-upgrade-20260702 (รวม GA4 เข้า traffic-monitor + เก็บกวาดวงจร + commit/push)"
+    "เจ้าของ: export ยอดขาย Gumroad CSV → automation-log/gumroad-sales.csv"
   ]
 }
