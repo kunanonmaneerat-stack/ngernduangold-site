@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-02 (CC revenue-sprint P1-P3 done)",
+  "updated": "2026-07-02 11:20 — sprint day 1 โพสต์แล้ว: FB (+ลิงก์ title-loan คอมเมนต์แรก) + Threads · /links การ์ดใหม่ verified LIVE",
   "product": "e-book แผนปลดหนี้บัตรเครดิต 59฿",
   "channels": [
     {
@@ -44,8 +44,8 @@
     }
   ],
   "pending": [
-    "เจ้าของ/Cowork: ตั้งคิวจาก _social-stage — QUEUE_fb-threads_20260702-0708 (FB/Threads วันนี้เริ่มได้) + POST-PACK_week_20260706-0712 (IG/TikTok/YT 6-12 ก.ค.)",
-    "Cowork/เจ้าของ: gen Flow batch ตาม FLOW-PLAN_15clips_20260702 (tl 8 / kp 5 / eb 2) + ตรวจลายน้ำก่อน stage",
+    "✅ วันนี้ (2 ก.ค.) FB+Threads โพสต์แล้วโดย Cowork — คิวเหลือ 3-8 ก.ค. (Cowork โพสต์รายวันหลังเจ้าของยืนยันในแชต) + POST-PACK_week_20260706-0712 (IG/TikTok/YT)",
+    "🛑 Flow outage ยืนยัน (12:40): gen fail ทุกงานตั้งแต่ ~11:40 ยกเว้น tl01 (fail สะสม 3-4 การ์ด retry แล้วก็ตาย + heavy load banner ซ้ำ) — Cowork หยุดยิงเด็ดขาด · tl01 ✅ ตัวเดียว · scheduled task 'flow-batch-resume' 14:00 มี guard: ทดสอบ 1 ตัวก่อน ถ้า fail = เลิกและรายงาน · คิวค้าง: tl02-08, kp01-05, eb01-02 (14) · เครดิตไม่ควรโดนหักจากงาน fail — ให้ task ตรวจยอดจริงจากเมนูบัญชี",
     "เจ้าของ: อ่าน+โพสต์กระทู้ Pantip 2 ร่าง (social-review/pantip/draft-thread_*.md) มือเท่านั้น",
     "เจ้าของ: ลง TikTok จากมือถือ (แคปชันใน POST-PACK_ig-tiktok_20260628.md)",
     "เจ้าของ: ตัดสินใจ fold หน้าแรก Stitch (ธง CC ค้างตั้งแต่ 22 มิ.ย.)",
