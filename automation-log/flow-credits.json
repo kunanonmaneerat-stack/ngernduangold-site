@@ -1,1 +1,6 @@
-{"quota": 1000, "used": 741, "remaining": 259, "note": "sync avatar menu 2026-07-02 ~17:00 by Cowork (flow-batch-resume): real remaining 259 (ลดจาก 331 ตอน 14:30, -72). Batch เงินเดือนสมองทอง: ส่งเพิ่ม 6 คลิปที่ขาดสำเร็จทั้งหมด ไม่มี fail — tl02 split-screen ขาย/จำนำ, tl03 บัตรเครดิตเข้าลิ้นชัก, tl04 หญิงขับรถ commute, tl07 ลิ้นชักเจอเล่มทะเบียน, kp02 โหล 2 ใบหยอดซ้ายก่อน, kp03 กองเหรียญ 2 กอง. โปรเจกต์รวม 15 media = ครบ 11 ฉาก (tl01-08, kp01-03; บางตัวยัง queued/active). ขาดอีก 4 (รอบหน้า): kp04 จอแตก→bank calm, kp05 นอนหลับ+โหลเหรียญ, eb01 spreadsheet, eb02 e-book โซฟา. หมายเหตุ: tl06 chat ซ้ำ 5 อัน (2 done+3 queued) จาก batch เก่า buffer เหลือ ~259."}
+{
+  "month": "2026-07",
+  "quota": 1000,
+  "used": 0,
+  "log": []
+}
