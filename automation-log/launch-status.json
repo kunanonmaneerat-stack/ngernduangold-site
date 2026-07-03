@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-02 19:20 — ลุยตามระบบ: re-arm task flow-batch-resume → 3 ก.ค. 10:00 gen 4 ฉากที่ขาด (kp04/kp05/eb01/eb02) + โหลดดิบ 15 + เขียน RAW-READY ให้ CC ประกอบเอง · CC ทำ flow-fb-master ครบ (link-health 7/7=200 wire เข้า run_daily 05:02) · งาน A รอ RAW-READY (ถูกต้อง)",
+  "updated": "2026-07-03 10:46 — flow-batch-resume รัน: gen 4 ฉากที่ขาด (kp04/kp05/eb01/eb02) สำเร็จครบ 4/4 ✅ (Omni Flash 9:16 8s 1x, 12cr/คลิป) · เครดิต 259→211 (ใช้ 48, cap 90 OK) · โปรเจกต์มีคลิปเสร็จ 12 ตัว (11 ฉาก unique + tl06 ซ้ำ) · ยังขาด 4 ฉาก (tl02/tl07/tl08/kp01) ที่ค้าง queued zombie จากรอบเซิร์ฟเวอร์รวน · เขียน RAW-READY_flow-20260703.md แล้ว ⚠️ แต่ดาวน์โหลดดิบลง _raw\\ ยังทำไม่ได้ในรอบ scheduled (player โหลดไม่ขึ้น + Chrome Save-As dialog กดยืนยันไม่ได้) → CC พัก assembly จนกว่าจะ pull คลิปแบบ interactive",
   "product": "e-book แผนปลดหนี้บัตรเครดิต 59฿",
   "channels": [
     {
@@ -45,8 +45,8 @@
   ],
   "pending": [
     "✅ วันนี้ (2 ก.ค.) FB+Threads โพสต์แล้วโดย Cowork — คิวเหลือ 3-8 ก.ค. (Cowork โพสต์รายวันหลังเจ้าของยืนยันในแชต) + POST-PACK_week_20260706-0712 (IG/TikTok/YT)",
-    "🎬 Flow (2 ก.ค. 17:00): ส่ง prompt ครบ 11 ฉาก (tl01-08, kp01-03) · เครดิตเหลือ 259 · ขาด gen 4 ฉาก (kp04/kp05/eb01/eb02) → task flow-batch-resume RE-ARMED ยิง 3 ก.ค. 10:00 (gen 4 + โหลดดิบ 15 + เขียน cowork-inbox/RAW-READY_flow-20260703.md ให้ CC) · ถ้า Flow รวน task เลื่อนตัวเอง +3ชม. เอง — ไม่ต้อง grind มือ",
-    "🔗 CC flow-fb-master (pushed cff626c): งาน B ครบ — link-health 7/7=200 wire เข้า run_daily 05:02 (ก่อน 08:00) + ledger protocol พร้อม · งาน A (ประกอบ _final_) WAITING RAW-READY ตามคำสั่ง",
+    "🎬 Flow (3 ก.ค. 10:46): gen 4 ฉากที่ขาด kp04/kp05/eb01/eb02 = สำเร็จครบ 4/4 ✅ · โปรเจกต์มีคลิปเสร็จ 12 ตัว (tl01,tl03,tl04,tl05,tl06+ซ้ำ,kp02,kp03,kp04,kp05,eb01,eb02) · เครดิต 259→211 · ยังขาด 4 ฉาก tl02/tl07/tl08/kp01 (ค้าง queued zombie 7 ตัว รอ gen ใหม่รอบหน้าเมื่อคิวโล่ง) · RAW-READY_flow-20260703.md เขียนแล้ว ⚠️ ดาวน์โหลดดิบลง _raw\\ ยังทำไม่ได้ (player โหลดไม่ขึ้น + native Save-As กดไม่ได้ในโหมด scheduled) → ต้อง pull 12 คลิปแบบ interactive ก่อน CC จะประกอบ _final_ ได้ (ดูทางเลือก A/B/C ใน RAW-READY)",
+    "🔗 CC flow-fb-master (pushed cff626c): งาน B ครบ — link-health 7/7=200 wire เข้า run_daily 05:02 (ก่อน 08:00) + ledger protocol พร้อม · งาน A (ประกอบ _final_) รอไฟล์ดิบใน _raw\\ (ตอนนี้ว่าง — รอ pull จาก Flow)",
     "เจ้าของ: อ่าน+โพสต์กระทู้ Pantip 2 ร่าง (social-review/pantip/draft-thread_*.md) มือเท่านั้น",
     "✅ TikTok e-book โพสต์แล้ว (2 ก.ค. ~18:4x โดย Cowork ผ่านเว็บ TikTok Studio): คลิป ebook-promo-9x16 1080P + แคปชันเต็ม + AI-label เปิด + ผ่าน qa_gate (0/2) — ขึ้นจริงในหน้า content",
     "✅ Stitch fold: DEFER (Cowork ตัดสิน 2 ก.ค. ตาม GA4 — homepage 0 conv, reach คือคอขวด) → DECISION-stitch-fold_20260702.md · เก็บ preview ไว้ revisit เมื่อ reach ดีขึ้น · ปิดธงที่ค้างมา 10 วัน",

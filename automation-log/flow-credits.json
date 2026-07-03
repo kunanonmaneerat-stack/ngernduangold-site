@@ -1,6 +1,10 @@
 {
   "month": "2026-07",
   "quota": 1000,
-  "used": 0,
-  "log": []
+  "used": 789,
+  "remaining": 211,
+  "updated": "2026-07-03 10:46",
+  "log": [
+    {"ts": "2026-07-03 10:2x", "run": "flow-batch-resume", "action": "gen 4 missing scenes (kp04,kp05,eb01,eb02) @ Omni Flash 9:16 8s 1x = 12 credits each", "credits": 48, "before": 259, "after": 211, "result": "all 4 completed OK"}
+  ]
 }
