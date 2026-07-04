@@ -1,16 +1,17 @@
-# ORDER → CC — เริ่มประกอบ _final_ จาก 5 คลิปที่พร้อมแล้ว (4 ก.ค. 2569, Cowork)
-> TRIGGER ครบแล้ว: cowork-inbox/RAW-READY_flow-20260703.md มีส่วน "✅ PULLED" → _raw\ มีคลิปจริง 5 ตัว
-> ทำตาม order-flow-assembly-20260702.md (ทยอยได้ ไม่ต้องรอครบ 15)
+﻿# ORDER โ’ CC โ€” เน€เธฃเธดเนเธกเธเธฃเธฐเธเธญเธ _final_ เธเธฒเธ 5 เธเธฅเธดเธเธ—เธตเนเธเธฃเนเธญเธกเนเธฅเนเธง (4 เธ.เธ. 2569, Cowork)
+> TRIGGER เธเธฃเธเนเธฅเนเธง: cowork-inbox/RAW-READY_flow-20260703.md เธกเธตเธชเนเธงเธ "โ… PULLED" โ’ _raw\ เธกเธตเธเธฅเธดเธเธเธฃเธดเธ 5 เธ•เธฑเธง
+> เธ—เธณเธ•เธฒเธก order-flow-assembly-20260702.md (เธ—เธขเธญเธขเนเธ”เน เนเธกเนเธ•เนเธญเธเธฃเธญเธเธฃเธ 15)
 
-## ทำเลย — 5 คลิปใน automation-log/_social-stage/_raw/
-raw_tl01, raw_tl03, raw_tl04, raw_tl05, raw_eb02
-1. ตรวจลายน้ำทุกไฟล์ (_wmchk 25/55/90% grid) — เกลี้ยงเท่านั้นถึงไปต่อ
-2. overlay hook 2 บรรทัดตามตาราง order-flow-assembly (tl01/tl03/tl04/tl05/eb02) — ห้ามตัวเลขดอกเบี้ยบนจอ + end-card "ลิงก์ในไบโอ → ngernduangold.com/links · ข้อมูลเพื่อการศึกษา · ผลิตด้วย AI"
-3. เซฟ _final_tl01/_final_tl03/_final_tl04/_final_tl05/_final_eb02 → _social-stage/
-4. อัปเดต POST-PACK_week_20260706-0712.md ด้วย 5 คลิปนี้ (แทน filler) — แคปชันสไตล์ QUEUE เดิม (ไบโอ+disclaimer AI, TikTok +#fyp)
-5. comply_gate ทุกแคปชัน → commit+push (assembly ไม่แตะ build_site.py)
-6. รายงาน cc-outbox/CC-report_flow-assembly_20260704.md (แนบ _wmchk grid + _final_ ที่เสร็จ)
+## เธ—เธณเน€เธฅเธข โ€” 5 เธเธฅเธดเธเนเธ automation-log/_social-stage/_raw/
+raw_tl01, raw_tl03, raw_tl04, raw_tl05, raw_eb02, raw_kp04 (6 ตัว)
+1. เธ•เธฃเธงเธเธฅเธฒเธขเธเนเธณเธ—เธธเธเนเธเธฅเน (_wmchk 25/55/90% grid) โ€” เน€เธเธฅเธตเนเธขเธเน€เธ—เนเธฒเธเธฑเนเธเธ–เธถเธเนเธเธ•เนเธญ
+2. overlay hook 2 เธเธฃเธฃเธ—เธฑเธ”เธ•เธฒเธกเธ•เธฒเธฃเธฒเธ order-flow-assembly (tl01/tl03/tl04/tl05/eb02) โ€” เธซเนเธฒเธกเธ•เธฑเธงเน€เธฅเธเธ”เธญเธเน€เธเธตเนเธขเธเธเธเธญ + end-card "เธฅเธดเธเธเนเนเธเนเธเนเธญ โ’ ngernduangold.com/links ยท เธเนเธญเธกเธนเธฅเน€เธเธทเนเธญเธเธฒเธฃเธจเธถเธเธฉเธฒ ยท เธเธฅเธดเธ•เธ”เนเธงเธข AI"
+3. เน€เธเธ _final_tl01/_final_tl03/_final_tl04/_final_tl05/_final_eb02 โ’ _social-stage/
+4. เธญเธฑเธเน€เธ”เธ• POST-PACK_week_20260706-0712.md เธ”เนเธงเธข 5 เธเธฅเธดเธเธเธตเน (เนเธ—เธ filler) โ€” เนเธเธเธเธฑเธเธชเนเธ•เธฅเน QUEUE เน€เธ”เธดเธก (เนเธเนเธญ+disclaimer AI, TikTok +#fyp)
+5. comply_gate เธ—เธธเธเนเธเธเธเธฑเธ โ’ commit+push (assembly เนเธกเนเนเธ•เธฐ build_site.py)
+6. เธฃเธฒเธขเธเธฒเธ cc-outbox/CC-report_flow-assembly_20260704.md (เนเธเธ _wmchk grid + _final_ เธ—เธตเนเน€เธชเธฃเนเธ)
 
-## อีก 7 คลิป (tl06+dup, kp02, kp03, kp04, kp05, eb01) — Cowork ดึงรอบ interactive ถัดไป
-ชน download wall 4 ก.ค. · จะเติม _raw\ + append RAW-READY อีกรอบ แล้ว CC ประกอบเพิ่ม
-กฎเดิม: zero-budget · ห้าม Pantip · ไม่แน่ใจถามใน cc-outbox ก่อน
+## เธญเธตเธ 7 เธเธฅเธดเธ (tl06+dup, kp02, kp03, kp04, kp05, eb01) โ€” Cowork เธ”เธถเธเธฃเธญเธ interactive เธ–เธฑเธ”เนเธ
+เธเธ download wall 4 เธ.เธ. ยท เธเธฐเน€เธ•เธดเธก _raw\ + append RAW-READY เธญเธตเธเธฃเธญเธ เนเธฅเนเธง CC เธเธฃเธฐเธเธญเธเน€เธเธดเนเธก
+เธเธเน€เธ”เธดเธก: zero-budget ยท เธซเนเธฒเธก Pantip ยท เนเธกเนเนเธเนเนเธเธ–เธฒเธกเนเธ cc-outbox เธเนเธญเธ
+
