@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-03 10:46 — flow-batch-resume รัน: gen 4 ฉากที่ขาด (kp04/kp05/eb01/eb02) สำเร็จครบ 4/4 ✅ (Omni Flash 9:16 8s 1x, 12cr/คลิป) · เครดิต 259→211 (ใช้ 48, cap 90 OK) · โปรเจกต์มีคลิปเสร็จ 12 ตัว (11 ฉาก unique + tl06 ซ้ำ) · ยังขาด 4 ฉาก (tl02/tl07/tl08/kp01) ที่ค้าง queued zombie จากรอบเซิร์ฟเวอร์รวน · เขียน RAW-READY_flow-20260703.md แล้ว ⚠️ แต่ดาวน์โหลดดิบลง _raw\\ ยังทำไม่ได้ในรอบ scheduled (player โหลดไม่ขึ้น + Chrome Save-As dialog กดยืนยันไม่ได้) → CC พัก assembly จนกว่าจะ pull คลิปแบบ interactive",
+  "updated": "2026-07-04 12:0x — จัดการของวันนี้ (ดูรายการปิงด้านล่าง) · [3 ก.ค.] flow-batch-resume gen 4 ฉากขาดครบ 4/4 · เครดิต 211 · โปรเจกต์คลิปเสร็จ 12 ตัว · ยังขาด 4 ฉาก (tl02/tl07/tl08/kp01) ที่ค้าง queued zombie · [อัปเดต 4 ก.ค. 12:0x] จัดการของวันนี้: FB คิว 4 ก.ค. โพสต์แล้ว (ID 1801185690860088 + ลิงก์คอมเมนต์ + ledger) · ดึงคลิป Flow interactive 5/12 → _raw (tl01,tl03,tl04,tl05,eb02) ส่ง CC ประกอบ (order-assemble-5clips) · อีก 7 ชน download wall ดึงรอบหน้า · Pantip รอเจ้าของกด รับทราบ",
   "product": "e-book แผนปลดหนี้บัตรเครดิต 59฿",
   "channels": [
     {

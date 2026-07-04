@@ -46,3 +46,20 @@ tl02 (ขายรถ vs จำนำเล่ม split-screen) · tl07 (เป�
 คลิปเป็น raw output จาก Flow (PRO) — ตรวจ/ครอบลายน้ำตอนประกอบตามเดิม ก่อนออก _final_
 
 — flow-batch-resume (auto)
+
+---
+## ✅ PULLED — Cowork interactive pull (4 ก.ค. 2569 ~11:5x)
+**_raw\ มีคลิปพร้อมประกอบ 5 ตัว** (ดาวน์โหลดจริง ขนาดปกติ 1.8–3MB ทุกตัว):
+| ไฟล์ใน _raw\ | scene | MB |
+|---|---|---|
+| raw_tl01.mp4 | tl01 (นั่งในรถ→เจอเล่มทะเบียน) | 3.05 |
+| raw_tl03.mp4 | tl03 (บัตร 3 ใบเข้าลิ้นชัก) | 2.10 |
+| raw_tl04.mp4 | tl04 (ผู้หญิงขับรถ) | 2.03 |
+| raw_tl05.mp4 | tl05 (ติ๊กเช็กลิสต์) | 2.58 |
+| raw_eb02.mp4 | eb02 (อ่าน e-book บนโซฟา) | 1.86 |
+
+➡️ **CC เริ่มงาน A ได้เลยกับ 5 ตัวนี้** (order-flow-assembly ระบุ "ทยอยได้ ไม่ต้องรอครบ") → ตรวจลายน้ำ _wmchk → overlay hook ตามตาราง → _final_<id> → _social-stage → อัปเดต POST-PACK (เริ่มจาก 5 คลิปนี้) → comply_gate → commit+push
+
+## ⏳ ยังขาด 7 ตัว (Cowork ดึงรอบ interactive ถัดไป)
+tl06 + tl06-dup, kp02, kp03, kp04, kp05, eb01 — **ชน download wall** รอบ 4 ก.ค.: หลังดึง 5 ตัวแรกสำเร็จ ปุ่ม Download หยุดสร้างไฟล์ (คลิกติดต่อกันหลายครั้งก็ไม่มีไฟล์ลง — น่าจะ Flow rate-limit ชั่วคราว หรือ native Save-As dialog ค้าง block คิวถัดไป). ไม่ grind ต่อกัน session · ดึงต่อรอบหน้า (เว้นสักพักให้ limit รีเซ็ต หรือรีสตาร์ต browser ก่อน) แล้วเติมลง _raw\ + append ไฟล์นี้
+(หมายเหตุ: tl02/tl07/tl08/kp01 = 4 ฉาก zombie-queued ยังไม่ gen — คนละเรื่องกับ 7 ตัวข้างบน)
