@@ -27,3 +27,12 @@ executed: 2026-07-05 · zero-budget (ffmpeg local) · ไม่แตะ Pantip/
 - CC ประกอบ kp05 ตามที่ order ระบุไว้แล้ว (ไม่ deviate) — รอ Cowork ตัดสินว่าจะสลับไหม
 
 ## DoD: _final 4/4 · ลายน้ำเกลี้ยง (proof _wmchk/) · hold-tl01 executed · POST-PACK 11-19 ครบ · comply 14/14 · commit report+order (media local/gitignored)
+
+---
+## ADDENDUM — swap _final_kp05 (order-swap-kp05) ✅ เสร็จ
+- re-assemble _final_kp05.mp4 ทับ raw ใหม่ **Two_coin_stacks_growing** (2,098,163 B ≠ kp04 → ไม่ซ้ำแล้ว) · content = เหรียญ 2 กองโตขึ้นเรื่อย ๆ = savings growth ตรงธีม
+- watermark ✦ ล่างขวา → delogo+crop → **VERIFY bottom-strip เกลี้ยง** (proof: _wmchk/GRID_kp05_coingrowth.png + QA_kp05swap_hook-end.png)
+- hook ใหม่บนจอ: "ออมทีละนิด เงินสำรองโตขึ้นเรื่อย ๆ / เริ่มจากก้อนเล็กที่ทำได้จริง" (Thai render ถูก) · end-card เดิม · 720x1280 audio คงไว้
+- POST-PACK 16 ก.ค. caption → ธีมออม/เงินโต ("เริ่มจากก้อนเล็ก...โตขึ้นเรื่อย ๆ") · **comply_gate 14/14 GATE_OK**
+- kp05-เก่า (mobile-banking = kp04 dup) → _social-stage/_rejected/_final_kp05_mobilebanking-dup.mp4 (เก็บ ไม่ลบ)
+- ผล: คิว 11-19 ก.ค. ไม่มีฟุตเทจซ้ำแล้ว (11=kp04 mobile-banking · 16=kp05 coin-growth = คนละคลิป)
