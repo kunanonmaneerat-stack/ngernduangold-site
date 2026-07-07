@@ -23,4 +23,12 @@ Cowork โพสต์เองวันนี้ (ขึ้นจริง ย�
   ⚠️ ธีม title-loan เคยมีพิน backfill 2 ก.ค. (ชี้ /title-loan) — อันใหม่ชี้ /links ต่างลิงก์ ถือเป็น variant ไม่ใช่ dup ซ้ำ
 → record ทั้ง 3 ใน post_ledger channel=threads/fb/pinterest เพื่อ dedup ±16 วัน (ใช้สคริปต์ ledger canonical ให้ hash/norm ตรงกัน)
 
+## D. UTM attribution — Cowork ติด bio ผ่านเว็บแล้วบางช่อง (7 ก.ค.)
+- ✅ **YouTube**: channel link → `https://ngernduangold.com/links?utm_source=yt` (เผยแพร่+verify)
+- ✅ **Threads**: bio → `https://ngernduangold.com/links?utm_source=threads` (verify · แก้ netlify→.com ในตัวด้วย)
+- ⚠️ **Pinterest**: website field **ตัด query ทิ้ง** (เหลือ /links no-UTM) → bio ใช้ UTM ไม่ได้
+- **Facebook**: website เพจคลิกน้อย → ไม่ทำ bio · **IG/TikTok**: bio มือถือเท่านั้น (เจ้าของ) → ?utm_source=ig / tiktok
+- 🛠️ **งาน CC — ทางแก้ถาวร:** สร้างหน้า redirect path-based `/go/{yt,pinterest,fb,ig,tiktok,threads}` → 301 → `/links?utm_source=<platform>` · path รอดทุกแพลตฟอร์ม (รวม Pinterest ที่ตัด query) → แล้ว bio ทุกช่องชี้ `/go/<platform>` (Cowork/เจ้าของอัปเดตทีหลัง) · clean สุด
+- 📌 **จนกว่า /go ขึ้น:** ใส่ `?utm_source=<platform>` ที่ **ลิงก์คอนเทนต์** ทุกครั้ง — FB โพสต์/คอมเมนต์แรก=fb · Pinterest pin destination=pinterest · IG/TikTok caption=ig/tiktok — อัปเดต POST-PACK + daily reminder template ให้ทำอัตโนมัติ
+
 ## C. commit report+order (media/local ไม่ commit) · push ปกติ · build_site.py = push แยกท้ายสุด
