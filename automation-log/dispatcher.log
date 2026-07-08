@@ -2306,3 +2306,103 @@ DECISION: ทำตาม consult: FREEZE การสร้างระบบ�
 Sent to telegram home channel (chat_id: 8431211539)
 CC STATUS -> C:\Users\nL_ku\ngernduangold-site\automation-log\cowork-inbox\cc-status-20260707-142128.md | 📥 มีผล CC 9 รอ Cowork review/consume
 [Tue 07/07/2026 14:21:46.61] run_daily end exit=0 
+[Wed 07/08/2026  7:00:01.92] comply_gate_stitch scan (components\stitch) 
+
+SUMMARY: 0 file(s), 0 FAIL finding(s).
+[Wed 07/08/2026  7:00:02.15] run_daily start 
+Sent to telegram home channel (chat_id: 8431211539)
+[free_llm] or-nemotron-ultra ERR 'choices' -> rotate
+queued: หนี้บัตรเครดิตหลายใบ จ่ายขั้นต่ำทุกเดือนแต | draft or-nemotron-ultra | final or-nemotron-ultra
+queued: ผ่อนรถอยู่แต่เริ่มผ่อนไม่ไหว ควรขายดาวน์ ร | draft or-nemotron-ultra | final or-nemotron-ultra
+queued: ฟรีแลนซ์รายได้ไม่ประจำ อยากได้บัตร/สินเชื่ | draft or-nemotron-ultra | final or-nemotron-ultra
+[free_llm] or-nemotron-ultra ERR 'choices' -> rotate
+[free_llm] or-nemotron-ultra ERR 'choices' -> rotate
+queued: เงินเดือน 15000 อยากได้บัตรเครดิตใบแรก สมั | draft qwen-turbo | final or-nemotron-ultra
+[free_llm] or-nemotron-ultra ERR 'choices' -> rotate
+[free_llm] or-nemotron-ultra ERR 'choices' -> rotate
+queued: เงินเดือนชนเดือนทุกที เก็บเงินไม่อยู่ เริ่ | draft or-nemotron-ultra | final or-nemotron-ultra
+queued: สมัครบัตร/สินเชื่อไม่ผ่านบ่อย ควรเช็กเครดิ | draft or-nemotron-ultra | final or-nemotron-ultra
+queued: ผ่อนบ้านมาเกิน 3 ปี อยากรีไฟแนนซ์ลดดอก ดูอ | draft or-nemotron-ultra | final or-nemotron-ultra
+---
+ngernduangold daily queue: 7/7 draft ตรวจ 5 ชั้นแล้ว พร้อม approve -> automation-log/council-2026-07-08.md (ลิงก์ DM/bio เท่านั้น คนกดโพสต์)
+notified Telegram via Hermes
+[Wed 07/08/2026  7:26:27.74] daily_content start 
+[daily_content] วันนี้หัวข้อ #4/7: เงินเดือน 15000 อยากได้บัตรเครดิตใบแรก สมัครใบไหนพ
+[free_llm] or-nemotron-ultra ERR 'choices' -> rotate
+[content_review] -> C:\Users\nL_ku\ngernduangold-site\automation-log\cowork-inbox\review-20260708-0732.md
+[content_review] มีจุดต้อง verify
+[head_content] package -> C:\Users\nL_ku\ngernduangold-site\automation-log\content-packages\20260708-0726-เง-นเด-อน-15000-อยากได-บ-ตรเครด.md
+[head_content] comply 6/6 OK
+[Wed 07/08/2026  7:32:43.29] ga4_pull start 
+[2026-07-08T07:32:45] auth = OAuth token (secrets/ga4-token.json)
+[2026-07-08T07:32:50] OK -> ga4-metrics.csv | source=11 sessions=311 quiz=12 conv=71
+[2026-07-08T07:32:50] auth = OAuth token (secrets/ga4-token.json)
+[2026-07-08T07:32:52] OK -> ga4-pages.csv | pages=61
+[2026-07-08T07:32:52] auth = OAuth token (secrets/ga4-token.json)
+[2026-07-08T07:32:53] OK -> ga4-funnel.csv | quiz_start=5 -> quiz_complete=4 -> recommendation_view=2 -> affiliate_click=71
+[Wed 07/08/2026  7:32:53.40] fb_queue_linkcheck (order-flow-fb-master B1) 
+OK all 7 pages 200 -> C:\Users\nL_ku\ngernduangold-site\automation-log\cowork-inbox\linkhealth-fb-2026-07-08.md
+[Wed 07/08/2026  7:32:58.33] traffic_analyst start 
+[traffic_monitor] -> C:\Users\nL_ku\ngernduangold-site\automation-log\traffic-monitor-20260708-0732.md
+[traffic_analyst] -> C:\Users\nL_ku\ngernduangold-site\automation-log\cowork-inbox\traffic-verdict-20260708-0732.md
+[traffic_analyst] VERDICT: PROVEN: reach คือคอขวด (funnel แปลงผลจริงเมื่อมี traffic)
+[traffic_analyst] DECISION: ทำตาม consult: FREEZE การสร้างระบบเพิ่ม + ทุ่ม reach ของช่องที่ converted ดีสุด (conv/session=23% · quiz/session=4% · conv รวม=71) — ลงแรง: direct, fb, ig
+[Wed 07/08/2026  7:32:58.70] post_agent start (timing -
+[2026-07-08T07:32:59] auth = OAuth token (secrets/ga4-token.json)
+[post_timing] -> C:\Users\nL_ku\ngernduangold-site\automation-log\cowork-inbox\post-timing-20260708-0733.md | source: GA4 จริง (324 sessions) + heuristic
+[post_agent] -> C:\Users\nL_ku\ngernduangold-site\automation-log\cowork-inbox\post-queue-20260708-0733.md | 9 slots
+[Wed 07/08/2026  7:33:02.23] credit_tracker status 
+Traceback (most recent call last):
+  File "C:\Users\nL_ku\ngernduangold-site\pipeline\credit_tracker.py", line 145, in <module>
+    s = status()
+  File "C:\Users\nL_ku\ngernduangold-site\pipeline\credit_tracker.py", line 99, in status
+    lines.append("- %s · %s · -%d (เหลือ %d)" % (e["ts"], e["desc"], e["credits"], e["balance"]))
+                                                          ~^^^^^^^^
+KeyError: 'desc'
+[Wed 07/08/2026  7:33:02.52] dashboard_agent start (dashboard.html) 
+[dashboard_agent] -> C:\Users\nL_ku\ngernduangold-site\automation-log\dashboard.html | sessions=311 conv=71 verdict=PROVEN: reach คือคอขวด (funnel
+[Wed 07/08/2026  7:33:02.87] post_dispatcher (video - plan) 
+[2026-07-08T07:33:03] auth = OAuth token (secrets/ga4-token.json)
+[post_timing] -> C:\Users\nL_ku\ngernduangold-site\automation-log\cowork-inbox\post-timing-20260708-0733.md | source: GA4 จริง (324 sessions) + heuristic
+[post_dispatcher] ตาราง 36 คลิป (ในเครื่อง 36) · IG 20:00 · -> post-plan-20260708-0733.md + content-calendar.html
+[posting_kit] -> C:\Users\nL_ku\ngernduangold-site\automation-log\posting-kit.html (36 คลิป)
+[Wed 07/08/2026  7:33:06.25] daily_post_reminder 
+Sent to telegram home channel (chat_id: 8431211539)
+[daily_post_reminder] ส่ง 1 การ์ด:
+📣 โพสต์ คิวถัดไป (พฤ 09/07) — ngernduangold
+
+🎬 หนี้บัตร/รวมหนี้ · 01-hook ความรู้สึกติดกับดัก
+ไฟล์พร้อมในเครื่อง: /sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/debt-consolidate/01.mp4
+📱 TikTok 19:00   📸 IG Reels 20:00   ▶️ YT Shorts 18:00
+📝 แคปชัน: หนี้บัตรหลายใบ จ่ายขั้นต่ำยอดไม่ลด? รู้จักสินเชื่อรวมหนี้แบบเข้าใจง่าย
+#️⃣ #fyp #การเงินส่วนบุคคล #รวมหนี้ #หนี้บัตรเครดิต #เงินเดือนสมองทอง
+💬 ปิดท้าย CTA: คอมเมนต์ "เช็กสิทธิ์"
+(ใส่ข้อความบนจอไทย+เสียงตามตาราง shot ก่อนโพสต์ · กดโพสต์เอง)
+[daily_post_reminder] Telegram: ส่งแล้ว
+[Wed 07/08/2026  7:33:19.37] hermes_digest start 
+Sent to telegram home channel (chat_id: 8431211539)
+Sent to telegram home channel (chat_id: 8431211539)
+[traffic_monitor] -> C:\Users\nL_ku\ngernduangold-site\automation-log\traffic-monitor-20260708-0733.md
+[traffic_monitor] -> C:\Users\nL_ku\ngernduangold-site\automation-log\traffic-monitor-20260708-0733.md
+[traffic_analyst] -> C:\Users\nL_ku\ngernduangold-site\automation-log\cowork-inbox\traffic-verdict-20260708-0733.md
+[traffic_analyst] VERDICT: PROVEN: reach คือคอขวด (funnel แปลงผลจริงเมื่อมี traffic)
+[traffic_analyst] DECISION: ทำตาม consult: FREEZE การสร้างระบบเพิ่ม + ทุ่ม reach ของช่องที่ converted ดีสุด (conv/session=23% · quiz/session=4% · conv รวม=71) — ลงแรง: direct, fb, ig
+[summary_card] -> C:\Users\nL_ku\ngernduangold-site\automation-log\summary.png
+[hermes_digest] ส่งภาพสรุปเข้า Telegram แล้ว
+[hermes_digest] digest:
+ngernduangold — สรุปรายวัน 2026-07-08
+traffic: Meta reach 370 views · GA4 311 sessions
+conversion (GA4 จริง): quiz_start=12 · affiliate_click=71
+ช่อง converted ดีสุด: direct(42), fb(19), ig(6), pantip(3), threads(1)
+คอนเทนต์ผลิตวันนี้: 1 แพ็กเกจ (ดราฟต์ รอรีวิว+โพสต์)
+Flow credits: 211/1000 เหลือ (~14 คลิป @ 15)
+คลิปดีสุด: ต้องใช้เงินด่วน-ไม่ขายรถ-CTAเช็กสิทธิ์ (132 views)
+ยังไม่มีคลิป reach >= 500 (ยังไม่พ้น cold-start)
+VERDICT: PROVEN: reach คือคอขวด (funnel แปลงผลจริงเมื่อมี traffic)
+DECISION: ทำตาม consult: FREEZE การสร้างระบบเพิ่ม + ทุ่ม reach ของช่องที่ converted ดีสุด (conv/session=23% · quiz/session=4% · conv รวม=71) — ลงแรง: direct, fb, ig
+งาน owner วันนี้: Pantip value 1-2 โพสต์ + โพสต์ใหม่ใช้ CTA 'คอมเมนต์ เช็กสิทธิ์'
+[hermes_digest] Telegram: ส่งแล้ว
+[Wed 07/08/2026  7:33:47.22] cc_monitor (Claude Code status -
+Sent to telegram home channel (chat_id: 8431211539)
+CC STATUS -> C:\Users\nL_ku\ngernduangold-site\automation-log\cowork-inbox\cc-status-20260708-073347.md | 📥 มีผล CC 9 รอ Cowork review/consume
+[Wed 07/08/2026  7:33:58.33] run_daily end exit=0 
