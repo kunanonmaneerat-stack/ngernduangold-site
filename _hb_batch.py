@@ -1,4 +1,8 @@
 # ASCII-ONLY. Batch-render hybrid Reels (footage + short on-screen hook/CTA from scripts_clean.json + watermark-cover scrim).
+# 2026-07-09 FIX: watermark now removed by SOURCE CROP (see filter_complex), NOT by the scrim.
+# The scrim (max alpha 0.90) is decorative/readability only - it FAILED as watermark cover because
+# the Veo sparkle drifts and shows through translucent overlays. Every render MUST pass
+# tiktok-pipeline/src/qa_watermark.py before leaving _vidout. PREFER kinetic-text (07_render) when possible.
 # Thai text comes ONLY from JSON data (never literals). One run = all clips.
 import os, json, subprocess, traceback
 try:
@@ -100,7 +104,7 @@ try:
         ovl = os.path.join(OUTD, out + ".ovl.png")
         build_overlay(hook, cta, disc, ovl)
         cmd = ["ffmpeg", "-y", "-i", foot, "-i", ovl, "-filter_complex",
-               "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,setsar=1[bg];[bg][1:v]overlay=0:0[v]",
+               "[0:v]crop=iw:ih*0.87:0:0,scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,setsar=1[bg];[bg][1:v]overlay=0:0[v]"  # crop bottom 13%: kill Veo sparkle (home y88-93%) BEFORE scale - semi-transparent scrim (<=0.90 alpha) let it leak (2026-07-09),
                "-map", "[v]", "-map", "0:a:0?", "-t", "10", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "20", "-preset", "veryfast", "-c:a", "aac", "-b:a", "128k",
                os.path.join(OUTD, out)]
         r = subprocess.run(cmd, capture_output=True, text=True)

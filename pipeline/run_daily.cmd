@@ -18,6 +18,9 @@ echo [%date% %time%] ga4_pull start >> "%LOG%"
 "%PY%" "%BASE%\ga4_pull.py" >> "%LOG%" 2>&1
 echo [%date% %time%] fb_queue_linkcheck (order-flow-fb-master B1) >> "%LOG%"
 "%PY%" "%BASE%\fb_queue_linkcheck.py" >> "%LOG%" 2>&1
+echo [%date% %time%] qa_watermark gate: scan postable staging (FAIL = DO NOT POST) >> "%LOG%"
+"%PY%" "%BASE%\..\tiktok-pipeline\src\qa_watermark.py" "%BASE%\..\_vidout\clean\*.mp4" "%BASE%\..\automation-log\_social-stage\_final_*.mp4" --fps 3 >> "%LOG%" 2>&1
+if errorlevel 1 echo WATERMARK ALERT: qa_watermark FAIL in staging - DO NOT POST any staged clip until fixed. See dispatcher.log > "%BASE%\..\automation-log\cowork-inbox\WATERMARK-ALERT.md"
 echo [%date% %time%] traffic_analyst start >> "%LOG%"
 "%PY%" "%BASE%\traffic_analyst.py" >> "%LOG%" 2>&1
 echo [%date% %time%] post_agent start (timing -> queue) >> "%LOG%"
