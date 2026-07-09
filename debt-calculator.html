@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เครื่องคำนวณแผนปลดหนี้ฟรี | เงินเดือนสมองทอง</title>
+<meta name="description" content="กรอกหนี้ของคุณ เห็นแผนปลดหนี้ 2 แบบ (Snowball / Avalanche) พร้อมประมาณเดือนที่ปลอดหนี้ — ปลดหนี้ด้วยตัวเลขจริง ไม่ขายฝัน">
+<style>
+  :root{
+    --gold:#E5B80B; --gold-d:#C9A227; --ink:#171724; --ink2:#232338;
+    --bg:#f6f5f0; --card:#ffffff; --line:#e4e1d6; --muted:#6b6b7a;
+    --snow:#2f7dd1; --aval:#d16a2f; --ok:#1f9d55; --warn:#c0392b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI","Sarabun","Noto Sans Thai",Tahoma,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.55;-webkit-text-size-adjust:100%}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px 56px}
+  header{background:linear-gradient(135deg,var(--ink),var(--ink2));color:#fff;
+    padding:26px 16px 30px;text-align:center}
+  header .brand{font-size:14px;letter-spacing:.5px;color:var(--gold);font-weight:700}
+  header h1{margin:8px 0 6px;font-size:24px;line-height:1.3}
+  header p{margin:0;color:#cfcfe0;font-size:14px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:18px;margin-top:18px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  h2{font-size:17px;margin:0 0 12px}
+  label{font-size:13px;color:var(--muted);display:block;margin-bottom:4px}
+  input{width:100%;padding:10px 11px;border:1px solid var(--line);border-radius:9px;
+    font-size:15px;font-family:inherit;background:#fff}
+  input:focus{outline:2px solid var(--gold);border-color:var(--gold)}
+  .debt-row{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr auto;gap:8px;align-items:end;margin-bottom:10px}
+  .debt-row .rm{background:#f0efe8;border:1px solid var(--line);border-radius:8px;
+    width:38px;height:40px;cursor:pointer;font-size:18px;color:var(--muted)}
+  @media(max-width:620px){
+    .debt-row{grid-template-columns:1fr 1fr;gap:8px;padding:12px;border:1px dashed var(--line);border-radius:10px;position:relative}
+    .debt-row .name-f{grid-column:1 / -1}
+    .debt-row .rm{position:absolute;top:8px;right:8px;width:30px;height:30px;font-size:15px}
+  }
+  .btn{display:inline-block;border:none;border-radius:10px;font-weight:700;
+    font-size:15px;cursor:pointer;font-family:inherit;padding:13px 18px;text-align:center;text-decoration:none}
+  .btn-add{background:#f0efe8;color:var(--ink);width:100%;margin-top:4px}
+  .btn-calc{background:linear-gradient(135deg,var(--gold),var(--gold-d));color:#1a1a1a;width:100%;font-size:17px;margin-top:14px}
+  .extra{display:grid;grid-template-columns:1fr;gap:6px;margin-top:8px}
+  .results{display:none;margin-top:18px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:560px){.grid2{grid-template-columns:1fr}}
+  .plan{border-radius:12px;padding:16px;color:#fff}
+  .plan.snow{background:linear-gradient(135deg,#2f7dd1,#245ea0)}
+  .plan.aval{background:linear-gradient(135deg,#d16a2f,#a84f1f)}
+  .plan h3{margin:0 0 2px;font-size:16px}
+  .plan .sub{font-size:12px;opacity:.85;margin-bottom:12px}
+  .big{font-size:30px;font-weight:800;line-height:1.1}
+  .big span{font-size:14px;font-weight:600;opacity:.9}
+  .plan ol{margin:12px 0 0;padding-left:20px;font-size:13px}
+  .plan ol li{margin-bottom:3px}
+  .verdict{background:#fffdf0;border:1px solid var(--gold);border-radius:12px;padding:14px 16px;margin-top:12px;font-size:14px}
+  .verdict b{color:var(--gold-d)}
+  .warn{background:#fff4f2;border:1px solid #f0c4bb;color:var(--warn);border-radius:10px;padding:12px 14px;margin-top:12px;font-size:13px;display:none}
+  .cta{background:linear-gradient(135deg,var(--ink),var(--ink2));border-radius:14px;padding:20px;margin-top:18px;color:#fff;text-align:center}
+  .cta h2{color:#fff}
+  .cta p{color:#cfcfe0;font-size:14px;margin:0 0 14px}
+  .cta .btn{margin:6px 6px 0}
+  .btn-line{background:#06C755;color:#fff}
+  .btn-book{background:var(--gold);color:#1a1a1a}
+  .btn-kit{background:#fff;color:var(--ink);border:1px solid #d9d9e4}
+  .foot{font-size:11.5px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.6}
+  .hint{font-size:12px;color:var(--muted);margin:-4px 0 12px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">เงินเดือนสมองทอง</div>
+  <h1>เครื่องคำนวณแผนปลดหนี้</h1>
+  <p>ปลดหนี้ด้วย “ตัวเลขจริง” ไม่ขายฝัน — กรอกหนี้ของคุณ เห็นแผนใน 10 วินาที</p>
+</header>
+
+<div class="wrap">
+  <div class="card">
+    <h2>1) ใส่หนี้ของคุณ</h2>
+    <p class="hint">ใส่ได้หลายก้อน (บัตรเครดิต / สินเชื่อ / ผ่อน) — ดอกเบี้ยใส่เป็น % ต่อปี ถ้าไม่รู้ให้ประมาณ</p>
+    <div id="debts"></div>
+    <button class="btn btn-add" onclick="addDebt()">+ เพิ่มหนี้อีกก้อน</button>
+
+    <div class="extra">
+      <div>
+        <label>2) เงินที่โปะเพิ่มได้ต่อเดือน (นอกจากขั้นต่ำ)</label>
+        <input id="extra" type="number" inputmode="numeric" placeholder="เช่น 2000" value="2000">
+      </div>
+    </div>
+
+    <button class="btn btn-calc" onclick="calc()">คำนวณแผนปลดหนี้ →</button>
+  </div>
+
+  <div class="results" id="results">
+    <div class="warn" id="warn"></div>
+    <div class="grid2">
+      <div class="plan snow">
+        <h3>❄️ Snowball</h3>
+        <div class="sub">จ่ายก้อนเล็กสุดก่อน — เห็นหนี้หมดทีละก้อน ได้กำลังใจเร็ว</div>
+        <div class="big" id="snowM">–</div>
+        <ol id="snowOrder"></ol>
+      </div>
+      <div class="plan aval">
+        <h3>🏔️ Avalanche</h3>
+        <div class="sub">จ่ายดอกสูงสุดก่อน — ประหยัดดอกรวมมากกว่า</div>
+        <div class="big" id="avalM">–</div>
+        <ol id="avalOrder"></ol>
+      </div>
+    </div>
+    <div class="verdict" id="verdict"></div>
+  </div>
+
+  <div class="cta">
+    <h2>อยากได้แผนเต็ม + สคริปต์คุยแบงก์?</h2>
+    <p>เครื่องคำนวณนี้คือจุดเริ่ม — ชุดเครื่องมือเต็มมี worksheet ตัดสินใจรีไฟแนนซ์, Debt Tracker และสคริปต์เจรจาขอลดดอก/ปรับโครงสร้างหนี้</p>
+    <a class="btn btn-line" id="lineBtn" href="https://line.me/R/ti/p/@804qodya" target="_blank" rel="noopener">💬 แอด LINE รับอัปเดต + ปรึกษาต่อ</a>
+    <a class="btn btn-book" href="https://ngernduangold.com/links?utm_source=calculator&utm_medium=leadmagnet&utm_campaign=debt_wedge">📘 คู่มือปลดหนี้ 59฿</a>
+    <a class="btn btn-kit" href="https://ngernduangold.com/links?utm_source=calculator&utm_medium=leadmagnet&utm_campaign=toolkit199">🧰 ชุดเครื่องมือ 199฿</a>
+  </div>
+
+  <div class="foot">
+    ข้อมูลและผลการคำนวณเป็นการ<strong>ประมาณเพื่อการศึกษาเท่านั้น</strong> ไม่ใช่คำแนะนำทางการเงิน
+    ผลจริงขึ้นกับเงื่อนไข/ดอกเบี้ยของสถาบันการเงินคุณ และวินัยการจ่ายจริง · หน้านี้มีลิงก์พันธมิตร<br>
+    © เงินเดือนสมองทอง · ngernduangold.com
+  </div>
+</div>
+
+<script>
+function row(name,bal,min,apr){
+  const el=document.createElement('div');
+  el.className='debt-row';
+  el.innerHTML=`
+    <div class="name-f"><label>ชื่อหนี้</label><input class="d-name" placeholder="เช่น บัตร A" value="${name||''}"></div>
+    <div><label>ยอดคงเหลือ</label><input class="d-bal" type="number" inputmode="numeric" placeholder="บาท" value="${bal||''}"></div>
+    <div><label>ขั้นต่ำ/เดือน</label><input class="d-min" type="number" inputmode="numeric" placeholder="บาท" value="${min||''}"></div>
+    <div><label>ดอก %/ปี</label><input class="d-apr" type="number" inputmode="decimal" placeholder="%" value="${apr||''}"></div>
+    <button class="rm" title="ลบ" onclick="this.parentElement.remove()">✕</button>`;
+  return el;
+}
+function addDebt(){ document.getElementById('debts').appendChild(row()); }
+document.getElementById('debts').appendChild(row('บัตร A',25000,1000,18));
+document.getElementById('debts').appendChild(row('สินเชื่อ B',60000,2500,25));
+
+function readDebts(){
+  const rows=[...document.querySelectorAll('.debt-row')];
+  const d=[];
+  for(const r of rows){
+    const name=r.querySelector('.d-name').value.trim()||'หนี้';
+    const bal=parseFloat(r.querySelector('.d-bal').value)||0;
+    const min=parseFloat(r.querySelector('.d-min').value)||0;
+    const apr=parseFloat(r.querySelector('.d-apr').value)||0;
+    if(bal>0) d.push({name,bal,min,apr});
+  }
+  return d;
+}
+function simulate(debts,extra,strategy){
+  let d=debts.map(x=>({name:x.name,bal:x.bal,min:x.min,apr:x.apr,done:false,clr:0}));
+  let months=0,totalInt=0;const MAX=1200;const order=[];
+  while(d.some(x=>x.bal>0.5)&&months<MAX){
+    months++;
+    d.forEach(x=>{if(x.bal>0.5){const i=x.bal*(x.apr/100/12);x.bal+=i;totalInt+=i;}});
+    let budget=extra+d.reduce((s,x)=>s+(x.bal>0.5?x.min:0),0);
+    d.forEach(x=>{if(x.bal>0.5){const p=Math.min(x.min,x.bal);x.bal-=p;budget-=p;}});
+    let open=d.map((x,i)=>i).filter(i=>d[i].bal>0.5);
+    open.sort((a,b)=> strategy==='snow' ? d[a].bal-d[b].bal : d[b].apr-d[a].apr);
+    for(const i of open){ if(budget<=0.5)break; const p=Math.min(budget,d[i].bal); d[i].bal-=p; budget-=p; }
+    d.forEach(x=>{if(x.bal<=0.5&&!x.done){x.done=true;x.clr=months;order.push(x.name);}});
+  }
+  return {months,totalInt:Math.round(totalInt),order,paid:!d.some(x=>x.bal>0.5)};
+}
+function fmt(n){return n.toLocaleString('th-TH');}
+function monthsToText(m){const y=Math.floor(m/12),mo=m%12;let s='';if(y)s+=y+' ปี';if(mo)s+=(s?' ':'')+mo+' เดือน';return s||'0 เดือน';}
+function calc(){
+  const debts=readDebts();
+  const extra=parseFloat(document.getElementById('extra').value)||0;
+  if(debts.length===0){alert('ใส่หนี้อย่างน้อย 1 ก้อน (ยอดคงเหลือมากกว่า 0)');return;}
+  const snow=simulate(debts,extra,'snow');
+  const aval=simulate(debts,extra,'aval');
+  document.getElementById('results').style.display='block';
+  const warn=document.getElementById('warn');
+  if(!snow.paid||!aval.paid){
+    warn.style.display='block';
+    warn.innerHTML='⚠️ ด้วยยอดจ่ายขั้นต่ำ+เงินโปะที่ใส่ ระบบคำนวณแล้ว<strong>หนี้ลดช้ามาก/ไม่ปิดในกรอบเวลา</strong> — แปลว่าจ่ายขั้นต่ำเกือบหมดไปกับดอกเบี้ย ลองเพิ่ม “เงินโปะต่อเดือน” หรือดูวิธีขอลดดอก/รวมหนี้ในคู่มือด้านล่าง';
+  } else { warn.style.display='none'; }
+  document.getElementById('snowM').innerHTML=(snow.paid?monthsToText(snow.months):'ยังไม่ปิด')+' <span>ปลอดหนี้ (โดยประมาณ)</span>';
+  document.getElementById('avalM').innerHTML=(aval.paid?monthsToText(aval.months):'ยังไม่ปิด')+' <span>ปลอดหนี้ (โดยประมาณ)</span>';
+  document.getElementById('snowOrder').innerHTML='<b>ลำดับจ่าย:</b> '+snow.order.map((n,i)=>`<li>${n}</li>`).join('');
+  document.getElementById('avalOrder').innerHTML='<b>ลำดับจ่าย:</b> '+aval.order.map((n,i)=>`<li>${n}</li>`).join('');
+  const v=document.getElementById('verdict');
+  if(snow.paid&&aval.paid){
+    const saveInt=snow.totalInt-aval.totalInt;
+    const saveMo=snow.months-aval.months;
+    let msg='<b>สรุป:</b> ';
+    if(saveInt>0){
+      msg+=`แผน <b>Avalanche</b> ประหยัดดอกได้ประมาณ <b>${fmt(saveInt)} บาท</b>`;
+      if(saveMo>0) msg+=` และปิดเร็วกว่า ~${saveMo} เดือน`;
+      msg+=` — แต่ถ้าอยากได้กำลังใจเห็นหนี้หมดทีละก้อนเร็ว ๆ เลือก <b>Snowball</b> ได้ (ต่างกันไม่มากก็เลือกที่ทำต่อได้จริง)`;
+    } else {
+      msg+='สองแผนใกล้เคียงกันมาก — เลือกแบบที่คุณ<b>ทำต่อได้จริง</b>ไม่ยอมแพ้กลางทาง สำคัญกว่าตัวเลข';
+    }
+    v.innerHTML=msg;
+  } else {
+    v.innerHTML='<b>สรุป:</b> ก้าวแรกที่คุ้มสุดตอนนี้คือ<b>เพิ่มกระแสเงินโปะ</b> (ตัดค่าใช้จ่าย/หารายได้เสริม) หรือ<b>ลดต้นทุนดอก</b>ด้วยการเจรจาขอลดดอก/รวมหนี้ — มีสคริปต์คุยแบงก์ในคู่มือด้านล่าง';
+  }
+  document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});
+}
+</script>
+</body>
+</html>
