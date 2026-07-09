@@ -44,6 +44,20 @@ for _s,_d in [("cover_banner.png","og-default.png"),("cover_banner_loan.png","og
         try: shutil.copy(_s, f"{OUT}/{_d}")
         except Exception: pass
 
+# /debt-calculator: standalone tool page (Cowork-QA'd, inline JS/CSS). Copy with head-injection so the
+# smoke gate's per-page asserts (GA4 + affiliate_click listener + og + canonical) pass and the funnel
+# page gets analytics. Root file stays pristine.
+if os.path.exists("debt-calculator.html"):
+    _dc = open("debt-calculator.html", encoding="utf-8").read()
+    _dc_inject = (f'<link rel="canonical" href="{BASE}/debt-calculator">'
+                  f'<meta property="og:type" content="website">'
+                  f'<meta property="og:title" content="เครื่องคำนวณแผนปลดหนี้ฟรี | {SITE}">'
+                  f'<meta property="og:description" content="กรอกหนี้ของคุณ เห็นแผนปลดหนี้ Snowball/Avalanche — ปลดหนี้ด้วยตัวเลขจริง ไม่ขายฝัน">'
+                  f'<meta property="og:image" content="{BASE}/og-default.png">'
+                  f'<meta property="og:url" content="{BASE}/debt-calculator">' + GA_SNIPPET)
+    open(f"{OUT}/debt-calculator.html", "w", encoding="utf-8").write(
+        _dc.replace("</head>", _dc_inject + "</head>", 1))
+
 # Canonical lowercase provider codes so GA4 provider/campaign never splits one provider into
 # 'Srisawad' vs 'srisawad' vs 'ศรีสวัสดิ์'. Category aliases collapse to their brand:
 # debt = HappyCash (รวมหนี้) product, personalloan = KTC PROUD product.
@@ -206,7 +220,7 @@ def head(title, desc, slug, jsonld_list, og_type="article", og_image="og-default
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;700&family=Noto+Serif+Thai:wght@600&display=swap" rel="stylesheet">
 <style>{CSS}</style>{ld}{GA_SNIPPET}</head><body>
 <header class="top"><div class="wrap"><a href="/" style="display:inline-flex;align-items:center;gap:7px;text-decoration:none"><img src="/logo.png" alt="{SITE}" class="logo" width="26" height="26" decoding="async"><b>{SITE}</b></a>
-<nav><a href="/credit-card-easy-approval-2026.html">บัตรเครดิต</a><a href="/high-yield-savings-2026.html">ออมเงิน</a><a href="/loan-cash-2026.html">สินเชื่อ</a><a href="/insurance-compare-2026.html">ประกัน</a><a href="/links">ลิงก์รวม</a></nav></div></header>
+<nav><a href="/debt-calculator">ปลดหนี้</a><a href="/credit-card-easy-approval-2026.html">บัตรเครดิต</a><a href="/high-yield-savings-2026.html">ออมเงิน</a><a href="/loan-cash-2026.html">สินเชื่อ</a><a href="/insurance-compare-2026.html">ประกัน</a><a href="/links">ลิงก์รวม</a><a href="https://line.me/R/ti/p/@804qodya" target="_blank" rel="noopener" style="color:#06C755;font-weight:700">แอด LINE</a></nav></div></header>
 <div class="trustband"><div class="wrap"><span>🗓 <b>อัปเดต 2026</b></span><span>🔗 อ้างอิงหน้าทางการของผู้ให้บริการ</span><span>⚖️ เทียบหลายเจ้าก่อนตัดสินใจ</span></div></div>"""
 
 # global JS on every page: interstitial (card+loan) + micro-conversion events. $0, no-PII (path+channel only).
@@ -292,7 +306,8 @@ def ebook_banner(slug):
     return ('<div class="ebkbn" style="margin:22px 0;padding:13px 16px;background:#fff7e6;border:1.5px solid #e0b23c;border-radius:12px;text-align:center">'
             '<a href="' + EBOOK_URL + '" target="_blank" rel="noopener" style="color:#6b5b2a;font-weight:700;text-decoration:none">'
             '📘 จัดการหนี้เป็นระบบ → คู่มือ + Worksheet ปลดหนี้บัตรเครดิต 59฿'
-            '<small style="display:block;font-weight:400;font-size:12.5px;margin-top:3px">e-book 35 หน้า + Excel กรอกได้ · คู่มือของเราเอง ไม่ใช่ลิงก์พันธมิตร</small></a></div>')
+            '<small style="display:block;font-weight:400;font-size:12.5px;margin-top:3px">e-book 35 หน้า + Excel กรอกได้ · คู่มือของเราเอง ไม่ใช่ลิงก์พันธมิตร</small></a></div>'
+            + '<div style="margin:10px 0 20px;text-align:center;font-size:14px"><a href="/debt-calculator" style="color:#6b5b2a;font-weight:600">🧮 ยังไม่พร้อมซื้อ? ลองเครื่องคำนวณแผนปลดหนี้ฟรีก่อน →</a></div>')
 
 
 def cta_ls(page, text):
@@ -2328,8 +2343,8 @@ HOME_TRUST = """<div class="htrust">
 </div><p class="hnote">* ตัวเลขเป็น \u201cช่วง\u201d ไม่การันตีอนุมัติ/ดอกเบี้ย/ผลตอบแทน · ยึดแนวทาง Responsible Lending ของ ธปท. · เช็กเงื่อนไขล่าสุดรายเจ้าก่อนตัดสินใจ</p>"""
 HOME_CTA = """<div class="hcta"><h2>ไม่รู้เริ่มตรงไหน?</h2><p>ตอบ 2 คำถาม ~30 วิ จับคู่บัตร/สินเชื่อ/ออม ที่เหมาะกับคุณ</p><a class="qbtn" href="/quiz">\U0001F9ED ทำ Quiz เลย \u2192</a></div>"""
 HOME_FEATURED = """<div class="hfeat"><h2>\U0001F525 คู่มือแนะนำ</h2><div class="hfeat-g"><a href="/kept-savings-2026.html">Kept: บัญชีออมเงินดอกสูง สมัครฟรี</a><a href="/credit-card-salary-30000-2026.html">เงินเดือน 30,000 สมัครบัตรอะไรได้</a><a href="/credit-bureau-check-2026.html">เช็กเครดิตบูโรก่อนสมัคร</a><a href="/credit-card-interest-2026.html">ดอกเบี้ยบัตร/จ่ายขั้นต่ำ</a><a href="/pay-off-credit-card-debt-2026.html">วิธีปลดหนี้บัตรเครดิต</a><a href="/loan-online-legal-2026.html">แอปกู้เงินถูกกฎหมาย</a><a href="/tax-deduction-salary-2026.html">ลดหย่อนภาษีมนุษย์เงินเดือน</a><a href="/health-insurance-salary-2026.html">ประกันสุขภาพเลือกยังไง</a><a href="/mutual-fund-beginner-2026.html">กองทุนรวม + DCA มือใหม่</a><a href="/retirement-planning-salary-2026.html">วางแผนเกษียณ</a></div></div>"""
-home=head("การเงินมนุษย์เงินเดือน บัตร·สินเชื่อ·ออม·ประกัน","สรุปการเงินมนุษย์เงินเดือน บัตรเครดิต ออมเงิน ลงทุน ย่อยง่าย พร้อมรีวิวและคู่มือสมัครออนไลน์ 2026","",home_ld,"website")
-home+=f'<div class="hero"><h1>{SITE}</h1><p>{TAGLINE}<br>คู่มือ + รีวิวการเงิน ย่อยง่าย สำหรับคนอยากให้เงินเดือนงอกเงย</p></div>'
+home=head("ปลดหนี้ด้วยตัวเลขจริง ไม่ขายฝัน — การเงินมนุษย์เงินเดือน","ปลดหนี้ด้วยตัวเลขจริง ไม่ขายฝัน — เครื่องคำนวณแผนปลดหนี้ฟรี คู่มือปลดหนี้/รีไฟแนนซ์ บัตรเครดิต ออมเงิน สำหรับมนุษย์เงินเดือน (อัปเดต 2026)","",home_ld,"website")
+home+=f'<div class="hero"><h1>{SITE}</h1><p><b style="color:var(--gold-lt)">ปลดหนี้ด้วยตัวเลขจริง ไม่ขายฝัน</b> · <a href="/debt-calculator" style="color:var(--gold-lt)">ลองเครื่องคำนวณแผนปลดหนี้ฟรี →</a><br>{TAGLINE}<br>คู่มือ + รีวิวการเงิน ย่อยง่าย สำหรับคนอยากให้เงินเดือนงอกเงย</p></div>'
 home+=HOME_UP_CSS
 home+=f'<main class="wrap">{HOME_CATS}{HOME_FEATURED}<h2>บทความล่าสุด</h2>{cards}{HOME_TRUST}{HOME_CTA}</main>'+FOOTER
 open(f"{OUT}/index.html","w",encoding="utf-8").write(home)
@@ -2345,6 +2360,7 @@ open(f"{OUT}/disclaimer.html","w",encoding="utf-8").write(head("นโยบา�
 
 # about page (EEAT/trust)
 about_body="""<h1>เกี่ยวกับ เงินเดือนสมองทอง</h1>
+<p><b>ปลดหนี้ด้วยตัวเลขจริง ไม่ขายฝัน</b> — เราเชื่อว่าการปลดหนี้เริ่มจากเห็นตัวเลขจริงของตัวเอง ไม่ใช่คำสัญญา ลองได้ที่ <a href="/debt-calculator">เครื่องคำนวณแผนปลดหนี้ฟรี</a></p>
 <p>เงินเดือนสมองทอง เป็นเว็บไซต์ให้ความรู้การเงินส่วนบุคคลสำหรับมนุษย์เงินเดือนและคนรุ่นใหม่ เรารวบรวมและย่อยเรื่องบัตรเครดิต การออมเงิน และการวางแผนการเงินให้เข้าใจง่าย เพื่อช่วยให้คุณตัดสินใจได้ด้วยตัวเอง</p>
 <h2>ผู้จัดทำ</h2>
 <p>เว็บไซต์นี้ดูแลโดยผู้จัดทำที่เป็นมนุษย์เงินเดือนเอง ซึ่งเคยผ่านการสมัครบัตรเครดิต ขอสินเชื่อ และใช้เครื่องมือออมเงินจริง จึงเขียนจากมุมคนใช้งานจริง จุดยืนของเราคือ &ldquo;เทียบให้ก่อนตัดสินใจ ไม่เชียร์ให้ก่อหนี้เกินตัว&rdquo; และพยายามอัปเดตข้อมูลให้ทันปี 2026 อยู่เสมอ</p>
@@ -2383,7 +2399,7 @@ contact_body="""<h1>ติดต่อ เงินเดือนสมอง�
 open(f"{OUT}/contact.html","w",encoding="utf-8").write(head("ติดต่อเรา | "+SITE,"ติดต่อ เงินเดือนสมองทอง ผ่านช่องทางโซเชียล Facebook Threads Instagram TikTok YouTube และหน้าลิงก์รวม สอบถาม/เสนอแนะเรื่องการเงินมนุษย์เงินเดือน","contact.html",[])+f'<main class="wrap">{contact_body}</main>'+FOOTER)
 
 # sitemap + robots
-urls=[("",("1.0")),("links","0.9"),("quiz","0.9"),("about.html","0.4"),("contact.html","0.4"),("disclaimer.html","0.3")]+[(s,"0.8") for s,*_ in ART]
+urls=[("",("1.0")),("links","0.9"),("quiz","0.9"),("debt-calculator","0.8"),("about.html","0.4"),("contact.html","0.4"),("disclaimer.html","0.3")]+[(s,"0.9" if s in {"debt-consolidation-2026.html","pay-off-credit-card-debt-2026.html","title-loan-2026.html"} else "0.8") for s,*_ in ART]
 sm='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
 for u,pr in urls:
     sm+=f"<url><loc>{BASE}/{u}</loc><lastmod>{BUILD_DATE}</lastmod><priority>{pr}</priority></url>\n"
@@ -2399,7 +2415,7 @@ _GO = {
   "debt":  HAPPYDEBT + "?utm_source=bio&utm_medium=social&utm_campaign=happydebt&utm_content=go_debt",
   "title": CAR4CASH + "?utm_source=bio&utm_medium=social&utm_campaign=car4cash&utm_content=go_title",
 }
-open(f"{OUT}/_redirects","w",encoding="utf-8").write("".join(f"/go/{k}  {v}  301!\n" for k,v in _GO.items()) + "/quiz.html   /quiz   301!" + chr(10) + "/links.html  /links  301!" + chr(10))  # canonical dedup: .html twin -> declared pretty canonical
+open(f"{OUT}/_redirects","w",encoding="utf-8").write("".join(f"/go/{k}  {v}  301!\n" for k,v in _GO.items()) + "/quiz.html   /quiz   301!" + chr(10) + "/links.html  /links  301!" + chr(10) + "/debt-calculator    /debt-calculator.html    200" + chr(10))  # canonical dedup: .html twin -> declared pretty canonical
 import shutil as _sh
 _mc = os.path.join(os.path.dirname(os.path.abspath(__file__)), "media", "clips-web")
 if os.path.isdir(_mc):
@@ -2489,8 +2505,12 @@ links_body = hub_style + f'''<div class="hub">
 <img class="logo" src="/logo.png" alt="{SITE}" width="88" height="88" decoding="async">
 <h1>{SITE}</h1>
 <p class="tag">บัตรเครดิต • สินเชื่อ • ออมเงิน ฉบับมนุษย์เงินเดือน — เทียบของจริง อนุมัติไว สมัครออนไลน์<br><b style="color:var(--gold-lt)">เลือกตามสถานการณ์คุณ 👇</b></p>
+<a class="hubbtn" href="https://line.me/R/ti/p/@804qodya" target="_blank" rel="noopener" style="background:linear-gradient(180deg,#06C755,#049a43);color:#fff">💬 แอด LINE (ฟรี) — รับเครื่องคำนวณปลดหนี้ + ปรึกษาต่อ<small style="color:#dfffe9">ฟรี ไม่มีเงื่อนไข · เครื่องคำนวณ Snowball/Avalanche + ถามต่อได้</small></a>
+<p class="hublbl" style="text-align:center;color:#c8c8d0;margin-top:14px">คู่มือของเราเอง (ไม่ใช่ลิงก์พันธมิตร) 👇</p>
+<a class="hubbtn" href="https://ngernduangold.gumroad.com/l/debt-payoff-planner" target="_blank" rel="noopener" style="background:linear-gradient(180deg,#c8941a,#a87a12);color:#1a1305">📘 คู่มือ + Worksheet ปลดหนี้บัตรเครดิต — 59฿ ⭐แนะนำ<small style="color:#3a2c08">e-book 35 หน้า + Excel กรอกได้ · อัปเดต ก.ค. 69 (มาตรการรัฐล่าสุด) · จาก "จ่ายขั้นต่ำไม่จบ" สู่ "ปลดหนี้เป็นระบบ"</small></a>
+<a class="hubbtn alt" href="https://ngernduangold.gumroad.com/l/debt-toolkit" target="_blank" rel="noopener">🧰 ชุดเครื่องมือปลดหนี้ (Excel) — 199฿<small>สำหรับคนอยากคุมแผนเอง · tracker + ตารางโปะ + งบรายเดือน ครบชุด</small></a>
 <a class="hubbtn" href="/quiz" style="background:linear-gradient(180deg,#3a3a44,#2a2a32);color:var(--gold-lt)">🧭 ไม่รู้เริ่มตรงไหน? ทำ Quiz 30 วิ →<small style="color:#c8c8d0">ตอบ 2 คำถาม จับคู่บัตร/สินเชื่อ/ออม ที่เหมาะกับคุณ</small></a>
-<a class="hubbtn" href="https://ngernduangold.gumroad.com/l/debt-payoff-planner" target="_blank" rel="noopener" style="background:linear-gradient(180deg,#c8941a,#a87a12);color:#1a1305">📘 คู่มือ + Worksheet ปลดหนี้บัตรเครดิต — 59฿<small style="color:#3a2c08">e-book 35 หน้า + Excel กรอกได้ · จาก "จ่ายขั้นต่ำไม่จบ" สู่ "ปลดหนี้เป็นระบบ" · คู่มือของเราเอง</small></a>
+<p class="hublbl" style="text-align:center;color:#c8c8d0;margin-top:18px">ทางเลือกการเงินจากพันธมิตรของเรา (ลิงก์พันธมิตร) 👇</p>
 {bcta(KEPT,"kept","🏦 ออมดอกสูง Kept — สมัครฟรี","หน้าแปลงดีสุดของเรา · ไม่เช็คเครดิต ดอกสูงกว่าออมทรัพย์ เช็กเงื่อนไขที่แอป")}
 {bcta(SRISAWAD,"srisawad","💸 จำนำทะเบียนรถ — เงินด่วน รถยังใช้ได้","รู้ผลไว · เทียบดอก+ค่าธรรมเนียมก่อนเซ็น เงื่อนไขตามผู้ให้บริการ")}
 <p class="hublbl" style="text-align:center;color:#c8c8d0;margin-top:14px">…หรือเลือกหมวดที่ตรงกับคุณ 👇</p>
