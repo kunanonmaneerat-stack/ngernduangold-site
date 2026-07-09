@@ -28,3 +28,10 @@ executed: 2026-07-09 · idempotent-checked ก่อนแก้ (ยังไ�
 
 ## GATES รวม: smoke **62/62 PASS** (หน้า calculator นับรวมแล้ว) · link_check **0 broken** (69 หน้า) · comply_gate GATE_OK · byte-safe UFFFD=0
 ## DoD: ครบทุกข้อ — /debt-calculator LIVE · LINE ทุกหน้า · /links การ์ดครบ+e-book เด่น · tagline ขึ้นหน้าแรก · sitemap/internal links อัปเดต · 0 broken · disclosure ครบ
+
+---
+## ADDENDUM — master-order re-run (idempotent pass) ✅
+- sweep แล้ว: TASK 1-5 อยู่ครบทั้ง source+live จากรอบแรก (94ef056) → **ข้ามทั้งหมด ไม่แตะซ้ำ**
+- จุดใหม่จุดเดียวของ re-run: **ปุ่ม 🧰 199฿ ในเครื่องคำนวณ** เดิม -> /links (แวะกลาง) → แก้เป็น **ตรง gumroad.com/l/debt-toolkit** (utm attribution คงไว้ + target=_blank noopener) — แก้เฉพาะ debt-calculator.html root, build_site.py ไม่แตะ (จึงไม่ต้องมี push แยกท้าย) · commit ba40030
+- smoke 62/62 PASS · **LIVE VERIFY: calc 199-btn->gumroad direct ✓ lineBtn ✓ GA4 ✓ · /links LINE+toolkit ✓ · home tagline+navLINE ✓** (ขึ้นในนาทีแรก)
+- funnel เครื่องคำนวณตอนนี้: ใช้ฟรี → LINE (ฟรี) → toolkit 199฿ ตรง Gumroad (ไม่เสีย click ที่ /links hop)
