@@ -310,6 +310,21 @@ def ebook_banner(slug):
             + '<div style="margin:10px 0 20px;text-align:center;font-size:14px"><a href="/debt-calculator" style="color:#6b5b2a;font-weight:600">🧮 ยังไม่พร้อมซื้อ? ลองเครื่องคำนวณแผนปลดหนี้ฟรีก่อน →</a></div>')
 
 
+CALC_CLUSTER = {"debt-consolidation-2026.html", "debt-restructuring-2026.html",
+                "pay-off-credit-card-debt-2026.html", "credit-card-interest-2026.html",
+                "close-debt-fast-2026.html", "debt-clinic-sam-2026.html",
+                "move-informal-debt-2026.html", "credit-card-debt-lawsuit-2026.html",
+                "rebuild-credit-after-debt-2026.html"}
+def calc_cta(slug):
+    """แบนเนอร์เครื่องคำนวณเด่นต้นบทความ เฉพาะ debt-cluster (calculator = จุด convert สูงสุด)"""
+    if slug not in CALC_CLUSTER:
+        return ""
+    return ('<div style="margin:14px 0 8px;padding:12px 15px;background:#fffdf5;border:1.5px solid #e0b23c;'
+            'border-radius:11px;text-align:center"><a href="/debt-calculator" '
+            'style="color:#6b5b2a;font-weight:700;text-decoration:none">🧮 กรอกหนี้ของคุณ เห็นแผนปลดหนี้ + '
+            'เดือนปลอดหนี้ทันที — เครื่องคำนวณฟรี →</a></div>')
+
+
 def cta_ls(page, text):
     # lifestyle credit-card CTA -> Krungsri, channel=lifestyle => sub_id lifestyle_{page}_krungsri
     u = utm(KRUNGSRI, "Krungsri", page, channel="lifestyle", medium="article")
@@ -2305,7 +2320,7 @@ for slug,title,desc,body,faqs,camp in ART:
     _sib=('<div class="related"><h2>เรื่องอื่นในหมวด'+(TAGS.get(slug) or '')+'</h2><div class="cluster">'+''.join(f'<a href="/{_s2}">{_t2}</a>' for _s2,_t2 in _sl)+'</div></div>') if len(_sl)>=2 else ''
     _ogimg="og-loan.png" if slug in {"loan-cash-2026.html","title-loan-2026.html","debt-consolidation-2026.html","car-for-cash-2026.html","personal-loan-2026.html","cash-card-easy-2026.html","refinance-home-2026.html","car-title-loan-compare-2026.html","home-land-for-cash-2026.html","motorcycle-title-loan-2026.html","car-refinance-2026.html","freelance-loan-2026.html","loan-online-legal-2026.html","bureau-blacklist-loan-2026.html","car-still-installment-loan-2026.html"} else "og-default.png"
     _info = (f'<figure style="margin:18px 0"><img class="artinfo" loading="lazy" src="{ARTICLE_HERO_IMG[slug]}" alt="ภาพประกอบ {_name}" width="800" height="420"><figcaption style="font-size:10.5px;color:#8a8a95;text-align:right;margin:2px 4px 0">ภาพประกอบ</figcaption></figure>' if slug in ARTICLE_HERO_IMG else "")
-    open(f"{OUT}/{slug}","w",encoding="utf-8").write(affil_disclose(head(title,desc,slug,ld,og_image=_ogimg)+f'<main class="wrap">{top_offer(camp,slug)}{clip_block(slug)}{hero_banner(slug)}{body}{_info}{_ASOF}{ebook_banner(slug)}{share_bar(slug,_name)}{QUIZ_CTA}{_sib}{_nav}</main>'+FOOTER))
+    open(f"{OUT}/{slug}","w",encoding="utf-8").write(affil_disclose(head(title,desc,slug,ld,og_image=_ogimg)+f'<main class="wrap">{top_offer(camp,slug)}{calc_cta(slug)}{clip_block(slug)}{hero_banner(slug)}{body}{_info}{_ASOF}{ebook_banner(slug)}{share_bar(slug,_name)}{QUIZ_CTA}{_sib}{_nav}</main>'+FOOTER))
 
 # homepage
 CTX={"credit-card-salary-15000-2026.html":"เงินเดือนน้อย","first-credit-card-student-2026.html":"เด็กจบใหม่","credit-card-easy-approval-2026.html":"อนุมัติง่าย","credit-card-freelance-2026.html":"ฟรีแลนซ์","krungsri-credit-card-rejected-2026.html":"เคยไม่ผ่าน","credit-card-installment-0-2026.html":"ผ่อน 0%","credit-card-cashback-2026.html":"เงินคืน","kept-savings-2026.html":"ออมดอกสูง","kept-interest-rate-2026.html":"ออมดอกสูง","high-yield-savings-2026.html":"ออมดอกสูง","emergency-fund-2026.html":"เงินสำรอง","how-to-save-money-2026.html":"เริ่มออม","salary-budgeting-2026.html":"แบ่งเงินเดือน","title-loan-2026.html":"มีรถ","car-for-cash-2026.html":"มีรถ","debt-consolidation-2026.html":"ปลดหนี้","loan-cash-2026.html":"เงินด่วน","personal-loan-2026.html":"ไม่ต้องค้ำ","cash-card-easy-2026.html":"บัตรกดเงินสด","refinance-home-2026.html":"มีบ้าน","travel-insurance-vacation-2026.html":"ก่อนเที่ยว","insurance-compare-2026.html":"เทียบประกัน","lifestyle-credit-card-2026.html":"สายไลฟ์สไตล์","credit-bureau-check-2026.html":"เช็กเครดิต","credit-card-salary-20000-2026.html":"เงินเดือน 20,000","loan-online-legal-2026.html":"กู้ออนไลน์","credit-card-interest-2026.html":"ดอกเบี้ยบัตร","pay-off-credit-card-debt-2026.html":"ปลดหนี้บัตร","credit-card-salary-30000-2026.html":"เงินเดือน 30,000","tax-deduction-salary-2026.html":"ลดหย่อนภาษี","health-insurance-salary-2026.html":"ประกันสุขภาพ","mutual-fund-beginner-2026.html":"เริ่มลงทุน","retirement-planning-salary-2026.html":"วางแผนเกษียณ"}
