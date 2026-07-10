@@ -6,7 +6,7 @@
 - (67) https://fonts.googleapis.com
 - (67) https://fonts.gstatic.com
 - (67) https://fonts.googleapis.com/css2
-- (64) https://line.me/R/ti/p/@804qodya
+- (66) https://line.me/R/ti/p/@804qodya
 - (62) https://www.googletagmanager.com/gtag/js
 - (55) https://www.facebook.com/sharer/sharer.php
 - (55) https://www.threads.net/intent/post
@@ -19,7 +19,6 @@
 - (9) https://atth.me/00eq00002a0x
 - (9) https://atth.me/00eeac002a0x
 - (7) https://atth.me/0031rk002a0x
-- (7) https://ngernduangold.gumroad.com/l/debt-payoff-planner
 - (6) https://atth.me/0038ag002a0x
 - (5) https://atth.me/00dgll002a0x
 - (5) https://atth.me/00bofm002a0x
@@ -43,3 +42,4 @@
 - (1) https://ngernduangold.com/cash-card-easy-2026.html
 - (1) https://ngernduangold.com/cash-card-vs-credit-card-2026.html
 - (1) https://ngernduangold.com/close-debt-fast-2026.html
+- (1) https://ngernduangold.com/contact.html
