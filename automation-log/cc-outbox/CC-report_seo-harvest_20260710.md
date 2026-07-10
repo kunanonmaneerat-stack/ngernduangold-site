@@ -22,3 +22,9 @@ executed: 2026-07-10 · gates: smoke 62/62 · affiliate 17/17 · link_check 0 br
 3. affiliate รวม = **17/17 live 0 problem** ✓
 
 ## commits: automation-log (CSV+report) → build_site.py แยกท้ายสุด · live verify แนบท้าย
+
+## LIVE VERIFY (FINAL, ~นาทีแรกหลัง deploy) ✅
+- /car-still-installment-loan: FAQ อายุรถขึ้นจริง + อยู่ใน FAQPage JSON-LD ✓
+- /credit-card-salary-30000: <title> ใหม่มี "วงเงินบัตรเครดิตได้เท่าไหร่" ✓
+- /kept-savings: โครง winner-links เดิมครบ (ไม่มี self-link) ✓
+เหลือเจ้าของ: GSC UI → Request Indexing 2 URL (car-still .html + salary-30000) · รอบหน้า: แก้ canonical/extensionless mismatch ทั้งไซต์ (FLAG ด้านบน) + รัน pos-8-20 harvest ซ้ำเมื่อ GSC สุก
