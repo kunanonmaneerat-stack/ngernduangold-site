@@ -28,7 +28,7 @@ for _s in (sys.stdout, sys.stderr):
         pass
 
 GA_ID = "G-17PPE0M1B8"
-CANON = {"krungsri", "kept", "srisawad", "carforcash", "ktcphboom",
+CANON = {"krungsri", "kept", "srisawad", "carforcash", "ktcphboom", "ngernturbo", "kashjoy",
          "happycash", "ktcproud", "refinance", "loan",
          "scbprotect", "scb", "axapa", "axamotor", "gettgo", "klook", "anc", "tuneprotect", "msig", "thanachart", "fwd", "viriyah"}
 BASE = "https://ngernduangold.com"
