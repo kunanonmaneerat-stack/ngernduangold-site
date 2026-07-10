@@ -10,7 +10,7 @@ _5 คลิปพร้อมผลิต · อ่าน production-manifest.j
 - [ ] ตอบคอมเมนต์เองช่วงแรก (native engagement ช่วยปลด throttle)
 
 ## bio
-- [ ] หลัง warm-up วันที่ 8 → ใส่ลิงก์ `ngernduangold.netlify.app/links` ใน bio (UTM tiktok ติดอัตโนมัติ)
+- [ ] หลัง warm-up วันที่ 8 → ใส่ลิงก์ `ngernduangold.com/links` ใน bio (UTM tiktok ติดอัตโนมัติ)
 
 ## คลิปรอบนี้
 - **tt-001** · ไม่เคยเป็นหนี้ = สมัครบัตรไม่ผ่าน · ~45s · bio→/credit-card-salary-15000-2026

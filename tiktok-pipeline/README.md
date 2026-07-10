@@ -38,7 +38,7 @@ python src/01_research.py --dry-run ; python src/02_script.py --dry-run ; python
 - prompt อยู่ใน `src/01_research.py` (RESEARCH_PROMPT) + `src/02_script.py` (SCRIPT_PROMPT) แก้ได้
 
 ## วัดผล GA4 (verify ของเดิม)
-bio = `ngernduangold.netlify.app/links?utm_source=tiktok&utm_medium=bio&utm_campaign=ttwarmup`.
+bio = `ngernduangold.com/links?utm_source=tiktok&utm_medium=bio&utm_campaign=ttwarmup`.
 หน้า `/links` มี JS (`LINKS_CHANNEL_JS`) อ่าน `utm_source` → rewrite ปุ่ม affiliate เป็น sub_id `tiktok_links_{provider}` อัตโนมัติ; คลิกยิง event `affiliate_click{channel:tiktok, sub_id:tiktok_links_*}`.
 **ดูใน GA4:** Reports → Traffic acquisition (filter `session source = tiktok`) + Events → `affiliate_click` (param `channel=tiktok` / `sub_id` ขึ้นต้น `tiktok_`). เทียบกับ 4-week kill-criterion ใน UPLOAD-CHECKLIST.md.
 
