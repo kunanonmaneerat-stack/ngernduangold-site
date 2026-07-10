@@ -193,7 +193,10 @@ header.top nav a{padding:5px 2px}
 """
 
 def head(title, desc, slug, jsonld_list, og_type="article", og_image="og-default.png"):
-    canon = f"{BASE}/{slug}" if slug else BASE + "/"
+    # URL-CONSISTENCY (2026-07-10): canonical = EXTENSIONLESS sitewide (Google already picks it;
+    # the .html twin 301s via _redirects). One page = one canonical URL.
+    _slug_c = slug[:-5] if slug.endswith(".html") else slug
+    canon = f"{BASE}/{_slug_c}" if slug else BASE + "/"
     ld = "\n".join(f'<script type="application/ld+json">{json.dumps(j,ensure_ascii=False)}</script>' for j in jsonld_list)
     # SEO <title>: keyword-first = primary phrase before first em-dash/pipe; append brand only if it still reads short.
     # Thai tone/vowel marks are ~zero-width, so estimate visual length excluding them (len() over-counts Thai).
@@ -436,7 +439,7 @@ def article_ld(title, desc, slug, faqs):
     a={"@context":"https://schema.org","@type":"Article","headline":title,"description":desc,
        "datePublished":TODAY,"dateModified":BUILD_DATE,"inLanguage":"th",
        "author":{"@type":"Organization","name":SITE},"publisher":{"@type":"Organization","name":SITE},
-       "mainEntityOfPage":{"@type":"WebPage","@id":f"{BASE}/{slug}"}}
+       "mainEntityOfPage":{"@type":"WebPage","@id":(f"{BASE}/{slug}"[:-5] if slug.endswith(".html") else f"{BASE}/{slug}")}}
     out=[a]
     if faqs:
         out.append({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
@@ -2431,7 +2434,8 @@ open(f"{OUT}/contact.html","w",encoding="utf-8").write(head("ติดต่อ�
 urls=[("",("1.0")),("links","0.9"),("quiz","0.9"),("debt-calculator","0.8"),("about.html","0.4"),("contact.html","0.4"),("disclaimer.html","0.3")]+[(s,"0.9" if s in {"debt-consolidation-2026.html","pay-off-credit-card-debt-2026.html","title-loan-2026.html"} else "0.8") for s,*_ in ART]
 sm='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
 for u,pr in urls:
-    sm+=f"<url><loc>{BASE}/{u}</loc><lastmod>{BUILD_DATE}</lastmod><priority>{pr}</priority></url>\n"
+    _u = u[:-5] if u.endswith(".html") else u   # URL-CONSISTENCY: sitemap = canonical form only
+    sm+=f"<url><loc>{BASE}/{_u}</loc><lastmod>{BUILD_DATE}</lastmod><priority>{pr}</priority></url>\n"
 sm+="</urlset>\n"
 open(f"{OUT}/sitemap.xml","w",encoding="utf-8").write(sm)
 open(f"{OUT}/robots.txt","w",encoding="utf-8").write(f"User-agent: *\nAllow: /\nSitemap: {BASE}/sitemap.xml\n")
@@ -2444,7 +2448,8 @@ _GO = {
   "debt":  HAPPYDEBT + "?utm_source=bio&utm_medium=social&utm_campaign=happydebt&utm_content=go_debt",
   "title": CAR4CASH + "?utm_source=bio&utm_medium=social&utm_campaign=car4cash&utm_content=go_title",
 }
-open(f"{OUT}/_redirects","w",encoding="utf-8").write("".join(f"/go/{k}  {v}  301!\n" for k,v in _GO.items()) + "/quiz.html   /quiz   301!" + chr(10) + "/links.html  /links  301!" + chr(10) + "/debt-calculator    /debt-calculator.html    200" + chr(10))  # canonical dedup: .html twin -> declared pretty canonical
+# URL-CONSISTENCY block moved to END of script (links/quiz/debt-calculator are written after this point)
+  # canonical dedup: .html twin -> declared pretty canonical
 import shutil as _sh
 _mc = os.path.join(os.path.dirname(os.path.abspath(__file__)), "media", "clips-web")
 if os.path.isdir(_mc):
@@ -2709,3 +2714,26 @@ showQ1();
 quiz_ld=[{"@context":"https://schema.org","@type":"WebPage","name":SITE+" — Quiz เลือกบัตร/สินเชื่อ/ออม","url":BASE+"/quiz","inLanguage":"th"}]
 open(f"{OUT}/quiz.html","w",encoding="utf-8").write(head("Quiz: บัตร/สินเชื่อ/ออม ตัวไหนเหมาะกับคุณ — "+SITE,"ตอบ 2 คำถาม ~30 วิ จับคู่บัตรเครดิต/สินเชื่อ/บัญชีออมที่เหมาะกับคุณ · ข้อมูลไม่ถูกบันทึก ไม่มี PII","quiz",quiz_ld,"website")+quiz_style+quiz_html+("<script>window.__QUIZ_INS="+json.dumps([{"type":o["type"],"provider":_pcode(o["provider"]),"label":o["label"],"u":o["url"]} for o in INSURANCE],ensure_ascii=False)+";window.__RECO="+json.dumps(RECO_MAP,ensure_ascii=False)+";window.__ASOF="+json.dumps(th_monthyear(BUILD_DATE),ensure_ascii=False)+"</script>")+quiz_js+FOOTER)
 print("quiz.html written")
+
+# ---- URL-CONSISTENCY final pass (must run AFTER every page write) ----
+# URL-CONSISTENCY: normalize INTERNAL hrefs to extensionless canonical across every built page
+# (covers nav/cards/cluster/banners/quiz JS strings; external + google-verify untouched).
+_href_pat = re.compile(r'(href=")/((?!google)[A-Za-z0-9-]+)\.html(["?#])')
+for _fn in sorted(os.listdir(OUT)):
+    if not _fn.endswith(".html") or _fn.startswith("google"):
+        continue
+    _p = os.path.join(OUT, _fn)
+    _h = open(_p, encoding="utf-8").read()
+    _h2 = _href_pat.sub(lambda m: m.group(1) + "/" + m.group(2) + m.group(3), _h)
+    if _h2 != _h:
+        open(_p, "w", encoding="utf-8").write(_h2)
+
+# URL-CONSISTENCY: every page 301s its .html twin -> extensionless canonical (google-verify excluded).
+_rl = "".join(f"/go/{k}  {v}  301!\n" for k,v in _GO.items())
+_rl += "/index.html  /  301!" + chr(10)
+for _fn in sorted(os.listdir(OUT)):
+    if _fn.endswith(".html") and _fn != "index.html" and not _fn.startswith("google"):
+        _rl += f"/{_fn}  /{_fn[:-5]}  301!" + chr(10)
+_rl += "/debt-calculator    /debt-calculator.html    200" + chr(10)
+open(f"{OUT}/_redirects","w",encoding="utf-8").write(_rl)
+print("url-consistency: hrefs normalized + per-page 301s written")
