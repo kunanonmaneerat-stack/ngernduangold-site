@@ -26,3 +26,11 @@
 - ติด: (1) โพสต์จริงทั้ง 2 ช่องรอ owner prereq (2) **batch 20–26 ก.ค.** — `SOCIAL-CAPTIONS_batch2` ยังไม่ถึง local (ไฟล์อยู่ outputs ฝั่ง Cowork) → caption sheet ปัจจุบันหมด 19 ก.ค. ระบบจะ log เตือนเอง
 - เจ้าของทำต่อ (ครั้งเดียว): ① IG: Meta app + secrets 2 ตัว + เทส (runbook IG §1–2) ② TikTok: `--login` + เทส DRY→live 1 คลิป (runbook §TikTok)
 - Compliance: AI-label — TikTok toggle สคริปต์พยายามเปิดให้อัตโนมัติ (หา switch ไม่เจอ = log บอก) · IG อาศัยคำในแคปชัน (API ตั้ง toggle ไม่ได้) · ห้าม bare % — sheet ปัจจุบันสะอาด + gate ใน publisher
+
+---
+## BATCH2 MERGED (11 ก.ค. ดึก · commit ล่าสุด) ✅
+- **20–26 ก.ค. 7 วัน merge แล้ว** ทั้ง `content_map.json` (IG+TikTok) และ `reels/schedule.json` (IG) → ตารางครบ **16 วัน (11–26 ก.ค.)**
+- **CC re-verify comply เอง 7/7 PASS**: disclaimer+"ผลิตด้วย AI" ทุก entry ทั้ง 2 แคปชัน · "มีลิงก์พันธมิตร" ตรง affiliate flag เป๊ะ (24,26=true) · ไม่มี bare % · TikTok ไม่มี URL + ลงท้าย #fyp ทุกตัว
+- **clipFile 20–26 = placeholder** (`batch2/<n>_<slug>.mp4`) — คลิปยังไม่ render: ถ้าถึงวันโพสต์แล้วไฟล์ยังไม่มา ทั้ง 2 ช่องจะ **fail-alert อัตโนมัติ** (ทดสอบ fail-path แล้วทั้งคู่ ข้อความชี้ชัด) — ไม่โพสต์มั่ว ไม่เงียบหาย
+- build อัปเป็น recursive copy: เจ้าของ/CC วางไฟล์จริงที่ `reels/batch2/` ชื่อตรง placeholder → push → host เองครบ ไม่ต้องแก้ config ใด
+- **ค้างที่เจ้าของ/Cowork**: render คลิป batch2 จาก `VIDEO-FACTORY_batch2_20-26jul` ก่อน 20 ก.ค. → วางไฟล์เข้า `reels/batch2/` (หรือส่งให้ CC วาง+verify ให้)
