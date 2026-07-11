@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เช็กสุขภาพหนี้ 60 วินาที ฟรี | เงินเดือนสมองทอง</title>
+<meta name="description" content="ตอบ 7 ข้อ รู้เกรดสุขภาพหนี้ A–F ทันที พร้อมก้าวถัดไปที่เหมาะกับคุณ — ไม่เก็บข้อมูล คำนวณในเครื่องคุณ 100%">
+<style>
+  :root{
+    --gold:#E5B80B; --gold-d:#C9A227; --ink:#171724; --ink2:#232338;
+    --bg:#f6f5f0; --card:#ffffff; --line:#e4e1d6; --muted:#6b6b7a;
+    --ok:#1f9d55; --mid:#d18a2f; --bad:#c0392b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI","Sarabun","Noto Sans Thai",Tahoma,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.55;-webkit-text-size-adjust:100%}
+  .wrap{max-width:680px;margin:0 auto;padding:0 16px 56px}
+  header{background:linear-gradient(135deg,var(--ink),var(--ink2));color:#fff;
+    padding:26px 16px 30px;text-align:center}
+  header .brand{font-size:14px;letter-spacing:.5px;color:var(--gold);font-weight:700}
+  header .brand a{color:var(--gold);text-decoration:none}
+  header h1{margin:8px 0 6px;font-size:24px;line-height:1.3}
+  header p{margin:0;color:#cfcfe0;font-size:14px}
+  .topnav{font-size:12.5px;margin-top:12px}
+  .topnav a{color:#cfcfe0;text-decoration:none;margin:0 7px}
+  .topnav a:hover{color:var(--gold)}
+  .badges{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:14px}
+  .badges span{font-size:11px;background:#ffffff14;border:1px solid #ffffff2b;color:#e8e8f2;
+    border-radius:20px;padding:3px 10px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:18px;margin-top:18px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  h2{font-size:16px;margin:0 0 10px}
+  .qnum{color:var(--gold-d);font-weight:800;margin-right:4px}
+  label.inp{font-size:13px;color:var(--muted);display:block;margin-bottom:4px}
+  input[type=number]{width:100%;padding:10px 11px;border:1px solid var(--line);border-radius:9px;
+    font-size:15px;font-family:inherit;background:#fff}
+  input[type=number]:focus{outline:2px solid var(--gold);border-color:var(--gold)}
+  .grid2i{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:520px){.grid2i{grid-template-columns:1fr}}
+  .opts{display:grid;gap:7px}
+  .opts label{display:flex;align-items:flex-start;gap:9px;border:1px solid var(--line);
+    border-radius:10px;padding:10px 12px;font-size:14px;cursor:pointer;background:#fff}
+  .opts label:has(input:checked){border-color:var(--gold);background:#fffdf0;font-weight:600}
+  .opts input{margin-top:3px;accent-color:var(--gold-d)}
+  .btn{display:inline-block;border:none;border-radius:10px;font-weight:700;
+    font-size:15px;cursor:pointer;font-family:inherit;padding:13px 18px;text-align:center;text-decoration:none}
+  .btn-go{background:linear-gradient(135deg,var(--gold),var(--gold-d));color:#1a1a1a;width:100%;font-size:17px;margin-top:16px}
+  .results{display:none;margin-top:18px}
+  .gradebox{border-radius:14px;padding:22px;text-align:center;color:#fff}
+  .gradebox .glabel{font-size:13px;opacity:.85}
+  .gradebox .g{font-size:64px;font-weight:800;line-height:1.05}
+  .gradebox .gname{font-size:17px;font-weight:700;margin-top:2px}
+  .gradebox .dti{font-size:12.5px;opacity:.85;margin-top:8px}
+  .advice{background:#fffdf0;border:1px solid var(--gold);border-radius:12px;padding:14px 16px;margin-top:12px;font-size:14px}
+  .advice b{color:var(--gold-d)}
+  .route{background:linear-gradient(135deg,var(--ink),var(--ink2));border-radius:14px;padding:20px;margin-top:14px;color:#fff;text-align:center}
+  .route h2{color:#fff;font-size:17px}
+  .route p{color:#cfcfe0;font-size:14px;margin:0 0 14px}
+  .btn-route{background:var(--gold);color:#1a1a1a;display:block}
+  .btn-sub{display:block;margin-top:9px;font-size:13px;color:#cfcfe0;text-decoration:underline}
+  .btn-share{background:#fff;color:var(--ink);border:1.5px solid var(--gold);width:100%;margin-top:12px}
+  .toolx{margin-top:14px;text-align:center;font-size:13.5px}
+  .toolx a{color:#6b5b2a;font-weight:600}
+  .foot{font-size:11.5px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.6}
+  .hint{font-size:12px;color:var(--muted);margin:-2px 0 10px}
+  #shareWrap{display:none;margin-top:10px;text-align:center}
+  #shareImg{max-width:100%;border-radius:12px;border:1px solid var(--line)}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><a href="/">เงินเดือนสมองทอง</a></div>
+  <h1>เช็กสุขภาพหนี้ 60 วินาที</h1>
+  <p>ตอบ 7 ข้อ รู้เกรด A–F ทันที พร้อม “ก้าวถัดไป” ที่เหมาะกับสถานการณ์คุณ</p>
+  <div class="badges">
+    <span>🔒 ไม่เก็บข้อมูล — คำนวณในเครื่องคุณ 100%</span>
+    <span>📏 เกณฑ์อิงหลักทั่วไป: DTI · เงินสำรอง · ประวัติจ่าย</span>
+    <span>🚫 ไม่หนุนหนี้นอกระบบ</span>
+  </div>
+  <nav class="topnav">
+    <a href="/">หน้าแรก</a>·<a href="/debt-calculator">เครื่องคำนวณปลดหนี้</a>·<a href="/refinance-savings-calculator">คำนวณรีไฟแนนซ์</a>·<a href="/links">ลิงก์รวม</a>
+  </nav>
+</header>
+
+<div class="wrap">
+  <div class="card">
+    <h2><span class="qnum">1.</span>รายได้กับยอดผ่อนต่อเดือน</h2>
+    <p class="hint">ใส่ตัวเลขกลม ๆ ได้ ไม่ต้องเป๊ะ — ใช้คำนวณสัดส่วนภาระหนี้ (DTI) โดยประมาณ</p>
+    <div class="grid2i">
+      <div>
+        <label class="inp">รายได้รวมต่อเดือน (บาท)</label>
+        <input id="income" type="number" inputmode="numeric" placeholder="เช่น 25000" min="0">
+      </div>
+      <div>
+        <label class="inp">ยอดผ่อนหนี้รวมต่อเดือน (บาท)</label>
+        <input id="paym" type="number" inputmode="numeric" placeholder="เช่น 8000" min="0">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="qnum">2.</span>บัตรเครดิต/บัตรกดเงินสด คุณจ่ายแบบไหน</h2>
+    <div class="opts" id="q2">
+      <label><input type="radio" name="q2" value="15">จ่ายเต็มจำนวนทุกงวด / ไม่มีบัตร</label>
+      <label><input type="radio" name="q2" value="10">จ่ายมากกว่าขั้นต่ำ แต่ไม่เต็ม</label>
+      <label><input type="radio" name="q2" value="4">จ่ายขั้นต่ำเป็นประจำ</label>
+      <label><input type="radio" name="q2" value="0">จ่ายช้า/ข้ามงวดบ้าง</label>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="qnum">3.</span>เงินสำรองฉุกเฉินของคุณ ครอบคลุมรายจ่ายกี่เดือน</h2>
+    <div class="opts" id="q3">
+      <label><input type="radio" name="q3" value="15">6 เดือนขึ้นไป</label>
+      <label><input type="radio" name="q3" value="11">3–6 เดือน</label>
+      <label><input type="radio" name="q3" value="6">ประมาณ 1–3 เดือน</label>
+      <label><input type="radio" name="q3" value="0">ไม่มี / ไม่ถึง 1 เดือน</label>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="qnum">4.</span>ใน 12 เดือนที่ผ่านมา เคยจ่ายช้าจนโดนค่าปรับ/โดนทวงไหม</h2>
+    <div class="opts" id="q4">
+      <label><input type="radio" name="q4" value="10">ไม่เคยเลย</label>
+      <label><input type="radio" name="q4" value="4">เคย 1–2 ครั้ง</label>
+      <label><input type="radio" name="q4" value="0">เคยหลายครั้ง / กำลังโดนทวงอยู่</label>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="qnum">5.</span>มีหนี้นอกระบบไหม</h2>
+    <div class="opts" id="q5">
+      <label><input type="radio" name="q5" value="15">ไม่มี</label>
+      <label><input type="radio" name="q5" value="5">มี แต่กำลังทยอยปิด</label>
+      <label><input type="radio" name="q5" value="0">มี และยอดยังไม่ลด</label>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="qnum">6.</span>เคยกู้ก้อนใหม่มาโปะหนี้ก้อนเก่า (หมุนหนี้) ไหม</h2>
+    <div class="opts" id="q6">
+      <label><input type="radio" name="q6" value="10">ไม่เคย</label>
+      <label><input type="radio" name="q6" value="4">นาน ๆ ครั้ง</label>
+      <label><input type="radio" name="q6" value="0">ทำเป็นประจำ</label>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="qnum">7.</span>คุณรู้ยอดหนี้รวมทั้งหมดของตัวเองไหม</h2>
+    <div class="opts" id="q7">
+      <label><input type="radio" name="q7" value="5">รู้ครบทุกก้อน จดไว้ชัดเจน</label>
+      <label><input type="radio" name="q7" value="3">รู้คร่าว ๆ</label>
+      <label><input type="radio" name="q7" value="0">ไม่แน่ใจ / ไม่กล้าดู</label>
+    </div>
+    <button class="btn btn-go" onclick="score()">ดูเกรดสุขภาพหนี้ของฉัน →</button>
+  </div>
+
+  <div class="results" id="results">
+    <div class="gradebox" id="gradebox">
+      <div class="glabel">เกรดสุขภาพหนี้ของคุณ (โดยประมาณ)</div>
+      <div class="g" id="gLetter">–</div>
+      <div class="gname" id="gName"></div>
+      <div class="dti" id="gDti"></div>
+    </div>
+    <div class="advice" id="advice"></div>
+    <div class="route" id="route">
+      <h2 id="rTitle"></h2>
+      <p id="rDesc"></p>
+      <a class="btn btn-route" id="rBtn" href="/debt-calculator">→</a>
+      <a class="btn-sub" id="rSub" href="/debt-clinic-sam-2026" style="display:none"></a>
+      <small style="display:block;margin-top:10px;color:#9c9cb0">หน้าปลายทางบางหน้ามีลิงก์พันธมิตร · ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำเฉพาะบุคคล</small>
+    </div>
+    <button class="btn btn-share" onclick="shareCard()">📤 แชร์การ์ดผลลัพธ์ (บันทึกเป็นรูป)</button>
+    <div id="shareWrap">
+      <canvas id="shareCv" width="1080" height="1080" style="display:none"></canvas>
+      <img id="shareImg" alt="การ์ดผลเช็กสุขภาพหนี้">
+      <div class="hint" style="margin-top:6px">กดค้าง/คลิกขวาที่รูปเพื่อบันทึก แล้วแชร์ได้เลย</div>
+    </div>
+    <div class="toolx">🧮 อยากรู้ว่ารวมหนี้/รีไฟแนนซ์แล้วประหยัดเท่าไหร่ → <a href="/refinance-savings-calculator?utm_source=tool&utm_medium=crosslink&utm_campaign=quiz_to_refi">ลองเครื่องคำนวณรีไฟแนนซ์</a></div>
+  </div>
+
+  <div class="foot">
+    ผลเป็นการ<strong>ประเมินเบื้องต้นเพื่อการศึกษาเท่านั้น</strong> ไม่ใช่คำแนะนำทางการเงินเฉพาะบุคคล
+    เกณฑ์คะแนนอิงหลักทั่วไป (สัดส่วนภาระหนี้ต่อรายได้ เงินสำรอง ประวัติการจ่าย) — สถานการณ์จริงควรเช็กกับผู้เชี่ยวชาญ/สถาบันการเงินของคุณ · หน้าปลายทางบางหน้ามีลิงก์พันธมิตร<br>
+    หน้านี้ไม่เก็บข้อมูลใด ๆ ที่คุณกรอก (คำนวณในเบราว์เซอร์ของคุณทั้งหมด) · © เงินเดือนสมองทอง · ngernduangold.com
+  </div>
+</div>
+
+<script>
+var LAST = null;
+function radioVal(name){
+  var els = document.getElementsByName(name);
+  for (var i = 0; i < els.length; i++){ if (els[i].checked) return parseInt(els[i].value, 10); }
+  return null;
+}
+function score(){
+  var income = parseFloat(document.getElementById('income').value) || 0;
+  var paymRaw = document.getElementById('paym').value;
+  var paym = parseFloat(paymRaw) || 0;
+  if (income <= 0){ alert('ใส่รายได้ต่อเดือนก่อนครับ (ข้อ 1)'); return; }
+  if (paymRaw === ''){ alert('ใส่ยอดผ่อนหนี้รวมต่อเดือนด้วยครับ (ข้อ 1) — ถ้าไม่มีหนี้เลย ใส่ 0'); return; }
+  var miss = [];
+  var qs = ['q2','q3','q4','q5','q6','q7'];
+  var vals = {};
+  for (var i = 0; i < qs.length; i++){
+    var v = radioVal(qs[i]);
+    if (v === null) miss.push(i + 2); else vals[qs[i]] = v;
+  }
+  if (miss.length){ alert('ยังไม่ได้ตอบข้อ ' + miss.join(', ')); return; }
+  var dti = paym / income * 100;
+  var dtiPts = dti <= 20 ? 30 : dti <= 35 ? 22 : dti <= 50 ? 12 : dti <= 70 ? 5 : 0;
+  var total = dtiPts + vals.q2 + vals.q3 + vals.q4 + vals.q5 + vals.q6 + vals.q7;
+  var g = total >= 85 ? 'A' : total >= 70 ? 'B' : total >= 55 ? 'C' : total >= 40 ? 'D' : total >= 25 ? 'E' : 'F';
+  render(g, total, dti, vals);
+}
+var META = {
+  A: {name:'แข็งแรงมาก', col:'#1f9d55', col2:'#14683a',
+      adv:'<b>สุขภาพหนี้ดีเยี่ยม</b> — ภาระหนี้อยู่ในเกณฑ์ปลอดภัย มีวินัยการจ่าย ก้าวถัดไปคือให้เงินทำงาน: กันเงินสำรองไว้ในบัญชีดอกสูงที่ถอนได้ไว แล้วค่อยขยับไปลงทุน'},
+  B: {name:'แข็งแรง', col:'#3aa768', col2:'#1f7d4b',
+      adv:'<b>โดยรวมดี</b> — มีจุดให้ขยับอีกนิด (เช่น เติมเงินสำรองให้ถึง 3–6 เดือน หรือเลิกจ่ายขั้นต่ำ) ทำได้เมื่อไหร่ เกรด A อยู่ไม่ไกล'},
+  C: {name:'เริ่มตึง', col:'#d1a02f', col2:'#a87c1f',
+      adv:'<b>สัญญาณเตือนเริ่มมา</b> — ภาระหนี้เริ่มกินรายได้ หรือยังไม่มีแผนชัด จุดเปลี่ยนคือ<b>เห็นตัวเลขจริงทั้งหมด</b>แล้ววางลำดับจ่ายให้ถูก เริ่มวันนี้ยังทันสบาย'},
+  D: {name:'ตึงแล้ว', col:'#d18a2f', col2:'#a8641f',
+      adv:'<b>ต้องจัดระบบด่วน</b> — สัดส่วนหนี้สูงหรือเริ่มจ่ายขั้นต่ำวน ๆ ยิ่งปล่อยดอกยิ่งพอก ทำแผนปลดหนี้แบบเห็นเดือนปลอดหนี้ชัด ๆ แล้วเดินตามทีละก้อน'},
+  E: {name:'อาการหนัก', col:'#c0602f', col2:'#94441f',
+      adv:'<b>ดอกกำลังกินยอด</b> — จ่ายเท่าไหร่ต้นแทบไม่ลด ทางออกที่คนส่วนใหญ่ใช้ได้ผลคือ<b>ลดต้นทุนดอกเบี้ย</b>: รวมหนี้หลายก้อนให้เหลือก้อนเดียวดอกต่ำลง หรือเจรจาปรับโครงสร้าง'},
+  F: {name:'วิกฤต — แต่มีทางออก', col:'#c0392b', col2:'#8f2a1f',
+      adv:'<b>อย่าเพิ่งหมดหวัง</b> — จุดนี้สำคัญที่สุดคือ<b>หยุดกู้ใหม่มาโปะ</b> แล้วหาทางลดดอก/ปรับโครงสร้างอย่างเป็นระบบ มีทั้งช่องทางรวมหนี้และคลินิกแก้หนี้ที่ช่วยได้จริง'}
+};
+function render(g, total, dti, vals){
+  var m = META[g];
+  LAST = {g:g, total:total, dti:dti, name:m.name, col:m.col, col2:m.col2};
+  var box = document.getElementById('gradebox');
+  box.style.background = 'linear-gradient(135deg,' + m.col + ',' + m.col2 + ')';
+  document.getElementById('gLetter').textContent = g;
+  document.getElementById('gName').textContent = m.name + ' · ' + total + '/100 คะแนน';
+  document.getElementById('gDti').textContent = 'สัดส่วนภาระหนี้ต่อรายได้ (DTI) ประมาณ ' + dti.toFixed(0) + '% — ตัวเลขประมาณจากที่คุณกรอก เช็กจริงกับใบแจ้งหนี้ของคุณ';
+  document.getElementById('advice').innerHTML = m.adv;
+  var rT = document.getElementById('rTitle'), rD = document.getElementById('rDesc'),
+      rB = document.getElementById('rBtn'), rS = document.getElementById('rSub');
+  rS.style.display = 'none';
+  if (g === 'A' || g === 'B'){
+    rT.textContent = 'ก้าวถัดไปของคุณ: ให้เงินเริ่มทำงาน';
+    rD.textContent = 'หนี้คุมได้แล้ว — กันเงินสำรองฉุกเฉินไว้ในบัญชีดอกสูงที่ถอนได้ไว บิลฉุกเฉินมาจะได้ไม่ต้องกลับไปกู้';
+    rB.href = '/kept-savings-2026?utm_source=tool&utm_medium=quiz&utm_campaign=dhq_' + g;
+    rB.textContent = '💰 ดูบัญชีออมดอกสูง สมัครฟรี →';
+  } else if (g === 'C' || g === 'D'){
+    rT.textContent = 'ก้าวถัดไปของคุณ: ทำแผนปลดหนี้ด้วยตัวเลขจริง';
+    rD.textContent = 'กรอกหนี้ทุกก้อน แล้วเห็นเลยว่าจ่ายลำดับไหนปลดเร็วสุด และอีกกี่เดือนปลอดหนี้ (ฟรี ไม่เก็บข้อมูล)';
+    rB.href = '/debt-calculator?utm_source=tool&utm_medium=quiz&utm_campaign=dhq_' + g;
+    rB.textContent = '🧮 เปิดเครื่องคำนวณแผนปลดหนี้ →';
+  } else {
+    rT.textContent = 'ก้าวถัดไปของคุณ: ลดต้นทุนดอกเบี้ยก่อน';
+    rD.textContent = 'รวมหนี้หลายก้อนให้เหลือก้อนเดียวดอกต่ำลง หรือเจรจาปรับโครงสร้าง — เทียบทางเลือกก่อนตัดสินใจ';
+    rB.href = '/debt-consolidation-2026?utm_source=tool&utm_medium=quiz&utm_campaign=dhq_' + g;
+    rB.textContent = '📊 ดูวิธีรวมหนี้ + เทียบทางเลือก →';
+    rS.href = '/debt-clinic-sam-2026?utm_source=tool&utm_medium=quiz&utm_campaign=dhq_sam_' + g;
+    rS.textContent = 'หนี้เสียหลายเจ้า/โดนทวงหนัก? รู้จักคลินิกแก้หนี้ (SAM) →';
+    rS.style.display = 'block';
+  }
+  var res = document.getElementById('results');
+  res.style.display = 'block';
+  res.scrollIntoView({behavior:'smooth', block:'start'});
+  document.getElementById('shareWrap').style.display = 'none';
+}
+function rrect(c, x, y, w, h, r){
+  c.beginPath(); c.moveTo(x + r, y);
+  c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r);
+  c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath();
+}
+function shareCard(){
+  if (!LAST){ alert('กด "ดูเกรด" ก่อนครับ'); return; }
+  var cv = document.getElementById('shareCv'), c = cv.getContext('2d');
+  var grad = c.createLinearGradient(0, 0, 1080, 1080);
+  grad.addColorStop(0, '#171724'); grad.addColorStop(1, '#232338');
+  c.fillStyle = grad; c.fillRect(0, 0, 1080, 1080);
+  c.textAlign = 'center';
+  c.fillStyle = '#E5B80B'; c.font = '700 40px Tahoma, sans-serif';
+  c.fillText('เงินเดือนสมองทอง', 540, 110);
+  c.fillStyle = '#cfcfe0'; c.font = '36px Tahoma, sans-serif';
+  c.fillText('ผลเช็กสุขภาพหนี้ 60 วินาที', 540, 175);
+  var g2 = c.createLinearGradient(240, 260, 840, 700);
+  g2.addColorStop(0, LAST.col); g2.addColorStop(1, LAST.col2);
+  c.fillStyle = g2; rrect(c, 240, 250, 600, 460, 36); c.fill();
+  c.fillStyle = '#ffffff'; c.font = '800 260px Tahoma, sans-serif';
+  c.fillText(LAST.g, 540, 560);
+  c.font = '700 52px Tahoma, sans-serif';
+  c.fillText(LAST.name, 540, 650);
+  c.fillStyle = '#e8e8f2'; c.font = '40px Tahoma, sans-serif';
+  c.fillText('คะแนน ' + LAST.total + '/100 · DTI ~' + LAST.dti.toFixed(0) + '%', 540, 790);
+  c.fillStyle = '#9c9cb0'; c.font = '32px Tahoma, sans-serif';
+  c.fillText('ประเมินเบื้องต้นเพื่อการศึกษา · ไม่เก็บข้อมูล', 540, 860);
+  c.fillStyle = '#E5B80B'; c.font = '700 44px Tahoma, sans-serif';
+  c.fillText('ลองเช็กของคุณฟรี → ngernduangold.com/debt-health-check', 540, 980);
+  var url = cv.toDataURL('image/png');
+  var img = document.getElementById('shareImg');
+  img.src = url;
+  document.getElementById('shareWrap').style.display = 'block';
+  cv.toBlob(function(blob){
+    if (navigator.share && navigator.canShare){
+      var f = new File([blob], 'debt-health-' + LAST.g + '.png', {type:'image/png'});
+      if (navigator.canShare({files:[f]})){
+        navigator.share({files:[f], title:'ผลเช็กสุขภาพหนี้ของฉัน'}).catch(function(){});
+        return;
+      }
+    }
+    var a = document.createElement('a');
+    a.href = url; a.download = 'debt-health-' + LAST.g + '.png';
+    document.body.appendChild(a); a.click(); a.remove();
+  });
+}
+</script>
+</body>
+</html>

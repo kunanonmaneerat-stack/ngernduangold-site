@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เครื่องคำนวณรีไฟแนนซ์/รวมหนี้ ประหยัดเท่าไหร่ | เงินเดือนสมองทอง</title>
+<meta name="description" content="กรอกยอดหนี้ ดอกเดิม ดอกใหม่ — เห็นทันทีว่ารีไฟแนนซ์/รวมหนี้แล้วประหยัดดอกกี่บาท คุ้มค่าธรรมเนียมไหม จุดคุ้มทุนกี่เดือน ฟรี ไม่เก็บข้อมูล">
+<style>
+  :root{
+    --gold:#E5B80B; --gold-d:#C9A227; --ink:#171724; --ink2:#232338;
+    --bg:#f6f5f0; --card:#ffffff; --line:#e4e1d6; --muted:#6b6b7a;
+    --ok:#1f9d55; --warn:#c0392b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI","Sarabun","Noto Sans Thai",Tahoma,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.55;-webkit-text-size-adjust:100%}
+  .wrap{max-width:680px;margin:0 auto;padding:0 16px 56px}
+  header{background:linear-gradient(135deg,var(--ink),var(--ink2));color:#fff;
+    padding:26px 16px 30px;text-align:center}
+  header .brand{font-size:14px;letter-spacing:.5px;color:var(--gold);font-weight:700}
+  header .brand a{color:var(--gold);text-decoration:none}
+  header h1{margin:8px 0 6px;font-size:24px;line-height:1.3}
+  header p{margin:0;color:#cfcfe0;font-size:14px}
+  .topnav{font-size:12.5px;margin-top:12px}
+  .topnav a{color:#cfcfe0;text-decoration:none;margin:0 7px}
+  .topnav a:hover{color:var(--gold)}
+  .badges{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:14px}
+  .badges span{font-size:11px;background:#ffffff14;border:1px solid #ffffff2b;color:#e8e8f2;
+    border-radius:20px;padding:3px 10px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:18px;margin-top:18px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  h2{font-size:16px;margin:0 0 12px}
+  label{font-size:13px;color:var(--muted);display:block;margin-bottom:4px}
+  input{width:100%;padding:10px 11px;border:1px solid var(--line);border-radius:9px;
+    font-size:15px;font-family:inherit;background:#fff}
+  input:focus{outline:2px solid var(--gold);border-color:var(--gold)}
+  .grid2i{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:520px){.grid2i{grid-template-columns:1fr}}
+  .fld{margin-bottom:10px}
+  .btn{display:inline-block;border:none;border-radius:10px;font-weight:700;
+    font-size:15px;cursor:pointer;font-family:inherit;padding:13px 18px;text-align:center;text-decoration:none}
+  .btn-calc{background:linear-gradient(135deg,var(--gold),var(--gold-d));color:#1a1a1a;width:100%;font-size:17px;margin-top:8px}
+  .results{display:none;margin-top:18px}
+  .bigbox{border-radius:14px;padding:22px;text-align:center;color:#fff}
+  .bigbox .lbl{font-size:13.5px;opacity:.88}
+  .bigbox .num{font-size:44px;font-weight:800;line-height:1.15}
+  .bigbox .num span{font-size:18px;font-weight:600}
+  .bigbox .sub{font-size:12.5px;opacity:.85;margin-top:6px}
+  .rows{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+  @media(max-width:560px){.rows{grid-template-columns:1fr}}
+  .mini{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center}
+  .mini .t{font-size:12.5px;color:var(--muted)}
+  .mini .v{font-size:20px;font-weight:800;margin-top:3px}
+  .verdict{background:#fffdf0;border:1px solid var(--gold);border-radius:12px;padding:14px 16px;margin-top:12px;font-size:14px}
+  .verdict b{color:var(--gold-d)}
+  .cta{background:linear-gradient(135deg,var(--ink),var(--ink2));border-radius:14px;padding:20px;margin-top:14px;color:#fff;text-align:center}
+  .cta h2{color:#fff;font-size:17px}
+  .cta p{color:#cfcfe0;font-size:14px;margin:0 0 14px}
+  .btn-route{background:var(--gold);color:#1a1a1a;display:block}
+  .btn-share{background:#fff;color:var(--ink);border:1.5px solid var(--gold);width:100%;margin-top:12px}
+  .toolx{margin-top:14px;text-align:center;font-size:13.5px}
+  .toolx a{color:#6b5b2a;font-weight:600}
+  .foot{font-size:11.5px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.6}
+  .hint{font-size:12px;color:var(--muted);margin:-4px 0 12px}
+  #shareWrap{display:none;margin-top:10px;text-align:center}
+  #shareImg{max-width:100%;border-radius:12px;border:1px solid var(--line)}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><a href="/">เงินเดือนสมองทอง</a></div>
+  <h1>รีไฟแนนซ์/รวมหนี้ แล้วประหยัดเท่าไหร่</h1>
+  <p>กรอก 4 ตัวเลข เห็นทันที: ดอกที่ประหยัดได้ ค่างวดใหม่ และจุดคุ้มทุนค่าธรรมเนียม</p>
+  <div class="badges">
+    <span>🔒 ไม่เก็บข้อมูล — คำนวณในเครื่องคุณ 100%</span>
+    <span>🏛️ ดอกเบี้ยกรอกเองตามจริง (กรอบเพดาน ธปท.)</span>
+    <span>🚫 ไม่หนุนหนี้นอกระบบ</span>
+  </div>
+  <nav class="topnav">
+    <a href="/">หน้าแรก</a>·<a href="/debt-calculator">เครื่องคำนวณปลดหนี้</a>·<a href="/debt-health-check">เช็กสุขภาพหนี้</a>·<a href="/links">ลิงก์รวม</a>
+  </nav>
+</header>
+
+<div class="wrap">
+  <div class="card">
+    <h2>ใส่ตัวเลขของคุณ</h2>
+    <p class="hint">ดอกเบี้ยดูจากใบแจ้งหนี้/สัญญาของคุณ (อย่าเดา) — ดอกใหม่ใช้ตัวเลขจากใบเสนอที่ได้จริง หรือที่สอบถามมา</p>
+    <div class="grid2i">
+      <div class="fld">
+        <label>ยอดหนี้คงเหลือรวม (บาท)</label>
+        <input id="bal" type="number" inputmode="numeric" placeholder="เช่น 150000" min="0">
+      </div>
+      <div class="fld">
+        <label>ระยะเวลาผ่อน (เดือน)</label>
+        <input id="term" type="number" inputmode="numeric" placeholder="เช่น 36" min="1" max="480">
+      </div>
+      <div class="fld">
+        <label>ดอกเบี้ยปัจจุบัน (% ต่อปี — จากใบแจ้งหนี้คุณ)</label>
+        <input id="r0" type="number" inputmode="decimal" step="0.1" placeholder="เช่น 22" min="0" max="36">
+      </div>
+      <div class="fld">
+        <label>ดอกเบี้ยใหม่ที่คาดว่าได้ (% ต่อปี)</label>
+        <input id="r1" type="number" inputmode="decimal" step="0.1" placeholder="เช่น 14" min="0" max="36">
+      </div>
+    </div>
+    <div class="fld">
+      <label>ค่าธรรมเนียม/ค่าใช้จ่ายในการรีไฟแนนซ์ (บาท — ถ้าไม่มี ใส่ 0)</label>
+      <input id="fee" type="number" inputmode="numeric" placeholder="เช่น 3000" value="0" min="0">
+    </div>
+    <button class="btn btn-calc" onclick="calc()">คำนวณเลย →</button>
+  </div>
+
+  <div class="results" id="results">
+    <div class="bigbox" id="bigbox">
+      <div class="lbl">ดอกเบี้ยที่ประหยัดได้ทั้งสัญญา (โดยประมาณ · หักค่าธรรมเนียมแล้ว)</div>
+      <div class="num" id="saveNum">–</div>
+      <div class="sub" id="saveSub"></div>
+    </div>
+    <div class="rows">
+      <div class="mini"><div class="t">ค่างวด/เดือน เดิม → ใหม่</div><div class="v" id="payRow">–</div></div>
+      <div class="mini"><div class="t">ดอกรวมทั้งสัญญา เดิม → ใหม่</div><div class="v" id="intRow">–</div></div>
+      <div class="mini"><div class="t">จุดคุ้มทุนค่าธรรมเนียม</div><div class="v" id="beRow">–</div></div>
+      <div class="mini"><div class="t">ส่วนต่างดอกเบี้ย</div><div class="v" id="drRow">–</div></div>
+    </div>
+    <div class="verdict" id="verdict"></div>
+    <div class="cta">
+      <h2 id="ctaT">พร้อมเทียบทางเลือกรวมหนี้จริงไหม?</h2>
+      <p>ดูขั้นตอนรวมหนี้ เอกสารที่ใช้ และตารางเทียบทางเลือกที่เราสรุปไว้ — อ่านก่อนตัดสินใจ 5 นาที</p>
+      <a class="btn btn-route" href="/debt-consolidation-2026?utm_source=tool&utm_medium=refi_calc&utm_campaign=refi_wedge">📊 ดูวิธีรวมหนี้ + เทียบทางเลือก →</a>
+      <small style="display:block;margin-top:10px;color:#9c9cb0">หน้าปลายทางมีลิงก์พันธมิตร · ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำเฉพาะบุคคล</small>
+    </div>
+    <button class="btn btn-share" onclick="shareCard()">📤 แชร์การ์ดผลลัพธ์ (บันทึกเป็นรูป)</button>
+    <div id="shareWrap">
+      <canvas id="shareCv" width="1080" height="1080" style="display:none"></canvas>
+      <img id="shareImg" alt="การ์ดผลคำนวณรีไฟแนนซ์">
+      <div class="hint" style="margin-top:6px">กดค้าง/คลิกขวาที่รูปเพื่อบันทึก แล้วแชร์ได้เลย</div>
+    </div>
+    <div class="toolx">🩺 ยังไม่แน่ใจว่าหนี้คุณอาการหนักแค่ไหน → <a href="/debt-health-check?utm_source=tool&utm_medium=crosslink&utm_campaign=refi_to_quiz">เช็กสุขภาพหนี้ 60 วินาที</a></div>
+  </div>
+
+  <div class="foot">
+    ผลการคำนวณเป็นการ<strong>ประมาณเพื่อการศึกษาเท่านั้น</strong> (คิดแบบผ่อนคงที่ ลดต้นลดดอก) ไม่ใช่คำแนะนำทางการเงิน
+    เงื่อนไข/อัตราจริงขึ้นกับสถาบันการเงินของคุณ — เช็กใบเสนอจริงก่อนตัดสินใจทุกครั้ง · หน้านี้มีลิงก์พันธมิตร<br>
+    หน้านี้ไม่เก็บข้อมูลใด ๆ ที่คุณกรอก (คำนวณในเบราว์เซอร์ของคุณทั้งหมด) · © เงินเดือนสมองทอง · ngernduangold.com
+  </div>
+</div>
+
+<script>
+var LAST = null;
+function fmt(n){ return Math.round(n).toLocaleString('th-TH'); }
+function pmt(P, annualPct, m){
+  var r = annualPct / 100 / 12;
+  if (r === 0) return P / m;
+  var k = Math.pow(1 + r, m);
+  return P * r * k / (k - 1);
+}
+function calc(){
+  var P = parseFloat(document.getElementById('bal').value) || 0;
+  var m = parseInt(document.getElementById('term').value, 10) || 0;
+  var r0 = parseFloat(document.getElementById('r0').value);
+  var r1 = parseFloat(document.getElementById('r1').value);
+  var fee = parseFloat(document.getElementById('fee').value) || 0;
+  if (P <= 0 || m <= 0 || isNaN(r0) || isNaN(r1)){ alert('กรอกยอดหนี้ ระยะเวลา และดอกเบี้ยทั้งสองช่องก่อนครับ'); return; }
+  if (m > 480){ alert('ระยะเวลาผ่อนใส่เป็น "เดือน" นะครับ (สูงสุด 480 เดือน = 40 ปี)'); return; }
+  var pay0 = pmt(P, r0, m), pay1 = pmt(P, r1, m);
+  var int0 = pay0 * m - P, int1 = pay1 * m - P;
+  var saveGross = int0 - int1;
+  var saveNet = saveGross - fee;
+  var moSave = pay0 - pay1;
+  var beMonths = moSave > 0 ? Math.ceil(fee / moSave) : null;
+  LAST = {saveNet:saveNet, pay0:pay0, pay1:pay1, r0:r0, r1:r1, beMonths:beMonths, fee:fee};
+  var big = document.getElementById('bigbox');
+  var sn = document.getElementById('saveNum');
+  if (saveNet > 0){
+    big.style.background = 'linear-gradient(135deg,#1f9d55,#14683a)';
+    sn.innerHTML = '+' + fmt(saveNet) + ' <span>บาท</span>';
+    document.getElementById('saveSub').textContent = 'ประหยัดดอกรวม ~' + fmt(saveGross) + ' บาท หักค่าธรรมเนียม ' + fmt(fee) + ' บาท';
+  } else {
+    big.style.background = 'linear-gradient(135deg,#c0602f,#8f2a1f)';
+    sn.innerHTML = fmt(saveNet) + ' <span>บาท</span>';
+    document.getElementById('saveSub').textContent = 'ตัวเลขติดลบ = จ่ายแพงขึ้น ไม่คุ้มที่จะย้ายตามเงื่อนไขนี้';
+  }
+  document.getElementById('payRow').textContent = fmt(pay0) + ' → ' + fmt(pay1) + ' ฿';
+  document.getElementById('intRow').textContent = fmt(int0) + ' → ' + fmt(int1) + ' ฿';
+  document.getElementById('beRow').textContent = fee <= 0 ? 'ไม่มีค่าธรรมเนียม' : (beMonths ? '~' + beMonths + ' เดือน' : 'ไม่คุ้มทุน');
+  document.getElementById('drRow').textContent = r0.toFixed(1) + '% → ' + r1.toFixed(1) + '% ต่อปี';
+  var v = document.getElementById('verdict');
+  if (saveNet <= 0){
+    v.innerHTML = '<b>สรุป: เงื่อนไขนี้ยังไม่คุ้ม</b> — ดอกใหม่ต่างจากเดิมน้อยเกินไป หรือค่าธรรมเนียมสูงเกิน ลองต่อรองดอก/ค่าธรรมเนียม หรือเทียบเจ้าอื่นก่อน แล้วกลับมาคำนวณใหม่';
+  } else if (beMonths && beMonths > m){
+    v.innerHTML = '<b>สรุป: ระวัง</b> — กว่าจะคุ้มค่าธรรมเนียมใช้เวลานานกว่าระยะผ่อนที่ตั้งไว้ ตัวเลขนี้ยังไม่น่าย้าย เช็กเงื่อนไขจริงกับผู้ให้บริการอีกครั้ง';
+  } else if (saveNet < 3000){
+    v.innerHTML = '<b>สรุป: คุ้มแบบเฉียด ๆ</b> — ประหยัดสุทธิ ' + fmt(saveNet) + ' บาททั้งสัญญา ถ้ามีเงื่อนไขแฝง (ประกัน/ค่าปรับปิดก่อนกำหนด) อาจไม่เหลือ อ่านสัญญาให้ละเอียดก่อน';
+  } else {
+    v.innerHTML = '<b>สรุป: ตัวเลขน่าสนใจ</b> — ประหยัดสุทธิประมาณ <b>' + fmt(saveNet) + ' บาท</b>' +
+      (beMonths ? ' และคุ้มค่าธรรมเนียมใน ~' + beMonths + ' เดือน' : '') +
+      ' ขั้นถัดไปคือเทียบเงื่อนไขจริงหลาย ๆ เจ้า (ดอกจริง ค่าธรรมเนียมแฝง ประกันพ่วง) ก่อนเซ็น';
+  }
+  var res = document.getElementById('results');
+  res.style.display = 'block';
+  res.scrollIntoView({behavior:'smooth', block:'start'});
+  document.getElementById('shareWrap').style.display = 'none';
+}
+function rrect(c, x, y, w, h, r){
+  c.beginPath(); c.moveTo(x + r, y);
+  c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r);
+  c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath();
+}
+function shareCard(){
+  if (!LAST){ alert('กด "คำนวณ" ก่อนครับ'); return; }
+  var cv = document.getElementById('shareCv'), c = cv.getContext('2d');
+  var grad = c.createLinearGradient(0, 0, 1080, 1080);
+  grad.addColorStop(0, '#171724'); grad.addColorStop(1, '#232338');
+  c.fillStyle = grad; c.fillRect(0, 0, 1080, 1080);
+  c.textAlign = 'center';
+  c.fillStyle = '#E5B80B'; c.font = '700 40px Tahoma, sans-serif';
+  c.fillText('เงินเดือนสมองทอง', 540, 110);
+  c.fillStyle = '#cfcfe0'; c.font = '36px Tahoma, sans-serif';
+  c.fillText('รีไฟแนนซ์/รวมหนี้ แล้วประหยัดเท่าไหร่', 540, 175);
+  var pos = LAST.saveNet > 0;
+  var g2 = c.createLinearGradient(140, 260, 940, 640);
+  g2.addColorStop(0, pos ? '#1f9d55' : '#c0602f'); g2.addColorStop(1, pos ? '#14683a' : '#8f2a1f');
+  c.fillStyle = g2; rrect(c, 140, 250, 800, 400, 36); c.fill();
+  c.fillStyle = '#e8f7ee'; c.font = '34px Tahoma, sans-serif';
+  c.fillText('ดอกที่ประหยัดได้ (สุทธิ · โดยประมาณ)', 540, 330);
+  c.fillStyle = '#ffffff'; c.font = '800 110px Tahoma, sans-serif';
+  c.fillText((pos ? '+' : '') + fmt(LAST.saveNet) + ' บาท', 540, 470);
+  c.font = '700 40px Tahoma, sans-serif';
+  c.fillText('ค่างวด ' + fmt(LAST.pay0) + ' → ' + fmt(LAST.pay1) + ' ฿/เดือน', 540, 570);
+  c.fillStyle = '#e8e8f2'; c.font = '38px Tahoma, sans-serif';
+  c.fillText('ดอกเบี้ย ' + LAST.r0.toFixed(1) + '% → ' + LAST.r1.toFixed(1) + '% ต่อปี (กรอกเอง)', 540, 730);
+  c.fillStyle = '#9c9cb0'; c.font = '32px Tahoma, sans-serif';
+  c.fillText('ประมาณเพื่อการศึกษา · เช็กใบเสนอจริงก่อนตัดสินใจ', 540, 800);
+  c.fillStyle = '#E5B80B'; c.font = '700 42px Tahoma, sans-serif';
+  c.fillText('ลองคำนวณของคุณฟรี →', 540, 930);
+  c.fillText('ngernduangold.com/refinance-savings-calculator', 540, 990);
+  var url = cv.toDataURL('image/png');
+  var img = document.getElementById('shareImg');
+  img.src = url;
+  document.getElementById('shareWrap').style.display = 'block';
+  cv.toBlob(function(blob){
+    if (navigator.share && navigator.canShare){
+      var f = new File([blob], 'refi-save.png', {type:'image/png'});
+      if (navigator.canShare({files:[f]})){
+        navigator.share({files:[f], title:'รีไฟแนนซ์แล้วประหยัดเท่าไหร่'}).catch(function(){});
+        return;
+      }
+    }
+    var a = document.createElement('a');
+    a.href = url; a.download = 'refi-save.png';
+    document.body.appendChild(a); a.click(); a.remove();
+  });
+}
+</script>
+</body>
+</html>
