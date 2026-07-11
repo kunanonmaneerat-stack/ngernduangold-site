@@ -45,3 +45,25 @@ schtasks /Create /TN "ngern-tiktok-daily" /SC DAILY /ST 19:00 /TR "cmd /c cd /d 
 
 ## เติม batch (แคปชันหมด 19 ก.ค.)
 `SOCIAL-CAPTIONS_batch2_20-26jul` ยังอยู่ฝั่ง Cowork → วางเข้า cc-inbox แล้วสั่ง CC เติม: CC จะเพิ่มคลิปเข้า `reels/` + `reels/schedule.json` (IG) + `social-autopost/content_map.json` (TikTok) ชุดเดียวจบ
+
+---
+## GO-LIVE CHECKLIST (เรียงตามเวลา — เจ้าของกดตามนี้เป๊ะ ๆ)
+**สถานะตอนนี้ (11 ก.ค.):** scheduler เปิดแล้วทั้งคู่ — IG นัดถัดไป 12 ก.ค. 20:00TH (soft-skip จนกว่ามี token) · TikTok task `ngern-tiktok-daily` 19:00TH (โหมด dry จนกว่า login)
+
+☐ **1. IG (~30 นาที — ทำก่อน 20:00 ของวันที่อยากให้โพสต์แรกขึ้น)**
+   1.1 developers.facebook.com → Create App (Business) → Add product "Instagram Graph API"
+   1.2 Graph API Explorer → permissions: instagram_content_publish, instagram_basic, pages_show_list, pages_read_engagement → Generate Token
+   1.3 หา ig-user-id: GET /me/accounts → {page-id}?fields=instagram_business_account
+   1.4 แลก long-lived: GET /v22.0/oauth/access_token?grant_type=fb_exchange_token&client_id=<APP_ID>&client_secret=<APP_SECRET>&fb_exchange_token=<TOKEN>
+   1.5 GitHub repo → Settings → Secrets → Actions → เพิ่ม `IG_ACCESS_TOKEN` + `IG_USER_ID`
+   1.6 (ทดสอบทันทีไม่รอ 20:00) Actions → ig-reels → Run workflow → date=วันนี้, dry_run=false → เช็ค Reel ขึ้นจริง
+   → เสร็จข้อนี้ = IG hands-off ตลอด 16 วัน (และต่อ ๆ ไปเมื่อเติม batch)
+
+☐ **2. TikTok (~10 นาที)**
+   2.1 `cd C:\Users\nL_ku\ngernduangold-site && python social-autopost\publish_tiktok.py --login` → login ในเบราว์เซอร์ → ปิดหน้าต่าง
+   2.2 `python social-autopost\publish_tiktok.py --check` → ต้อง "CHECK OK"
+   2.3 `python social-autopost\publish_tiktok.py --date <วันนี้>` → DRY: ดู screenshot ใน social-autopost\logs\ ว่าหน้าพร้อมโพสต์+แคปชันถูก
+   2.4 `python social-autopost\publish_tiktok.py --date <วันนี้> --live` → โพสต์จริง 1 คลิป → เช็คบนแอป
+   2.5 สลับ task เป็น live: `schtasks /Change /TN "ngern-tiktok-daily" /TR "cmd /c cd /d C:\Users\nL_ku\ngernduangold-site && python social-autopost\run_daily.py --live >> social-autopost\logs\daily.log 2>&1"`
+
+☐ **3. ก่อน 20 ก.ค.:** วางคลิป batch2 ที่ `reels\batch2\` ชื่อตรง placeholder ใน content_map → `git add reels && git commit && git push` (หรือส่งไฟล์ให้ CC จัดการ+verify hosting)

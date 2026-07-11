@@ -108,7 +108,17 @@ def main():
         log(caption.replace("\n", " | ")[:220])
         return 0
     if not TOKEN or not IG_USER:
-        fail("IG_ACCESS_TOKEN / IG_USER_ID not set (GitHub secrets)", date)
+        # SOFT SKIP (order 11 ก.ค. §2): ยังไม่ใส่ secrets = ข้ามนุ่มนวล + แจ้งเตือน ไม่ทำ workflow แดงรายวัน
+        # พอ secrets มา นัดถัดไป (20:00TH) โพสต์จริงเองอัตโนมัติ ไม่ต้องแก้อะไร
+        skip_note = os.path.join(ROOT, "automation-log", "cowork-inbox", "IG-PUBLISH-SKIP.md")
+        os.makedirs(os.path.dirname(skip_note), exist_ok=True)
+        _msg = ("# IG SKIPPED — token missing — " + now_th().strftime("%Y-%m-%d %H:%M") + chr(10) + chr(10)
+                + "- date: " + date + " (คลิป/แคปชันพร้อม hosting OK)" + chr(10)
+                + "- เหตุผล: ยังไม่ได้ใส่ GitHub secrets IG_ACCESS_TOKEN/IG_USER_ID" + chr(10)
+                + "- ทำตาม runbook §1 แล้วนัดถัดไป (20:00TH) จะโพสต์จริงเองอัตโนมัติ" + chr(10))
+        io.open(skip_note, "w", encoding="utf-8").write(_msg)
+        log("SKIPPED: IG token missing — pipeline พร้อม รอ secrets (alert -> cowork-inbox/IG-PUBLISH-SKIP.md)")
+        return 0
 
     # 1) create media container
     r = api("/%s/media" % IG_USER, {

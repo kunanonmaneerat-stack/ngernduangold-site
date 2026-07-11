@@ -190,13 +190,32 @@ def mode_post(p, date, live):
         fail("unexpected: %s" % e, page, date)
 
 
+def mode_plan(date):
+    """resolve entry + comply check ของวันที่กำหนด โดยไม่เปิดเบราว์เซอร์ (ใช้ monitor/พิสูจน์การเลือกคลิป)"""
+    cmap = json.load(io.open(CONTENT_MAP, encoding="utf-8"))
+    entry = cmap.get(date)
+    if not entry:
+        log("PLAN %s: no entry — ต้องเติม batch (last=%s)" % (date, max(cmap)))
+        return 0
+    clip = os.path.join(ROOT, "reels", entry["clipFile"])
+    cap = entry["tiktokCaption"]
+    comply = "ข้อมูลเพื่อการศึกษา" in cap and "ผลิตด้วย AI" in cap
+    log("PLAN %s: clip=%s (exists=%s) | affiliate=%s | comply=%s" % (
+        date, entry["clipFile"], os.path.exists(clip), entry.get("affiliate"), "PASS" if comply else "FAIL"))
+    log("PLAN caption: " + cap.replace(chr(10), " | ")[:200])
+    return 0 if comply else 2
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--login", action="store_true")
     ap.add_argument("--check", action="store_true")
     ap.add_argument("--live", action="store_true")
+    ap.add_argument("--plan", action="store_true")
     ap.add_argument("--date", default="")
     a = ap.parse_args()
+    if a.plan:
+        return mode_plan(a.date or now_th().strftime("%Y-%m-%d"))
     from playwright.sync_api import sync_playwright
     with sync_playwright() as p:
         if a.login:
