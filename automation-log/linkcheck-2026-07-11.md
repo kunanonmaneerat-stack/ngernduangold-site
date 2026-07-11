@@ -1,13 +1,13 @@
 # LINK CHECK — 2026-07-11
 
-สแกน 69 หน้า · ไฟล์ลิงก์เสียจริง 0 · route ต้องตรวจ live 0 · ลิงก์นอก 94
+สแกน 74 หน้า · ไฟล์ลิงก์เสียจริง 0 · route ต้องตรวจ live 0 · ลิงก์นอก 99
 
 ## ลิงก์ภายนอก (เช็ก affiliate up-to-date)
+- (70) https://line.me/R/ti/p/@804qodya
 - (67) https://fonts.googleapis.com
 - (67) https://fonts.gstatic.com
 - (67) https://fonts.googleapis.com/css2
-- (66) https://line.me/R/ti/p/@804qodya
-- (62) https://www.googletagmanager.com/gtag/js
+- (67) https://www.googletagmanager.com/gtag/js
 - (55) https://www.facebook.com/sharer/sharer.php
 - (55) https://www.threads.net/intent/post
 - (55) https://social-plugins.line.me/lineit/share
