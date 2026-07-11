@@ -50,10 +50,12 @@ for _s,_d in [("cover_banner.png","og-default.png"),("og-letter-kit.png","og-let
 # /reels/: mp4 assets สำหรับ IG Content Publishing API เท่านั้น (order 2026-07-11)
 # จงใจไม่อยู่ใน sitemap/nav + robots Disallow — ไม่ใช่หน้าเว็บ ไม่ต้อง index
 if os.path.isdir("reels"):
-    os.makedirs(f"{OUT}/reels", exist_ok=True)
-    for _rf in sorted(os.listdir("reels")):
-        if _rf.endswith((".mp4", ".json")):
-            shutil.copy2(os.path.join("reels", _rf), f"{OUT}/reels/{_rf}")
+    for _rd, _dirs, _files in os.walk("reels"):   # เดินลง subdir (batch2/ ฯลฯ) — path บน site คงโครงเดิม
+        _rel = os.path.relpath(_rd, ".")
+        os.makedirs(f"{OUT}/{_rel}", exist_ok=True)
+        for _rf in sorted(_files):
+            if _rf.endswith((".mp4", ".json")):
+                shutil.copy2(os.path.join(_rd, _rf), f"{OUT}/{_rel}/{_rf}")
 
 _TOOL_PAGES = [  # standalone tool/landing pages (root file pristine; copy + head-inject like debt-calculator)
     ("debt-calculator", "เครื่องคำนวณแผนปลดหนี้ฟรี",
