@@ -29,3 +29,14 @@
 - Gates เว็บไม่กระทบ: smoke 67/67 · link_check 0 · affiliate 17/17
 
 ## เจ้าของทำต่อ (ครั้งเดียว): runbook §1 (~30 นาที) → §2 ทดสอบ 1 คลิป → จบ, hands-off
+
+---
+## RECONCILE กับ order ฉบับละเอียด (11 ก.ค. ค่ำ · commit c037a33) — deliverables ครบ 5/5
+1. **คลิป host แล้ว (URL list)** ✅ — 9/9 = 200 + video/mp4 + เล่นจริง:
+   `ngernduangold.com/reels/` → `2026-07-11_kp04` · `12_tl01b` · `13_tl03` · `14_tl04` · `15_tl05` · `16_kp05` · `17_eb02` · `18_kp06` · `19_eb03` (.mp4)
+   (path ใน repo = `reels/` → serve ที่ `/reels/` ตาม URL spec · ไม่อยู่ใน sitemap/nav + robots Disallow ✓)
+2. **สคริปต์ + scheduler ใน repo** ✅ — `automation/ig_publish.py` (อัปเป็น **v22.0 + poll 5 วิ/timeout 5 นาที ตาม spec เป๊ะ**) + `.github/workflows/ig-reels.yml` (cron 0 13 * * * = 20:00TH) · error handling ครบ: container fail / publish fail / token 190 → log + alert file + Action แดง, ไม่พัง pipeline (exit-code แยกชั้น)
+3. **runbook step-by-step** ✅ — `RUNBOOK_ig-reels-api_20260711.md` + **token refresh cron ใหม่**: workflow `ig-token-check` (วันที่ 1+15) validate เสมอ; ใส่ `FB_APP_ID`+`FB_APP_SECRET`+`GH_ADMIN_TOKEN` = **full auto-refresh** ก่อนครบ 60 วัน (แลก token + อัปเดต secret เอง ไม่ log ค่า token)
+4. **ผลทดสอบ 1 โพสต์จริง** 🟡 BLOCKED-ON-OWNER — ต้องมี `IG_ACCESS_TOKEN`/`IG_USER_ID` ก่อน (prereq §1 ~30 นาที) · CC ทดสอบได้สุดทางแล้ว: DRY_RUN กับ live ผ่าน (video OK + caption ครบ disclaimer/AI) · ขั้น publish จริง = runbook §2 (manual run, dry_run=false, 1 คลิป ช่วง low-traffic)
+5. **TikTok ไม่ถูกแตะ** ✅ — ยืนยัน: ไม่มีโค้ด/config ใดแตะ TikTok · แยกไป Postiz/manual ตามนโยบาย
+- Compliance: แคปชันจาก sheet อนุมัติเป๊ะ (local POST-PACK ตรงกับ ig_tiktok_clips sheet) · ไม่มี bare % · AI-toggle caveat flag แล้ว (เปิดเผยผ่านข้อความ+gate บังคับ) · batch 20–26 รอไฟล์ SOCIAL-CAPTIONS_batch2 เข้า cc-inbox

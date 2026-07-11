@@ -11,7 +11,7 @@
 5. หา **IG Business Account ID** (ig-user-id — ไม่ใช่ username):
    - ใน Explorer เรียก `GET /me/accounts` → เอา Page id → เรียก `GET /{page-id}?fields=instagram_business_account` → ได้ id ตัวเลข (คาดว่า = asset_id `583765282304956` — ยืนยันด้วยการเรียกจริง)
 6. แปลง token เป็น **long-lived (60 วัน)**:
-   `GET https://graph.facebook.com/v21.0/oauth/access_token?grant_type=fb_exchange_token&client_id=<APP_ID>&client_secret=<APP_SECRET>&fb_exchange_token=<SHORT_TOKEN>`
+   `GET https://graph.facebook.com/v22.0/oauth/access_token?grant_type=fb_exchange_token&client_id=<APP_ID>&client_secret=<APP_SECRET>&fb_exchange_token=<SHORT_TOKEN>`
    → ได้ `access_token` ใหม่ (ห้ามแปะลงแชท/ไฟล์ใด ๆ ในเรโป)
 7. ใส่ secrets ใน GitHub: repo `ngernduangold-site` → Settings → Secrets and variables → Actions → New repository secret:
    - `IG_ACCESS_TOKEN` = long-lived token
