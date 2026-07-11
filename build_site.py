@@ -39,7 +39,7 @@ def gate_stitch():
                          "(turn hardcoded numbers into {{placeholders}}, remove fake reviews)")
 gate_stitch()
 
-for _s,_d in [("cover_banner.png","og-default.png"),("og-tool-quiz.png","og-tool-quiz.png"),("og-tool-refi.png","og-tool-refi.png"),("og-tool-clock.png","og-tool-clock.png"),("og-workshop-hr.png","og-workshop-hr.png"),("cover_banner_loan.png","og-loan.png"),("logo.png","logo.png"),("insure-hero.svg","insure-hero.svg"),("car-insurance-infographic.html","car-insurance-infographic.html"),("debt-payoff-infographic.html","debt-payoff-infographic.html"),("budget-503020-infographic.html","budget-503020-infographic.html"),("home-land-for-cash-infographic.html","home-land-for-cash-infographic.html"),("motorcycle-title-loan-infographic.html","motorcycle-title-loan-infographic.html"),("car-refinance-infographic.html","car-refinance-infographic.html")]:
+for _s,_d in [("cover_banner.png","og-default.png"),("og-letter-kit.png","og-letter-kit.png"),("og-tool-quiz.png","og-tool-quiz.png"),("og-tool-refi.png","og-tool-refi.png"),("og-tool-clock.png","og-tool-clock.png"),("og-workshop-hr.png","og-workshop-hr.png"),("cover_banner_loan.png","og-loan.png"),("logo.png","logo.png"),("insure-hero.svg","insure-hero.svg"),("car-insurance-infographic.html","car-insurance-infographic.html"),("debt-payoff-infographic.html","debt-payoff-infographic.html"),("budget-503020-infographic.html","budget-503020-infographic.html"),("home-land-for-cash-infographic.html","home-land-for-cash-infographic.html"),("motorcycle-title-loan-infographic.html","motorcycle-title-loan-infographic.html"),("car-refinance-infographic.html","car-refinance-infographic.html")]:
     if os.path.exists(_s):
         try: shutil.copy(_s, f"{OUT}/{_d}")
         except Exception: pass
@@ -63,6 +63,9 @@ _TOOL_PAGES = [  # standalone tool/landing pages (root file pristine; copy + hea
     ("workshop-hr", "Workshop การเงินสำหรับพนักงาน — สำหรับ HR และองค์กร",
      "เวิร์กช็อปปลดหนี้/เงินสำรอง/วางแผนเงินเดือนสำหรับพนักงาน On-site/Online ไม่ขายผลิตภัณฑ์ในห้อง ขอใบเสนอราคาฟรี",
      "og-workshop-hr.png"),
+    ("debt-letter-kit", "ชุดจดหมายเจรจาหนี้ 4 ฉบับ + สคริปต์โทรแบงก์ — ขอลดดอก/ปรับโครงสร้าง/ประนอมหนี้",
+     "จดหมายพร้อมใช้ 4 ฉบับ + สคริปต์โทรแบงก์ กรอกช่องว่างแล้วส่งได้เลย ปรับตามกรณีคุณ — ตัวอย่างฟรี ขอชุดเต็มทาง LINE",
+     "og-letter-kit.png"),
 ]
 for _tslug, _ttt, _ttd, _tog in _TOOL_PAGES:
     # FAIL-CLOSED: sitemap/_redirects/footer อ้างหน้าเหล่านี้แบบ unconditional — ไฟล์หายต้องล้ม build
@@ -379,6 +382,20 @@ def kept_next(slug):
     return ('<div style="margin:14px 0;padding:11px 14px;background:#f4fbf6;border:1.5px solid #1f9d55;'
             'border-radius:11px;text-align:center"><a href="/kept-savings-2026.html?utm_source=article&utm_medium=nextstep&utm_campaign=kept_wedge" '
             'style="color:#14683a;font-weight:700;text-decoration:none">🛡️ ปลดหนี้แล้ว ขั้นต่อไป: กันเงินสำรองไว้ในบัญชีดอกสูง ถอนได้ไว →</a></div>')
+
+
+LETTER_CLUSTER = {"debt-consolidation-2026.html", "debt-restructuring-2026.html",
+                  "pay-off-credit-card-debt-2026.html", "credit-card-interest-2026.html",
+                  "close-debt-fast-2026.html", "debt-clinic-sam-2026.html",
+                  "credit-card-debt-lawsuit-2026.html"}
+def letter_cta(slug):
+    """ท้ายบทความสายเจรจา/ลดดอก -> หน้าขายชุดจดหมายเจรจาหนี้ (สินค้าแบรนด์เอง 199฿ ไม่ใช่ affiliate)"""
+    if slug not in LETTER_CLUSTER:
+        return ""
+    return ('<div style="margin:14px 0;padding:11px 14px;background:#fbfaf5;border:1.5px solid #C9A227;'
+            'border-radius:11px;text-align:center"><a href="/debt-letter-kit?utm_source=article&utm_medium=nextstep&utm_campaign=letter_kit" '
+            'style="color:#6b5b2a;font-weight:700;text-decoration:none">✉️ ไม่รู้จะพูดกับแบงก์ยังไง? '
+            'ชุดจดหมายเจรจาหนี้ 4 ฉบับ + สคริปต์โทร (ตัวอย่างฟรี) →</a></div>')
 
 
 def cta_ls(page, text):
@@ -2379,7 +2396,7 @@ for slug,title,desc,body,faqs,camp in ART:
     _sib=('<div class="related"><h2>เรื่องอื่นในหมวด'+(TAGS.get(slug) or '')+'</h2><div class="cluster">'+''.join(f'<a href="/{_s2}">{_t2}</a>' for _s2,_t2 in _sl)+'</div></div>') if len(_sl)>=2 else ''
     _ogimg="og-loan.png" if slug in {"loan-cash-2026.html","title-loan-2026.html","debt-consolidation-2026.html","car-for-cash-2026.html","personal-loan-2026.html","cash-card-easy-2026.html","refinance-home-2026.html","car-title-loan-compare-2026.html","home-land-for-cash-2026.html","motorcycle-title-loan-2026.html","car-refinance-2026.html","freelance-loan-2026.html","loan-online-legal-2026.html","bureau-blacklist-loan-2026.html","car-still-installment-loan-2026.html"} else "og-default.png"
     _info = (f'<figure style="margin:18px 0"><img class="artinfo" loading="lazy" src="{ARTICLE_HERO_IMG[slug]}" alt="ภาพประกอบ {_name}" width="800" height="420"><figcaption style="font-size:10.5px;color:#8a8a95;text-align:right;margin:2px 4px 0">ภาพประกอบ</figcaption></figure>' if slug in ARTICLE_HERO_IMG else "")
-    open(f"{OUT}/{slug}","w",encoding="utf-8").write(affil_disclose(head(title,desc,slug,ld,og_image=_ogimg)+f'<main class="wrap">{top_offer(camp,slug)}{calc_cta(slug)}{clip_block(slug)}{hero_banner(slug)}{body}{_info}{_ASOF}{kept_next(slug)}{ebook_banner(slug)}{share_bar(slug,_name)}{QUIZ_CTA}{_sib}{_nav}</main>'+FOOTER))
+    open(f"{OUT}/{slug}","w",encoding="utf-8").write(affil_disclose(head(title,desc,slug,ld,og_image=_ogimg)+f'<main class="wrap">{top_offer(camp,slug)}{calc_cta(slug)}{clip_block(slug)}{hero_banner(slug)}{body}{_info}{_ASOF}{kept_next(slug)}{letter_cta(slug)}{ebook_banner(slug)}{share_bar(slug,_name)}{QUIZ_CTA}{_sib}{_nav}</main>'+FOOTER))
 
 # homepage
 CTX={"credit-card-salary-15000-2026.html":"เงินเดือนน้อย","first-credit-card-student-2026.html":"เด็กจบใหม่","credit-card-easy-approval-2026.html":"อนุมัติง่าย","credit-card-freelance-2026.html":"ฟรีแลนซ์","krungsri-credit-card-rejected-2026.html":"เคยไม่ผ่าน","credit-card-installment-0-2026.html":"ผ่อน 0%","credit-card-cashback-2026.html":"เงินคืน","kept-savings-2026.html":"ออมดอกสูง","kept-interest-rate-2026.html":"ออมดอกสูง","high-yield-savings-2026.html":"ออมดอกสูง","emergency-fund-2026.html":"เงินสำรอง","how-to-save-money-2026.html":"เริ่มออม","salary-budgeting-2026.html":"แบ่งเงินเดือน","title-loan-2026.html":"มีรถ","car-for-cash-2026.html":"มีรถ","debt-consolidation-2026.html":"ปลดหนี้","loan-cash-2026.html":"เงินด่วน","personal-loan-2026.html":"ไม่ต้องค้ำ","cash-card-easy-2026.html":"บัตรกดเงินสด","refinance-home-2026.html":"มีบ้าน","travel-insurance-vacation-2026.html":"ก่อนเที่ยว","insurance-compare-2026.html":"เทียบประกัน","lifestyle-credit-card-2026.html":"สายไลฟ์สไตล์","credit-bureau-check-2026.html":"เช็กเครดิต","credit-card-salary-20000-2026.html":"เงินเดือน 20,000","loan-online-legal-2026.html":"กู้ออนไลน์","credit-card-interest-2026.html":"ดอกเบี้ยบัตร","pay-off-credit-card-debt-2026.html":"ปลดหนี้บัตร","credit-card-salary-30000-2026.html":"เงินเดือน 30,000","tax-deduction-salary-2026.html":"ลดหย่อนภาษี","health-insurance-salary-2026.html":"ประกันสุขภาพ","mutual-fund-beginner-2026.html":"เริ่มลงทุน","retirement-planning-salary-2026.html":"วางแผนเกษียณ"}
@@ -2473,7 +2490,7 @@ contact_body="""<h1>ติดต่อ เงินเดือนสมอง�
 open(f"{OUT}/contact.html","w",encoding="utf-8").write(head("ติดต่อเรา | "+SITE,"ติดต่อ เงินเดือนสมองทอง ผ่านช่องทางโซเชียล Facebook Threads Instagram TikTok YouTube และหน้าลิงก์รวม สอบถาม/เสนอแนะเรื่องการเงินมนุษย์เงินเดือน","contact.html",[])+f'<main class="wrap">{contact_body}</main>'+FOOTER)
 
 # sitemap + robots
-urls=[("",("1.0")),("links","0.9"),("quiz","0.9"),("debt-calculator","0.8"),("debt-health-check","0.9"),("refinance-savings-calculator","0.8"),("debt-freedom-clock","0.8"),("workshop-hr","0.5"),("about.html","0.4"),("contact.html","0.4"),("disclaimer.html","0.3")]+[(s,"0.9" if s in {"debt-consolidation-2026.html","pay-off-credit-card-debt-2026.html","title-loan-2026.html"} else "0.8") for s,*_ in ART]
+urls=[("",("1.0")),("links","0.9"),("quiz","0.9"),("debt-calculator","0.8"),("debt-health-check","0.9"),("refinance-savings-calculator","0.8"),("debt-freedom-clock","0.8"),("workshop-hr","0.5"),("debt-letter-kit","0.8"),("about.html","0.4"),("contact.html","0.4"),("disclaimer.html","0.3")]+[(s,"0.9" if s in {"debt-consolidation-2026.html","pay-off-credit-card-debt-2026.html","title-loan-2026.html"} else "0.8") for s,*_ in ART]
 sm='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
 for u,pr in urls:
     _u = u[:-5] if u.endswith(".html") else u   # URL-CONSISTENCY: sitemap = canonical form only
@@ -2781,5 +2798,6 @@ _rl += "/debt-health-check    /debt-health-check.html    200" + chr(10)
 _rl += "/refinance-savings-calculator    /refinance-savings-calculator.html    200" + chr(10)
 _rl += "/debt-freedom-clock    /debt-freedom-clock.html    200" + chr(10)
 _rl += "/workshop-hr    /workshop-hr.html    200" + chr(10)
+_rl += "/debt-letter-kit    /debt-letter-kit.html    200" + chr(10)
 open(f"{OUT}/_redirects","w",encoding="utf-8").write(_rl)
 print("url-consistency: hrefs normalized + per-page 301s written")

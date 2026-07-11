@@ -167,6 +167,7 @@
       <h2 id="rTitle"></h2>
       <p id="rDesc"></p>
       <a class="btn btn-route" id="rBtn" href="/debt-calculator">→</a>
+      <a class="btn-sub" id="rLetter" href="/debt-letter-kit?utm_source=tool&utm_medium=quiz&utm_campaign=dhq_letter" style="display:none">✉️ อยากได้คำพูดเจรจากับเจ้าหนี้? → ชุดจดหมายเจรจาหนี้ (ตัวอย่างฟรี)</a>
       <a class="btn-sub" id="rSub" href="/debt-clinic-sam-2026" style="display:none"></a>
       <small style="display:block;margin-top:10px;color:#9c9cb0">หน้าปลายทางบางหน้ามีลิงก์พันธมิตร · ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำเฉพาะบุคคล</small>
     </div>
@@ -237,8 +238,10 @@ function render(g, total, dti, vals){
   document.getElementById('gDti').textContent = 'สัดส่วนภาระหนี้ต่อรายได้ (DTI) ประมาณ ' + dti.toFixed(0) + '% — ตัวเลขประมาณจากที่คุณกรอก เช็กจริงกับใบแจ้งหนี้ของคุณ';
   document.getElementById('advice').innerHTML = m.adv;
   var rT = document.getElementById('rTitle'), rD = document.getElementById('rDesc'),
-      rB = document.getElementById('rBtn'), rS = document.getElementById('rSub');
+      rB = document.getElementById('rBtn'), rS = document.getElementById('rSub'),
+      rL = document.getElementById('rLetter');
   rS.style.display = 'none';
+  rL.style.display = 'none';
   if (g === 'A' || g === 'B'){
     rT.textContent = 'ก้าวถัดไปของคุณ: ให้เงินเริ่มทำงาน';
     rD.textContent = 'หนี้คุมได้แล้ว — กันเงินสำรองฉุกเฉินไว้ในบัญชีดอกสูงที่ถอนได้ไว บิลฉุกเฉินมาจะได้ไม่ต้องกลับไปกู้';
@@ -254,6 +257,7 @@ function render(g, total, dti, vals){
     rD.textContent = 'รวมหนี้หลายก้อนให้เหลือก้อนเดียวดอกต่ำลง หรือเจรจาปรับโครงสร้าง — เทียบทางเลือกก่อนตัดสินใจ';
     rB.href = '/debt-consolidation-2026?utm_source=tool&utm_medium=quiz&utm_campaign=dhq_' + g;
     rB.textContent = '📊 ดูวิธีรวมหนี้ + เทียบทางเลือก →';
+    rL.style.display = 'block';
     rS.href = '/debt-clinic-sam-2026?utm_source=tool&utm_medium=quiz&utm_campaign=dhq_sam_' + g;
     rS.textContent = 'หนี้เสียหลายเจ้า/โดนทวงหนัก? รู้จักคลินิกแก้หนี้ (SAM) →';
     rS.style.display = 'block';

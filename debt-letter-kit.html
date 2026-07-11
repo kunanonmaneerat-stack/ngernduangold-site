@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ชุดจดหมายเจรจาหนี้ 4 ฉบับ + สคริปต์โทรแบงก์ — ขอลดดอก/ปรับโครงสร้าง/ประนอมหนี้ | เงินเดือนสมองทอง</title>
+<meta name="description" content="จดหมายพร้อมใช้ 4 ฉบับ + สคริปต์โทรแบงก์ กรอกช่องว่างแล้วส่งได้เลย ปรับตามกรณีคุณ — ตัวอย่างฟรี ขอชุดเต็มทาง LINE">
+<style>
+  :root{
+    --gold:#E9B949; --gold-d:#C9A227; --navy:#0F172A; --navy2:#1E293B;
+    --bg:#f6f5f0; --card:#ffffff; --line:#e4e1d6; --muted:#6b6b7a; --ok:#1f9d55;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI","Sarabun","Noto Sans Thai",Tahoma,sans-serif;
+    background:var(--bg);color:#171724;line-height:1.6;-webkit-text-size-adjust:100%}
+  .wrap{max-width:700px;margin:0 auto;padding:0 16px 56px}
+  header{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;
+    padding:32px 16px 36px;text-align:center}
+  header .brand{font-size:14px;letter-spacing:.5px;color:var(--gold);font-weight:700}
+  header .brand a{color:var(--gold);text-decoration:none}
+  header h1{margin:10px 0 8px;font-size:26px;line-height:1.35}
+  header p{margin:0 auto;color:#cbd5e1;font-size:14.5px;max-width:560px}
+  .topnav{font-size:12.5px;margin-top:14px}
+  .topnav a{color:#cbd5e1;text-decoration:none;margin:0 7px}
+  .topnav a:hover{color:var(--gold)}
+  .badges{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:14px}
+  .badges span{font-size:11px;background:#ffffff14;border:1px solid #ffffff2b;color:#e2e8f0;
+    border-radius:20px;padding:3px 10px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:20px;margin-top:18px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  h2{font-size:17.5px;margin:0 0 10px}
+  .pains{display:grid;gap:9px}
+  .pains div{background:#fffdf5;border:1px solid var(--line);border-radius:10px;padding:11px 14px;font-size:14px}
+  .items{display:grid;gap:9px;margin-top:4px}
+  .item{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:11px 14px;font-size:14px}
+  .item .ic{color:var(--gold-d);font-weight:800;flex:0 0 auto}
+  .item b{display:block}
+  .item small{color:var(--muted)}
+  .letter{background:#fbfaf5;border:1.5px solid var(--gold);border-radius:12px;padding:18px 16px;margin-top:12px;
+    font-family:"Sarabun","Leelawadee UI",Tahoma,sans-serif;font-size:13.5px;line-height:1.8;white-space:pre-wrap;overflow-x:auto;color:#2a2a35}
+  .lethead{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+  .lethead .free{background:var(--ok);color:#fff;font-size:11.5px;font-weight:800;border-radius:12px;padding:2px 11px}
+  .tip{background:#fffdf0;border:1px solid var(--gold);border-radius:10px;padding:11px 14px;margin-top:10px;font-size:13.5px}
+  .tip b{color:var(--gold-d)}
+  .buy{background:linear-gradient(135deg,var(--navy),var(--navy2));border-radius:14px;padding:26px 20px;margin-top:18px;color:#fff;text-align:center}
+  .buy h2{color:#fff;font-size:19px}
+  .buy .pr{font-size:40px;font-weight:800;color:var(--gold);margin:8px 0 2px}
+  .buy .pr small{font-size:15px;color:#cbd5e1;font-weight:600}
+  .buy p{color:#cbd5e1;font-size:14px;max-width:520px;margin:6px auto 14px}
+  .btn{display:inline-block;border:none;border-radius:10px;font-weight:700;
+    font-size:15.5px;cursor:pointer;font-family:inherit;padding:14px 22px;text-align:center;text-decoration:none;margin:4px}
+  .btn-line{background:#06C755;color:#fff;font-size:16.5px}
+  .sub2{display:block;margin-top:10px;font-size:13px;color:#cbd5e1;text-decoration:underline}
+  .buy .note{font-size:12px;color:#94a3b8;margin-top:12px}
+  .trust{display:grid;gap:9px}
+  .trust div{border:1px solid var(--line);border-radius:10px;padding:11px 14px;font-size:13.5px;background:#fff}
+  .foot{font-size:11.5px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.65}
+  .toolx{margin-top:14px;text-align:center;font-size:13.5px}
+  .toolx a{color:#6b5b2a;font-weight:600}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><a href="/">เงินเดือนสมองทอง</a></div>
+  <h1>จดหมายเจรจาหนี้ 4 ฉบับ + สคริปต์โทร ที่ธนาคารรับฟัง</h1>
+  <p>ขอลดดอก · ปรับโครงสร้าง · ประนอมหนี้ · ปิดบัญชีลดยอด + สคริปต์โทรแบงก์ — กรอกช่องว่างแล้วส่งได้เลย ปรับตามกรณีคุณ</p>
+  <div class="badges">
+    <span>🤝 เป็นกลาง — ไม่ขายประกัน/สินเชื่อแฝง</span>
+    <span>🏛️ อ้างอิงช่องทางช่วยเหลือจริง (คลินิกแก้หนี้ ธปท.)</span>
+    <span>🚫 ไม่หนุนหนี้นอกระบบ</span>
+  </div>
+  <nav class="topnav">
+    <a href="/">หน้าแรก</a>·<a href="/debt-health-check">เช็กสุขภาพหนี้</a>·<a href="/debt-calculator">เครื่องคำนวณปลดหนี้</a>·<a href="/debt-consolidation-2026">วิธีรวมหนี้</a>
+  </nav>
+</header>
+
+<div class="wrap">
+  <div class="card">
+    <h2>เสียงในหัวตอนจะติดต่อแบงก์ คุ้น ๆ ไหม</h2>
+    <div class="pains">
+      <div>😰 "โทรไปแล้วจะพูดอะไรดี เดี๋ยวพูดผิดเสียเปรียบ"</div>
+      <div>📝 "อยากยื่นเรื่องเป็นลายลักษณ์อักษร แต่เขียนจดหมายราชการไม่เป็น"</div>
+      <div>🤐 "รู้ว่าเจรจาได้ แต่ไม่รู้ว่า 'คำที่ใช่' คืออะไร"</div>
+    </div>
+    <p style="font-size:14px;margin:12px 0 0">ชุดนี้ให้<b>คำพูดที่ใช่</b> — ทั้งฉบับเขียนและสคริปต์โทร ที่เรียบเรียงตามแนวทางที่เจ้าหนี้คุ้นเคย</p>
+  </div>
+
+  <div class="card">
+    <h2>ในชุดมีอะไร (PDF 9 หน้า)</h2>
+    <div class="items">
+      <div class="item"><span class="ic">1</span><span><b>จดหมายขอลดดอกเบี้ย</b><small>สำหรับคนประวัติจ่ายดี อยากปิดเร็วขึ้น</small></span></div>
+      <div class="item"><span class="ic">2</span><span><b>จดหมายขอปรับโครงสร้างหนี้</b><small>เมื่อค่างวดเริ่มหนักเกินรายได้</small></span></div>
+      <div class="item"><span class="ic">3</span><span><b>จดหมายขอประนอมหนี้/ผ่อนผัน</b><small>เมื่อเริ่มค้างจ่าย ต้องการเสนอเงื่อนไขใหม่</small></span></div>
+      <div class="item"><span class="ic">4</span><span><b>จดหมายขอปิดบัญชีลดยอด (settlement)</b><small>มีเงินก้อนจำกัด อยากจบหนี้</small></span></div>
+      <div class="item"><span class="ic">5</span><span><b>สคริปต์โทรแบงก์</b><small>พูดตามได้ทีละบรรทัด + วิธีรับมือคำถามย้อน</small></span></div>
+      <div class="item"><span class="ic">+</span><span><b>เคล็ดลับต่อฉบับ · ตารางเลือกใช้ตามสถานะหนี้ · ช่องทางช่วยเหลือจริง</b><small>รวมคลินิกแก้หนี้ (ธปท./SAM) — ของฟรีที่ควรรู้ก่อนจ่ายเงินให้ใคร</small></span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="lethead"><h2>ตัวอย่างจริงจากในชุด — ฉบับที่ 1</h2><span class="free">อ่านฟรีเต็มใบ</span></div>
+    <div class="letter">เรียน  ฝ่ายบริการลูกค้า / ฝ่ายสินเชื่อ  [ชื่อธนาคาร]
+เรื่อง  ขอความอนุเคราะห์พิจารณาปรับลดอัตราดอกเบี้ย บัญชีเลขที่ [เลขบัตร 4 ตัวท้าย / เลขอ้างอิงบัญชี]
+
+ข้าพเจ้า [ชื่อ-นามสกุล] ผู้ถือ [บัตรเครดิต/สินเชื่อ] เลขที่ [.....] เป็นลูกค้ากับท่านมาตั้งแต่ [ปี]
+ที่ผ่านมาข้าพเจ้าชำระตรงเวลามาโดยตลอด
+
+เนื่องด้วยภาระค่าใช้จ่ายที่เพิ่มขึ้น ข้าพเจ้าประสงค์จะบริหารหนี้ให้ปิดได้เร็วขึ้น จึงขอความอนุเคราะห์
+ให้ท่านพิจารณาปรับลดอัตราดอกเบี้ยของบัญชีนี้ลง เพื่อให้ข้าพเจ้าชำระเงินต้นได้มากขึ้น
+
+ข้าพเจ้ายินดีให้ข้อมูลเพิ่มเติมและพร้อมชำระตามเงื่อนไขใหม่ที่เหมาะสมร่วมกัน
+
+ขอแสดงความนับถือ
+[ชื่อ-นามสกุล] · โทร [เบอร์] · วันที่ [.....]</div>
+    <div class="tip"><b>เคล็ดจากในชุด:</b> แนบเหตุผล "อยากปิดเร็วขึ้น" (เจ้าหนี้ชอบ) มากกว่า "ไม่มีจ่าย" · ส่งแล้วโทรตามผลใน 7–14 วัน · ⚠️ ฉบับนี้สำหรับคนประวัติจ่ายดี — ถ้าเคยค้างจ่าย อย่าคัดประโยค "ชำระตรงเวลา" ให้ใช้ฉบับที่ 2/3 ในชุดแทน</div>
+    <p style="font-size:13.5px;color:var(--muted);margin:12px 0 0">นี่แค่ 1 ใน 4 — อีก 3 ฉบับ (ปรับโครงสร้าง / ประนอมหนี้ / ปิดบัญชีลดยอด) + สคริปต์โทรแบงก์ เหมาะกับเคสที่หนักขึ้นตามลำดับ</p>
+  </div>
+
+  <div class="buy">
+    <h2>ชุดเต็ม: จดหมาย 4 ฉบับ + สคริปต์โทรแบงก์ (PDF 9 หน้า)</h2>
+    <div class="pr">199฿ <small>จ่ายครั้งเดียว</small></div>
+    <p>สินค้าของเงินเดือนสมองทองเอง (ไม่ใช่ค่าธรรมเนียมของเจ้าหนี้/หน่วยงานใด) — สั่งทาง LINE โอนพร้อมเพย์ แล้วรับไฟล์ทันที</p>
+    <a class="btn btn-line" href="https://line.me/R/ti/p/@804qodya" target="_blank" rel="noopener">💬 รับชุดเต็มทาง LINE @804qodya</a>
+    <a class="sub2" href="https://line.me/R/ti/p/@804qodya" target="_blank" rel="noopener">หรือทักขอตัวอย่างเพิ่มฟรีก่อนตัดสินใจ</a>
+    <div class="note">แอด LINE แล้วพิมพ์ "จดหมาย" — ส่งไฟล์ผ่านแชทหลังยืนยันโอน ไม่ต้องรอเมล</div>
+  </div>
+
+  <div class="card">
+    <h2>ทำไมเชื่อเราได้</h2>
+    <div class="trust">
+      <div>🤝 <b>เป็นกลาง</b> — เราเป็นสื่อความรู้การเงิน ไม่ใช่ตัวแทนขายประกัน/สินเชื่อ ไม่มีผลิตภัณฑ์การเงินแฝงในชุดนี้</div>
+      <div>🏛️ ชุดนี้<b>บอกช่องทางช่วยเหลือฟรีของจริง</b>ไว้ด้วย (คลินิกแก้หนี้ · ทางด่วนแก้หนี้ ธปท.) — เพราะบางเคสทางฟรีเหมาะกว่า</div>
+      <div>🚫 ไม่หนุนหนี้นอกระบบ · ไม่มีการรับจ้าง "เคลียร์หนี้แทน" — ชุดนี้ให้คุณเจรจาเองอย่างมีหลัก</div>
+    </div>
+  </div>
+
+  <div class="toolx">🩺 ยังไม่แน่ใจว่าหนี้อยู่ขั้นไหน → <a href="/debt-health-check?utm_source=product&utm_medium=crosslink&utm_campaign=kit_to_quiz">เช็กสุขภาพหนี้ 60 วินาที ฟรี</a> · 🧮 <a href="/debt-calculator?utm_source=product&utm_medium=crosslink&utm_campaign=kit_to_calc">วางแผนปลดหนี้ด้วยตัวเลขจริง</a></div>
+
+  <div class="foot">
+    เอกสารในชุดจัดทำเพื่อ<strong>การศึกษาและเป็นแนวทางตั้งต้น</strong> ไม่ใช่คำแนะนำทางกฎหมายเฉพาะบุคคล
+    ผลการเจรจาขึ้นกับดุลยพินิจของเจ้าหนี้และเงื่อนไขของแต่ละบัญชี · ไม่การันตีผลลัพธ์<br>
+    ราคา 199 บาท = สินค้าดิจิทัลของแบรนด์เงินเดือนสมองทอง (ไม่ใช่ค่าธรรมเนียมเจ้าหนี้/หน่วยงานรัฐ) · หน้านี้ไม่มีลิงก์พันธมิตร<br>
+    © เงินเดือนสมองทอง · ngernduangold.com
+  </div>
+</div>
+</body>
+</html>
