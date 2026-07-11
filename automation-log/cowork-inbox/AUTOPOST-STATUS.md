@@ -18,3 +18,8 @@
 3. **render batch2** วางที่ reels/batch2/ ก่อน 20 ก.ค.
 
 ## FIRST LIVE POST (หลัง prereq): IG — 12 ก.ค. 20:00TH (_final_tl01b จำนำทะเบียน) ถ้า token มาก่อนเวลานัด
+
+## QA ยืนยันก่อนโพสต์จริง (11 ก.ค. 22:45TH — ตามที่ owner สั่ง)
+- **ลายน้ำ Google Flow/Veo: 9/9 PASS** (qa_watermark NCC detector, track 0 เฟรมทุกคลิป reels/11-19)
+- **ข้อมูลกำกับตามที่ Cowork กำหนด: 16/16 วัน PASS** (disclaimer+ผลิตด้วย AI ทั้ง IG/TikTok caption · มีลิงก์พันธมิตร ตรง affiliate flag · ไม่มี bare % · TikTok ไม่มี URL ในโพสต์)
+- TikTok task = Disabled ชั่วคราว (login ติด rate-limit) — เส้นทางทดสอบ = semi-auto ผ่าน browser pane ที่ owner login ไว้
