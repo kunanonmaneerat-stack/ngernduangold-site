@@ -24,3 +24,9 @@
 - **ลายน้ำ Google Flow/Veo: 9/9 PASS** (qa_watermark NCC detector, track 0 เฟรมทุกคลิป reels/11-19)
 - **ข้อมูลกำกับตามที่ Cowork กำหนด: 16/16 วัน PASS** (disclaimer+ผลิตด้วย AI ทั้ง IG/TikTok caption · มีลิงก์พันธมิตร ตรง affiliate flag · ไม่มี bare % · TikTok ไม่มี URL ในโพสต์)
 - TikTok task = Disabled ชั่วคราว (login ติด rate-limit) — เส้นทางทดสอบ = semi-auto ผ่าน browser pane ที่ owner login ไว้
+
+## TikTok BREAKTHROUGH (11 ก.ค. 23:35TH)
+- **GATE ทดสอบ 1 คลิปจริง = ผ่าน**: owner โพสต์ kp04 ขึ้น live (11 ก.ค. 23:29) + **ตั้งเวลา tl01b 12 ก.ค. 19:00** ผ่าน TikTok Studio native scheduler — แคปชันตรง sheet อนุมัติครบทุกบรรทัดทั้งคู่ (verify บน Studio จริง)
+- เส้นทาง TikTok ที่ใช้จริง = **native schedule ผ่าน Studio** (เสถียรกว่า Playwright, ไม่มีประเด็น anti-bot) — dedup 11-12 บันทึกแล้วกัน Playwright ยิงซ้ำ
+- ชีทตั้งเวลา 13–19 รวดเดียว: `cowork-inbox/TIKTOK-SCHEDULE-SHEET_13-19jul.md` (path+แคปชันพร้อมก๊อป ~10 นาทีครบสัปดาห์)
+- ⚠️ พบโพสต์เก่า 1 ตัว 'หนี้บัตรหลายใบ จ่ายขั้นต่ำ...' สถานะ **'อยู่ระหว่างการตรวจสอบ' + เฉพาะฉัน** — ฝาก Cowork ประเมิน (ไม่ใช่โพสต์ของรอบนี้)
