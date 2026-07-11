@@ -30,3 +30,10 @@ quiz **65 หน้า** (nav sitewide+hero) · refi **8 หน้า** (banner 
 ## Owner/Cowork ตัดสินใจ 2 จุด
 1. **อีเมล B2B** ใช้ gmail เจ้าของ (kunanonmaneerat@) — ถ้าอยากได้ email ทางการกว่านี้แจ้งแก้ 1 บรรทัด
 2. **ราคา workshop** ไม่ใส่ตัวเลข (ใบเสนอราคาฟรีไม่ผูกมัด) — CC ไม่ invent ราคาแทนเจ้าของ · ถ้าจะใส่ "เริ่มต้น X฿" ส่งตัวเลขมา
+
+---
+## PATCH 11 ก.ค. (เย็น) — /workshop-hr contact+price (commit 0aaee5d) ✅ LIVE
+- **LINE-only**: ลบ element อีเมลสาธารณะหมดทั้งหน้า (hero + price + steps + FAQ JSON-LD) — assert `mailto:`/gmail = 0 บนหน้า live · ปุ่ม LINE 2 จุด → @804qodya เปิดแอดได้
+- **ตารางราคาเริ่มต้น 3 แพ็กเกจ**: Talk 5,000฿ · **Workshop ครึ่งวัน 12,000฿ (featured)** · Full-day 15,000฿ + note "ราคาปรับตามจำนวนผู้เข้าร่วม/รูปแบบ · สอบถามใบเสนอราคาทาง LINE" · คำว่า "เริ่มต้น" ครบทุกแพ็กเกจ (ไม่ผูกมัด)
+- badge เป็นกลาง (ไม่ใช่ตัวแทนขายประกัน/สินเชื่อ) คงเดิม · FAQ-LD อัปเดตราคา/ระยะเวลา 3 แพ็กเกจ
+- Gates: smoke 66/66 · link_check 0 · affiliate 17/17 ไม่แตะ · mobile: การ์ดราคา stack แนวตั้ง ไม่มี overflow · blob UFFFD=0
