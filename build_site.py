@@ -63,8 +63,8 @@ _TOOL_PAGES = [  # standalone tool/landing pages (root file pristine; copy + hea
     ("workshop-hr", "Workshop การเงินสำหรับพนักงาน — สำหรับ HR และองค์กร",
      "เวิร์กช็อปปลดหนี้/เงินสำรอง/วางแผนเงินเดือนสำหรับพนักงาน On-site/Online ไม่ขายผลิตภัณฑ์ในห้อง ขอใบเสนอราคาฟรี",
      "og-workshop-hr.png"),
-    ("debt-letter-kit", "ชุดจดหมายเจรจาหนี้ 4 ฉบับ + สคริปต์โทรแบงก์ — ขอลดดอก/ปรับโครงสร้าง/ประนอมหนี้",
-     "จดหมายพร้อมใช้ 4 ฉบับ + สคริปต์โทรแบงก์ กรอกช่องว่างแล้วส่งได้เลย ปรับตามกรณีคุณ — ตัวอย่างฟรี ขอชุดเต็มทาง LINE",
+    ("debt-letter-kit", "ชุดจดหมายเจรจาหนี้ 5 ฉบับ + สคริปต์โทรแบงก์",
+     "จดหมายพร้อมใช้ 5 ฉบับ (ลดดอก/ปรับโครงสร้าง/พักชำระ/ประนอมหนี้/ปิดบัญชีลดยอด) + สคริปต์โทรแบงก์ — ตัวอย่างฟรี ขอชุดเต็มทาง LINE",
      "og-letter-kit.png"),
 ]
 for _tslug, _ttt, _ttd, _tog in _TOOL_PAGES:
@@ -395,7 +395,7 @@ def letter_cta(slug):
     return ('<div style="margin:14px 0;padding:11px 14px;background:#fbfaf5;border:1.5px solid #C9A227;'
             'border-radius:11px;text-align:center"><a href="/debt-letter-kit?utm_source=article&utm_medium=nextstep&utm_campaign=letter_kit" '
             'style="color:#6b5b2a;font-weight:700;text-decoration:none">✉️ ไม่รู้จะพูดกับแบงก์ยังไง? '
-            'ชุดจดหมายเจรจาหนี้ 4 ฉบับ + สคริปต์โทร (ตัวอย่างฟรี) →</a></div>')
+            'ชุดจดหมายเจรจาหนี้ 5 ฉบับ + สคริปต์โทร (ตัวอย่างฟรี) →</a></div>')
 
 
 def cta_ls(page, text):
