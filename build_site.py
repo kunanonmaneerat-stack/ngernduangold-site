@@ -39,7 +39,7 @@ def gate_stitch():
                          "(turn hardcoded numbers into {{placeholders}}, remove fake reviews)")
 gate_stitch()
 
-for _s,_d in [("cover_banner.png","og-default.png"),("cover_banner_loan.png","og-loan.png"),("logo.png","logo.png"),("insure-hero.svg","insure-hero.svg"),("car-insurance-infographic.html","car-insurance-infographic.html"),("debt-payoff-infographic.html","debt-payoff-infographic.html"),("budget-503020-infographic.html","budget-503020-infographic.html"),("home-land-for-cash-infographic.html","home-land-for-cash-infographic.html"),("motorcycle-title-loan-infographic.html","motorcycle-title-loan-infographic.html"),("car-refinance-infographic.html","car-refinance-infographic.html")]:
+for _s,_d in [("cover_banner.png","og-default.png"),("og-tool-quiz.png","og-tool-quiz.png"),("og-tool-refi.png","og-tool-refi.png"),("og-tool-clock.png","og-tool-clock.png"),("og-workshop-hr.png","og-workshop-hr.png"),("cover_banner_loan.png","og-loan.png"),("logo.png","logo.png"),("insure-hero.svg","insure-hero.svg"),("car-insurance-infographic.html","car-insurance-infographic.html"),("debt-payoff-infographic.html","debt-payoff-infographic.html"),("budget-503020-infographic.html","budget-503020-infographic.html"),("home-land-for-cash-infographic.html","home-land-for-cash-infographic.html"),("motorcycle-title-loan-infographic.html","motorcycle-title-loan-infographic.html"),("car-refinance-infographic.html","car-refinance-infographic.html")]:
     if os.path.exists(_s):
         try: shutil.copy(_s, f"{OUT}/{_d}")
         except Exception: pass
@@ -47,24 +47,41 @@ for _s,_d in [("cover_banner.png","og-default.png"),("cover_banner_loan.png","og
 # /debt-calculator: standalone tool page (Cowork-QA'd, inline JS/CSS). Copy with head-injection so the
 # smoke gate's per-page asserts (GA4 + affiliate_click listener + og + canonical) pass and the funnel
 # page gets analytics. Root file stays pristine.
-_TOOL_PAGES = [  # standalone tool pages (root file pristine; copy + head-inject like debt-calculator)
+_TOOL_PAGES = [  # standalone tool/landing pages (root file pristine; copy + head-inject like debt-calculator)
     ("debt-calculator", "เครื่องคำนวณแผนปลดหนี้ฟรี",
-     "กรอกหนี้ของคุณ เห็นแผนปลดหนี้ Snowball/Avalanche — ปลดหนี้ด้วยตัวเลขจริง ไม่ขายฝัน"),
+     "กรอกหนี้ของคุณ เห็นแผนปลดหนี้ Snowball/Avalanche — ปลดหนี้ด้วยตัวเลขจริง ไม่ขายฝัน",
+     "og-default.png"),
     ("debt-health-check", "เช็กสุขภาพหนี้ 60 วินาที ฟรี",
-     "ตอบ 7 ข้อ รู้เกรดสุขภาพหนี้ A–F พร้อมก้าวถัดไปที่เหมาะกับคุณ — ไม่เก็บข้อมูล คำนวณในเครื่องคุณ"),
+     "ตอบ 7 ข้อ รู้เกรดสุขภาพหนี้ A–F พร้อมก้าวถัดไปที่เหมาะกับคุณ — ไม่เก็บข้อมูล คำนวณในเครื่องคุณ",
+     "og-tool-quiz.png"),
     ("refinance-savings-calculator", "เครื่องคำนวณรีไฟแนนซ์/รวมหนี้ ประหยัดเท่าไหร่",
-     "กรอกยอดหนี้ ดอกเดิม ดอกใหม่ เห็นดอกที่ประหยัดได้ + จุดคุ้มทุนค่าธรรมเนียมทันที — ฟรี ไม่เก็บข้อมูล"),
+     "กรอกยอดหนี้ ดอกเดิม ดอกใหม่ เห็นดอกที่ประหยัดได้ + จุดคุ้มทุนค่าธรรมเนียมทันที — ฟรี ไม่เก็บข้อมูล",
+     "og-tool-refi.png"),
+    ("debt-freedom-clock", "นาฬิกาวันปลอดหนี้ — ปลดหนี้กี่เดือน เห็นเป็นวันจริง",
+     "กรอกยอดหนี้ ดอกเบี้ย ยอดจ่าย/เดือน เห็นวันปลอดหนี้เป็นเดือน/ปีจริง + slider เร่งเวลาด้วยยอดโปะเพิ่ม — ฟรี ไม่เก็บข้อมูล",
+     "og-tool-clock.png"),
+    ("workshop-hr", "Workshop การเงินสำหรับพนักงาน — สำหรับ HR และองค์กร",
+     "เวิร์กช็อปปลดหนี้/เงินสำรอง/วางแผนเงินเดือนสำหรับพนักงาน On-site/Online ไม่ขายผลิตภัณฑ์ในห้อง ขอใบเสนอราคาฟรี",
+     "og-workshop-hr.png"),
 ]
-for _tslug, _ttt, _ttd in _TOOL_PAGES:
+for _tslug, _ttt, _ttd, _tog in _TOOL_PAGES:
+    # FAIL-CLOSED: sitemap/_redirects/footer อ้างหน้าเหล่านี้แบบ unconditional — ไฟล์หายต้องล้ม build
+    # ไม่ใช่ deploy เว็บที่มีลิงก์ 404 ทั้งไซต์ (บทเรียน review 2026-07-11)
     if not os.path.exists(f"{_tslug}.html"):
-        continue
+        raise SystemExit(f"BUILD ABORTED: tool page {_tslug}.html missing (referenced by sitemap/redirects/footer)")
+    if _tog != "og-default.png" and not os.path.exists(_tog):
+        raise SystemExit(f"BUILD ABORTED: og image {_tog} missing (referenced by {_tslug})")
     _dc = open(f"{_tslug}.html", encoding="utf-8").read()
     _dc_inject = (f'<link rel="canonical" href="{BASE}/{_tslug}">'
                   f'<meta property="og:type" content="website">'
                   f'<meta property="og:title" content="{_ttt} | {SITE}">'
                   f'<meta property="og:description" content="{_ttd}">'
-                  f'<meta property="og:image" content="{BASE}/og-default.png">'
-                  f'<meta property="og:url" content="{BASE}/{_tslug}">' + GA_SNIPPET)
+                  f'<meta property="og:image" content="{BASE}/{_tog}">'
+                  f'<meta property="og:url" content="{BASE}/{_tslug}">'
+                  f'<meta name="twitter:card" content="summary_large_image">'
+                  f'<meta name="twitter:title" content="{_ttt} | {SITE}">'
+                  f'<meta name="twitter:description" content="{_ttd}">'
+                  f'<meta name="twitter:image" content="{BASE}/{_tog}">' + GA_SNIPPET)
     open(f"{OUT}/{_tslug}.html", "w", encoding="utf-8").write(
         _dc.replace("</head>", _dc_inject + "</head>", 1))
 
@@ -276,7 +293,7 @@ FOOTER = f"""<footer><div class="wrap">
 เนื้อหาในเว็บนี้จัดทำเพื่อให้ข้อมูลทั่วไป ไม่ใช่คำแนะนำทางการเงิน การลงทุน หรือสินเชื่อ
 โปรดศึกษาเงื่อนไข/ดอกเบี้ย/ค่าธรรมเนียมจากผู้ให้บริการก่อนตัดสินใจ ·
 เว็บไซต์มีลิงก์พันธมิตร (affiliate) ซึ่งเราอาจได้รับค่าตอบแทนเมื่อคุณสมัครผ่านลิงก์ โดยไม่มีค่าใช้จ่ายเพิ่มกับคุณ<br>
-© 2026 {SITE} · <a href="/disclaimer.html">นโยบายความเป็นส่วนตัว & การเปิดเผยข้อมูล</a>
+© 2026 {SITE} · <a href="/disclaimer.html">นโยบายความเป็นส่วนตัว & การเปิดเผยข้อมูล</a> · <a href="/workshop-hr">สำหรับองค์กร/HR: Workshop การเงินพนักงาน</a>
 </div></div></footer>{SITE_JS}</body></html>"""
 
 # end-of-article entry to the quiz (internal link; no affiliate, no PII)
@@ -331,6 +348,12 @@ CALC_CLUSTER = {"debt-consolidation-2026.html", "debt-restructuring-2026.html",
                 "rebuild-credit-after-debt-2026.html"}
 def calc_cta(slug):
     """แบนเนอร์เครื่องคำนวณเด่นต้นบทความ เฉพาะ debt-cluster (calculator = จุด convert สูงสุด)"""
+    if slug == "car-title-loan-compare-2026.html":
+        # ไม่ใช่ debt-cluster เต็ม แต่คนเทียบสินเชื่อทะเบียนรถควรเช็กตัวเลขรีไฟแนนซ์ก่อน (order 11 ก.ค.)
+        return ('<div style="margin:14px 0 8px;padding:12px 15px;background:#fffdf5;border:1.5px solid #e0b23c;'
+                'border-radius:11px;text-align:center"><a href="/refinance-savings-calculator?utm_source=article&utm_medium=toolbanner&utm_campaign=refi_calc" '
+                'style="color:#6b5b2a;font-weight:700;text-decoration:none">💡 ก่อนตัดสินใจ — เช็กก่อนว่ารวมหนี้/รีไฟแนนซ์'
+                'แล้วประหยัดกี่บาท ลองเครื่องคำนวณฟรี →</a></div>')
     if slug not in CALC_CLUSTER:
         return ""
     _refi = ""
@@ -2430,7 +2453,7 @@ about_body="""<h1>เกี่ยวกับ เงินเดือนสม�
 <h2>การหารายได้ของเว็บไซต์</h2>
 <p>เว็บไซต์มีลิงก์พันธมิตร (affiliate) เมื่อคุณสมัครผลิตภัณฑ์ผ่านลิงก์ของเรา เราอาจได้รับค่าตอบแทนจากผู้ให้บริการ โดยไม่มีค่าใช้จ่ายเพิ่มเติมกับคุณ อ่านรายละเอียดได้ที่ <a href="/disclaimer.html">หน้านโยบายและการเปิดเผยข้อมูล</a></p>
 <h2>ติดต่อเรา</h2>
-<p>ติดตามและสอบถามเพิ่มเติมได้ที่ <a href="/contact.html">หน้าติดต่อเรา</a> หรือดูช่องทางทั้งหมดที่ <a href="/links">ลิงก์รวมของเรา</a></p>"""
+<p>ติดตามและสอบถามเพิ่มเติมได้ที่ <a href="/contact.html">หน้าติดต่อเรา</a> หรือดูช่องทางทั้งหมดที่ <a href="/links">ลิงก์รวมของเรา</a></p>\n<p>สำหรับองค์กร: เราจัด <a href="/workshop-hr">Workshop การเงินสำหรับพนักงาน (HR/People Team)</a> — ปลดหนี้ เงินสำรอง วางแผนเงินเดือน โดยไม่ขายผลิตภัณฑ์การเงินในห้อง</p>"""
 open(f"{OUT}/about.html","w",encoding="utf-8").write(head("เกี่ยวกับเรา | "+SITE,"เกี่ยวกับ เงินเดือนสมองทอง เว็บไซต์ให้ความรู้การเงินมนุษย์เงินเดือน บัตรเครดิต ออมเงิน ย่อยง่าย พร้อมการเปิดเผยลิงก์พันธมิตร","about.html",[])+f'<main class="wrap">{about_body}</main>'+FOOTER)
 
 # contact page (legitimacy)
@@ -2450,7 +2473,7 @@ contact_body="""<h1>ติดต่อ เงินเดือนสมอง�
 open(f"{OUT}/contact.html","w",encoding="utf-8").write(head("ติดต่อเรา | "+SITE,"ติดต่อ เงินเดือนสมองทอง ผ่านช่องทางโซเชียล Facebook Threads Instagram TikTok YouTube และหน้าลิงก์รวม สอบถาม/เสนอแนะเรื่องการเงินมนุษย์เงินเดือน","contact.html",[])+f'<main class="wrap">{contact_body}</main>'+FOOTER)
 
 # sitemap + robots
-urls=[("",("1.0")),("links","0.9"),("quiz","0.9"),("debt-calculator","0.8"),("debt-health-check","0.9"),("refinance-savings-calculator","0.8"),("about.html","0.4"),("contact.html","0.4"),("disclaimer.html","0.3")]+[(s,"0.9" if s in {"debt-consolidation-2026.html","pay-off-credit-card-debt-2026.html","title-loan-2026.html"} else "0.8") for s,*_ in ART]
+urls=[("",("1.0")),("links","0.9"),("quiz","0.9"),("debt-calculator","0.8"),("debt-health-check","0.9"),("refinance-savings-calculator","0.8"),("debt-freedom-clock","0.8"),("workshop-hr","0.5"),("about.html","0.4"),("contact.html","0.4"),("disclaimer.html","0.3")]+[(s,"0.9" if s in {"debt-consolidation-2026.html","pay-off-credit-card-debt-2026.html","title-loan-2026.html"} else "0.8") for s,*_ in ART]
 sm='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
 for u,pr in urls:
     _u = u[:-5] if u.endswith(".html") else u   # URL-CONSISTENCY: sitemap = canonical form only
@@ -2756,5 +2779,7 @@ for _fn in sorted(os.listdir(OUT)):
 _rl += "/debt-calculator    /debt-calculator.html    200" + chr(10)
 _rl += "/debt-health-check    /debt-health-check.html    200" + chr(10)
 _rl += "/refinance-savings-calculator    /refinance-savings-calculator.html    200" + chr(10)
+_rl += "/debt-freedom-clock    /debt-freedom-clock.html    200" + chr(10)
+_rl += "/workshop-hr    /workshop-hr.html    200" + chr(10)
 open(f"{OUT}/_redirects","w",encoding="utf-8").write(_rl)
 print("url-consistency: hrefs normalized + per-page 301s written")

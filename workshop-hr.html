@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workshop การเงินสำหรับพนักงาน — อบรมปลดหนี้/ออมเงิน สำหรับ HR และองค์กร | เงินเดือนสมองทอง</title>
+<meta name="description" content="เวิร์กช็อปการเงินส่วนบุคคลสำหรับพนักงาน: ปลดหนี้เป็นระบบ เงินสำรองฉุกเฉิน วางแผนเงินเดือน — เนื้อหาย่อยง่าย ใช้เครื่องมือ interactive จริง On-site/Online ปรับตามองค์กร ขอใบเสนอราคาฟรี ไม่ผูกมัด">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Workshop การเงินพนักงานใช้เวลานานแค่ไหน","acceptedAnswer":{"@type":"Answer","text":"มาตรฐาน 1.5–3 ชั่วโมง ปรับตามบริบทองค์กรได้ ทั้งรูปแบบ On-site และ Online"}},
+{"@type":"Question","name":"เนื้อหาครอบคลุมอะไรบ้าง","acceptedAnswer":{"@type":"Answer","text":"3 แกนหลัก: ปลดหนี้อย่างเป็นระบบด้วยตัวเลขจริง, สร้างเงินสำรองฉุกเฉิน/ออมดอกสูง, และวางแผนเงินเดือนให้เหลือ — พร้อมเครื่องมือ interactive ให้พนักงานลองกับตัวเลขของตัวเองระหว่างเวิร์กช็อป"}},
+{"@type":"Question","name":"ค่าใช้จ่ายเท่าไหร่","acceptedAnswer":{"@type":"Answer","text":"เสนอราคาตามขนาดทีมและรูปแบบงาน — ขอใบเสนอราคาได้ฟรี ไม่ผูกมัด ผ่าน LINE หรืออีเมล"}}
+]}
+</script>
+<style>
+  :root{
+    --gold:#E5B80B; --gold-d:#C9A227; --ink:#171724; --ink2:#232338;
+    --bg:#f6f5f0; --card:#ffffff; --line:#e4e1d6; --muted:#6b6b7a; --ok:#1f9d55;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI","Sarabun","Noto Sans Thai",Tahoma,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.6;-webkit-text-size-adjust:100%}
+  .wrap{max-width:720px;margin:0 auto;padding:0 16px 56px}
+  header{background:linear-gradient(135deg,var(--ink),var(--ink2));color:#fff;
+    padding:34px 16px 38px;text-align:center}
+  header .brand{font-size:14px;letter-spacing:.5px;color:var(--gold);font-weight:700}
+  header .brand a{color:var(--gold);text-decoration:none}
+  header .tag{display:inline-block;background:#ffffff14;border:1px solid #ffffff2b;color:#e8e8f2;
+    border-radius:20px;padding:3px 12px;font-size:12px;margin-top:12px}
+  header h1{margin:12px 0 8px;font-size:27px;line-height:1.3}
+  header p{margin:0 auto;color:#cfcfe0;font-size:15px;max-width:560px}
+  .topnav{font-size:12.5px;margin-top:14px}
+  .topnav a{color:#cfcfe0;text-decoration:none;margin:0 7px}
+  .topnav a:hover{color:var(--gold)}
+  .herocta{margin-top:18px}
+  .btn{display:inline-block;border:none;border-radius:10px;font-weight:700;
+    font-size:15px;cursor:pointer;font-family:inherit;padding:13px 20px;text-align:center;text-decoration:none;margin:4px}
+  .btn-line{background:#06C755;color:#fff}
+  .btn-mail{background:#fff;color:var(--ink);border:1px solid #d9d9e4}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:20px;margin-top:18px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  h2{font-size:18px;margin:0 0 10px}
+  .pain{display:grid;gap:10px}
+  .pain div{background:#fffdf5;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:14px}
+  .mods{display:grid;gap:12px;margin-top:6px}
+  .mod{border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .mod h3{margin:0 0 6px;font-size:15.5px}
+  .mod p{margin:0;font-size:13.5px;color:var(--muted)}
+  .mod .n{display:inline-block;background:var(--gold);color:#1a1a1a;font-weight:800;
+    border-radius:8px;padding:1px 9px;font-size:13px;margin-right:7px}
+  ul.fmt{margin:8px 0 0;padding-left:20px;font-size:14px}
+  ul.fmt li{margin-bottom:6px}
+  .why{font-size:14px}
+  .price{background:linear-gradient(135deg,var(--ink),var(--ink2));border-radius:14px;
+    padding:24px 20px;margin-top:18px;color:#fff;text-align:center}
+  .price h2{color:#fff}
+  .price p{color:#cfcfe0;font-size:14px;max-width:520px;margin:0 auto 14px}
+  .price .note{font-size:12px;color:#9c9cb0;margin-top:10px}
+  .steps{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:8px}
+  @media(max-width:560px){.steps{grid-template-columns:1fr}}
+  .steps div{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px;font-size:13px;text-align:center}
+  .steps b{display:block;color:var(--gold-d);font-size:15px;margin-bottom:3px}
+  .foot{font-size:11.5px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.6}
+  .foot a{color:var(--muted)}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><a href="/">เงินเดือนสมองทอง</a></div>
+  <div class="tag">สำหรับ HR · People Team · เจ้าของธุรกิจ</div>
+  <h1>Workshop การเงินสำหรับพนักงาน<br>"ปลดหนี้ด้วยตัวเลขจริง ไม่ขายฝัน"</h1>
+  <p>พนักงานที่เครียดเรื่องหนี้ พกความเครียดนั้นมาที่โต๊ะทำงานด้วย — เวิร์กช็อปนี้ให้เครื่องมือ+วิธีคิดที่ใช้ได้จริงตั้งแต่เงินเดือนถัดไป โดยไม่ขายผลิตภัณฑ์การเงินใด ๆ ในห้อง</p>
+  <div class="herocta">
+    <a class="btn btn-line" href="https://line.me/R/ti/p/@804qodya" target="_blank" rel="noopener">💬 คุยผ่าน LINE (พิมพ์ "HR")</a>
+    <a class="btn btn-mail" href="mailto:kunanonmaneerat@gmail.com?subject=สอบถาม%20Workshop%20การเงินพนักงาน">✉️ ส่งอีเมลสอบถาม</a>
+  </div>
+  <nav class="topnav">
+    <a href="/">หน้าแรก</a>·<a href="/about.html">เกี่ยวกับเรา</a>·<a href="/debt-health-check">ลองเครื่องมือของเรา</a>
+  </nav>
+</header>
+
+<div class="wrap">
+  <div class="card">
+    <h2>ทำไมองค์กรถึงควรสนใจเรื่องนี้</h2>
+    <div class="pain why">
+      <div>😮‍💨 หลายองค์กรพบว่า <b>ความเครียดเรื่องเงินของพนักงาน</b> สะท้อนออกมาเป็นสมาธิที่หายไป การขอเบิกล่วงหน้า และการลาออกเพื่อ "หนีหนี้" — ต้นทุนที่ HR เห็นแต่วัดยาก</div>
+      <div>🧰 สวัสดิการที่ให้ "ความรู้ + เครื่องมือ" ติดตัวพนักงานไปตลอด ต้นทุนคาดการณ์ได้ จ่ายเป็นครั้ง และไม่สร้างภาระผูกพันระยะยาวกับองค์กร</div>
+      <div>🤝 เราเป็นสื่อความรู้การเงิน ไม่ใช่ตัวแทนขายประกัน/สินเชื่อ — <b>ในห้องอบรมไม่มีการขายผลิตภัณฑ์การเงินใด ๆ</b> พนักงานฟังได้สบายใจ</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>เนื้อหา 3 แกน (ปรับตามโจทย์องค์กรได้)</h2>
+    <div class="mods">
+      <div class="mod"><h3><span class="n">1</span>ปลดหนี้อย่างเป็นระบบ</h3>
+        <p>เรียงหนี้แบบ Snowball/Avalanche · อ่านใบแจ้งหนี้ให้เป็น · สคริปต์เจรจาลดดอก/ปรับโครงสร้าง · พนักงานลองกับตัวเลขจริงของตัวเองผ่าน<b>เครื่องคำนวณ + นาฬิกาวันปลอดหนี้</b>ของเรา (ไม่เก็บข้อมูล คำนวณในเครื่องผู้ใช้)</p></div>
+      <div class="mod"><h3><span class="n">2</span>เงินสำรองฉุกเฉิน — เกราะกันกลับไปกู้</h3>
+        <p>ตั้งเป้าเงินสำรองที่เหมาะกับรายได้ · เลือกที่พักเงินให้ถอนไวแต่ดอกไม่หาย · ระบบออมอัตโนมัติที่ทำต่อได้จริงหลังจบเวิร์กช็อป</p></div>
+      <div class="mod"><h3><span class="n">3</span>วางแผนเงินเดือนให้เหลือ</h3>
+        <p>งบ 50/30/20 ฉบับปรับให้เข้ากับเงินเดือนไทย · จัดลำดับบิล · กับดักผ่อนของที่ HR ก็เจอบ่อย · Q&A ตามเคสจริงของพนักงาน (ไม่ระบุตัวตน)</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>รูปแบบการจัด</h2>
+    <ul class="fmt">
+      <li><b>On-site หรือ Online</b> — มาตรฐาน 1.5–3 ชั่วโมง (บรรยาย + ลงมือทำกับเครื่องมือจริง)</li>
+      <li>เหมาะกับกลุ่ม 15–100 คน — ปรับความลึกตามกลุ่ม (พนักงานทั่วไป / หัวหน้างาน / กลุ่มที่มีภาระหนี้สูง)</li>
+      <li>มีชีทสรุป + ลิงก์เครื่องมือให้พนักงานกลับไปใช้ต่อฟรี ไม่มีค่าใช้จ่ายแฝงกับพนักงาน</li>
+      <li>เนื้อหาอ้างอิงกรอบเพดานดอกเบี้ย ธปท. · ไม่แนะนำหนี้นอกระบบ · ไม่ขายผลิตภัณฑ์การเงินในห้อง</li>
+    </ul>
+  </div>
+
+  <div class="price">
+    <h2>ราคา</h2>
+    <p>เสนอราคาตาม<b>ขนาดทีมและรูปแบบงาน</b> (จำนวนคน · On-site/Online · ความยาว) — ขอใบเสนอราคาได้ฟรี <b>ไม่ผูกมัด</b> ตอบกลับภายใน 1–2 วันทำการ</p>
+    <a class="btn btn-line" href="https://line.me/R/ti/p/@804qodya" target="_blank" rel="noopener">💬 ขอใบเสนอราคาผ่าน LINE</a>
+    <a class="btn btn-mail" href="mailto:kunanonmaneerat@gmail.com?subject=ขอใบเสนอราคา%20Workshop%20การเงินพนักงาน&body=ชื่อองค์กร:%0Aจำนวนพนักงานโดยประมาณ:%0Aรูปแบบ (On-site/Online):%0Aช่วงเวลาที่สนใจ:">✉️ ขอใบเสนอราคาทางอีเมล</a>
+    <div class="note">แอด LINE แล้วพิมพ์ "HR" — เราจะส่งโครงเนื้อหา (outline) ให้ดูก่อนตัดสินใจ</div>
+  </div>
+
+  <div class="card">
+    <h2>เริ่มยังไง</h2>
+    <div class="steps">
+      <div><b>1. ทัก</b>LINE/อีเมล บอกขนาดทีม + โจทย์ที่อยากแก้</div>
+      <div><b>2. รับ outline</b>เราปรับเนื้อหาให้ตรงบริบท + ใบเสนอราคา</div>
+      <div><b>3. จัดจริง</b>On-site/Online + ชีทสรุปให้พนักงาน</div>
+    </div>
+  </div>
+
+  <div class="foot">
+    จัดโดยทีม <a href="/about.html">เงินเดือนสมองทอง</a> — สื่อความรู้การเงินมนุษย์เงินเดือน "ปลดหนี้ด้วยตัวเลขจริง ไม่ขายฝัน"<br>
+    ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำเฉพาะบุคคล · ไม่มีการขายผลิตภัณฑ์การเงินในห้องอบรม · เครื่องมือที่ใช้เป็นหน้าเว็บสาธารณะของเรา ซึ่งบางหน้าปลายทางมีลิงก์พันธมิตร (เปิดเผยชัดเจนบนหน้านั้น ๆ)<br>
+    © เงินเดือนสมองทอง · ngernduangold.com
+  </div>
+</div>
+</body>
+</html>

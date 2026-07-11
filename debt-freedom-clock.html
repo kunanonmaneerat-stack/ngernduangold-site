@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>นาฬิกาวันปลอดหนี้ — ปลดหนี้กี่เดือน เห็นเป็นวันจริง | เงินเดือนสมองทอง</title>
+<meta name="description" content="กรอกยอดหนี้ ดอกเบี้ย ยอดจ่ายต่อเดือน — เห็น 'วันปลอดหนี้' ของคุณเป็นเดือน/ปีจริง แล้วลองเลื่อนดูว่าโปะเพิ่มเดือนละเท่าไหร่ วันอิสระขยับเข้ามาใกล้แค่ไหน ฟรี ไม่เก็บข้อมูล">
+<style>
+  :root{
+    --gold:#E5B80B; --gold-d:#C9A227; --ink:#171724; --ink2:#232338;
+    --bg:#f6f5f0; --card:#ffffff; --line:#e4e1d6; --muted:#6b6b7a;
+    --ok:#1f9d55; --warn:#c0392b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI","Sarabun","Noto Sans Thai",Tahoma,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.55;-webkit-text-size-adjust:100%}
+  .wrap{max-width:680px;margin:0 auto;padding:0 16px 56px}
+  header{background:linear-gradient(135deg,var(--ink),var(--ink2));color:#fff;
+    padding:26px 16px 30px;text-align:center}
+  header .brand{font-size:14px;letter-spacing:.5px;color:var(--gold);font-weight:700}
+  header .brand a{color:var(--gold);text-decoration:none}
+  header h1{margin:8px 0 6px;font-size:24px;line-height:1.3}
+  header p{margin:0;color:#cfcfe0;font-size:14px}
+  .topnav{font-size:12.5px;margin-top:12px}
+  .topnav a{color:#cfcfe0;text-decoration:none;margin:0 7px}
+  .topnav a:hover{color:var(--gold)}
+  .badges{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:14px}
+  .badges span{font-size:11px;background:#ffffff14;border:1px solid #ffffff2b;color:#e8e8f2;
+    border-radius:20px;padding:3px 10px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:18px;margin-top:18px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  h2{font-size:16px;margin:0 0 12px}
+  label{font-size:13px;color:var(--muted);display:block;margin-bottom:4px}
+  input[type=number]{width:100%;padding:10px 11px;border:1px solid var(--line);border-radius:9px;
+    font-size:15px;font-family:inherit;background:#fff}
+  input[type=number]:focus{outline:2px solid var(--gold);border-color:var(--gold)}
+  .grid2i{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:520px){.grid2i{grid-template-columns:1fr}}
+  .fld{margin-bottom:10px}
+  .btn{display:inline-block;border:none;border-radius:10px;font-weight:700;
+    font-size:15px;cursor:pointer;font-family:inherit;padding:13px 18px;text-align:center;text-decoration:none}
+  .btn-calc{background:linear-gradient(135deg,var(--gold),var(--gold-d));color:#1a1a1a;width:100%;font-size:17px;margin-top:8px}
+  .results{display:none;margin-top:18px}
+  .clockbox{border-radius:14px;padding:26px 20px;text-align:center;color:#fff;
+    background:linear-gradient(135deg,var(--ink),var(--ink2));border:1.5px solid var(--gold)}
+  .clockbox .lbl{font-size:14px;color:#cfcfe0}
+  .clockbox .date{font-size:38px;font-weight:800;color:var(--gold);line-height:1.2;margin:6px 0 2px}
+  .clockbox .mo{font-size:14px;color:#e8e8f2}
+  .never{display:none;background:#fff4f2;border:1px solid #f0c4bb;color:var(--warn);
+    border-radius:10px;padding:12px 14px;margin-top:12px;font-size:13.5px}
+  .accel{margin-top:14px;background:#fffdf5;border:1.5px solid var(--gold);border-radius:12px;padding:16px}
+  .accel h3{margin:0 0 4px;font-size:15px}
+  .accel .sub{font-size:12.5px;color:var(--muted);margin-bottom:10px}
+  input[type=range]{width:100%;accent-color:var(--gold-d)}
+  .accel .val{text-align:center;font-weight:800;font-size:17px;margin-top:4px}
+  .accel .gain{text-align:center;font-size:14px;margin-top:6px}
+  .accel .gain b{color:var(--ok)}
+  .ideas{font-size:12.5px;color:var(--muted);margin-top:10px;text-align:center}
+  .verdict{background:#fffdf0;border:1px solid var(--gold);border-radius:12px;padding:14px 16px;margin-top:12px;font-size:14px}
+  .verdict b{color:var(--gold-d)}
+  .cta{background:linear-gradient(135deg,var(--ink),var(--ink2));border-radius:14px;padding:20px;margin-top:14px;color:#fff;text-align:center}
+  .cta h2{color:#fff;font-size:17px}
+  .cta p{color:#cfcfe0;font-size:14px;margin:0 0 14px}
+  .btn-route{background:var(--gold);color:#1a1a1a;display:block}
+  .btn-share{background:#fff;color:var(--ink);border:1.5px solid var(--gold);width:100%;margin-top:12px}
+  .toolx{margin-top:14px;text-align:center;font-size:13.5px}
+  .toolx a{color:#6b5b2a;font-weight:600}
+  .foot{font-size:11.5px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.6}
+  .hint{font-size:12px;color:var(--muted);margin:-4px 0 12px}
+  #shareWrap{display:none;margin-top:10px;text-align:center}
+  #shareImg{max-width:100%;border-radius:12px;border:1px solid var(--line)}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><a href="/">เงินเดือนสมองทอง</a></div>
+  <h1>⏳ นาฬิกาวันปลอดหนี้</h1>
+  <p>หนี้ก้อนนี้จะหมดวันไหน? เห็นเป็น "เดือน/ปีจริง" แล้วลองเร่งเวลาให้เร็วขึ้นด้วยมือคุณเอง</p>
+  <div class="badges">
+    <span>🔒 ไม่เก็บข้อมูล — คำนวณในเครื่องคุณ 100%</span>
+    <span>🏛️ ดอกเบี้ยกรอกเองตามจริง (กรอบเพดาน ธปท.)</span>
+    <span>🚫 ไม่หนุนหนี้นอกระบบ</span>
+  </div>
+  <nav class="topnav">
+    <a href="/">หน้าแรก</a>·<a href="/debt-calculator">เครื่องคำนวณปลดหนี้</a>·<a href="/debt-health-check">เช็กสุขภาพหนี้</a>·<a href="/refinance-savings-calculator">คำนวณรีไฟแนนซ์</a>
+  </nav>
+</header>
+
+<div class="wrap">
+  <div class="card">
+    <h2>ใส่ตัวเลขของคุณ</h2>
+    <p class="hint">รวมหนี้ทุกก้อนเป็นก้อนเดียวได้ (ใช้ดอกเบี้ยเฉลี่ยคร่าว ๆ จากใบแจ้งหนี้ของคุณ)</p>
+    <div class="grid2i">
+      <div class="fld">
+        <label>ยอดหนี้คงเหลือรวม (บาท)</label>
+        <input id="bal" type="number" inputmode="numeric" placeholder="เช่น 120000" min="0">
+      </div>
+      <div class="fld">
+        <label>ดอกเบี้ย (% ต่อปี — จากใบแจ้งหนี้คุณ)</label>
+        <input id="apr" type="number" inputmode="decimal" step="0.1" placeholder="เช่น 18" min="0" max="36">
+      </div>
+    </div>
+    <div class="fld">
+      <label>ยอดที่จ่ายได้ต่อเดือน (บาท)</label>
+      <input id="pay" type="number" inputmode="numeric" placeholder="เช่น 6000" min="0">
+    </div>
+    <button class="btn btn-calc" onclick="calc()">เปิดนาฬิกาวันปลอดหนี้ →</button>
+  </div>
+
+  <div class="results" id="results">
+    <div class="clockbox">
+      <div class="lbl">🗓️ วันปลอดหนี้ของคุณ (โดยประมาณ)</div>
+      <div class="date" id="freeDate">–</div>
+      <div class="mo" id="freeMo"></div>
+    </div>
+    <div class="never" id="never"></div>
+
+    <div class="accel" id="accelBox">
+      <h3>⚡ เร่งเวลา: ถ้าโปะเพิ่ม/หารายได้เสริมได้อีกเดือนละ…</h3>
+      <div class="sub">ลองเลื่อนดู — ทุกบาทที่เพิ่ม ขยับวันอิสระเข้ามาใกล้</div>
+      <input id="extra" type="range" min="0" max="15000" step="500" value="0" oninput="accel()">
+      <div class="val" id="extraVal">+0 บาท/เดือน</div>
+      <div class="gain" id="gain"></div>
+      <div class="ideas">💡 ไอเดียหาเพิ่ม: ลดรายจ่ายประจำ · ขายของไม่ใช้ · งานเสริมวันหยุด — เงินโปะไม่จำเป็นต้องมาจากเงินเดือนอย่างเดียว</div>
+    </div>
+
+    <div class="verdict" id="verdict"></div>
+
+    <div class="cta">
+      <h2>อยากได้แผนละเอียดทีละก้อน?</h2>
+      <p>นาฬิกานี้มองหนี้เป็นก้อนรวม — เครื่องคำนวณแผนปลดหนี้แยกหนี้ทุกก้อน เรียงลำดับจ่ายให้ (Snowball/Avalanche) พร้อมเดือนปลอดหนี้ของแต่ละแผน</p>
+      <a class="btn btn-route" href="/debt-calculator?utm_source=tool&utm_medium=clock&utm_campaign=clock_to_calc">🧮 เปิดเครื่องคำนวณแผนปลดหนี้ →</a>
+      <small style="display:block;margin-top:10px;color:#9c9cb0">ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำเฉพาะบุคคล</small>
+    </div>
+    <button class="btn btn-share" onclick="shareCard()">📤 แชร์การ์ด "วันอิสระของฉัน" (บันทึกเป็นรูป)</button>
+    <div id="shareWrap">
+      <canvas id="shareCv" width="1080" height="1080" style="display:none"></canvas>
+      <img id="shareImg" alt="การ์ดวันปลอดหนี้">
+      <div class="hint" style="margin-top:6px">กดค้าง/คลิกขวาที่รูปเพื่อบันทึก แล้วแชร์ได้เลย</div>
+    </div>
+    <div class="toolx">🩺 ยังไม่รู้จุดยืนหนี้ตัวเอง → <a href="/debt-health-check?utm_source=tool&utm_medium=crosslink&utm_campaign=clock_to_quiz">เช็กสุขภาพหนี้ 60 วินาที</a></div>
+  </div>
+
+  <div class="foot">
+    ผลเป็นการ<strong>ประมาณเพื่อการศึกษาเท่านั้น</strong> (คิดดอกเบี้ยลดต้นลดดอก จ่ายคงที่ทุกเดือน) ไม่ใช่คำแนะนำทางการเงิน
+    เงื่อนไข/อัตราจริงขึ้นกับสถาบันการเงินของคุณ · หน้าปลายทางบางหน้ามีลิงก์พันธมิตร<br>
+    หน้านี้ไม่เก็บข้อมูลใด ๆ ที่คุณกรอก (คำนวณในเบราว์เซอร์ของคุณทั้งหมด) · © เงินเดือนสมองทอง · ngernduangold.com
+  </div>
+</div>
+
+<script>
+var LAST = null;
+var TH_MONTHS = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน',
+                 'กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+function fmt(n){ return Math.round(n).toLocaleString('th-TH'); }
+function payoffMonths(P, aprPct, A){
+  var i = aprPct / 100 / 12;
+  if (A <= 0) return null;
+  if (i === 0) return Math.ceil(P / A);
+  if (A <= P * i) return null;                       // จ่ายไม่พอดอก — ไม่มีวันหมด
+  var m = -Math.log(1 - P * i / A) / Math.log(1 + i);
+  return Math.ceil(m);
+}
+function thDate(monthsAhead){
+  var d = new Date();
+  d.setDate(1);                                      // kill day-of-month overflow (31 Jan + 1m != March)
+  d.setMonth(d.getMonth() + monthsAhead);
+  return TH_MONTHS[d.getMonth()] + ' ' + (d.getFullYear() + 543);
+}
+function moText(m){
+  var y = Math.floor(m / 12), mo = m % 12, s = '';
+  if (y) s += y + ' ปี';
+  if (mo) s += (s ? ' ' : '') + mo + ' เดือน';
+  return s || '0 เดือน';
+}
+function calc(){
+  var P = parseFloat(document.getElementById('bal').value) || 0;
+  var apr = parseFloat(document.getElementById('apr').value);
+  var A = parseFloat(document.getElementById('pay').value) || 0;
+  if (P <= 0 || isNaN(apr) || A <= 0){ alert('กรอกยอดหนี้ ดอกเบี้ย และยอดจ่ายต่อเดือนก่อนครับ'); return; }
+  var m = payoffMonths(P, apr, A);
+  LAST = {P: P, apr: apr, A: A, m: m, extra: 0, m2: m};
+  document.getElementById('extra').value = 0;
+  render();
+  var res = document.getElementById('results');
+  res.style.display = 'block';
+  res.scrollIntoView({behavior: 'smooth', block: 'start'});
+  document.getElementById('shareWrap').style.display = 'none';
+}
+function accel(){
+  if (!LAST) return;
+  LAST.extra = parseInt(document.getElementById('extra').value, 10) || 0;
+  LAST.m2 = payoffMonths(LAST.P, LAST.apr, LAST.A + LAST.extra);
+  render();
+}
+function render(){
+  var nv = document.getElementById('never');
+  var use = LAST.extra > 0 ? LAST.m2 : LAST.m;
+  document.getElementById('extraVal').textContent = '+' + fmt(LAST.extra) + ' บาท/เดือน';
+  if (use === null || use > 600){
+    nv.style.display = 'block';
+    nv.innerHTML = (use === null)
+      ? '⚠️ ยอดจ่ายต่อเดือนตอนนี้<strong>ไม่พอตัดเงินต้น</strong> (ดอกกินเกือบหมด) — นาฬิกายังเดินไม่ได้ ลองเลื่อนเพิ่มยอดโปะด้านล่าง หรือดูวิธีลดดอก/รวมหนี้ก่อน'
+      : '⚠️ ยอดนี้ปิดได้ แต่ใช้เวลา<strong>เกิน 50 ปี</strong> — ในทางปฏิบัติแทบไม่ต่างจากไม่จบ ลองเลื่อนเพิ่มยอดโปะด้านล่าง หรือดูวิธีลดดอก/รวมหนี้ก่อน';
+    document.getElementById('freeDate').textContent = 'ยังคำนวณไม่ได้';
+    document.getElementById('freeMo').textContent = '';
+    document.getElementById('gain').innerHTML = '';
+    document.getElementById('verdict').innerHTML = '<b>ทางออกตอนนี้:</b> ลดต้นทุนดอกเบี้ย (รวมหนี้/เจรจาลดดอก) หรือเพิ่มกระแสเงินโปะ — ดูตัวเลขเทียบได้ที่ <a href="/refinance-savings-calculator?utm_source=tool&utm_medium=clock&utm_campaign=clock_to_refi" style="color:#6b5b2a">เครื่องคำนวณรีไฟแนนซ์</a>';
+    return;
+  }
+  nv.style.display = 'none';
+  document.getElementById('freeDate').textContent = thDate(use);
+  document.getElementById('freeMo').textContent = 'อีกประมาณ ' + moText(use) + ' จากวันนี้';
+  var g = document.getElementById('gain');
+  if (LAST.extra > 0 && LAST.m === null && LAST.m2 !== null && LAST.m2 <= 600){
+    g.innerHTML = 'จากเดิมที่ปิดไม่ลง — ตอนนี้เห็นวันจบแล้ว!';
+  } else if (LAST.extra > 0 && LAST.m !== null && LAST.m2 !== null && LAST.m2 < LAST.m){
+    g.innerHTML = (LAST.m > 600)
+      ? 'จากเดิมที่นานเกิน 50 ปี — ตอนนี้เห็นวันจบแล้ว!'
+      : 'เร็วขึ้น <b>' + moText(LAST.m - LAST.m2) + '</b> (จากเดิม ' + thDate(LAST.m) + ')';
+  } else if (LAST.extra > 0){
+    g.innerHTML = '';
+  } else {
+    g.innerHTML = 'ลองเลื่อนดูสิ ⤴';
+  }
+  var v = document.getElementById('verdict');
+  if (use <= 24){
+    v.innerHTML = '<b>ใกล้มากแล้ว!</b> เหลือไม่ถึง 2 ปี — รักษาจังหวะจ่ายให้สม่ำเสมอ แล้ววางแผนต่อว่าพอปลอดหนี้จะเริ่มเก็บเงินสำรองยังไง';
+  } else if (use <= 60){
+    v.innerHTML = '<b>อยู่ในระยะทำได้จริง</b> — ทุก 500 บาทที่โปะเพิ่มขยับวันอิสระเข้ามาชัดเจน ลองเลื่อน slider ดูแล้วตั้งเป้าที่ทำต่อได้จริง';
+  } else {
+    v.innerHTML = '<b>ระยะยาวไปหน่อย — ย่นได้</b> สองคันโยกที่ผลแรงสุด: (1) ลดดอกเบี้ย (รวมหนี้/รีไฟแนนซ์/เจรจา) (2) เพิ่มยอดโปะ แม้เดือนละไม่กี่ร้อยก็ขยับวันได้หลายเดือน';
+  }
+}
+function rrect(c, x, y, w, h, r){
+  c.beginPath(); c.moveTo(x + r, y);
+  c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r);
+  c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath();
+}
+function shareCard(){
+  if (!LAST){ alert('กด "เปิดนาฬิกา" ก่อนครับ'); return; }
+  var use = LAST.extra > 0 ? LAST.m2 : LAST.m;
+  if (use === null || use > 600){ alert('ยังคำนวณวันปลอดหนี้ไม่ได้ — ลองเพิ่มยอดจ่ายก่อนครับ'); return; }
+  var cv = document.getElementById('shareCv'), c = cv.getContext('2d');
+  var grad = c.createLinearGradient(0, 0, 1080, 1080);
+  grad.addColorStop(0, '#171724'); grad.addColorStop(1, '#232338');
+  c.fillStyle = grad; c.fillRect(0, 0, 1080, 1080);
+  c.textAlign = 'center';
+  c.fillStyle = '#E5B80B'; c.font = '700 40px Tahoma, sans-serif';
+  c.fillText('เงินเดือนสมองทอง', 540, 110);
+  c.fillStyle = '#cfcfe0'; c.font = '36px Tahoma, sans-serif';
+  c.fillText('⏳ นาฬิกาวันปลอดหนี้ของฉัน', 540, 175);
+  c.strokeStyle = '#E5B80B'; c.lineWidth = 4;
+  rrect(c, 140, 250, 800, 420, 36); c.stroke();
+  c.fillStyle = '#cfcfe0'; c.font = '38px Tahoma, sans-serif';
+  c.fillText('วันอิสระของฉันคือ', 540, 350);
+  c.fillStyle = '#E5B80B'; c.font = '800 92px Tahoma, sans-serif';
+  c.fillText(thDate(use), 540, 480);
+  c.fillStyle = '#ffffff'; c.font = '700 44px Tahoma, sans-serif';
+  c.fillText('อีก ' + moText(use) + ' จากวันนี้', 540, 590);
+  if (LAST.extra > 0 && LAST.m !== null && LAST.m2 < LAST.m){
+    c.fillStyle = '#7fd6a4'; c.font = '38px Tahoma, sans-serif';
+    c.fillText('⚡ เร่งแล้วเร็วขึ้น ' + moText(LAST.m - LAST.m2), 540, 740);
+  }
+  c.fillStyle = '#9c9cb0'; c.font = '32px Tahoma, sans-serif';
+  c.fillText('ประมาณเพื่อการศึกษา · ไม่เก็บข้อมูล', 540, 830);
+  c.fillStyle = '#E5B80B'; c.font = '700 42px Tahoma, sans-serif';
+  c.fillText('ดูวันอิสระของคุณฟรี →', 540, 940);
+  c.fillText('ngernduangold.com/debt-freedom-clock', 540, 1000);
+  var url = cv.toDataURL('image/png');
+  document.getElementById('shareImg').src = url;
+  document.getElementById('shareWrap').style.display = 'block';
+  cv.toBlob(function(blob){
+    if (blob && navigator.share && navigator.canShare){
+      var f = new File([blob], 'debt-free-day.png', {type: 'image/png'});
+      if (navigator.canShare({files: [f]})){
+        navigator.share({files: [f], title: 'วันปลอดหนี้ของฉัน'}).catch(function(){});
+        return;
+      }
+    }
+    var a = document.createElement('a');
+    a.href = url; a.download = 'debt-free-day.png';
+    document.body.appendChild(a); a.click(); a.remove();
+  });
+}
+</script>
+</body>
+</html>
