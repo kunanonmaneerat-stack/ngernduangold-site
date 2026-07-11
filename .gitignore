@@ -44,3 +44,6 @@ automation-log/_pantip_*
 automation-log/cowork-handoff-*.md
 automation-log/_*batch*
 automation-log/_*
+# social-autopost: browser session + logs (ห้าม commit — มี cookies/credentials)
+social-autopost/.tiktok-profile/
+social-autopost/logs/
