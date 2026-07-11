@@ -21,3 +21,12 @@
 smoke **67/67** · link_check 0 broken · affiliate **17/17 ไม่แตะ** · comply OK · blob UFFFD=0 · live: ตัวอย่างเต็มใบแสดงครบ · mobile 375px ไม่ overflow · **0 console error** · build_site.py commit เดียว (fail-closed guard คุ้มครองแล้ว)
 
 **พร้อมใช้เป็นปลายทาง LINE broadcast #4 + กระสุน Pantip 16 ก.ค.** ("มีชุดจดหมาย+สคริปต์เจรจา ตัวอย่างฟรี → /debt-letter-kit")
+
+---
+## FLIP 11 ก.ค. (ค่ำ) — 5 ฉบับ + สคริปต์ (commit db7ef54) ✅ LIVE
+PDF จริงอัปเป็น 5 จดหมาย (เพิ่มใบ #3 พักชำระชั่วคราว/เหตุสุดวิสัย) → flip ทุก surface ตาม order:
+- title/meta/H1/hero-sub/buy box → "จดหมาย 5 ฉบับ + สคริปต์โทรแบงก์ (PDF 10 หน้า)" · รายการครบ ①ลดดอก ②ปรับโครงสร้าง(ยืดงวด/ลดค่างวด) ③**พักชำระชั่วคราว** ④ประนอมหนี้(ค้าง/ใกล้ค้าง) ⑤ปิดบัญชีลดยอด ⑥สคริปต์โทร (+ตาราง/ช่องทาง ธปท.)
+- OG card regen (5 ฉบับ + พักชำระใน subtitle) · banner ท้ายบทความ 7 หน้า → "5 ฉบับ"
+- อัปเลขอ้างอิงใน tip ให้ตรงเลขใหม่ (เคยค้างจ่าย → ใช้ฉบับ 2/4)
+- คงเดิมครบ: 199฿ · LINE 2 ปุ่ม · disclaimer ดุลยพินิจเจ้าหนี้ · ตัวอย่างฉบับ 1 (เวอร์ชัน privacy-safe "[เลขบัตร 4 ตัวท้าย]" — ตรงกับที่ order ยืนยัน) · 0 affiliate · funnel Quiz E/F + cluster ไม่แตะ
+- Gates: smoke 67/67 · link_check 0 · affiliate 17/17 · live verify ทุกจุด "5 ฉบับ" ✓ ไม่เหลือ "4 ฉบับ/9 หน้า" ✓ mobile ไม่ overflow ✓ blob UFFFD=0
