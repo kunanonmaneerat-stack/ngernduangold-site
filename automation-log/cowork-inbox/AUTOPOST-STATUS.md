@@ -4,7 +4,8 @@
 | ช่อง | กลไก | นัดถัดไป (เวลาไทย) | โหมดตอนนี้ |
 |---|---|---|---|
 | IG Reels | GitHub Action `ig-reels` (cron 13:00 UTC) | **12 ก.ค. 20:00** | LIVE-ready แต่ token ยังไม่มา → **soft-skip + alert** (ไม่แดง) |
-| TikTok | Windows Task `ngern-tiktok-daily` (NANON) | **12 ก.ค. 19:00** | **DRY** (ยังไม่ --login) — เตรียมถึงหน้าโพสต์+screenshot ไม่กด Post |
+| TikTok | Windows Task `ngern-tiktok-daily` (NANON) | — | **Disabled ชั่วคราว** (login ติด rate-limit — เส้นทาง = semi-auto ผ่าน browser pane / ลอง QR ใหม่พรุ่งนี้) |
+| FB Page | GitHub Action `fb-feed` (cron 08:00 UTC) | **12 ก.ค. 15:00** | soft-skip + alert จนกว่ามี FB_PAGE_ID/FB_PAGE_TOKEN · feed map 12–18 พร้อม 7 โพสต์ |
 
 ## พฤติกรรมช่วงรอปลดล็อก (พิสูจน์แล้วทุกเส้น 11 ก.ค.)
 - IG ไม่มี token → เขียน `IG-PUBLISH-SKIP.md` + จบเขียว · พอ secrets มา นัดถัดไปโพสต์จริงเอง

@@ -1,0 +1,46 @@
+# FB Page daily feed post — 15:00 Asia/Bangkok (08:00 UTC) · order 2026-07-11
+# Channel-isolated จาก ig-reels/tiktok · dormant (soft-skip) จนกว่ามี secrets FB_PAGE_ID + FB_PAGE_TOKEN
+name: fb-feed
+on:
+  schedule:
+    - cron: "0 8 * * *"
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "Override date YYYY-MM-DD"
+        required: false
+        default: ""
+      dry_run:
+        description: "true = validate only"
+        required: false
+        default: "true"
+
+concurrency:
+  group: fb-feed
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Post today's FB feed entry
+        env:
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+          OVERRIDE_DATE: ${{ github.event.inputs.date }}
+          DRY_RUN: ${{ (github.event_name == 'schedule' || github.event.inputs.dry_run == 'false') && '0' || '1' }}
+        run: python social-autopost/publish_fb.py
+      - name: Commit log (Netlify ignore-rule skips automation-log)
+        if: always()
+        run: |
+          git config user.name "fb-feed-bot"
+          git config user.email "actions@github.com"
+          git add automation-log/fb-feed automation-log/cowork-inbox/FB-PUBLISH-FAIL.md automation-log/cowork-inbox/FB-PUBLISH-SKIP.md 2>/dev/null || true
+          git diff --cached --quiet || (git commit -m "chore(fb-feed): log $(date -u +%F)" && git pull --rebase && git push)

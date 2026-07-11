@@ -67,3 +67,20 @@ schtasks /Create /TN "ngern-tiktok-daily" /SC DAILY /ST 19:00 /TR "cmd /c cd /d 
    2.5 สลับ task เป็น live: `schtasks /Change /TN "ngern-tiktok-daily" /TR "cmd /c cd /d C:\Users\nL_ku\ngernduangold-site && python social-autopost\run_daily.py --live >> social-autopost\logs\daily.log 2>&1"`
 
 ☐ **3. ก่อน 20 ก.ค.:** วางคลิป batch2 ที่ `reels\batch2\` ชื่อตรง placeholder ใน content_map → `git add reels && git commit && git push` (หรือส่งไฟล์ให้ CC จัดการ+verify hosting)
+
+---
+## ช่อง FB Page (feed text + ลิงก์คอมเมนต์แรก — order 11 ก.ค. กลางคืน)
+- **Scope IG feed ที่เลือก: (ก)** — IG ใช้ Reels จาก pipeline เดิมเป็นหลัก ไม่ผลิตรูปนิ่งรายวัน (default ตาม order)
+- คลังโพสต์: `social-autopost/feed_content_map.json` (12–18 ก.ค. = 7 โพสต์จาก 4 หัวข้อ REACH-PACK: จ่ายขั้นต่ำ/โปะใบไหน/วันปลอดหนี้/เจรจาแบงก์ + variants) — Cowork ส่ง 14-day pack มาเติมต่อได้
+- Scheduler: GitHub Action `fb-feed` รายวัน **15:00TH** (08:00 UTC — สล็อต Planner แนะนำ, ไม่ชน Reels 20:00/TikTok 19:00) · channel-isolated
+- กติกาใน publisher (fail-closed): body มี disclaimer · **ไม่มี URL ในบอดี้** (ลิงก์อยู่คอมเมนต์แรกเท่านั้น) · affiliate=true ต้องมี "มีลิงก์พันธมิตร" · ไม่มี bare % · dedup รายวัน · soft-skip เขียว+alert ถ้า secrets ยังไม่มา
+
+### Prereq เจ้าของ (ใช้ Meta app เดียวกับ IG — เพิ่ม permission)
+1. Graph API Explorer → เพิ่ม permissions: `pages_manage_posts`, `pages_manage_engagement`, `pages_read_engagement` → Generate token ใหม่ → แลก long-lived (ขั้นเดียวกับ IG §1.4)
+2. เอา **Page Access Token**: เรียก `GET /me/accounts` ด้วย long-lived user token → ในผลลัพธ์มี `access_token` ของเพจ เงินเดือนสมองทอง (page token จาก long-lived user token = อายุยาวอัตโนมัติ) + `id` ของเพจ
+3. GitHub → Settings → Secrets → Actions: เพิ่ม `FB_PAGE_ID` + `FB_PAGE_TOKEN`
+4. ทดสอบ: Actions → fb-feed → Run workflow → date=วันนี้, dry_run=false → เช็คโพสต์ขึ้นเพจ + คอมเมนต์แรกมีลิงก์กดได้ → จบ auto รายวัน
+
+### ปิด/แก้
+- ปิดชั่วคราว: Actions → fb-feed → Disable workflow · ข้ามวัน: ลบ entry ใน feed_content_map.json
+- token พัง (code 190 ใน log): ทำ Prereq ข้อ 1–3 ใหม่ · โพสต์ขึ้นแต่คอมเมนต์พลาด: alert จะบอกข้อความคอมเมนต์ให้เติมมือ (โพสต์ไม่ถูกยิงซ้ำ — dedup กันแล้ว)
