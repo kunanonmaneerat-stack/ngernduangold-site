@@ -1,0 +1,39 @@
+# IG token health — monthly validate + auto-refresh long-lived token before 60-day expiry
+# Full auto-refresh needs optional secrets: FB_APP_ID, FB_APP_SECRET, GH_ADMIN_TOKEN (PAT repo-admin,
+# used only to update the IG_ACCESS_TOKEN secret). Without them: validate-only (red = owner notified).
+name: ig-token-check
+on:
+  schedule:
+    - cron: "0 6 1,15 * *"   # 1st + 15th of month, 13:00TH
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate token (+refresh if near expiry and app creds present)
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          FB_APP_ID: ${{ secrets.FB_APP_ID }}
+          FB_APP_SECRET: ${{ secrets.FB_APP_SECRET }}
+          OUT_FILE: ${{ runner.temp }}/new_token
+        run: python automation/ig_token_check.py
+      - name: Persist refreshed token to repo secret (only if a new token was issued)
+        if: ${{ hashFiles(format('{0}/new_token', runner.temp)) != '' }}
+        env:
+          GH_TOKEN: ${{ secrets.GH_ADMIN_TOKEN }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::error::new token issued but GH_ADMIN_TOKEN not set — update IG_ACCESS_TOKEN secret manually (runbook §4)"
+            exit 2
+          fi
+          gh secret set IG_ACCESS_TOKEN --repo "$GITHUB_REPOSITORY" < "$RUNNER_TEMP/new_token"
+          rm -f "$RUNNER_TEMP/new_token"
+          echo "IG_ACCESS_TOKEN secret updated"

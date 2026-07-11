@@ -29,7 +29,10 @@
 - วันที่ไม่มีในตาราง → log เตือน "ต้องเติม batch" (ไม่ fail) — **เติม batch:** CC เพิ่มคลิป+แคปชันใน `reels/` + `schedule.json` (สั่งผ่าน order ได้; batch 20–26 ก.ค. รอไฟล์ `SOCIAL-CAPTIONS_batch2` จาก Cowork)
 - โพสต์ fail → Action แดง (GitHub ส่งอีเมลแจ้งเจ้าของอัตโนมัติ) + ไฟล์ `automation-log/cowork-inbox/IG-PUBLISH-FAIL.md` บอกสาเหตุ
 
-## §4 Token หมดอายุ (ทุก ~60 วัน — ตั้งเตือนปฏิทินที่ ~วันที่ 50)
+## §4 Token หมดอายุ (ทุก ~60 วัน)
+**มี cron เช็กอัตโนมัติแล้ว**: workflow `ig-token-check` รันวันที่ 1 และ 15 ของเดือน — validate token เสมอ (พัง = Action แดง + อีเมลแจ้ง)
+- **โหมด full-auto (แนะนำ)**: ใส่ secrets เพิ่ม 3 ตัว → `FB_APP_ID`, `FB_APP_SECRET` (จากหน้า Meta app), `GH_ADMIN_TOKEN` (GitHub PAT สิทธิ์ repo-admin สำหรับอัปเดต secret) — เหลือ <21 วัน ระบบจะแลก token ใหม่ + อัปเดต secret `IG_ACCESS_TOKEN` เองทั้งหมด ไม่ต้องแตะอีก
+- **โหมด manual** (ไม่ใส่ 3 ตัวข้างบน): cron ยัง validate ให้ — พอใกล้หมด/หมด Action จะแดงเตือน แล้วทำมือตามนี้:
 1. รันคำสั่งแลก token ข้อ §1.6 อีกครั้ง (ใช้ token ปัจจุบันเป็น fb_exchange_token ได้ ถ้ายังไม่หมดอายุ)
 2. อัปเดต GitHub secret `IG_ACCESS_TOKEN` ค่าใหม่ — จบ
 - ถ้าหมดอายุไปแล้ว (error code 190 ใน log): generate ใหม่จาก Graph API Explorer (§1.4) แล้วแลกเป็น long-lived

@@ -28,7 +28,7 @@ SCHEDULE = os.path.join(ROOT, "reels", "schedule.json")
 LOG_DIR = os.path.join(ROOT, "automation-log", "ig-reels")
 PUBLISHED = os.path.join(LOG_DIR, "published.json")
 ALERT = os.path.join(ROOT, "automation-log", "cowork-inbox", "IG-PUBLISH-FAIL.md")
-GRAPH = "https://graph.facebook.com/v21.0"
+GRAPH = "https://graph.facebook.com/v22.0"
 
 BASE_URL = os.environ.get("BASE_URL", "https://ngernduangold.com")
 DRY_RUN = os.environ.get("DRY_RUN", "1") != "0"
@@ -121,8 +121,8 @@ def main():
 
     # 2) poll until FINISHED (video processing ~30-60s, allow 5 min)
     status = ""
-    for _ in range(30):
-        time.sleep(10)
+    for _ in range(60):
+        time.sleep(5)
         s = api("/%s" % cid, {"fields": "status_code"})
         status = s.get("status_code", "")
         log("status=" + status)
