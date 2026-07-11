@@ -47,6 +47,14 @@ for _s,_d in [("cover_banner.png","og-default.png"),("og-letter-kit.png","og-let
 # /debt-calculator: standalone tool page (Cowork-QA'd, inline JS/CSS). Copy with head-injection so the
 # smoke gate's per-page asserts (GA4 + affiliate_click listener + og + canonical) pass and the funnel
 # page gets analytics. Root file stays pristine.
+# /reels/: mp4 assets สำหรับ IG Content Publishing API เท่านั้น (order 2026-07-11)
+# จงใจไม่อยู่ใน sitemap/nav + robots Disallow — ไม่ใช่หน้าเว็บ ไม่ต้อง index
+if os.path.isdir("reels"):
+    os.makedirs(f"{OUT}/reels", exist_ok=True)
+    for _rf in sorted(os.listdir("reels")):
+        if _rf.endswith((".mp4", ".json")):
+            shutil.copy2(os.path.join("reels", _rf), f"{OUT}/reels/{_rf}")
+
 _TOOL_PAGES = [  # standalone tool/landing pages (root file pristine; copy + head-inject like debt-calculator)
     ("debt-calculator", "เครื่องคำนวณแผนปลดหนี้ฟรี",
      "กรอกหนี้ของคุณ เห็นแผนปลดหนี้ Snowball/Avalanche — ปลดหนี้ด้วยตัวเลขจริง ไม่ขายฝัน",
@@ -2497,7 +2505,7 @@ for u,pr in urls:
     sm+=f"<url><loc>{BASE}/{_u}</loc><lastmod>{BUILD_DATE}</lastmod><priority>{pr}</priority></url>\n"
 sm+="</urlset>\n"
 open(f"{OUT}/sitemap.xml","w",encoding="utf-8").write(sm)
-open(f"{OUT}/robots.txt","w",encoding="utf-8").write(f"User-agent: *\nAllow: /\nSitemap: {BASE}/sitemap.xml\n")
+open(f"{OUT}/robots.txt","w",encoding="utf-8").write(f"User-agent: *\nAllow: /\nDisallow: /reels/\nSitemap: {BASE}/sitemap.xml\n")
 open(f"{OUT}/google068178fb9e4f38c9.html","w",encoding="utf-8").write("google-site-verification: google068178fb9e4f38c9.html")  # GSC ownership - keep on every rebuild
 # ---- branded /go/ short links (Netlify redirects) for bio/social: protect link reach + AccessTrade channel attribution ----
 _GO = {

@@ -1,0 +1,49 @@
+# IG Reels auto-publish — daily 20:00 Asia/Bangkok (13:00 UTC) · order 2026-07-11
+# Live only when repo secrets IG_ACCESS_TOKEN + IG_USER_ID are set AND dry_run=false / scheduled run.
+# Manual test: Actions -> ig-reels -> Run workflow (date=YYYY-MM-DD, dry_run=false) — ทดสอบ 1 คลิปก่อนเปิด auto
+# Kill switch: Actions -> ig-reels -> "..." -> Disable workflow (ดู runbook)
+name: ig-reels
+on:
+  schedule:
+    - cron: "0 13 * * *"
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "Override date YYYY-MM-DD (default: today TH)"
+        required: false
+        default: ""
+      dry_run:
+        description: "true = validate only, no publish"
+        required: false
+        default: "true"
+
+concurrency:
+  group: ig-reels
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Publish today's reel
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          OVERRIDE_DATE: ${{ github.event.inputs.date }}
+          # scheduled runs are LIVE (DRY_RUN=0); manual runs default to dry unless dry_run=false
+          DRY_RUN: ${{ (github.event_name == 'schedule' || github.event.inputs.dry_run == 'false') && '0' || '1' }}
+        run: python automation/ig_publish.py
+      - name: Commit log (Netlify ignore-rule skips automation-log — no rebuild)
+        if: always()
+        run: |
+          git config user.name "ig-reels-bot"
+          git config user.email "actions@github.com"
+          git add automation-log/ig-reels automation-log/cowork-inbox/IG-PUBLISH-FAIL.md 2>/dev/null || true
+          git diff --cached --quiet || (git commit -m "chore(ig-reels): publish log $(date -u +%F)" && git push)
