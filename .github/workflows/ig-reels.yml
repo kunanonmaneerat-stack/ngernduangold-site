@@ -5,7 +5,7 @@
 name: ig-reels
 on:
   schedule:
-    - cron: "0 13 * * *"
+    - cron: "0 12 * * *"   # 19:00 Asia/Bangkok (order 12 ก.ค.: ทุกช่อง 19:00)
   workflow_dispatch:
     inputs:
       date:
