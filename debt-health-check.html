@@ -63,6 +63,15 @@
   .toolx a{color:#6b5b2a;font-weight:600}
   .foot{font-size:11.5px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.6}
   .hint{font-size:12px;color:var(--muted);margin:-2px 0 10px}
+  .stickybar{position:fixed;left:0;right:0;bottom:0;z-index:50;display:none;
+    background:linear-gradient(135deg,var(--ink),var(--ink2));border-top:1.5px solid var(--gold);
+    padding:9px 10px calc(9px + env(safe-area-inset-bottom));box-shadow:0 -2px 12px rgba(0,0,0,.25)}
+  .stickybar .in{max-width:680px;margin:0 auto;display:flex;gap:8px}
+  .stickybar a{flex:1;display:block;text-align:center;border-radius:10px;padding:11px 8px;
+    font-weight:700;font-size:13.5px;text-decoration:none}
+  .sb-kit{background:var(--gold);color:#1a1a1a}
+  .sb-line{background:#06C755;color:#fff}
+  body.sb-on{padding-bottom:76px}
   #shareWrap{display:none;margin-top:10px;text-align:center}
   #shareImg{max-width:100%;border-radius:12px;border:1px solid var(--line)}
 </style>
@@ -167,6 +176,7 @@
       <h2 id="rTitle"></h2>
       <p id="rDesc"></p>
       <a class="btn btn-route" id="rBtn" href="/debt-calculator">→</a>
+      <a class="btn-sub" id="rLinks" href="/links?utm_source=tool&utm_medium=quiz&utm_campaign=dhq_links" style="display:none">🧭 ดูทางเลือกปลดหนี้ทั้งหมดที่เรารวมไว้ →</a>
       <a class="btn-sub" id="rLetter" href="/debt-letter-kit?utm_source=tool&utm_medium=quiz&utm_campaign=dhq_letter" style="display:none">✉️ อยากได้คำพูดเจรจากับเจ้าหนี้? → ชุดจดหมายเจรจาหนี้ (ตัวอย่างฟรี)</a>
       <a class="btn-sub" id="rSub" href="/debt-clinic-sam-2026" style="display:none"></a>
       <small style="display:block;margin-top:10px;color:#9c9cb0">หน้าปลายทางบางหน้ามีลิงก์พันธมิตร · ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำเฉพาะบุคคล</small>
@@ -184,6 +194,13 @@
     ผลเป็นการ<strong>ประเมินเบื้องต้นเพื่อการศึกษาเท่านั้น</strong> ไม่ใช่คำแนะนำทางการเงินเฉพาะบุคคล
     เกณฑ์คะแนนอิงหลักทั่วไป (สัดส่วนภาระหนี้ต่อรายได้ เงินสำรอง ประวัติการจ่าย) — สถานการณ์จริงควรเช็กกับผู้เชี่ยวชาญ/สถาบันการเงินของคุณ · หน้าปลายทางบางหน้ามีลิงก์พันธมิตร<br>
     หน้านี้ไม่เก็บข้อมูลใด ๆ ที่คุณกรอก (คำนวณในเบราว์เซอร์ของคุณทั้งหมด) · © เงินเดือนสมองทอง · ngernduangold.com
+  </div>
+</div>
+
+<div class="stickybar" id="stickyBar">
+  <div class="in">
+    <a class="sb-kit" href="/links?utm_source=tool&utm_medium=quiz_sticky&utm_campaign=kit199#buy">🧰 ชุดเครื่องมือปลดหนี้ 199฿</a>
+    <a class="sb-line" href="https://line.me/R/ti/p/@804qodya" target="_blank" rel="noopener">💬 แอด LINE OA</a>
   </div>
 </div>
 
@@ -239,9 +256,12 @@ function render(g, total, dti, vals){
   document.getElementById('advice').innerHTML = m.adv;
   var rT = document.getElementById('rTitle'), rD = document.getElementById('rDesc'),
       rB = document.getElementById('rBtn'), rS = document.getElementById('rSub'),
-      rL = document.getElementById('rLetter');
+      rL = document.getElementById('rLetter'), rK = document.getElementById('rLinks');
   rS.style.display = 'none';
   rL.style.display = 'none';
+  rK.style.display = 'none';
+  document.getElementById('stickyBar').style.display = 'block';
+  document.body.className = 'sb-on';
   if (g === 'A' || g === 'B'){
     rT.textContent = 'ก้าวถัดไปของคุณ: ให้เงินเริ่มทำงาน';
     rD.textContent = 'หนี้คุมได้แล้ว — กันเงินสำรองฉุกเฉินไว้ในบัญชีดอกสูงที่ถอนได้ไว บิลฉุกเฉินมาจะได้ไม่ต้องกลับไปกู้';
@@ -258,6 +278,7 @@ function render(g, total, dti, vals){
     rB.href = '/debt-consolidation-2026?utm_source=tool&utm_medium=quiz&utm_campaign=dhq_' + g;
     rB.textContent = '📊 ดูวิธีรวมหนี้ + เทียบทางเลือก →';
     rL.style.display = 'block';
+    rK.style.display = 'block';
     rS.href = '/debt-clinic-sam-2026?utm_source=tool&utm_medium=quiz&utm_campaign=dhq_sam_' + g;
     rS.textContent = 'หนี้เสียหลายเจ้า/โดนทวงหนัก? รู้จักคลินิกแก้หนี้ (SAM) →';
     rS.style.display = 'block';

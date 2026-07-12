@@ -8,7 +8,7 @@
   # Exit 0 => Netlify ignores the build. Any change to build_site.py, *.html, media/, reels/, assets,
   # or this file still rebuilds. tools/ is excluded as a TRIGGER only — the build command still runs the
   # checked-out tools/postdeploy_smoke.py at build time (WO decision D3, 2026-07-12). Saves build minutes.
-  ignore = "git diff --quiet HEAD^ HEAD -- . ':(exclude)automation-log' ':(exclude)pipeline' ':(exclude)tiktok-pipeline' ':(exclude).system_control' ':(exclude)social-autopost' ':(exclude)tools'"
+  ignore = "git diff --quiet HEAD^ HEAD -- . ':(exclude)automation-log' ':(exclude)pipeline' ':(exclude)tiktok-pipeline' ':(exclude).system_control' ':(exclude)social-autopost' ':(exclude)tools' ':(exclude)data'"
 
 [build.environment]
   SITE_BASE = "https://ngernduangold.com"
