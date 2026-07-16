@@ -1,0 +1,9 @@
+Implemented the uploader and report:
+
+- [yt_upload_batch2.py](C:\Users\nL_ku\ngernduangold-site\tools\yt_upload_batch2.py)
+- [CODEX-REPORT_yt-upload_20260716.md](C:\Users\nL_ku\ngernduangold-site\automation-log\CODEX-REPORT_yt-upload_20260716.md)
+
+It uses the existing installed-app OAuth client, keeps a separate ignored YouTube token, defaults to offline dry-run, caps live runs at six uploads, and includes deduplication, retries, quota handling, and `--check`.
+
+No live upload or secret/token write was performed. The mandated `py` compile and dry-run were attempted but blocked: `py` is unavailable and the fallback Python shim is sandbox-denied. The report includes the exact blocker and owner commands.
+

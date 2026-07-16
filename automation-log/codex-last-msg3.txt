@@ -1,0 +1,8 @@
+Implemented and ran the nightly post guard.
+
+- Added [tools/post_guard.py](C:/Users/nL_ku/ngernduangold-site/tools/post_guard.py:1), with all requested channel checks, Thai status table, JSON history, tomorrow preview, exit semantics, and constrained YouTube recovery.
+- Created [delivery report](C:/Users/nL_ku/ngernduangold-site/automation-log/CODEX-REPORT_post-guard_20260716.md:1).
+- Real-run artifacts: [status](C:/Users/nL_ku/ngernduangold-site/automation-log/post-guard/status-2026-07-16.md:1) and [history](C:/Users/nL_ku/ngernduangold-site/automation-log/post-guard/history.jsonl:1).
+- Verified with `python -m py_compile tools/post_guard.py` (`py` is unavailable in this shell).
+
+The real 16 July run exited 0: YouTube, Facebook, TikTok, and Threads were `UNKNOWN`; Instagram was `SCHEDULED-UI`; no definite `FAIL` occurred. Tomorrow’s preview found the reel but missing Facebook, YouTube, and Threads captions.
