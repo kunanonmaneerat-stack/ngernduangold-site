@@ -29,3 +29,11 @@
 ## ทันทีที่ token มา
 - IG: ใส่ 2 secrets → นัดถัดไป 19:00 ยิงเอง (20–26 ครบอัตโนมัติ + dedup กันซ้ำ)
 - FB: ใส่ 2 secrets แล้วสั่ง CC "รัน FB scheduler จริง" → `DRY_RUN=0` 1 ครั้ง = ตั้งครบ 21–26 + อัปเดต manifest อัตโนมัติ
+
+---
+## REFI UPGRADE APPLIED (16 ก.ค. · commit 4d15b7b — สเปกอนุมัติแล้ว) ✅ LIVE
+- **โหมดใหม่ "ไม่รู้ดอกใหม่ — ลองช่วงสมมติ"**: กรอก 3 ตัวเลขจากใบแจ้งหนี้ (ยอดคงเหลือ/งวดที่เหลือ/ค่างวด) → derive ต้นทุนดอกปัจจุบันด้วย bisection ฝั่ง client → slider 3 ระดับ (นิดหน่อย/ปานกลาง/มาก) โชว์**ช่วงประหยัด+ช่วงค่างวดใหม่เป็นบาท ไม่มีเลขดอกเบี้ยใด ๆ** + คำเตือน "ได้ใบเสนอจริงค่อยใช้โหมดแม่นสุด"
+- **Sticky CTA** (option ก ตามอนุมัติ): 📊 /debt-consolidation-2026 (หน้ากลาง — ไม่มี atth ตรง) + 💬 LINE OA — โผล่หลังได้ผลลัพธ์ทั้งสองโหมด
+- **GA events**: refi_result_view (mode: exact/range) + refi_slider_change (band) — guard typeof gtag
+- **Gates ครบ**: **F3 regression ผ่านทั้ง local และ LIVE = +36,259 บาท** (สูตรเดิมไม่ถูกแตะ, assert ใน patch) · smoke 67/67 · link_check 0 · affiliate 17/17 (ไม่เพิ่มลิงก์) · ไม่มีเลข % ใน copy ใหม่ (assert+live check) · blob UFFFD=0 · mobile 375px ไม่ overflow · build 1 ครั้ง commit เดียว = HEAD
+- Live sanity range mode: 150k/30งวด/6,500 → นิดหน่อย ~4.8–9.6k · มาก ~16.5–23.4k บาท (สมเหตุผล เพิ่มตามระดับ)
