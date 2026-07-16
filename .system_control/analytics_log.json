@@ -2,9 +2,66 @@
  "weeks": [
   {
    "week": "2026-W29",
-   "ga4": {},
-   "gsc": {},
-   "gumroad": {}
+   "captured": "2026-07-16",
+   "ga4": {
+    "sessions_7d": 311,
+    "affiliate_click_7d": 45,
+    "top3_pages": [
+     {
+      "page": "/",
+      "views": 201
+     },
+     {
+      "page": "/links",
+      "views": 105
+     },
+     {
+      "page": "/kept-savings-2026",
+      "views": 23
+     }
+    ],
+    "source": "automation-log/ga4-{metrics,funnel,pages}.csv (delivery cron 16 ก.ค.)"
+   },
+   "gsc": {
+    "clicks": 0,
+    "impressions": 49,
+    "striking_8_40": [
+     {
+      "query": "บัตรเครดิต เงินเดือน 30000",
+      "page": "/credit-card-salary-30000-2026",
+      "pos": 39,
+      "impressions": 3
+     },
+     {
+      "query": "บัตรเครดิตเงินเดือน 30000",
+      "page": "/credit-card-salary-30000-2026",
+      "pos": 38.7,
+      "impressions": 6
+     },
+     {
+      "query": "เงินเดือน 30000 บัตรเครดิต",
+      "page": "/credit-card-salary-30000-2026",
+      "pos": 30.2,
+      "impressions": 4
+     },
+     {
+      "query": "เงินเดือน 30000 วงเงินบัตรเครดิต",
+      "page": "/credit-card-salary-30000-2026.html",
+      "pos": 29.3,
+      "impressions": 3,
+      "pos_before_20260711": 29.8
+     },
+     {
+      "query": "เงินเดือน 30000 ได้วงเงินบัตรเครดิตเท่าไหร่",
+      "page": "/credit-card-salary-30000-2026",
+      "pos": 32.2,
+      "impressions": 4
+     }
+    ],
+    "note": "7d window 2026-07-09..2026-07-16 · striking(8-40)=5 queries · baseline compare = pos_before_20260711 (86 links applied 12 ก.ค. — SEO ต้องรอ recrawl หลายสัปดาห์)"
+   },
+   "gumroad": null,
+   "insight": "อะไรขยับ: affiliate_click 45/สัปดาห์ + /links(105วิว)→kept(23วิว,conv26) = ท่อ conversion ทำงาน; อะไรนิ่ง: GSC ยังเด็ก (clicks 0) — 86 internal links เพิ่งลง 12 ก.ค. ยังไม่ถึงรอบ recrawl; ข้อเสนอ 1 ข้อ: โฟกัส reach ช่องโซเชียลที่เพิ่งเปิดครบ (5 ช่อง/วัน) ให้ครบ 2 สัปดาห์ก่อนตัดสิน แล้ววัด W30 เทียบ direct-traffic เข้าหน้า tools"
   }
  ]
 }
