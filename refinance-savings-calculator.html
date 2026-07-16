@@ -62,6 +62,24 @@
   .toolx a{color:#6b5b2a;font-weight:600}
   .foot{font-size:11.5px;color:var(--muted);margin-top:22px;text-align:center;line-height:1.6}
   .hint{font-size:12px;color:var(--muted);margin:-4px 0 12px}
+  .modetab{display:flex;gap:8px;margin-top:16px}
+  .modetab button{flex:1;border:1.5px solid var(--line);background:#fff;border-radius:10px;
+    padding:10px 8px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;color:var(--muted)}
+  .modetab button.on{border-color:var(--gold);background:#fffdf0;color:var(--ink)}
+  .rangebox{display:none;border-radius:14px;padding:20px;text-align:center;color:#fff;
+    background:linear-gradient(135deg,#1f9d55,#14683a);margin-top:14px}
+  .rangebox .lbl{font-size:13px;opacity:.88}
+  .rangebox .num{font-size:30px;font-weight:800;line-height:1.2;margin-top:4px}
+  .rangebox .sub{font-size:12.5px;opacity:.85;margin-top:8px}
+  .stickybar{position:fixed;left:0;right:0;bottom:0;z-index:50;display:none;
+    background:linear-gradient(135deg,var(--ink),var(--ink2));border-top:1.5px solid var(--gold);
+    padding:9px 10px calc(9px + env(safe-area-inset-bottom));box-shadow:0 -2px 12px rgba(0,0,0,.25)}
+  .stickybar .in{max-width:680px;margin:0 auto;display:flex;gap:8px}
+  .stickybar a{flex:1;display:block;text-align:center;border-radius:10px;padding:11px 8px;
+    font-weight:700;font-size:13.5px;text-decoration:none}
+  .sb-consol{background:var(--gold);color:#1a1a1a}
+  .sb-line{background:#06C755;color:#fff}
+  body.sb-on{padding-bottom:76px}
   #shareWrap{display:none;margin-top:10px;text-align:center}
   #shareImg{max-width:100%;border-radius:12px;border:1px solid var(--line)}
 </style>
@@ -82,7 +100,40 @@
 </header>
 
 <div class="wrap">
-  <div class="card">
+  <div class="modetab">
+    <button id="tabExact" class="on" onclick="setMode('exact')" type="button">รู้ดอกเบี้ยทั้งสองตัว (แม่นสุด)</button>
+    <button id="tabRange" onclick="setMode('range')" type="button">ไม่รู้ดอกใหม่ — ลองช่วงสมมติ</button>
+  </div>
+
+  <div class="card" id="modeRange" style="display:none">
+    <h2>โหมดช่วงสมมติ — ใช้แค่ 3 ตัวเลขจากใบแจ้งหนี้</h2>
+    <p class="hint">ยังไม่มีใบเสนอดอกใหม่ก็ลองได้ — ระบบประมาณต้นทุนดอกปัจจุบันจากค่างวดของคุณ แล้วให้เลื่อนดู "ช่วงที่อาจประหยัดได้" (ตัวเลขเป็นช่วงโดยประมาณ ไม่ใช่ข้อเสนอจริง)</p>
+    <div class="grid2i">
+      <div class="fld">
+        <label>ยอดหนี้คงเหลือ (บาท)</label>
+        <input id="bal2" type="number" inputmode="numeric" placeholder="เช่น 120000" min="0">
+      </div>
+      <div class="fld">
+        <label>จำนวนงวดที่เหลือ (เดือน)</label>
+        <input id="term2" type="number" inputmode="numeric" placeholder="เช่น 24" min="1" max="480">
+      </div>
+    </div>
+    <div class="fld">
+      <label>ค่างวดที่จ่ายอยู่ตอนนี้ (บาท/เดือน)</label>
+      <input id="pay2" type="number" inputmode="numeric" placeholder="เช่น 6000" min="0">
+    </div>
+    <button class="btn btn-calc" onclick="calcRange()" type="button">ลองดูช่วงที่อาจประหยัดได้ →</button>
+
+    <div class="rangebox" id="rangeBox">
+      <div class="lbl">ถ้าได้ดอกใหม่ต่ำกว่าเดิม "<span id="bandName">ปานกลาง</span>" — ทั้งสัญญาอาจประหยัดราว ๆ (โดยประมาณ)</div>
+      <div class="num" id="rangeSave">–</div>
+      <div class="sub" id="rangePay"></div>
+      <input id="band" type="range" min="1" max="3" step="1" value="2" oninput="bandChange()" style="width:100%;margin-top:12px;accent-color:#fff">
+      <div class="sub">← ลดนิดหน่อย · ลดปานกลาง · ลดมาก → (เลื่อนดูช่วงสมมติ — เงื่อนไขจริงขึ้นกับใบเสนอของแต่ละเจ้า)</div>
+    </div>
+  </div>
+
+  <div class="card" id="modeExact">
     <h2>ใส่ตัวเลขของคุณ</h2>
     <p class="hint">ดอกเบี้ยดูจากใบแจ้งหนี้/สัญญาของคุณ (อย่าเดา) — ดอกใหม่ใช้ตัวเลขจากใบเสนอที่ได้จริง หรือที่สอบถามมา</p>
     <div class="grid2i">
@@ -145,6 +196,13 @@
   </div>
 </div>
 
+<div class="stickybar" id="stickyBar">
+  <div class="in">
+    <a class="sb-consol" href="/debt-consolidation-2026?utm_source=tool&utm_medium=refi_sticky&utm_campaign=refi_wedge">📊 เทียบทางเลือกรวมหนี้/รีไฟแนนซ์</a>
+    <a class="sb-line" href="https://line.me/R/ti/p/@804qodya" target="_blank" rel="noopener">💬 แอด LINE OA</a>
+  </div>
+</div>
+
 <script>
 var LAST = null;
 function fmt(n){ return Math.round(n).toLocaleString('th-TH'); }
@@ -200,6 +258,80 @@ function calc(){
   res.style.display = 'block';
   res.scrollIntoView({behavior:'smooth', block:'start'});
   document.getElementById('shareWrap').style.display = 'none';
+  showSticky();
+  ga('refi_result_view', {mode: 'exact'});
+}
+function ga(ev, params){
+  try { if (typeof gtag === 'function') gtag('event', ev, params || {}); } catch (e) {}
+}
+function showSticky(){
+  document.getElementById('stickyBar').style.display = 'block';
+  document.body.className = 'sb-on';
+}
+function setMode(m){
+  document.getElementById('modeExact').style.display = m === 'exact' ? 'block' : 'none';
+  document.getElementById('modeRange').style.display = m === 'range' ? 'block' : 'none';
+  document.getElementById('tabExact').className = m === 'exact' ? 'on' : '';
+  document.getElementById('tabRange').className = m === 'range' ? 'on' : '';
+}
+function solveRate(P, A, n){
+  // หา monthly rate i จาก P,A,n (bisection) — A*n <= P = ดอก ~0
+  if (A * n <= P) return 0;
+  var lo = 0, hi = 0.08;
+  for (var k = 0; k < 60; k++){
+    var mid = (lo + hi) / 2;
+    var kk = Math.pow(1 + mid, n);
+    var pay = mid === 0 ? P / n : P * mid * kk / (kk - 1);
+    if (pay > A) hi = mid; else lo = mid;
+  }
+  return (lo + hi) / 2;
+}
+var BANDS = {1: {name: 'นิดหน่อย', lo: 0.10, hi: 0.20},
+             2: {name: 'ปานกลาง', lo: 0.20, hi: 0.35},
+             3: {name: 'มาก', lo: 0.35, hi: 0.50}};
+var RANGE = null;
+function intTotal(P, i, n){
+  if (i <= 0) return 0;
+  var kk = Math.pow(1 + i, n);
+  return P * i * kk / (kk - 1) * n - P;
+}
+function payOf(P, i, n){
+  if (i <= 0) return P / n;
+  var kk = Math.pow(1 + i, n);
+  return P * i * kk / (kk - 1);
+}
+function calcRange(){
+  var P = parseFloat(document.getElementById('bal2').value) || 0;
+  var n = parseInt(document.getElementById('term2').value, 10) || 0;
+  var A = parseFloat(document.getElementById('pay2').value) || 0;
+  if (P <= 0 || n <= 0 || A <= 0){ alert('กรอกครบ 3 ช่องก่อนครับ'); return; }
+  if (n > 480){ alert('จำนวนงวดใส่เป็น "เดือน" นะครับ (สูงสุด 480)'); return; }
+  if (A * n < P){ alert('ค่างวดรวมน้อยกว่ายอดหนี้ — เช็กตัวเลขอีกครั้ง (ค่างวด x งวดที่เหลือ ควรมากกว่ายอดหนี้)'); return; }
+  var i = solveRate(P, A, n);
+  RANGE = {P: P, n: n, A: A, i: i};
+  document.getElementById('rangeBox').style.display = 'block';
+  bandChange(true);
+  showSticky();
+  ga('refi_result_view', {mode: 'range'});
+}
+function bandChange(first){
+  if (!RANGE) return;
+  var b = BANDS[document.getElementById('band').value];
+  document.getElementById('bandName').textContent = b.name;
+  if (RANGE.i <= 0.0005){
+    document.getElementById('rangeSave').textContent = 'ดอกปัจจุบันของคุณต่ำมากอยู่แล้ว';
+    document.getElementById('rangePay').textContent = 'การย้ายอาจไม่คุ้มค่าธรรมเนียม — เช็กใบเสนอจริงก่อนตัดสินใจ';
+    return;
+  }
+  var int0 = intTotal(RANGE.P, RANGE.i, RANGE.n);
+  var sLo = int0 - intTotal(RANGE.P, RANGE.i * (1 - b.lo), RANGE.n);
+  var sHi = int0 - intTotal(RANGE.P, RANGE.i * (1 - b.hi), RANGE.n);
+  var pLo = payOf(RANGE.P, RANGE.i * (1 - b.hi), RANGE.n);
+  var pHi = payOf(RANGE.P, RANGE.i * (1 - b.lo), RANGE.n);
+  document.getElementById('rangeSave').textContent = '~' + fmt(sLo) + ' – ' + fmt(sHi) + ' บาท';
+  document.getElementById('rangePay').textContent = 'ค่างวดใหม่คร่าว ๆ ~' + fmt(pLo) + ' – ' + fmt(pHi) +
+    ' บาท/เดือน (จาก ' + fmt(RANGE.A) + ') · ยังไม่หักค่าธรรมเนียมย้าย — ได้ใบเสนอจริงเมื่อไหร่ กลับมาใช้โหมดแม่นสุดอีกที';
+  if (!first) ga('refi_slider_change', {band: b.name});
 }
 function rrect(c, x, y, w, h, r){
   c.beginPath(); c.moveTo(x + r, y);
