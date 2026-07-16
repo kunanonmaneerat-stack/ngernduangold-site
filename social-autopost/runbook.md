@@ -71,7 +71,7 @@ schtasks /Create /TN "ngern-tiktok-daily" /SC DAILY /ST 19:00 /TR "cmd /c cd /d 
 ---
 ## ช่อง FB Page (feed text + ลิงก์คอมเมนต์แรก — order 11 ก.ค. กลางคืน)
 - **Scope IG feed ที่เลือก: (ก)** — IG ใช้ Reels จาก pipeline เดิมเป็นหลัก ไม่ผลิตรูปนิ่งรายวัน (default ตาม order)
-- คลังโพสต์: `social-autopost/feed_content_map.json` (12–18 ก.ค. = 7 โพสต์จาก 4 หัวข้อ REACH-PACK: จ่ายขั้นต่ำ/โปะใบไหน/วันปลอดหนี้/เจรจาแบงก์ + variants) — Cowork ส่ง 14-day pack มาเติมต่อได้
+- คลังโพสต์: `social-autopost/feed_content_map.json` (12–25 ก.ค. = 14 โพสต์: REACH-PACK หนี้ 12–18 + SAVE-PACK ออม/บูโร/รวมหนี้ 19–25 เติมเมื่อ 16 ก.ค.) — หมดคิว 25 ก.ค. เติม pack ถัดไปก่อนวันนั้น
 - Scheduler: GitHub Action `fb-feed` รายวัน **15:00TH** (08:00 UTC — สล็อต Planner แนะนำ, ไม่ชน Reels 20:00/TikTok 19:00) · channel-isolated
 - กติกาใน publisher (fail-closed): body มี disclaimer · **ไม่มี URL ในบอดี้** (ลิงก์อยู่คอมเมนต์แรกเท่านั้น) · affiliate=true ต้องมี "มีลิงก์พันธมิตร" · ไม่มี bare % · dedup รายวัน · soft-skip เขียว+alert ถ้า secrets ยังไม่มา
 
