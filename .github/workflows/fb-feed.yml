@@ -37,10 +37,19 @@ jobs:
           OVERRIDE_DATE: ${{ github.event.inputs.date }}
           DRY_RUN: ${{ (github.event_name == 'schedule' || github.event.inputs.dry_run == 'false') && '0' || '1' }}
         run: python social-autopost/publish_fb.py
-      - name: Commit log (Netlify ignore-rule skips automation-log)
+      # standing order (16 ก.ค.): พอเจ้าของใส่ FB token = ตั้งเวลา batch2 21-26 เองในรอบถัดไป ไม่ต้องสั่ง
+      # dup-guard 3 ชั้นในสคริปต์ (day-20 hard-excluded, manifest posted, GET scheduled_posts) + past-date GAP skip
+      - name: Auto-schedule batch2 videos 21-26 when token present
+        if: always()
+        env:
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+          DRY_RUN: ${{ secrets.FB_PAGE_TOKEN != '' && '0' || '1' }}
+        run: python social-autopost/schedule_fb_batch2.py
+      - name: Commit log (Netlify ignore-rule skips automation-log/.system_control)
         if: always()
         run: |
           git config user.name "fb-feed-bot"
           git config user.email "actions@github.com"
-          git add automation-log/fb-feed automation-log/cowork-inbox/FB-PUBLISH-FAIL.md automation-log/cowork-inbox/FB-PUBLISH-SKIP.md 2>/dev/null || true
+          git add automation-log/fb-feed automation-log/cowork-inbox/FB-PUBLISH-FAIL.md automation-log/cowork-inbox/FB-PUBLISH-SKIP.md .system_control/content_manifest.json 2>/dev/null || true
           git diff --cached --quiet || (git commit -m "chore(fb-feed): log $(date -u +%F)" && git pull --rebase && git push)

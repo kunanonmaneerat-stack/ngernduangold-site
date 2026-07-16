@@ -69,9 +69,13 @@ def main():
             print("[fb] scheduled_posts query FAIL — หยุดเพื่อความปลอดภัย (กันตั้งซ้ำ):", e)
             return 2
 
+    now_th = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=7)))
     results = []
     for date in DATES:
         it = by[date]
+        if unix_19th(date) <= int(now_th.timestamp()):
+            results.append((date, "GAP past-date (19:00 ผ่านแล้ว) — ห้ามโพสต์ย้อนหลัง รายงานให้เจ้าของตัดสิน"))
+            continue
         cap = it["captions"]["fb"]
         if not cap or "ข้อมูลเพื่อการศึกษา" not in cap:
             results.append((date, "FAIL caption missing/disclaimer")); continue
