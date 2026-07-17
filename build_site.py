@@ -2505,9 +2505,11 @@ open(f"{OUT}/contact.html","w",encoding="utf-8").write(head("ติดต่อ�
 # sitemap + robots
 urls=[("",("1.0")),("links","0.9"),("quiz","0.9"),("debt-calculator","0.8"),("debt-health-check","0.9"),("refinance-savings-calculator","0.8"),("debt-freedom-clock","0.8"),("workshop-hr","0.5"),("debt-letter-kit","0.8"),("about.html","0.4"),("contact.html","0.4"),("disclaimer.html","0.3")]+[(s,"0.9" if s in {"debt-consolidation-2026.html","pay-off-credit-card-debt-2026.html","title-loan-2026.html"} else "0.8") for s,*_ in ART]
 sm='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+_LASTMOD_MIN = {"car-still-installment-loan-2026": "2026-07-18", "credit-card-salary-30000-2026": "2026-07-18"}  # SEO-strike recrawl hint; BUILD_DATE overtakes on later deploys
 for u,pr in urls:
     _u = u[:-5] if u.endswith(".html") else u   # URL-CONSISTENCY: sitemap = canonical form only
-    sm+=f"<url><loc>{BASE}/{_u}</loc><lastmod>{BUILD_DATE}</lastmod><priority>{pr}</priority></url>\n"
+    _lm = max(BUILD_DATE, _LASTMOD_MIN.get(_u, BUILD_DATE))
+    sm+=f"<url><loc>{BASE}/{_u}</loc><lastmod>{_lm}</lastmod><priority>{pr}</priority></url>\n"
 sm+="</urlset>\n"
 open(f"{OUT}/sitemap.xml","w",encoding="utf-8").write(sm)
 open(f"{OUT}/robots.txt","w",encoding="utf-8").write(f"User-agent: *\nAllow: /\nDisallow: /reels/\nSitemap: {BASE}/sitemap.xml\n")
