@@ -26,8 +26,18 @@
    → ต้องได้ `LEDGER_OK` (หรือ `ALREADY_LEDGERED`)
 10. รายงานผลสั้นๆ ภาษาไทย
 
-## FALLBACK (ถ้าขั้น 3–8 ล้มเหลวเกิน 2 รอบ)
-กลับไปวิธีเดิม: พิมพ์แคปชั่นค้างไว้ใน composer แล้วแจ้งเจ้าของ: "รบกวนแนบไฟล์ <ชื่อไฟล์> แล้วกดโพสต์" — ห้ามกดโพสต์เองถ้ายังไม่มีวิดีโอ
+## FALLBACK A — extension ล่ม (Claude in Chrome ไม่เชื่อม) → ใช้ Windows-MCP ล้วน (พิสูจน์แล้ว 17 ก.ค.)
+ถ้า tabs_context ตอบ "not connected" ซ้ำ 2 ครั้ง: ทำทุกขั้นด้วย Windows-MCP แทน (คลิกจริง OS-level = trusted เหมือนกัน):
+1. App switch หา window Chrome ที่ title มี "เงินเดือนสมองทอง (@ngernduangold) • Threads" (ถ้าเจอ composer ค้างของเก่า: กดยกเลิก → "ไม่บันทึก" ทิ้งก่อน) · ถ้าไม่มี: เปิด window ใหม่ Ctrl+N → พิมพ์ URL ในแถบที่อยู่ (label จาก Snapshot) → threads.com/@ngernduangold
+2. กันซ้ำ: F5 → pagedown → Snapshot(vision) ดู timestamp โพสต์บนสุดที่ไม่ใช่ปักหมุด — ถ้าเป็นของวันนี้ → หยุด
+3. แคปชั่น: ห้ามพิมพ์ตรง (คีย์บอร์ดไทยพัง) → Clipboard set แคปชั่น → คลิก "เธรดใหม่" → ctrl+v → เช็ค value จาก Snapshot ต้อง verbatim
+4. การ์ด link preview: คลิกปุ่ม "ลบออก" (X บนการ์ด)
+5. คลิก "แนบสื่อ" → รันทันที: cmd /c "ping -n 3 127.0.0.1 > nul & powershell -NoProfile -ExecutionPolicy Bypass -File C:\Users\nL_ku\ngernduangold-site\tools\picker_fill.ps1 -FilePath <ไฟล์>" → ต้องได้ SETTEXT_OK;IDOK_CLICKED + DIALOG_CLOSED_OK
+6. Snapshot เห็น thumbnail → คลิก "โพสต์" → รอ 9 วิ → Snapshot เห็นโพสต์ใหม่ "x นาที" บนโปรไฟล์ → ledger ตามปกติ
+ระวัง: แอป ChatGPT/Codex ชอบเด้งแย่ง foreground — ถ้าหน้าจอเปลี่ยนเป็นแอปอื่น ให้ Esc แล้ว App switch กลับ ห้ามคลิกอะไรในแอปนั้น (โดยเฉพาะเมนู "รีเซ็ตได้ 1 ครั้ง")
+
+## FALLBACK B (ล้มเหลวทุกทางเกิน 2 รอบ)
+พิมพ์แคปชั่นค้างไว้ใน composer แล้วแจ้งเจ้าของ: "รบกวนแนบไฟล์ <ชื่อไฟล์> แล้วกดโพสต์" — ห้ามกดโพสต์เองถ้ายังไม่มีวิดีโอ
 
 ## ห้าม
 - โพสต์ซ้ำ / โพสต์โดยไม่มีวิดีโอ / แก้แคปชั่นเอง
