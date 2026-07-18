@@ -24,6 +24,7 @@
 - 1 คลิป = 1 คำถามที่คนค้นจริง
 - ห้ามระบุตัวเลขดอกเบี้ย
 - ใส่ disclosure ให้ครบ: ข้อมูลเพื่อการศึกษา, มีลิงก์พันธมิตรเมื่อมี, และผลิตด้วย AI
+- **UTM บังคับ (เพิ่ม 17 ก.ค. — แก้ปัญหาคลิก 58% วัดแหล่งไม่ได้)**: ลิงก์เว็บทุกจุดที่พิมพ์เป็น URL เต็มได้ ให้แนบ `?utm_source=<ช่อง>&utm_medium=<ตำแหน่ง>` เช่น YouTube description → `?utm_source=yt&utm_medium=desc` · คอมเมนต์ FB → `?utm_source=fb&utm_medium=comment` · Threads → `?utm_source=threads&utm_medium=post` (ช่องที่พิมพ์ลิงก์ไม่ได้เช่น bio ให้ใช้ URL bio กลางที่ตั้งค่าแล้ว)
 
 ## 5. จุดวัดผล
 

@@ -17,3 +17,10 @@
 - Cowork ยืนยัน live: `<lastmod>2026-07-18</lastmod>` ปรากฏ **2 จุดพอดี** ตรง 2 URL เป้า (credit-card-salary-30000-2026, car-still-installment-loan-2026) · design self-healing ผ่าน
 - งานมือคงเหลือของเจ้าของ (ทางเร่งที่เร็วกว่า): กด Request indexing 2 URL ใน GSC (~2 นาที)
 - ระบบ: bridge extension ⇄ แอป Claude ยังหลุด (side panel ล็อกอินแล้ว) — ทางแก้ที่แนะ: รีสตาร์ตแอป Claude desktop 1 ครั้ง
+
+## ภาคผนวก 2: Request indexing สำเร็จแล้ว (17 ก.ค. 21:33 โดย Cowork)
+- Cowork กด "Request indexing" ใน GSC UI สำเร็จ **ทั้ง 2 URL** ผ่าน Windows-MCP (session จริงของเจ้าของ ไม่แตะ login):
+  - /car-still-installment-loan-2026 → dialog "Indexing requested" 21:29 ✓
+  - /credit-card-salary-30000-2026 → dialog "Indexing requested" 21:33 ✓
+- ทั้งคู่สถานะ "URL is on Google / Page is indexed" อยู่แล้ว → คำขอนี้ = เร่ง recrawl หน้าเวอร์ชันใหม่เข้า priority queue
+- งาน GSC ปิดสมบูรณ์ ไม่เหลือขั้นตอนมือของเจ้าของ
