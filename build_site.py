@@ -98,6 +98,20 @@ for _tslug, _ttt, _ttd, _tog in _TOOL_PAGES:
     open(f"{OUT}/{_tslug}.html", "w", encoding="utf-8").write(
         _dc.replace("</head>", _dc_inject + "</head>", 1))
 
+# Standalone SEO supporting/comparison pages authored as root-level HTML.
+# Their head metadata is complete in the source, so copy them without injection.
+_SEO_STANDALONE = [
+    "car-pawn-not-paid-off",
+    "old-car-financing-20years",
+    "credit-card-salary-30000",
+    "loan-approval-compare",
+]
+for _sslug in _SEO_STANDALONE:
+    _ssrc = f"{_sslug}.html"
+    if not os.path.exists(_ssrc):
+        raise SystemExit(f"BUILD ABORTED: SEO page {_ssrc} missing")
+    shutil.copy2(_ssrc, f"{OUT}/{_ssrc}")
+
 # Canonical lowercase provider codes so GA4 provider/campaign never splits one provider into
 # 'Srisawad' vs 'srisawad' vs 'ศรีสวัสดิ์'. Category aliases collapse to their brand:
 # debt = HappyCash (รวมหนี้) product, personalloan = KTC PROUD product.
@@ -2503,7 +2517,7 @@ contact_body="""<h1>ติดต่อ เงินเดือนสมอง�
 open(f"{OUT}/contact.html","w",encoding="utf-8").write(head("ติดต่อเรา | "+SITE,"ติดต่อ เงินเดือนสมองทอง ผ่านช่องทางโซเชียล Facebook Threads Instagram TikTok YouTube และหน้าลิงก์รวม สอบถาม/เสนอแนะเรื่องการเงินมนุษย์เงินเดือน","contact.html",[])+f'<main class="wrap">{contact_body}</main>'+FOOTER)
 
 # sitemap + robots
-urls=[("",("1.0")),("links","0.9"),("quiz","0.9"),("debt-calculator","0.8"),("debt-health-check","0.9"),("refinance-savings-calculator","0.8"),("debt-freedom-clock","0.8"),("workshop-hr","0.5"),("debt-letter-kit","0.8"),("about.html","0.4"),("contact.html","0.4"),("disclaimer.html","0.3")]+[(s,"0.9" if s in {"debt-consolidation-2026.html","pay-off-credit-card-debt-2026.html","title-loan-2026.html"} else "0.8") for s,*_ in ART]
+urls=[("",("1.0")),("links","0.9"),("quiz","0.9"),("debt-calculator","0.8"),("debt-health-check","0.9"),("refinance-savings-calculator","0.8"),("debt-freedom-clock","0.8"),("workshop-hr","0.5"),("debt-letter-kit","0.8"),("about.html","0.4"),("contact.html","0.4"),("disclaimer.html","0.3")]+[(_s,"0.8") for _s in _SEO_STANDALONE]+[(s,"0.9" if s in {"debt-consolidation-2026.html","pay-off-credit-card-debt-2026.html","title-loan-2026.html"} else "0.8") for s,*_ in ART]
 sm='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
 _LASTMOD_MIN = {"car-still-installment-loan-2026": "2026-07-18", "credit-card-salary-30000-2026": "2026-07-18"}  # SEO-strike recrawl hint; BUILD_DATE overtakes on later deploys
 for u,pr in urls:
