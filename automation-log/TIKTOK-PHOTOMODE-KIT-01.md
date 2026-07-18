@@ -1,6 +1,6 @@
 # TikTok Photo-mode Kit 01
 
-ใช้ภาพต้นฉบับจาก `C:\Users\nL_ku\Downloads\ngernduangold-pin-1.png` ถึง `ngernduangold-pin-12.png` โดยแต่ละภาพใช้หนึ่งครั้ง
+ใช้ภาพต้นฉบับทั้ง 12 ใบจากโฟลเดอร์ Downloads โดยแต่ละภาพใช้หนึ่งครั้ง
 
 ## ชุด 1 — ปลดหนี้เริ่มยังไง
 

@@ -9,6 +9,8 @@ SITE = "เงินเดือนสมองทอง"
 TAGLINE = "การเงินมนุษย์เงินเดือน · บัตรเครดิต ออมเงิน ลงทุน ย่อยง่าย"
 KRUNGSRI = "https://atth.me/00dayn002a0x"
 KEPT = "https://atth.me/00d9uk002a0x"
+KTC_CARD = "https://atth.me/go/PeCbnOcY"
+LADY_TITANIUM = "https://atth.me/go/sdI3wlH5"
 GSC_VERIFY = os.environ.get("SITE_GSC_VERIFY","")  # GSC URL-prefix HTML-tag verification for ngernduangold.com (public token, NOT a secret)
 GSC_META = '<meta name="google-site-verification" content="'+GSC_VERIFY+'">' if GSC_VERIFY else ''
 GA_ID = os.environ.get("SITE_GA","")
@@ -121,6 +123,7 @@ for _sslug in _SEO_STANDALONE:
 # debt = HappyCash (รวมหนี้) product, personalloan = KTC PROUD product.
 PROVIDER_CANON = {
     "krungsri": "krungsri", "kept": "kept",
+    "ktccard": "ktccard", "ladytitanium": "ladytitanium",
     "srisawad": "srisawad", "ศรีสวัสดิ์": "srisawad",
     "car4cash": "carforcash", "carforcash": "carforcash",
     "ktcpheboom": "ktcphboom", "ktcphboom": "ktcphboom",
@@ -709,6 +712,7 @@ body4=f"""<h1 id="top">บัตรเครดิตอนุมัติง่
 <ul><li><b>รายได้ประจำ</b> ถึงเกณฑ์ขั้นต่ำของบัตร</li><li><b>ความมั่นคงของงาน</b> อายุงาน/ความต่อเนื่องของรายได้</li><li><b>ประวัติเครดิตบูโร</b> จ่ายหนี้ตรงเวลา ไม่มีค้างชำระ</li><li><b>ภาระหนี้ปัจจุบัน</b> เทียบกับรายได้ (DSR)</li><li><b>เอกสารครบถ้วน</b> ถูกต้อง ตรงกับข้อมูลที่กรอก</li></ul>
 <h2 id="pick">เลือกบัตรที่ “เกณฑ์พอดีตัว” = โอกาสผ่านสูงขึ้น</h2>
 <p>หลักง่าย ๆ คือ อย่าเล็งบัตรพรีเมียมที่เกณฑ์รายได้สูงเกินเงินเดือนตัวเอง เลือกใบที่เกณฑ์รายได้ใกล้เคียงหรือต่ำกว่ารายได้เราเล็กน้อย โอกาสอนุมัติจะสูงกว่ามาก</p>
+{cta('ktccard',KTC_CARD,'cceasy','บัตรเครดิต KTC — สมัครออนไลน์ เช็กเกณฑ์รายได้ที่หน้าสมัคร →')}
 <h2 id="krungsri">ทำไมบัตรเครดิตกรุงศรีเหมาะกับใบแรก</h2>
 <p>กรุงศรีมีบัตรหลายระดับที่เกณฑ์รายได้เริ่มต้นไม่สูง สมัครออนไลน์ได้ครบขั้นตอน และมีตัวเลือกเงินคืน/คะแนนให้เลือกตามไลฟ์สไตล์ จึงเป็นตัวเลือกยอดนิยมสำหรับคนทำบัตรใบแรก</p>
 {cta('Krungsri',KRUNGSRI,'easy-approval','ตรวจคุณสมบัติ + สมัครตรงกับ Krungsri →')}
@@ -2653,6 +2657,8 @@ links_body = hub_style + f'''<div class="hub">
 
 <div class="hubsec" id="cards">💳 อยากได้บัตรเครดิต<small>เงินคืน/ของกำนัล · สมัครออนไลน์ รู้ผลไว</small></div>
 {bimg("cards")}{bcta(KRUNGSRI,"krungsri","💳 สมัครบัตรเครดิต Krungsri","เงินคืนสูง · สมัครออนไลน์ รับของกำนัล")}
+{bcta(KTC_CARD,"ktccard","💳 สมัครบัตรเครดิต KTC — สมัครออนไลน์ ดูโปรบัตรทุกใบ","เช็กรายละเอียดและเงื่อนไขล่าสุดที่หน้าสมัคร")}
+{bcta(LADY_TITANIUM,"ladytitanium","💳 Krungsri Lady Titanium — บัตรสำหรับผู้หญิง สมัครออนไลน์","เช็กรายละเอียดและเงื่อนไขล่าสุดที่หน้าสมัคร")}
 <button class="morebtn" data-basket="cards" data-label="ดูบัตรตามเคสของคุณ (5 แบบ) ▾">ดูบัตรตามเคสของคุณ (5 แบบ) ▾</button>
 <div class="morewrap" data-basket="cards">
 <p class="hublbl">เลือกเคสของคุณ (อ่าน + ลิงก์สมัครในบทความ):</p>

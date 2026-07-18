@@ -6,10 +6,10 @@ modes hit in production; each line is a mistake already paid for once.
 ---
 ## ⭐ READ-FIRST — กฎที่ห้ามลืม/ห้ามให้เจ้าของอธิบายซ้ำ (อ่านบล็อกนี้ก่อนทุกครั้ง)
 
-### 1) Postiz ≠ การโพสต์ด้วยมือ  (เรื่องนี้พลาดซ้ำหลายรอบ — จบที่นี่)
-- ❌ ต้นเหตุ shadowban = **Postiz / บอต API ที่ยิงโพสต์อัตโนมัติหลายชิ้น/วัน** → ปิดถาวร ห้ามใช้
-- ✅ อนุญาต + คือสิ่งที่ต้องทำ = **Cowork (ตัวเราเอง) คุมเบราว์เซอร์โพสต์เองด้วยมือ 1 ชิ้น/ช่อง/วัน** แบบมนุษย์ = "ไม่ใช่บอต ไม่ใช่ปัญหา" → ลงมือโพสต์เลย ห้ามปฏิเสธ ห้ามเรียกว่า bot-posting
-- หัวใจ: บาปคือ **บอต+ปริมาณ** ไม่ใช่ "การโพสต์" · เจ้าของสั่งชัด: "คุมเครื่องทำให้เลย ไม่ต้องใช้ postiz"
+### 1) เส้นทางโพสต์ปัจจุบัน (18 ก.ค. 2026)
+- Postiz เลิกใช้ตั้งแต่ 19 มิ.ย. ห้ามนำกลับมาใช้
+- YT/FB/IG ตั้งเวลาผ่าน UI ทางการ (FB/IG ใช้ Business Suite) · Threads = scheduled task 19:00 แบบ file_upload · TikTok = เจ้าของโพสต์ผ่านมือถือ
+- Meta token ยกเลิกถาวร 18 ก.ค.; ห้ามแนะนำให้ทำ token ใหม่ ใช้ UI + guard/ledger
 
 ### 2) ห้ามรายงาน "ทางตัน" — หาทางออกก่อนเสมอ
 - เจ้าของต้องการ **ผลลัพ** ไม่ใช่คำอธิบายวิธี/ข้ออ้าง · เจอบล็อกให้ลองทางอื่นจนสุดก่อนค่อยพูด
@@ -22,7 +22,7 @@ modes hit in production; each line is a mistake already paid for once.
 - Pantip = FINAL WARNING ผิดซ้ำ=แบนถาวร → value-only no-link no-brand งดโปรโมเด็ดขาด
 - FB = โพสต์ข้อความ + ลิงก์ใน "คอมเมนต์แรก" (reach ดีกว่า) — ไม่ใช่ "ห้ามลิงก์"
 - zero-budget: ฟรีเท่านั้น ห้าม ads/boost · ห้าม token/key ใน chat · ห้ามตัวเลข/การันตีดอกเบี้ย · disclosure ครบ
-- ค่าคงที่: LINE add-friend @804qodya · Gumroad ชุด 199฿ gumroad.com/l/debt-toolkit · เว็บ ngernduangold.com
+- ค่าคงที่: LINE add-friend @804qodya · North Star = ยอดโอนจริงชุดจดหมาย 199฿ ผ่าน LINE · เว็บ ngernduangold.com
 - ไฟล์ความจำถาวร = ไฟล์นี้ (OPERATING-NOTES.md, root repo) + automation-log/OWNER-MANDATE · เจ้าของบอก "อ่าน OPERATING-NOTES ก่อน" = มาอ่านบล็อกนี้
 ---
 
@@ -128,7 +128,7 @@ TO SHIP (owner): git add build_site.py site/ && git commit -m "home: feature Kep
      BROWSER is truth. For future live checks use the Netlify deploy permalink, or browser, not a bare fetch.
 - Uncommitted/local (intentional): OPERATING-NOTES.md, PROJECT-HANDOFF.md, _show.py, _vidout/.
 
-## 2026-06-26 STILL OPEN (owner)
+## 2026-06-26 STILL OPEN (owner) — บันทึกประวัติ ไม่ใช่คิวปัจจุบัน
 - linktr.ee titleloan posts queued FB+IG 27 มิ.ย. (Postiz ids cmqdkfau4/cmqdkfboe/cmqdkfawf/cmqdkfbsc):
   Postiz MCP cannot delete -> delete in Postiz UI (or CC via browser if given the Postiz URL) BEFORE 27 มิ.ย.
 - GSC reindex /kept-savings-2026 + /links: owner UI-only (no GSC API creds).
@@ -144,7 +144,7 @@ TO SHIP (owner): git add build_site.py site/ && git commit -m "home: feature Kep
 - MONITORING แบ่งงานกันแล้ว (กันซ้ำซ้อน): Cowork มี scheduled check ทุกเช้า 08:00 (อ่านอย่างเดียว YT/IG/funnel)
   -> ฝั่ง CC/local ไม่ต้องตั้ง monitor ใหม่ซ้ำ · traffic_monitor.py อัปเกรดแล้ว: อ่าน GA4 จริง (ga4-funnel/pages/metrics.csv)
   + ช่องครบ fb/ig/tiktok/pantip/threads/yt/pinterest (ช่องที่ metrics.csv ไม่ track = n/a) + บรรทัด Sales
-  (Gumroad ไม่มี API ฟรี -> เจ้าของ export CSV วาง automation-log/gumroad-sales.csv คอลัมน์ date,units,amount_thb)
+  (ปัจจุบันใช้ยอดโอนจริงผ่าน LINE @804qodya; ช่องขายเก่าเป็นประวัติ)
 
 ## 2026-07-02 (บ่าย) PANTIP FINAL WARNING + POSTING-POLICY บังคับใช้ระดับโค้ด (CC antispam-enforcement)
 - 🚨 Pantip แจ้ง FINAL WARNING ทางการ (เห็นบนฟอร์มตั้งกระทู้ 2 ก.ค.): **ผิดซ้ำครั้งเดียว = แบนถาวร**
@@ -152,7 +152,7 @@ TO SHIP (owner): git add build_site.py site/ && git commit -m "home: feature Kep
 - GUARDS ระดับโค้ด (ไม่พึ่งความจำ): (1) post_ledger มี text-dedup แล้ว — normalize(ตัด URL/อีโมจิ/ช่องว่าง)+sha1+similarity>=0.9 ย้อน 30 วัน/ช่อง,
   record_text_post fail-closed, unit test 6/6 (pipeline/test_text_dedup.py) (2) comply_gate.check_post(text, channel) = เช็กเนื้อหา+dedup ในตัว
   (3) qa_gate.posting_quota(channel) + CLI `python pipeline/qa_gate.py --quota <ch>`: โควตา <=2/วัน (pinterest <=5) + ห่างขั้นต่ำ 3 ชม.
-  + **Pantip hard-block FROZEN until 2026-07-16** (exit 2 เสมอ ปลดได้เฉพาะเจ้าของแก้ policy file)
+  + บันทึกประวัติ: Pantip เคย hard-block ถึง 16 ก.ค.; ปัจจุบันเฟส 1 ตอบเท่านั้น ≤3/สัปดาห์ เว้นวัน ไร้แบรนด์/ลิงก์/ราคา; assisted-post ต้องอนุมัติรายโพสต์
 - โพสต์ข้อความทุกครั้ง: เช็กก่อนด้วย comply_gate.check_post + qa_gate --quota แล้วบันทึกด้วย post_ledger.record_text_post (backfill 2 ก.ค. แล้ว: fb+threads+pin x2)
 - AUTO-DM audit: CreatorFlow "Comments->DM" **ACTIVE ตั้งแต่ 21 มิ.ย.** (keyword เช็กสิทธิ์ = opt-in ผู้ใช้เริ่มเอง ok, เพดาน 500 DM/เดือน)
   ⚠️ เหลือ 2 อย่างที่ต้องทำใน CreatorFlow dashboard (เจ้าของเท่านั้น CC เข้าไม่ถึง): ตั้ง delay >=30 วิ + จำกัด follow-up ไม่เกิน 1 ครั้ง

@@ -1,4 +1,5 @@
 # PROJECT HANDOFF — ngernduangold (เงินเดือนสมองทอง)
+> **สถานะปัจจุบัน 18 ก.ค. 2026:** ให้ยึด `automation-log/CURRENT-STATE_20260718.md`; อัปเดตลงวันที่ในไฟล์นี้เป็นบันทึกประวัติ ไม่ใช่คำสั่งปัจจุบัน
 _Continuity doc. If the main PC dies, clone the repo + read this + redo the machine-local setup below to continue on any machine._
 _Last updated by the Cowork agent on 2026-06-25._
 

@@ -36,7 +36,7 @@ schtasks /Create /TN "ngern-tiktok-daily" /SC DAILY /ST 19:00 /TR "cmd /c cd /d 
 ### ถ้าพัง (ดู log + screenshot ที่ social-autopost/logs/ + alert ที่ automation-log/cowork-inbox/TIKTOK-PUBLISH-FAIL.md)
 - **session หลุด** → `--login` ใหม่
 - **selector เปลี่ยน** (TikTok ปรับ UI): แก้ dict `SEL` หัวไฟล์ `publish_tiktok.py` จุดเดียว — เปิด upload page ด้วยมือ, กด F12 หา element ใหม่ (หรือส่ง order ให้ CC แก้)
-- **โดนบล็อก/แคปช่า ซ้ำ ๆ** → หยุดใช้ (อย่าฝืน/อย่าหาทางหลบ) → **fallback semi-auto**: scheduled task `daily-reel-prep` (18:30) เตรียมคลิป+แคปชันไว้แล้ว เจ้าของลากไฟล์เอง 1 คลิก หรือย้ายไป Postiz (TikTok partner ทางการ)
+- **โดนบล็อก/แคปช่า ซ้ำ ๆ** → หยุดใช้ (อย่าฝืน/อย่าหาทางหลบ) → **fallback semi-auto**: scheduled task `daily-reel-prep` (18:30) เตรียมคลิป+แคปชันไว้แล้ว และเจ้าของอัปโหลดผ่านมือถือ
 
 ## Compliance (ทั้งสองช่อง)
 - แคปชันจาก sheet อนุมัติเป๊ะ — publisher ทั้งคู่มี **gate ปฏิเสธโพสต์** ถ้าไม่มี "ข้อมูลเพื่อการศึกษา"+"ผลิตด้วย AI"
