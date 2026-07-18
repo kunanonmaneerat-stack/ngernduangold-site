@@ -110,7 +110,11 @@ for _sslug in _SEO_STANDALONE:
     _ssrc = f"{_sslug}.html"
     if not os.path.exists(_ssrc):
         raise SystemExit(f"BUILD ABORTED: SEO page {_ssrc} missing")
-    shutil.copy2(_ssrc, f"{OUT}/{_ssrc}")
+    # head metadata (canonical/og) ครบในไฟล์ต้นทางแล้ว — inject เฉพาะ GA_SNIPPET
+    # (GA4 + affiliate_click listener) เพื่อผ่าน smoke gate เหมือนหน้าอื่น (fix 18 ก.ค.)
+    _ssc = open(_ssrc, encoding="utf-8").read()
+    open(f"{OUT}/{_ssrc}", "w", encoding="utf-8").write(
+        _ssc.replace("</head>", GA_SNIPPET + "</head>", 1))
 
 # Canonical lowercase provider codes so GA4 provider/campaign never splits one provider into
 # 'Srisawad' vs 'srisawad' vs 'ศรีสวัสดิ์'. Category aliases collapse to their brand:
