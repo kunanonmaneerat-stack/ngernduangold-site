@@ -1,5 +1,7 @@
 # 🔒 ngernduangold — Posting dedup protocol (กันโพสต์ซ้ำ / รับคำสั่งแทรก)
 
+> **สถานะ 18 ก.ค. 2026:** เนื้อหา Postiz ด้านล่างเป็นประวัติระบบเก่า ห้ามใช้เป็น runbook ปัจจุบัน. ใช้ YT/FB/IG UI, Threads task 19:00 (file_upload), TikTok เจ้าของมือถือ และ guard/ledger; Postiz เลิกใช้ตั้งแต่ 19 มิ.ย.
+
 > สร้าง 2026-06-15 หลัง adversarial audit (3 reviewer). ทั้ง 3 ยืนยัน: **ก่อนหน้านี้ระบบโพสต์ซ้ำได้จริง** —
 > ad-hoc (`type=now`) กับ scheduled loop **มองไม่เห็นกัน**, และ Postiz **ลบโพสต์ที่ schedule แล้วไม่ได้**
 > → ถ้าซ้ำหลุดไป = ยิงแน่นอน แก้ได้ทางเดียวคือ Cowork ลบมือใน Postiz web UI ก่อนถึงเวลา.

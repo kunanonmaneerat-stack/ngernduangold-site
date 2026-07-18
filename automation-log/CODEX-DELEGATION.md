@@ -24,6 +24,7 @@
 - ⛔ ห้ามตลอดไป: git push · git add -A · แตะ token/secret · โพสต์ Pantip · ลบไฟล์นอก spec · แตะ build_site.py เกิน deliverable
 
 ## บทเรียนที่ Codex ต้องรู้ (ใส่ใน spec ทุกครั้งที่เกี่ยว)
+- **งานหน้าเว็บทุก spec**: ต้องทดสอบจำลอง env Netlify ก่อนส่ง: `SITE_GA=G-17PPE0M1B8 python build_site.py` แล้ว `python tools/postdeploy_smoke.py --src site` ต้อง PASS ทุกหน้า (บทเรียน 18 ก.ค.: Codex12 ข้าม smoke → deploy โดนบล็อกทั้งเว็บ)
 - เครื่องนี้ไม่มีคำสั่ง `py` ใน shell ของ Codex → ใช้ `python` (hermes venv)
 - console เป็น cp874 → ห้าม print emoji/ไทยตรงๆ ใน python stdout (ใช้ ensure_ascii หรือเขียนลงไฟล์)
 - git จะเตือน LF→CRLF = ปกติ ไม่ใช่ error

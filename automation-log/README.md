@@ -1,6 +1,6 @@
 # automation-log — proof-of-run ของ ngernduangold routines
 
-**ทำไมมี:** automation รันบน Claude Code desktop scheduler (ไม่ใช่ GitHub Actions — routine ต้องใช้ browser+Postiz/Meta MCP+ไฟล์ local). Cowork มองไม่เห็น scheduler นั้น → โฟลเดอร์นี้คือ **สะพาน** ให้ทุกรอบที่ routine fire ถูกบันทึกลง GitHub (Cowork เปิดดูได้).
+**ทำไมมี:** automation รันบน desktop scheduler (ไม่ใช่ GitHub Actions; บาง routine ต้องใช้ browser+ไฟล์ local). โฟลเดอร์นี้คือ **สะพาน** บันทึก proof-of-run. เส้นโพสต์ปัจจุบัน: YT/FB/IG ตั้งเวลาผ่าน UI, Threads task 19:00 (file_upload), TikTok เจ้าของมือถือ; Meta token ยกเลิกถาวร 18 ก.ค. 2026.
 
 **ดูสถานะล่าสุด:** [`latest.md`](latest.md) — ตาราง last-run + status ต่อ routine
 **ประวัติเต็ม:** `YYYY-MM.jsonl` — 1 บรรทัด/รอบ (`{ts, routine, status, summary, metrics}`)
