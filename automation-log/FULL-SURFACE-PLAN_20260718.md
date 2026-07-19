@@ -18,6 +18,7 @@
 | Instagram | Carousel จากพิน 12 ใบ | 🔜 19-20 ก.ค. | Cowork โพสต์ชุดแรก · แคปชั่นจาก pinterest METADATA |
 | Instagram | bio UTM | 🧍 เจ้าของ (มือถือเท่านั้น) | ลิงก์: ngernduangold.com/links?utm_source=ig&utm_medium=bio |
 | Facebook | Reels รายวัน | ✅ | ตั้งเวลา Business Suite |
+| Facebook | text post เสริม | ✅ เปิดใช้ 20 ก.ค. (เครื่อง knowledge-post เที่ยง) | task knowledge-post เที่ยง |
 | Facebook | comment-link ใต้โพสต์ | ✅ | task 21:30 + guard 3 ชั้น |
 | Facebook | แชร์ Reel เข้า Story | 🔜 19 ก.ค. พร้อม IG Story | Cowork (composer เดียวกันติ๊ก 2 ที่) |
 | Facebook | Groups (borrowed reach) | ⏸ ตัดสิน 27 ก.ค. | ต้องมี guardrail ก่อน (คิวตามผลปรึกษา) |
@@ -27,7 +28,7 @@
 | TikTok | bio | ⛔ ปล่อยตามเดิม (ตัดสินใจถาวร 18 ก.ค. — <1k ลิงก์กดไม่ได้) | — |
 | Threads | วิดีโอ 1/วัน 19:00 | ✅ | task threads-daily (file_upload) |
 | Threads | reply-link ใต้โพสต์ตัวเอง | ✅ เพิ่มแล้ว เริ่มพรุ่งนี้ | ในตัว threads-daily ข้อ 8 |
-| Threads | text post เสริม | 🔜 ประเมิน 22 ก.ค. | ถ้า video+reply รัน 3 วันไม่มีปัญหา ค่อยเพิ่ม (กัน over-post) |
+| Threads | text post เสริม | ✅ เปิดใช้ 20 ก.ค. (เครื่อง knowledge-post เที่ยง) | task knowledge-post เที่ยง |
 | Pinterest | 3-4 พิน/สัปดาห์ | ✅ | task อาทิตย์ 11:00 |
 | Pinterest | พินชี้ 4 หน้า SEO ใหม่ | ✅ เพิ่ม rotation แล้ว เริ่มพรุ่งนี้ | ในตัว pinterest-weekly |
 | LINE OA | auto-reply "ขอจดหมาย" + UTM | ✅ | live |
