@@ -22,6 +22,7 @@
 | Facebook | comment-link ใต้โพสต์ | ✅ | task 21:30 + guard 3 ชั้น |
 | Facebook | แชร์ Reel เข้า Story | 🔜 19 ก.ค. พร้อม IG Story | Cowork (composer เดียวกันติ๊ก 2 ที่) |
 | Facebook | Groups (borrowed reach) | ⏸ ตัดสิน 27 ก.ค. | ต้องมี guardrail ก่อน (คิวตามผลปรึกษา) |
+| Facebook เพจ 2 | "สินเชื่อธนาคารถูกกฎหมาย" (search-intent · Page ID 108620178544812) | ✅ เปิดใช้ 21 ก.ค. — bio/URL/ปกแก้แล้ว 19 ก.ค. ชื่อเดิมห้ามเปลี่ยน | task page2-loan-post อ./ศ. 13:10 (คลัง PAGE2-POSTS Codex23) · metric หลัก = คนทัก inbox |
 | TikTok | คลิปรายวัน | ✅ (มือถือเจ้าของ + nudge 19:01) | batch3 ไฟล์พร้อมใน reels/ |
 | TikTok | คอมเมนต์ปักหมุด CTA | ✅ เพิ่มใน nudge แล้ว | เจ้าของ 10 วิ/วัน หลังอัพ |
 | TikTok | photo-mode จากพิน | 🔜 สัปดาห์หน้า | Codex ทำ kit → เจ้าของอัพมือถือ |
