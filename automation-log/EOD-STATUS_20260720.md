@@ -24,3 +24,16 @@ YouTube UNKNOWN (token หมดอายุ) · IG BLOCKED (ไม่มี cre
 1. อ่าน timestamp ของข้อมูลก่อนตีความเป็นเวลาปัจจุบัน (พลาดบอก "ตี 1")
 2. FB group/identity ผูกกับ "โปรไฟล์/เพจ" ที่ active — สลับแล้วต้องสลับกลับ
 3. guard ที่ match กว้างเกิน (channel+date) ทำให้ผ่านทั้งที่ของจริงไม่ขึ้น — ต้อง match ให้เจาะจง type
+
+
+## ✅ อัปเดต ~20:05 — คลิป Threads โพสต์สำเร็จ (หลังเปิด Chrome ใหม่)
+เจ้าของชี้ว่า Chrome ปิดอยู่ → เปิด Chrome ใหม่ผ่าน Start-Process → extension reconnect → แท็บใหม่ได้ viewport เต็ม (780x538)
+แต่ file_upload วิดีโอยังไม่แนบเพราะ visibilityState=hidden (แท็บ Threads อยู่หลัง แท็บ FB เป็น active)
+→ SendKeys Ctrl+9 สลับไปแท็บ Threads (แท็บสุดท้าย) → visibilityState=visible → **วิดีโอแนบทันที (videos:1)**
+→ paste แคปชัน + กดโพสต์ → ยืนยันโปรไฟล์ "เช็กสุขภาพหนี้ 60 วิ" ขึ้น "1 นาที" · ledger source=cowork-manual-recovery
+**บทเรียนสำคัญ: Threads video ต้อง visibilityState=visible เท่านั้น — viewport เต็มยังไม่พอ · การสลับให้แท็บเป็น active tab (Ctrl+9) คือกุญแจ**
+
+## ❌ คอมเมนต์กลุ่ม FB (โพสต์ CozyPear5571) — ทำไม่ได้ถาวร
+เปิดหน้าจริง viewport เต็มแล้วเห็นชัด: **"ได้มีการปิดการแสดงความคิดเห็นไว้สำหรับโพสต์นี้"** (JS check เช้านี้ผิดเพราะข้อความอยู่นอก [role=article])
+→ โพสต์นี้คอมเมนต์ไม่ได้เลย ไม่ใช่ปัญหา identity/tab · fbgroup-listen พรุ่งนี้ต้องข้ามโพสต์นี้ หาโพสต์ที่คอมเมนต์เปิด
+→ ควรเพิ่มเช็ค "ปิดการแสดงความคิดเห็น" เข้า fbgroup-listen ก่อนร่าง (กันร่างเสียเปล่า)
