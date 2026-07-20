@@ -24,6 +24,16 @@ modes hit in production; each line is a mistake already paid for once.
 - zero-budget: ฟรีเท่านั้น ห้าม ads/boost · ห้าม token/key ใน chat · ห้ามตัวเลข/การันตีดอกเบี้ย · disclosure ครบ
 - ค่าคงที่: LINE add-friend @804qodya · North Star = ยอดโอนจริงชุดจดหมาย 199฿ ผ่าน LINE · เว็บ ngernduangold.com
 - ไฟล์ความจำถาวร = ไฟล์นี้ (OPERATING-NOTES.md, root repo) + automation-log/OWNER-MANDATE · เจ้าของบอก "อ่าน OPERATING-NOTES ก่อน" = มาอ่านบล็อกนี้
+
+### 4) ⚡ FLEET PATTERN — ผลิตของหลายชิ้นให้ใช้ agent ขนาน (พิสูจน์แล้ว 20 ก.ค. 2026)
+ที่มา: แนวคิด Fleet Engineering · pilot สำเร็จ (2 คลังคอนเทนต์พร้อมกัน 1 รอบ) รายละเอียด: automation-log/FLEET-ENGINEERING-ADAPT_20260720.md
+**ใช้เมื่อ:** ต้องผลิต deliverable อิสระ ≥2 ชิ้น (คลังคอนเทนต์ / สคริปต์ / ไฟล์จาก spec) ที่ไม่พึ่งผลของกันและกัน — แทนการรัน Codex/agent ทีละชิ้นเรียงกัน
+**วิธี (3 ขั้น):**
+1. **spawn ขนาน:** เรียก Agent tool (subagent_type=general-purpose) หลายตัวใน **ข้อความเดียว** (หลาย tool_use พร้อมกัน) · แต่ละ prompt ต้องครบในตัว: รูปแบบ output + path ไฟล์ + **กฎ compliance เต็ม** (ห้ามดอกเบี้ย/ค่าธรรมเนียม/%/บาท · ห้ามคำ อนุมัติ/ไม่เช็คบูโร/การันตี/รับรองผล · ห้ามชื่อธนาคาร · ห้าม URL ในโพสต์ · disclosure ครบ) + สั่ง **"ห้ามรัน git ใดๆ · เขียนไฟล์แล้ว return เนื้อหาทั้งหมดกลับมาในข้อความสรุป"**
+2. **MERGE GATE (Cowork ทำเอง ห้ามข้าม):** ตรวจทุกไฟล์ด้วย python จริง — นับแถว · grep คำต้องห้าม · เช็ก http/%/บาท · ตรวจ column integrity — **ห้ามเชื่อ self-report ของ agent** (มัน "รายงานว่าผ่าน" ได้แม้พลาด) ผ่านแล้วค่อย `git add <ไฟล์เจาะจง> && git commit` ทีเดียวโดย Cowork
+3. **wire เข้าเครื่อง:** ต่อ scheduled task ให้ไล่คลังใหม่ตามวันอัตโนมัติ (fallback) + copy SKILL.md ลง automation-log/_task_*_SKILL.md
+**ข้อจำกัดที่เจอจริง:** `isolation:"worktree"` **ใช้ไม่ได้** เพราะ CWD ของ Cowork (sandbox) ไม่ใช่ git repo (repo อยู่โฟลเดอร์ mount) → ใช้ pattern "return-content + orchestrator commit" แทน ได้ผลเดียวกันคือเลี่ยง .git/index.lock
+**เพดาน:** Fleet เร่งแค่การ **ผลิต/เขียน** ไม่ใช่การ **ยิงโพสต์** — anti-spam cadence คงเดิมทุกช่อง (โพสต์รัว=เจ็บ) · quality gate ต้องเข้มขึ้นตามปริมาณที่ผลิต
 ---
 
 ## Tool-call / session reliability
