@@ -631,8 +631,12 @@ def check_threads(target: date, item: dict[str, Any] | None) -> dict[str, str]:
                 continue
             if str(entry.get("channel", "")).casefold() != "threads":
                 continue
+            # กันสับสน: knowledge-post เที่ยงเป็น type=text ช่อง threads เหมือนกัน
+            # แต่ไม่ใช่คลิปรายวัน 19:00 — อย่านับ text เป็นหลักฐานว่าคลิปขึ้นแล้ว (บั๊ก 20 ก.ค.)
+            if str(entry.get("type", "")).casefold() == "text":
+                continue
             if wanted in json.dumps(entry, ensure_ascii=False):
-                return result("THREADS", "OK", f"Threads entry dated {wanted} found in post-ledger.jsonl.")
+                return result("THREADS", "OK", f"Threads clip entry dated {wanted} found in post-ledger.jsonl.")
     except OSError as exc:
         return result("THREADS", "UNKNOWN", f"Could not read post-ledger.jsonl: {type(exc).__name__}", "Ask Cowork/Threads profile.")
     prefix = clean_text(channel_caption(item, "threads"))[:30]
