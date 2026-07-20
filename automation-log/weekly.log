@@ -15,3 +15,38 @@ Sent to telegram home channel (chat_id: 8431211539)
 [2026-06-27T16:31:15] OK -> gsc-pages.csv | pages=0
 weekly growth review -> C:\Users\nL_ku\ngernduangold-site\automation-log\weekly-growth-20260627.md | sessions=204 conv=65
 [Sat 06/27/2026 16:32:09.29] run_weekly end exit=0 
+[Mon 07/20/2026 21:31:48.69] comply_gate_stitch scan (components\stitch) 
+
+SUMMARY: 0 file(s), 0 FAIL finding(s).
+[Mon 07/20/2026 21:31:48.83] run_weekly start 
+[2026-07-20T21:31:51] auth = OAuth token (secrets/ga4-token.json)
+[2026-07-20T21:31:56] OK -> ga4-metrics.csv | source=7 sessions=311 quiz=3 conv=33
+[2026-07-20T21:31:56] auth = OAuth token (secrets/ga4-token.json)
+[2026-07-20T21:31:59] OK -> ga4-pages.csv | pages=62
+[2026-07-20T21:31:59] auth = OAuth token (secrets/ga4-token.json)
+[2026-07-20T21:32:01] OK -> ga4-funnel.csv | quiz_start=2 -> quiz_complete=2 -> recommendation_view=2 -> affiliate_click=33
+[2026-07-20T21:32:02] auth = ga4-token.json
+[2026-07-20T21:32:02] GSC property = https://ngernduangold.com/
+[2026-07-20T21:32:02] OK -> gsc-queries.csv | queries=11
+[2026-07-20T21:32:03] OK -> gsc-pages.csv | pages=18
+ping skip: Command '['C:\\Users\\nL_ku\\AppData\\Local\\hermes\\hermes-
+weekly growth review -> C:\Users\nL_ku\ngernduangold-site\automation-log\weekly-growth-20260720.md | sessions=311 conv=33
+[Mon 07/20/2026 21:33:33.51] run_weekly end exit=0 
+[Mon 07/20/2026 21:34:15.45] comply_gate_stitch scan (components\stitch) 
+
+SUMMARY: 0 file(s), 0 FAIL finding(s).
+[Mon 07/20/2026 21:34:15.69] run_weekly start 
+[2026-07-20T21:34:18] auth = OAuth token (secrets/ga4-token.json)
+[2026-07-20T21:34:21] OK -> ga4-metrics.csv | source=7 sessions=311 quiz=3 conv=33
+[2026-07-20T21:34:21] auth = OAuth token (secrets/ga4-token.json)
+[2026-07-20T21:34:23] OK -> ga4-pages.csv | pages=62
+[2026-07-20T21:34:23] auth = OAuth token (secrets/ga4-token.json)
+[2026-07-20T21:34:25] OK -> ga4-funnel.csv | quiz_start=2 -> quiz_complete=2 -> recommendation_view=2 -> affiliate_click=33
+Sent to telegram home channel (chat_id: 8431211539)
+[2026-07-20T21:34:28] auth = ga4-token.json
+[2026-07-20T21:34:29] GSC property = https://ngernduangold.com/
+[2026-07-20T21:34:29] OK -> gsc-queries.csv | queries=11
+[2026-07-20T21:34:29] OK -> gsc-pages.csv | pages=18
+ping skip: Command '['C:\\Users\\nL_ku\\AppData\\Local\\hermes\\hermes-
+weekly growth review -> C:\Users\nL_ku\ngernduangold-site\automation-log\weekly-growth-20260720.md | sessions=311 conv=33
+[Mon 07/20/2026 21:36:00.21] run_weekly end exit=0 

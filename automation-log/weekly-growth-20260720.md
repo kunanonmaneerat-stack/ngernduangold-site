@@ -1,13 +1,13 @@
 # Weekly Growth Review — 20260720
 
-**ภาพรวม 28 วัน:** sessions=307 · conversion(affiliate_click)=33 · conv-rate=10.7% · quiz_start=3
+**ภาพรวม 28 วัน:** sessions=311 · conversion(affiliate_click)=33 · conv-rate=10.6% · quiz_start=3
 
 > ยัง cold-start (sessions < 500) — โฟกัส distribution (Threads/social/SEO index) ก่อน ตัวเลขจะแม่นขึ้นเมื่อทราฟฟิกเยอะพอ
 
 ## ช่องที่แปลงดี (ทุ่มเพิ่ม)
 | # | ช่อง | sessions | conv | conv-rate |
 |--|--|--|--|--|
-| 1 | direct | 228 | 30 | 13.2% |
+| 1 | direct | 232 | 30 | 12.9% |
 | 2 | fb | 33 | 2 | 6.1% |
 | 3 | pantip | 29 | 1 | 3.4% |
 | 4 | bing | 2 | 0 | — (n ต่ำ) |
@@ -21,7 +21,7 @@
 | # | หน้า | views | conv |
 |--|--|--|--|
 | 1 | kept savings | 23 | 26 |
-| 2 | links | 46 | 3 |
+| 2 | links | 48 | 3 |
 | 3 | title loan | 12 | 2 |
 | 4 | debt consolidation | 8 | 1 |
 | 5 | personal loan | 6 | 1 |
@@ -48,20 +48,20 @@
 หน้าได้ impression สูงสุด (โอกาสทราฟฟิก — ดันต่อ):
 | หน้า | imp | clicks | pos |
 |--|--|--|--|
-| https://ngernduangold.com/car still installment loan | 82 | 0 | 51.2 |
-| https://ngernduangold.com/credit card salary 30000 | 39 | 0 | 36.0 |
+| https://ngernduangold.com/car still installment loan | 88 | 0 | 52.1 |
+| https://ngernduangold.com/credit card salary 30000 | 47 | 0 | 35.5 |
 | https://ngernduangold.com/credit card salary 30000 | 12 | 0 | 27.5 |
-| https://ngernduangold.com/debt restructuring | 5 | 0 | 9.4 |
-| https://ngernduangold.com | 3 | 0 | 1.0 |
-| https://ngernduangold.com/freelance loan | 2 | 0 | 2.5 |
-| https://ngernduangold.com/how to save money | 2 | 0 | 6.5 |
-| https://ngernduangold.com/links | 2 | 0 | 3.0 |
+| https://ngernduangold.com/debt restructuring | 6 | 0 | 9.5 |
+| https://ngernduangold.com | 4 | 0 | 1.2 |
+| https://ngernduangold.com/credit card salary 20000 | 3 | 0 | 4.0 |
+| https://ngernduangold.com/freelance loan | 3 | 0 | 2.3 |
+| https://ngernduangold.com/credit card salary 15000 | 2 | 0 | 4.0 |
 
 หน้า indexed แต่ยังอ่อน (impression>0, อันดับ >20 -> เสริมเนื้อหา/internal link):
 | หน้า | imp | clicks | pos |
 |--|--|--|--|
-| https://ngernduangold.com/car still installment loan | 82 | 0 | 51.2 |
-| https://ngernduangold.com/credit card salary 30000 | 39 | 0 | 36.0 |
+| https://ngernduangold.com/car still installment loan | 88 | 0 | 52.1 |
+| https://ngernduangold.com/credit card salary 30000 | 47 | 0 | 35.5 |
 | https://ngernduangold.com/credit card salary 30000 | 12 | 0 | 27.5 |
 
 ทำต่อ: Google เห็นหน้าเหล่านี้แล้วแต่อันดับยังต่ำ — เพิ่ม internal link จากหน้าอื่น + เสริมเนื้อหา/คีย์ที่ตรง
