@@ -8,9 +8,15 @@
 |---|---|---|
 | A. รถผ่อนไม่หมด จำนำได้ไหม | `car-still-installment-loan-2026.html` | 92 imp · pos 52 |
 | B. บัตรเครดิต เงินเดือน 30000 | `credit-card-salary-30000-2026.html` | 55 imp · pos 36 |
+| C. **debt-letter-kit (หน้าขาย 199฿ North Star)** | `debt-letter-kit.html` (ถ้า slug ไม่มี .html ในโค้ด ใช้ตามจริง) | 🔴 **orphan — Google "unknown", ไม่มี referring page เลย** ต้องมีลิงก์ชี้เข้าด่วน |
 
 ## 📥 หน้าที่ให้เพิ่มลิงก์ออก (source = หน้าที่ติดหน้า 1 แล้ว มี authority · จาก gsc-pages.csv)
 เพิ่ม **ลิงก์ contextual 1 อัน/หน้า** (ไม่เกินนี้ กัน over-optimization) จาก source → target ตามความเกี่ยวข้องหัวข้อ:
+
+**🔴 เข้าเป้าหมาย C (debt-letter-kit) — สำคัญสุด แก้ orphan (เพิ่ม 21 ก.ค. 18:50):**
+- หน้าเนื้อหาหนี้ที่พูดถึง "เจรจา/ลดดอกเบี้ย/จดหมายถึงเจ้าหนี้" → เพิ่มลิงก์ไป debt-letter-kit เช่น `debt-consolidation-2026.html` · `debt-restructuring-2026.html` · `pay-off-credit-card-debt-2026.html` · `debt-clinic-sam-2026.html` (เลือก 3-4 หน้าที่ context เข้ากับ "ตัวอย่างจดหมายเจรจาหนี้")
+- anchor แนะนำ: **"ตัวอย่างจดหมายขอลดดอกเบี้ย/เจรจาหนี้"** หรือ **"ชุดจดหมายเจรจาเจ้าหนี้"** (ไม่มีคำต้องห้าม ไม่มีราคาในลิงก์)
+- **เป้าหมาย: ให้ debt-letter-kit พ้นสถานะ orphan** (มี referring page ≥3) เพื่อให้ Google crawl+index หน้าขายจริง
 
 **เข้าเป้าหมาย A (รถ/สินเชื่อมีหลักประกัน):**
 - `debt-restructuring-2026.html` (pos 9.5) → A

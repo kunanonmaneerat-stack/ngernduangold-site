@@ -33,3 +33,21 @@
 
 ## ⏱️ ความคาดหวังที่สมจริง
 เว็บอายุไม่กี่สัปดาห์ อันดับ 35–52 บน query แข่งสูง = ปกติ · การขยับเข้าหน้า 1 (top 10) วัดเป็น **6–12 สัปดาห์** ถ้าทำ internal link + freshness + สะสมหน้าคุณภาพต่อเนื่อง · ไม่มีทางลัดที่งบศูนย์ — นี่คือเหตุผลที่เลือก "patient SEO"
+
+## 🔴 UPDATE 18:45 — เช็ก index จริงใน GSC (Cowork ลงมือ) เจอปัญหาใหญ่กว่าอันดับ
+GSC Page indexing: **index แล้ว 30 หน้า · ยังไม่ index 89** (Discovered-not-indexed 83 · Crawled-not-indexed 2 · Alternate-canonical 4=.html twin ปกติ)
+
+ตรวจรายหน้าสำคัญด้วย URL Inspection:
+| หน้า | สถานะจริง | ทำ |
+|---|---|---|
+| /debt-letter-kit (**North Star 199฿**) | 🔴 "unknown to Google" + **orphan (ไม่มี referring page) + ไม่อยู่ใน sitemap ที่ Google เห็น** | ✅ request indexing แล้ว |
+| /loan-cash-2026 (money hub) | 🟠 discovered-not-indexed (มีลิงก์เข้าแล้ว แต่ authority ไม่พอ) | ✅ request indexing แล้ว |
+| /debt-health-check | ✅ indexed (แค่ 0 impression) | ข้าม |
+| /debt-calculator | ✅ indexed (แค่ 0 impression) | ข้าม |
+
+**ข้อค้นพบชี้ขาด:**
+1. **debt-letter-kit หน้าขายจริง 199฿ Google มองไม่เห็นเลย + เป็นหน้ากำพร้า** — ต้องมี internal link ชี้เข้า (สำคัญกว่า 2 target เดิม) → เพิ่มเข้า CC order internal-link รอบหน้า
+2. "0 impression" ≠ "ไม่ index" — หลายหน้า index แล้วแต่ยังไม่ติดอันดับ = ยืนยัน bottleneck คือ authority/เวลา ตรงกับยุทธศาสตร์ patient SEO
+3. request indexing ช่วย nudge หน้า money ที่ discovered-not-indexed ได้ (ทำได้งบศูนย์ · quota ~10-12/วัน)
+
+→ ทำต่อ: (ก) เครื่อง gsc-index-nudge ทยอย request หน้า money ที่ยังไม่ index วันละไม่กี่หน้า (ข) CC order ต่อไปเพิ่มลิงก์ชี้ debt-letter-kit ให้พ้น orphan

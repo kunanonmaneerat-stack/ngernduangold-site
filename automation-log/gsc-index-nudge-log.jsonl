@@ -1,0 +1,4 @@
+{"url": "/debt-letter-kit", "status_found": "unknown-to-google-orphan", "action": "requested", "ts": "2026-07-21T18:45:00+07:00", "note": "North Star funnel page invisible to Google — no referring page (orphan) + not in sitemap Google saw"}
+{"url": "/debt-health-check", "status_found": "indexed", "action": "skip", "ts": "2026-07-21T18:47:00+07:00"}
+{"url": "/debt-calculator", "status_found": "indexed", "action": "skip", "ts": "2026-07-21T18:49:00+07:00"}
+{"url": "/loan-cash-2026", "status_found": "discovered-not-indexed", "action": "requested", "ts": "2026-07-21T18:52:00+07:00", "note": "money hub — discovered+has internal links but Google not indexed yet (authority-limited)"}
