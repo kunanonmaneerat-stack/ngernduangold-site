@@ -517,6 +517,11 @@ def run_live(
             posted["youtube"] = f"scheduled (yt-api {video_id})"
             save_manifest(manifest)
             print(f"SUCCESS {plan.date}: videoId={video_id}")
+            try:  # C-fix 23Jul: confirmed post must reach post-ledger (never breaks upload flow)
+                from clip_ledger import append_row
+                print(f"LEDGER_{append_row('youtube', plan.date)} {plan.date}")
+            except Exception as exc:
+                print(f"LEDGER_WARN {plan.date}: {exc}")
         except QuotaExceeded:
             print("STOP: YouTube quotaExceeded. Resume tomorrow; no more uploads were attempted.")
             break

@@ -98,6 +98,12 @@ def main():
             vid = r.get("id", "")
             it["posted"]["fb"] = "scheduled %s 19:00+07:00 (video_id=%s)" % (date, vid)
             results.append((date, "SCHEDULED id=%s" % vid))
+            try:  # C-fix 23Jul: confirmed post must reach post-ledger (never breaks schedule flow)
+                import sys as _s; _s.path.insert(0, r"C:\Users\nL_ku\ngernduangold-site\tools")
+                from clip_ledger import append_row
+                results.append((date, "LEDGER_%s" % append_row("facebook", date)))
+            except Exception as _e:
+                results.append((date, "LEDGER_WARN %s" % _e))
         except RuntimeError as e:
             results.append((date, "FAIL %s" % e))
             break  # หยุดทันทีตาม order — ไม่ retry รัว
