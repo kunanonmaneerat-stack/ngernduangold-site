@@ -44,3 +44,27 @@ commit ที่ขึ้น remote รอบนี้ (push ครั้งเ�
 
 - **commit ค้างของ Cowork ขึ้นครบ 3 ตัว** (ค้นแล้วไม่พบ commit ชื่อ "sales-log system" ในสิ่งที่ค้าง — ที่ค้างจริงคือ LINE funnel fix + rich menu + order file; ถ้า sales-log ยังไม่ commit ฝั่ง Cowork แจ้งได้ ผมจะ push ให้รอบหน้า)
 - ย้ายเข้า `cc-inbox/done/`: order นี้ + `CC-ORDER_internal-link-architecture_20260724.md` (ตัวหลังย้ายไปแล้วตั้งแต่รอบก่อน — ยืนยันอยู่ใน done/ ครบ) → **cc-inbox ว่าง**
+
+
+## ✅ Live verify (หลัง deploy)
+- footer "ติดต่อเรา" ปรากฏจริงบนหน้า live: **8/8 หน้าที่สุ่มตรวจ** (/, kept-savings, debt-clinic-sam, car-still, salary-30000, links, about, close-debt-fast)
+- `tools/link_audit.py` รันได้จาก path ใดก็ได้ (relative path) — ผลตรงกับก่อน push
+
+## ⚠️ ข้อโต้แย้งเชิงหลักฐาน: กฎ cache-bust ที่เพิ่งบันทึกใน OPERATING-NOTES (commit cbb206f) ไม่ตรงกับพฤติกรรมจริงของ Netlify
+
+หมายเหตุใหม่ของ Cowork บอกว่า "เวลา verify งาน deploy บน live ให้ fetch พร้อม query string สุ่ม (`?cb=<timestamp>`) เสมอ ไม่งั้นจะสรุปผิดว่ายังไม่ขึ้น" — ผมทดสอบ 3 วิธีบน URL เดียวกันหลัง deploy รอบนี้ ได้ผลดังนี้:
+
+| วิธี fetch | เห็นของใหม่ | `Age` | `Cache-Status` |
+|---|---|---|---|
+| fetch เปล่า | ใช่ | 6 | `"Netlify Edge"; **hit**` |
+| `?cb=<timestamp>` (วิธีที่บันทึกไว้) | ใช่ | 6 | `"Netlify Edge"; **hit**` |
+| header `Cache-Control: no-cache` | ใช่ | 7 | `"Netlify Edge"; **hit**` |
+
+**สิ่งที่ข้อมูลนี้บอก:** `?cb=` **ไม่ได้ bypass cache** — response ยังเป็น cache `hit` และ `Age` เท่ากับ fetch เปล่าเป๊ะ แปลว่า Netlify **ไม่รวม query string ใน cache key** การเติม `?cb=` จึงได้ object เดิมจาก edge cache เหมือนไม่เติม
+
+**แล้วทำไม Cowork ถึงเห็นของใหม่ตอนใส่ `?cb=`?** อธิบายได้ด้วย timing: Netlify ทำ atomic deploy แล้ว purge cache ให้เอง — ระหว่างรอ deploy เสร็จจะเห็นของเก่าทุกวิธี พอ deploy เสร็จก็เห็นของใหม่ทุกวิธี การใส่ `?cb=` ตอนนั้นจึง "ดูเหมือน" ได้ผลแต่เป็นเรื่องบังเอิญเชิงเวลา
+
+**เรื่องนี้เคยกัดเรามาแล้วในทางกลับกัน** — บันทึกเดิม 26 มิ.ย.: การ verify ด้วย URL ที่มี query string ทำให้เห็นของ stale อยู่ ~40 นาที และสรุปผิดว่า "ยังไม่ live" ทั้งที่ deploy ขึ้นแล้ว
+
+**ข้อเสนอถ้อยคำที่ควรใช้แทนใน OPERATING-NOTES** (ขอให้ Cowork เป็นคนแก้ เพราะ order นี้ระบุ "แก้เฉพาะที่ระบุ"):
+> verify งาน deploy: อย่าใช้ `?cb=` — Netlify ไม่รวม query string ใน cache key จึงไม่ bust อะไรเลย (และเคยทำให้เห็น stale จนสรุปผิดมาแล้ว 26 มิ.ย.) · ให้ **poll ซ้ำจนเห็นเนื้อหาใหม่** (atomic deploy จะ purge cache ให้เอง ปกติ ~15 วินาที) และถ้าต้องมั่นใจให้ดู header `Age` / `Cache-Status` ประกอบ · ส่ง `Cache-Control: no-cache` ได้ ไม่เสียหาย แต่ไม่ใช่ตัวชี้ขาด
