@@ -175,3 +175,16 @@ TO SHIP (owner): git add build_site.py site/ && git commit -m "home: feature Kep
 2. เพิ่มอักษร/ข้อความ overlay ให้เหมาะกับแต่ละแพลตฟอร์ม (IG / TikTok / YouTube)
 3. โพสต์เป็นวิดีโอสะอาด
 => 5 หัวข้อที่ลบ (title-loan/emergency-fund/compound-interest/save-small/auto-save) ให้เอา Flow clip เดิมมา "ล้างลายน้ำ + ใส่ข้อความ" แล้วโพสต์ใหม่ (วิดีโอ). รูปนิ่ง = stopgap วันเดียวเท่านั้น ไม่ใช่ตัวจริง. ห้ามเหมาว่า footage Veo = ใช้ไม่ได้.
+
+## 5. VERIFY บน LIVE — ต้อง cache-bust เสมอ (บทเรียน 25 ก.ค. 2026)
+Netlify/CDN แคชหน้า HTML → `web_fetch https://ngernduangold.com/<page>` อาจคืน**ของเก่า**ทั้งที่ deploy ใหม่ขึ้นแล้ว
+- **วิธีที่ถูก:** `web_fetch https://ngernduangold.com/<page>?cb=<yyyymmddN>` (query string สุ่ม) แล้วค่อยสรุปผล
+- เคสจริง: PHASE 0 (/links hero แก้คำต้องห้าม) — fetch ปกติเห็นข้อความเก่า → เกือบสรุปผิดว่า CC ยังไม่ได้ทำ · cache-bust แล้วเห็นของใหม่ทันที
+- ใช้กับทุกการ verify หลัง deploy (หน้าเว็บ · sitemap · robots) — ทั้ง Cowork และ CC
+
+## 6. INDEX/ORPHAN AUDIT — เกณฑ์นับลิงก์ (บทเรียน CC 24-25 ก.ค. 2026)
+`tools/link_audit.py` (เครื่องมือถาวร) ตรวจ inbound link ต่อหน้า โดย:
+- นับ **contextual** (ลิงก์ในเนื้อหา) แยกจาก **total** (รวม footer/nav) — หน้าเช่น workshop-hr contextual=1 แต่ total=61 = **ไม่ใช่ orphan** ในสายตา Google อย่าไปยัดลิงก์ให้
+- **กรองหน้า noindex ออกจากเป้าหมาย** (infographic 6 หน้า) — ยัดลิงก์ให้หน้า noindex = เสียแรงเปล่า
+- `index.html` เป็น **source ได้** (กันออกเฉพาะจากการเป็น target)
+- เกณฑ์: หน้า content indexable ควรมี contextual inbound >= 3
