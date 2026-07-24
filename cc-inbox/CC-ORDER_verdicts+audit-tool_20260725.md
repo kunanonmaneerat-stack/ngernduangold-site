@@ -13,10 +13,13 @@
 - เหตุผล: ดีต่อ E-E-A-T (หน้าเงิน/การเงิน Google ให้น้ำหนักการติดต่อได้จริง) + แก้ inbound=2
 - แก้ที่ template ฟุตเตอร์ใน build_site.py จุดเดียว · ข้อความ anchor: `ติดต่อเรา` · คั่นด้วย ` · ` ให้เข้ากับของเดิม
 
-## ✅ คำตัดสิน 3 — `tools/_link_audit.py`: **commit เป็นเครื่องมือถาวร**
-เปลี่ยนชื่อเป็น `tools/link_audit.py` (ตัด underscore นำหน้า) + เพิ่ม docstring หัวไฟล์ (ใช้ทำอะไร รันยังไง อ่านผลยังไง) แล้ว commit
-- เหตุผล: ต้องใช้ตรวจซ้ำทุกครั้งที่เพิ่มหน้าใหม่ (กัน orphan รอบใหม่) และให้ weekly-review/Cowork เรียกใช้ได้
-- ถ้ามีส่วนที่ hard-code path ให้แก้เป็น relative จาก repo root
+## ✅ คำตัดสิน 3 — link audit tool: **สร้างใหม่ + commit ถาวร** (อัปเดต: ทราบแล้วว่าคุณลบ `_link_audit.py` ไปตาม order เดิม — ถูกต้องแล้ว ให้สร้างใหม่ตามสเปคนี้)
+สร้าง `tools/link_audit.py` (commit ถาวร) โดย**ใส่บทเรียน 3 ข้อที่คุณค้นพบเองรอบที่แล้วเข้าไปในโค้ด** เพื่อไม่ต้องค้นพบซ้ำ:
+1. **นับเฉพาะ contextual link** (ตัด footer/nav/related-card ที่ซ้ำทุกหน้าออก) — และ**รายงานคู่กับ total inbound** เพื่อไม่ให้เข้าใจผิดแบบ workshop-hr (contextual=1 แต่ total=61 → ไม่ใช่ orphan ในสายตา Google)
+2. **กรองหน้า `noindex` ออกจากเป้าหมาย** (เช่น 6 หน้า infographic) — ยัดลิงก์ให้หน้า noindex = เสียแรงเปล่า
+3. **`index.html` ต้องนับเป็น source ได้** (กันออกเฉพาะจากการเป็น target) — บั๊กที่คุณเจอและแก้แล้ว อย่าให้หลุดกลับมา
+เพิ่มเติม: docstring หัวไฟล์ (ใช้ทำอะไร · รันยังไง · อ่านผลยังไง · เกณฑ์ inbound>=3) · path ทั้งหมด relative จาก repo root · output เรียงจาก inbound น้อย→มาก + คอลัมน์ contextual/total
+เหตุผลที่ต้องถาวร: ใช้ตรวจซ้ำทุกครั้งที่เพิ่มหน้าใหม่ (กัน orphan รอบใหม่) และ weekly-review/Cowork เรียกใช้ได้เอง
 
 ## ✅ BUILD GATE (สำหรับข้อ 2 เท่านั้น)
 `set SITE_GA=G-17PPE0M1B8` -> `python build_site.py` -> `python tools/postdeploy_smoke.py --src site` = PASS ทุกหน้า · เช็คว่าฟุตเตอร์ทุกหน้ามีลิงก์ /contact จริง (grep นับ) · disclosure เดิมไม่หาย
@@ -28,3 +31,9 @@
 
 ## 📤 รายงาน -> cc-outbox/result-verdicts-20260725-<ts>.md
 ข้อ 2 ฟุตเตอร์เพิ่มกี่หน้า + smoke PASS? · ข้อ 3 link_audit commit แล้ว path ไหน · push commit hash ล่าสุด · commit ของ Cowork ขึ้น remote ครบไหม
+
+---
+## 📌 หมายเหตุจาก Cowork (25 ก.ค. 01:4x) — verify แล้ว
+- **PHASE 0 ยืนยันขึ้น live จริง**: hero /links = "เทียบของจริง ก่อนตัดสินใจ สมัครออนไลน์" (ต้อง fetch แบบ cache-bust `?cb=...` ถึงเห็น — CDN cache หน้า HTML ทำให้ fetch ปกติเห็นของเก่า)
+- **บทเรียนสำหรับทั้งสองฝั่ง:** เวลา verify งาน deploy บน live ให้ fetch พร้อม query string สุ่ม (`?cb=<timestamp>`) เสมอ ไม่งั้นจะสรุปผิดว่า "ยังไม่ขึ้น"
+- งาน internal-link wave นี้: รับทราบครบ ผลดีมาก (orphan 9→2 · 13/13 live-verified · smoke 71/71) ไม่มีข้อแก้
