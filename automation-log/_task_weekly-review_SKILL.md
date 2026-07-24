@@ -20,7 +20,7 @@ description: รายงานทบทวนรายสัปดาห์ (�
 4. **FB reach (เบราว์เซอร์):** เปิดเพจ FB ดูโพสต์สัปดาห์นี้: ไลก์/คอมเมนต์/แชร์ที่มองเห็น โดยเฉพาะโพสต์ที่มี link-in-comment (Meta token ยกเลิกถาวร — ห้ามใช้ Meta MCP)
 5. **TikTok:** เปิดโปรไฟล์ @ngernduangold ดู views คลิปสัปดาห์นี้ — เทียบ kill-criterion: ≥30 วัน view เฉลี่ย <300 → เตือนทบทวน (batch3 มีเสียงพูดเริ่ม 27 ก.ค. ให้เวลาใหม่ถึง 10 ส.ค.)
 6. **AccessTrade:** conversion + payout ต่อ sub_id ถ้า login ได้
-7. **🎯 North Star (สำคัญสุด — ตามผลปรึกษา 2 โมเดล 18 ก.ค.):** (1) **ยอดขายชุดจดหมาย 199฿ ที่โอนจริง** — ขายผ่าน LINE @804qodya (คนพิมพ์ "ขอชุดจดหมาย"/โอนพร้อมเพย์ — เช็ค automation-log/post-ledger.jsonl + ถามเจ้าของจำนวนปิดได้จริง) ← **รายได้จริงคือ metric ตัดสิน ไม่ใช่ micro-conversion** (2) LINE OA friends เพิ่ม/สัปดาห์ (manager.line.biz insights) (3) จำนวนคนพิมพ์ "จดหมาย/ขอจดหมาย" (4) traffic /debt-letter-kit + /debt-calculator
+7. **🎯 North Star (สำคัญสุด — ตามผลปรึกษา 2 โมเดล 18 ก.ค.):** (1) **ยอดขายชุดจดหมาย 199฿ ที่โอนจริง** — ขายผ่าน LINE @804qodya (คนพิมพ์ "ขอชุดจดหมาย"/โอนพร้อมเพย์ — รัน `py tools\sales_week.py` อ่านยอดจริง (199฿/59฿/affiliate) จาก automation-log/sales-log.jsonl แยก channel_source · ว่าง=เตือนเจ้าของบันทึกทุกดีลด้วย `py tools\log_sale.py --product letter-kit-199 --amount 199 --source line` (ห้าม PII)) ← **รายได้จริงคือ metric ตัดสิน ไม่ใช่ micro-conversion** (2) LINE OA friends เพิ่ม/สัปดาห์ (manager.line.biz insights) (3) จำนวนคนพิมพ์ "จดหมาย/ขอจดหมาย" (4) traffic /debt-letter-kit + /debt-calculator
 8. อ่าน automation-log/CONSULT-ANSWERS_20260718.md ส่วนสังเคราะห์ — รายงานความคืบหน้าเทียบแผน 14 วัน (sessions เป้า 400-500/สัปดาห์)
 
 สรุปออกมาเป็น:
