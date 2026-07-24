@@ -327,7 +327,7 @@ FOOTER = f"""<footer><div class="wrap">
 เนื้อหาในเว็บนี้จัดทำเพื่อให้ข้อมูลทั่วไป ไม่ใช่คำแนะนำทางการเงิน การลงทุน หรือสินเชื่อ
 โปรดศึกษาเงื่อนไข/ดอกเบี้ย/ค่าธรรมเนียมจากผู้ให้บริการก่อนตัดสินใจ ·
 เว็บไซต์มีลิงก์พันธมิตร (affiliate) ซึ่งเราอาจได้รับค่าตอบแทนเมื่อคุณสมัครผ่านลิงก์ โดยไม่มีค่าใช้จ่ายเพิ่มกับคุณ<br>
-© 2026 {SITE} · <a href="/disclaimer.html">นโยบายความเป็นส่วนตัว & การเปิดเผยข้อมูล</a> · <a href="/workshop-hr">สำหรับองค์กร/HR: Workshop การเงินพนักงาน</a>
+© 2026 {SITE} · <a href="/disclaimer.html">นโยบายความเป็นส่วนตัว & การเปิดเผยข้อมูล</a> · <a href="/workshop-hr">สำหรับองค์กร/HR: Workshop การเงินพนักงาน</a> · <a href="/contact">ติดต่อเรา</a>
 </div></div></footer>{SITE_JS}</body></html>"""
 
 # end-of-article entry to the quiz (internal link; no affiliate, no PII)
