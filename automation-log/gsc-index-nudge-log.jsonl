@@ -2,3 +2,11 @@
 {"url": "/debt-health-check", "status_found": "indexed", "action": "skip", "ts": "2026-07-21T18:47:00+07:00"}
 {"url": "/debt-calculator", "status_found": "indexed", "action": "skip", "ts": "2026-07-21T18:49:00+07:00"}
 {"url": "/loan-cash-2026", "status_found": "discovered-not-indexed", "action": "requested", "ts": "2026-07-21T18:52:00+07:00", "note": "money hub — discovered+has internal links but Google not indexed yet (authority-limited)"}
+{"url": "/car-pawn-not-paid-off", "status_found": "indexed", "action": "skip", "ts": "2026-07-24T10:53:43+07:00", "note": "already indexed despite 0 impression — 0-imp != not-indexed"}
+{"url": "/car-for-cash-2026", "status_found": "discovered-not-indexed", "action": "requested", "ts": "2026-07-24T10:55:43+07:00", "note": "money (car-for-cash) — ref: car-title-loan-compare + home"}
+{"url": "/car-title-loan-compare-2026", "status_found": "discovered-not-indexed", "action": "requested", "ts": "2026-07-24T10:57:43+07:00", "note": "money (car title compare) — ref: bureau-blacklist-loan + home"}
+{"url": "/motorcycle-title-loan-2026", "status_found": "discovered-not-indexed", "action": "requested", "ts": "2026-07-24T10:59:43+07:00", "note": "money (motorcycle title loan) — ref: car-still + home"}
+{"url": "/personal-loan-2026", "status_found": "unknown-to-google", "action": "requested", "ts": "2026-07-24T11:01:43+07:00", "note": "ORPHAN: no referring page + no referring sitemap detected — core money page, needs internal link"}
+{"url": "/loan-online-legal-2026", "status_found": "discovered-not-indexed", "action": "requested", "ts": "2026-07-24T11:03:43+07:00", "note": "money (online legal loan) — ref: home"}
+{"url": "/home-land-for-cash-2026", "status_found": "discovered-not-indexed", "action": "requested", "ts": "2026-07-24T11:05:43+07:00", "note": "money (home/land for cash) — ref: home"}
+{"url": "/credit-card-easy-approval-2026", "status_found": "discovered-not-indexed", "action": "requested", "ts": "2026-07-24T11:07:43+07:00", "note": "money (easy-approval card) — ref: car-title-loan-compare"}
