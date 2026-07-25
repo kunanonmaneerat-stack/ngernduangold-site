@@ -433,9 +433,16 @@ def letter_cta(slug):
     ให้ 'ชัยชนะเล็กฟรี' (ประโยคเปิดเจรจาเฉพาะเคส) ก่อน แล้วค่อยเสนอชุดเต็มในแชท."""
     if slug not in LETTER_CLUSTER:
         return ""
+    # LINE URL scheme (ยืนยันจาก developers.line.biz 25 ก.ค. 2026):
+    #   https://line.me/R/oaMessage/{percent-encoded ID}/?{percent-encoded text}
+    #   -> เปิดหน้าแชท OA พร้อมใส่ข้อความไว้ในช่องพิมพ์ให้เลย = ผู้ใช้แค่กดส่ง
+    #   รองรับเฉพาะ LINE for iOS/Android (เอกสารระบุว่าไม่รองรับ LINE for PC)
+    #   -> บน desktop ยังเปิดหน้าเว็บ line.me ให้เพิ่มเพื่อนได้ตามปกติ จึงไม่มีทางตัน
+    # ใช้เฉพาะ CTA ท้ายบทความหนี้ (13 หน้า) ไม่แตะลิงก์ ti/p ที่ nav/hub (72 จุด) ซึ่งมีหน้าที่แค่ add friend
     return ('<div style="margin:14px 0;padding:12px 15px;background:#f4fbf6;border:1.5px solid #06C755;'
             'border-radius:11px;text-align:center">'
-            '<a href="https://line.me/R/ti/p/@804qodya" target="_blank" rel="noopener" '
+            '<a href="https://line.me/R/oaMessage/%40804qodya/?%E0%B9%80%E0%B8%84%E0%B8%AA" '
+            'target="_blank" rel="noopener" '
             'style="color:#14683a;font-weight:700;text-decoration:none;font-size:15px">'
             '💬 ไม่รู้จะเปิดประโยคกับแบงก์ยังไง? ทัก LINE พิมพ์คำว่า <u>เคส</u> — '
             'รับประโยคเปิดเจรจาเฉพาะสถานะของคุณ ฟรี</a>'
