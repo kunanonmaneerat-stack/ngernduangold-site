@@ -436,10 +436,55 @@ def cta_ls(page, text):
     u = utm(KRUNGSRI, "Krungsri", page, channel="lifestyle", medium="article")
     return f'<a class="cta" rel="sponsored noopener nofollow" target="_blank" data-provider="krungsri" href="{u}">{text}<small>สมัครออนไลน์ตรงกับผู้ให้บริการ · ปลอดภัย · เช็กสิทธิ์/โปร/เงื่อนไขล่าสุดที่หน้าบัตร</small></a>'
 
+# ── INTENT GUARD (25 ก.ค. 2026 — ผลตรวจ CONSULT-ANSWERS_20260725) ────────────
+# ปัญหาที่พบ: 38 หน้ามี affiliate CTA above-the-fold โดยยิงตาม camp อย่างเดียว
+# ทำให้หน้า "คนกำลังวิกฤต" (โดนฟ้อง/อายัดเงินเดือน/ถูกทวงโหด/คลินิกแก้หนี้ของรัฐ)
+# ขึ้น "สินเชื่อรวมหนี้" เป็นสิ่งแรกที่ผู้อ่านเห็น = intent mismatch + สัญญาณ E-E-A-T แย่
+# บนหน้า YMYL + ผิดเจตนาผู้อ่านที่มาหาทางออก ไม่ได้มาหาสินเชื่อ
+# แก้: 2 กลุ่มนี้ห้าม affiliate above-fold — ให้ "ทางเลือกฟรี/เครื่องมือเรา" ขึ้นก่อน
+# (affiliate ในเนื้อหายังอยู่ตามเดิม ระบบ disclosure นับจาก anchor จริงจึงถูกต้องอัตโนมัติ)
+
+# กลุ่ม A — วิกฤต/สิทธิ: ผู้อ่านกำลังเดือดร้อน ต้องชี้ช่องทางทางการ (ฟรี) ก่อนเสมอ
+CRISIS_SLUGS = {
+    "credit-card-debt-lawsuit-2026", "wage-garnishment-debt-2026",
+    "debt-collection-rights-2026", "debt-clinic-sam-2026",
+    "move-informal-debt-2026", "debt-restructuring-2026",
+}
+# กลุ่ม B — ความรู้/หลังถูกปฏิเสธ: มาหาคำตอบ ไม่ได้มาสมัคร -> เสนอเครื่องมือฟรีของเรา
+INFO_SLUGS = {
+    "credit-card-interest-2026", "credit-bureau-check-2026",
+    "pay-off-credit-card-debt-2026", "rebuild-credit-after-debt-2026",
+    "close-debt-fast-2026", "krungsri-credit-card-rejected-2026",
+}
+# สายด่วนทางการ — ตัวเลขที่เว็บเราอ้างอิงอยู่แล้ว ไม่มีการสร้างข้อมูลใหม่
+_HELP_BOX = ('<div style="margin:14px 0 8px;padding:12px 15px;background:#f4fbf6;'
+             'border:1.5px solid #1f9d55;border-radius:11px;font-size:13.5px;color:#14683a;line-height:1.7">'
+             '<b>🆘 ลองช่องทางที่ไม่มีค่าใช้จ่ายก่อน</b><br>'
+             '· <b>คลินิกแก้หนี้ (โทร 1443)</b> — รวมหนี้บัตร/สินเชื่อไม่มีหลักประกันหลายเจ้าไว้ที่เดียว<br>'
+             '· <b>ศูนย์คุ้มครองผู้ใช้บริการทางการเงิน ธปท. (โทร 1213)</b> — ร้องเรียน/ขอคำแนะนำเรื่องหนี้และการทวงถาม<br>'
+             '· <b>หนี้นอกระบบ โทร 1359</b> (ศูนย์รับแจ้งการเงินนอกระบบ สศค.)<br>'
+             '<span style="font-size:12.5px;color:#5b6b5f">*ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำทางกฎหมาย '
+             'เงื่อนไข/สิทธิ์เป็นไปตามที่หน่วยงานประกาศ — โปรดตรวจสอบล่าสุดกับหน่วยงานโดยตรง</span></div>')
+_TOOL_BOX = ('<div style="margin:14px 0 8px;padding:12px 15px;background:#fffdf5;'
+             'border:1.5px solid #e0b23c;border-radius:11px;text-align:center">'
+             '<a href="/debt-health-check?utm_source=article&utm_medium=topoffer&utm_campaign=dhq_intent" '
+             'style="color:#6b5b2a;font-weight:700;text-decoration:none">'
+             '🩺 เช็กสุขภาพหนี้ 60 วินาที — รู้เกรด A–F ว่าตอนนี้อยู่ตรงไหน (ฟรี ไม่ต้องกรอกชื่อ) →</a>'
+             '<a href="/debt-calculator?utm_source=article&utm_medium=topoffer&utm_campaign=calc_intent" '
+             'style="display:block;margin-top:7px;color:#6b5b2a;font-weight:600;font-size:13.5px;text-decoration:none">'
+             '🧮 กรอกยอดหนี้จริง เห็นเดือนที่ปลอดหนี้ + ลำดับที่ควรจ่ายก่อน →</a></div>')
+
+
 def top_offer(camp, slug):
-    """CTA above-the-fold ตาม intent ของบทความ (จาก camp). หมวดที่ไม่มี affiliate ตรง -> ไม่ใส่ (เลี่ยงยัดมั่ว)."""
+    """CTA above-the-fold ตาม intent ของบทความ (จาก camp). หมวดที่ไม่มี affiliate ตรง -> ไม่ใส่ (เลี่ยงยัดมั่ว).
+    INTENT GUARD: หน้าวิกฤต/ความรู้ ห้าม affiliate above-fold (ดูหมายเหตุด้านบน)."""
     c = (camp or "").lower()
     sl = (slug or "").lower()
+    _bare = sl.replace(".html", "")
+    if _bare in CRISIS_SLUGS:
+        return _HELP_BOX
+    if _bare in INFO_SLUGS:
+        return _TOOL_BOX
     if any(k in sl for k in ("health-insurance", "insurance-compare")):
         return f'<div style="margin:14px 0 8px">{ins_cta("tuneprotect", slug, "เช็กแผนประกันสุขภาพ Tune Protect — เหมาจ่ายค่ารักษา ซื้อออนไลน์ →")}</div>'
     if any(k in sl for k in ("life-insurance", "tax-life")):
