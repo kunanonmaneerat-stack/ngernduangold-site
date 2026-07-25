@@ -39,6 +39,9 @@ AUTO_YT_FROM = date(2026, 7, 26)
 UI_SCHEDULED_IG_DATES = {
     date(2026, 7, day) for day in range(13, 20)
 }
+# Channel paused by decision 25 Jul 2026 (see automation-log/CHANNEL-DECISION_20260725.md).
+IG_PAUSED_FROM = date(2026, 7, 26)
+IG_PAUSED_UNTIL = date(2026, 8, 25)
 FB_MANUAL_DATE = date(2026, 7, 20)
 FB_TOKEN_BLOCKED_DATES = {
     date(2026, 7, day) for day in range(21, 27)
@@ -400,6 +403,19 @@ def ig_workflow_configured() -> bool:
 
 
 def check_instagram(target: date, item: dict[str, Any] | None) -> dict[str, str]:
+    # IG paused on purpose 26 Jul - 25 Aug 2026.  Evidence (GA4, 28d): ig = 1 session,
+    # 0 conversions from 5 posts, vs pantip 29 sessions from 2 items.  See
+    # automation-log/CHANNEL-DECISION_20260725.md.  A silent IG channel in this window is
+    # the plan working, not a failure -- reporting BLOCKED here produced a daily false alarm
+    # that also asked the owner to supply Meta credentials, which they permanently revoked
+    # on 18 Jul 2026.  Never surface a token prompt for IG again.
+    if IG_PAUSED_FROM <= target <= IG_PAUSED_UNTIL:
+        return result(
+            "INSTAGRAM",
+            "PAUSED",
+            f"IG paused by decision until {IG_PAUSED_UNTIL.isoformat()} (GA4: 1 session / 0 conv).",
+            "No action -- revisit on 25 Aug 2026.",
+        )
     matches = ig_artifact_matches(target)
     if matches:
         files = ", ".join(path.relative_to(ROOT).as_posix() for path in matches)
@@ -414,9 +430,9 @@ def check_instagram(target: date, item: dict[str, Any] | None) -> dict[str, str]
     if not ig_workflow_configured():
         return result(
             "INSTAGRAM",
-            "BLOCKED",
-            "No configured IG workflow token/account is available; artifact-only verification is possible.",
-            "Provide IG workflow credentials or verify in Instagram UI.",
+            "MANUAL-ONLY",
+            "IG publishing is manual via Business Suite by design (Meta token revoked 18 Jul 2026).",
+            "Verify in Instagram UI. Do NOT request tokens or credentials.",
         )
     return manifest_or_unknown(
         item,
@@ -457,12 +473,16 @@ def check_facebook(target: date, item: dict[str, Any] | None) -> dict[str, str]:
     note = "no FB/feed run logs found" if not candidates else f"scanned {len(candidates)} FB/feed-named log(s); none mention {wanted}"
     if target == FB_MANUAL_DATE:
         return result("FACEBOOK", "OK", f"Manual-scheduled date (20 Jul); {note}")
-    if target in FB_TOKEN_BLOCKED_DATES and not (os.environ.get("FB_PAGE_ID") and os.environ.get("FB_PAGE_TOKEN")):
+    # The owner permanently revoked the Meta token on 18 Jul 2026; FB publishing is manual via
+    # Business Suite by design.  This branch used to report BLOCKED and ask for FB_PAGE_ID /
+    # FB_PAGE_TOKEN every single day, which contradicts a settled decision and trains the
+    # operator to ignore the guard.  Report the real state instead and never prompt for tokens.
+    if target in FB_TOKEN_BLOCKED_DATES:
         return result(
             "FACEBOOK",
-            "BLOCKED",
-            f"{note}; FB_PAGE_ID/FB_PAGE_TOKEN are not configured for the batch-2 schedule.",
-            "Configure the FB scheduler credentials or schedule in Business Suite.",
+            "MANUAL-ONLY",
+            f"{note}; FB publishing is manual via Business Suite by design (Meta token revoked 18 Jul 2026).",
+            "Verify/schedule in Business Suite. Do NOT request tokens or credentials.",
         )
     return manifest_or_unknown(
         item,
