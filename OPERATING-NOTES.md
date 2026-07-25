@@ -176,11 +176,14 @@ TO SHIP (owner): git add build_site.py site/ && git commit -m "home: feature Kep
 3. โพสต์เป็นวิดีโอสะอาด
 => 5 หัวข้อที่ลบ (title-loan/emergency-fund/compound-interest/save-small/auto-save) ให้เอา Flow clip เดิมมา "ล้างลายน้ำ + ใส่ข้อความ" แล้วโพสต์ใหม่ (วิดีโอ). รูปนิ่ง = stopgap วันเดียวเท่านั้น ไม่ใช่ตัวจริง. ห้ามเหมาว่า footage Veo = ใช้ไม่ได้.
 
-## 5. VERIFY บน LIVE — ต้อง cache-bust เสมอ (บทเรียน 25 ก.ค. 2026)
-Netlify/CDN แคชหน้า HTML → `web_fetch https://ngernduangold.com/<page>` อาจคืน**ของเก่า**ทั้งที่ deploy ใหม่ขึ้นแล้ว
-- **วิธีที่ถูก:** `web_fetch https://ngernduangold.com/<page>?cb=<yyyymmddN>` (query string สุ่ม) แล้วค่อยสรุปผล
-- เคสจริง: PHASE 0 (/links hero แก้คำต้องห้าม) — fetch ปกติเห็นข้อความเก่า → เกือบสรุปผิดว่า CC ยังไม่ได้ทำ · cache-bust แล้วเห็นของใหม่ทันที
-- ใช้กับทุกการ verify หลัง deploy (หน้าเว็บ · sitemap · robots) — ทั้ง Cowork และ CC
+## 5. VERIFY บน LIVE หลัง deploy — อย่าใช้ `?cb=` (แก้ 25 ก.ค. 2026 · CC พิสูจน์ด้วยหลักฐาน)
+**กฎเดิมที่เขียนไว้เมื่อ 25 ก.ค. 01:0x ว่า "ให้เติม `?cb=<timestamp>`" — ผิด ยกเลิกแล้ว**
+- หลักฐาน (CC ทดสอบ 3 วิธีบน URL เดียวกันหลัง deploy): `?cb=<ts>` ให้ `Cache-Status: "Netlify Edge"; hit` และ `Age` เท่ากับ fetch เปล่าเป๊ะ → **Netlify ไม่รวม query string ใน cache key** การเติม `?cb=` จึงไม่ bust อะไรเลย
+- ที่ Cowork เห็นของใหม่ตอนใส่ `?cb=` = บังเอิญเชิงเวลา (atomic deploy purge cache ให้เองพอดี) ไม่ใช่ผลของ query string
+- **เคยกัดเรามาแล้วในทางกลับกัน (26 มิ.ย.):** verify ด้วย URL ที่มี query string เห็น stale ~40 นาที → สรุปผิดว่า "ยังไม่ live"
+
+**วิธีที่ถูก:** poll ซ้ำจนเห็นเนื้อหาใหม่ (atomic deploy purge เอง ปกติ ~15 วินาที) · ถ้าต้องมั่นใจให้ดู header `Age` / `Cache-Status` ประกอบ · ส่ง `Cache-Control: no-cache` ได้ ไม่เสียหาย แต่ไม่ใช่ตัวชี้ขาด
+**บทเรียนเชิงระบบ:** กฎที่เขียนจากการสังเกตครั้งเดียวโดยไม่ได้ทดสอบตัวแปรควบคุม = เดาที่ดูเหมือนความรู้ · ก่อนบันทึกเป็นกฎถาวร ต้องมีหลักฐานที่แยกตัวแปรได้ (แบบที่ CC ทำ: เทียบ 3 วิธี ดู Age/Cache-Status)
 
 ## 6. INDEX/ORPHAN AUDIT — เกณฑ์นับลิงก์ (บทเรียน CC 24-25 ก.ค. 2026)
 `tools/link_audit.py` (เครื่องมือถาวร) ตรวจ inbound link ต่อหน้า โดย:
