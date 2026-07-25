@@ -420,15 +420,29 @@ def kept_next(slug):
 LETTER_CLUSTER = {"debt-consolidation-2026.html", "debt-restructuring-2026.html",
                   "pay-off-credit-card-debt-2026.html", "credit-card-interest-2026.html",
                   "close-debt-fast-2026.html", "debt-clinic-sam-2026.html",
-                  "credit-card-debt-lawsuit-2026.html"}
+                  "credit-card-debt-lawsuit-2026.html",
+                  # ขยายเข้าหน้าวิกฤต/ความรู้ที่เพิ่งถอด affiliate above-fold ออก (25 ก.ค.)
+                  "wage-garnishment-debt-2026.html", "debt-collection-rights-2026.html",
+                  "move-informal-debt-2026.html", "rebuild-credit-after-debt-2026.html",
+                  "credit-bureau-check-2026.html", "krungsri-credit-card-rejected-2026.html"}
 def letter_cta(slug):
-    """ท้ายบทความสายเจรจา/ลดดอก -> หน้าขายชุดจดหมายเจรจาหนี้ (สินค้าแบรนด์เอง 199฿ ไม่ใช่ affiliate)"""
+    """ท้ายบทความสายเจรจา/ลดดอก -> ชวนทัก LINE ด้วยคำเฉพาะ 'เคส' (มี auto-reply triage รออยู่จริง
+    ตั้งไว้ใน LINE OA 25 ก.ค. 2026: keyword เคส/คุยกับแบงก์/ขอประโยค -> ถามสถานะ 3 ข้อ ไม่ขอ PII)
+    เหตุผล: CTA เดิม 'ชุดจดหมาย 199฿ (ตัวอย่างฟรี)' ขายก่อนสร้างความไว้ใจ — ผลตรวจ consult 25 ก.ค.
+    ชี้ตรงกัน 2 โมเดลว่าจุดรั่วสูงสุดคือ บทความ -> แอด LINE เพราะ CTA กว้างและกลัวถูกขาย.
+    ให้ 'ชัยชนะเล็กฟรี' (ประโยคเปิดเจรจาเฉพาะเคส) ก่อน แล้วค่อยเสนอชุดเต็มในแชท."""
     if slug not in LETTER_CLUSTER:
         return ""
-    return ('<div style="margin:14px 0;padding:11px 14px;background:#fbfaf5;border:1.5px solid #C9A227;'
-            'border-radius:11px;text-align:center"><a href="/debt-letter-kit?utm_source=article&utm_medium=nextstep&utm_campaign=letter_kit" '
-            'style="color:#6b5b2a;font-weight:700;text-decoration:none">✉️ ไม่รู้จะพูดกับแบงก์ยังไง? '
-            'ชุดจดหมายเจรจาหนี้ 5 ฉบับ + สคริปต์โทร (ตัวอย่างฟรี) →</a></div>')
+    return ('<div style="margin:14px 0;padding:12px 15px;background:#f4fbf6;border:1.5px solid #06C755;'
+            'border-radius:11px;text-align:center">'
+            '<a href="https://line.me/R/ti/p/@804qodya" target="_blank" rel="noopener" '
+            'style="color:#14683a;font-weight:700;text-decoration:none;font-size:15px">'
+            '💬 ไม่รู้จะเปิดประโยคกับแบงก์ยังไง? ทัก LINE พิมพ์คำว่า <u>เคส</u> — '
+            'รับประโยคเปิดเจรจาเฉพาะสถานะของคุณ ฟรี</a>'
+            '<div style="margin-top:6px;font-size:12.5px;color:#5b6b5f">'
+            'ไม่ต้องบอกชื่อ เลขบัตร หรือเลขบัญชี · ตอบอัตโนมัติ 24 ชม. · '
+            '<a href="/debt-letter-kit?utm_source=article&utm_medium=nextstep&utm_campaign=letter_kit" '
+            'style="color:#6b5b2a;text-decoration:underline">ดูชุดจดหมายเจรจาหนี้ฉบับเต็ม</a></div></div>')
 
 
 def cta_ls(page, text):
