@@ -43,9 +43,11 @@ UI_SCHEDULED_IG_DATES = {
 IG_PAUSED_FROM = date(2026, 7, 26)
 IG_PAUSED_UNTIL = date(2026, 8, 25)
 FB_MANUAL_DATE = date(2026, 7, 20)
-FB_TOKEN_BLOCKED_DATES = {
-    date(2026, 7, day) for day in range(21, 27)
-}
+# Facebook publishing is manual via Business Suite from 21 Jul 2026 ONWARDS -- this is a
+# standing decision (Meta token revoked 18 Jul 2026), not a temporary window.  It was
+# previously a hardcoded set covering only 21-26 Jul, which silently expired on 27 Jul and
+# made the guard fall through to UNKNOWN every day.  Use an open-ended start date instead.
+FB_MANUAL_FROM = date(2026, 7, 21)
 TIKTOK_MANUAL_DATES = {
     date(2026, 7, day) for day in range(23, 27)
 }
@@ -477,7 +479,7 @@ def check_facebook(target: date, item: dict[str, Any] | None) -> dict[str, str]:
     # Business Suite by design.  This branch used to report BLOCKED and ask for FB_PAGE_ID /
     # FB_PAGE_TOKEN every single day, which contradicts a settled decision and trains the
     # operator to ignore the guard.  Report the real state instead and never prompt for tokens.
-    if target in FB_TOKEN_BLOCKED_DATES:
+    if target >= FB_MANUAL_FROM:
         return result(
             "FACEBOOK",
             "MANUAL-ONLY",
@@ -707,12 +709,34 @@ def readiness_preview(target: date, items: list[dict[str, Any]], upload_log: dic
                 status = "MISSING"
             checks.append({"name": "YouTube plan", "status": status, "detail": detail})
 
+    # TikTok lets you schedule ~10 days ahead, and every clip is uploaded by hand (no-bot-post
+    # policy).  Derive the open window from the manifest instead of a hardcoded July date set:
+    # the old set covered only 23-26 Jul and silently stopped being useful on 27 Jul, leaving a
+    # note that could never fire again.  Manifest-derived means this keeps working for batch 4, 5...
     horizon_end = checked_at.date() + timedelta(days=10)
-    due_tiktok = sorted(day for day in TIKTOK_MANUAL_DATES if checked_at.date() <= day <= horizon_end)
-    if due_tiktok:
-        tiktok_note = "TikTok manual UI scheduling window is open for: " + ", ".join(day.isoformat() for day in due_tiktok) + ". Schedule once if not already set."
+    planned_all: list[date] = []
+    for entry in items:
+        raw = entry.get("date")
+        if not isinstance(raw, str):
+            continue
+        try:
+            planned_all.append(date.fromisoformat(raw))
+        except ValueError:
+            continue
+    planned_days = sorted({d for d in planned_all if checked_at.date() <= d <= horizon_end})
+    if planned_days:
+        tiktok_note = (
+            "TikTok manual scheduling window is open for: "
+            + ", ".join(day.isoformat() for day in planned_days)
+            + ". Schedule once if not already set."
+        )
     else:
-        tiktok_note = "No 23-26 Jul TikTok manual scheduling date is inside the current 10-day window."
+        last_planned = max(planned_all, default=None)
+        tiktok_note = (
+            f"No planned clip inside the next 10 days; manifest ends {last_planned.isoformat()} -- produce the next batch."
+            if last_planned
+            else "Manifest has no dated clips -- produce the next batch."
+        )
     return {"date": tomorrow.isoformat(), "checks": checks, "tiktok_schedule_note": tiktok_note}
 
 
