@@ -57,7 +57,9 @@ def check_page(html):
     # FTC clear-and-conspicuous: affiliate disclosure must appear BEFORE the first affiliate CTA anchor
     m_aff = re.search(r'<a\b[^>]*atth\.me/[^>]*>', html)
     if m_aff:
-        _dp = [p for p in (html.find("มีลิงก์พันธมิตร"), html.find("ได้รับค่าตอบแทน")) if p >= 0]
+        # negative lookbehind: "ไม่มีลิงก์พันธมิตร" (หน้าที่ไม่มี affiliate) ต้องไม่นับเป็น disclosure
+        _dp = [m.start() for ph in ("มีลิงก์พันธมิตร", "ได้รับค่าตอบแทน")
+               for m in re.finditer("(?<!ไม่)" + ph, html)]
         if not _dp or min(_dp) > m_aff.start():
             fails.append("affiliate disclosure ไม่อยู่เหนือ CTA แรก (FTC clear & conspicuous)")
     for tag in re.findall(r"<a\b[^>]*>", html):

@@ -353,8 +353,10 @@ def affil_disclose(htmlstr):
     if not m:
         return htmlstr
     i = m.start()
+    # NOTE: ต้องเป็น regex + negative lookbehind — plain find("มีลิงก์พันธมิตร") จะ match
+    # "ไม่มีลิงก์พันธมิตร" (คำปฏิเสธของหน้าที่ไม่มี affiliate) แล้วข้ามการใส่ disclosure ทั้งที่ควรใส่
     for ph in ("มีลิงก์พันธมิตร", "ได้รับค่าตอบแทน"):
-        d = htmlstr.find(ph)
+        d = next((m.start() for m in re.finditer("(?<!ไม่)" + ph, htmlstr)), -1)
         if 0 <= d < i:
             return htmlstr
     return htmlstr[:i] + AFF_DISC + htmlstr[i:]

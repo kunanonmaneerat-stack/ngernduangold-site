@@ -27,10 +27,12 @@ def main():
         iid = it["id"]
         caps = {k: v for k, v in it["captions"].items() if v}
         if it.get("affiliate"):
-            if "มีลิงก์พันธมิตร" not in it.get("disclosure", ""):
+            # regex + negative lookbehind: 'ไม่มีลิงก์พันธมิตร' ต้องไม่ผ่านเป็น disclosure
+            _has = lambda t: re.search("(?<!ไม่)มีลิงก์พันธมิตร", t or "") is not None
+            if not _has(it.get("disclosure", "")):
                 errs.append("%s: affiliate=true แต่ disclosure ไม่มี 'มีลิงก์พันธมิตร'" % iid)
             for ch, c in caps.items():
-                if "มีลิงก์พันธมิตร" not in c:
+                if not _has(c):
                     errs.append("%s: caption[%s] ขาด 'มีลิงก์พันธมิตร'" % (iid, ch))
         reel = os.path.join(ROOT, it["reel"])
         if it["status"] in NEED_FILE and not os.path.exists(reel):
