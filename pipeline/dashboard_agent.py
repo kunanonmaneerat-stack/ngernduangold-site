@@ -110,12 +110,106 @@ def _launch():
     return card
 
 
+# ===== เพิ่ม 25 ก.ค. 2026: ให้ตรงยุทธศาสตร์ patient SEO + North Star =====
+def _sales():
+    """ยอดขายจริงจาก sales-log.jsonl — North Star"""
+    import json, datetime as _dt
+    p = os.path.join(AL, "sales-log.jsonl")
+    out = {"week": 0.0, "month": 0.0, "n_week": 0, "n_month": 0, "by_src": {}, "last": ""}
+    if not os.path.exists(p):
+        return out
+    today = _dt.date.today()
+    mon = today - _dt.timedelta(days=today.weekday())
+    for line in open(p, encoding="utf-8"):
+        try:
+            r = json.loads(line)
+            if "date" not in r or "amount_thb" not in r:
+                continue
+            d = _dt.date.fromisoformat(r["date"])
+            amt = float(r["amount_thb"])
+            if d.year == today.year and d.month == today.month:
+                out["month"] += amt; out["n_month"] += 1
+            if mon <= d <= today:
+                out["week"] += amt; out["n_week"] += 1
+                src = r.get("channel_source", "?")
+                out["by_src"][src] = out["by_src"].get(src, 0) + amt
+            out["last"] = r["date"]
+        except Exception:
+            pass
+    return out
+
+
+def _gsc():
+    """GSC = ตัววัดหลักตามยุทธศาสตร์ (ไม่ใช่ GA4 รายวัน)"""
+    out = {"clicks": 0, "impr": 0, "n_q": 0, "watch": []}
+    p = os.path.join(AL, "gsc-queries.csv")
+    if os.path.exists(p):
+        for r in csv.DictReader(open(p, encoding="utf-8")):
+            try:
+                out["clicks"] += int(float(r.get("clicks", 0) or 0))
+                out["impr"] += int(float(r.get("impressions", 0) or 0))
+                out["n_q"] += 1
+            except Exception:
+                pass
+    # 2 cluster ที่เฝ้าตาม SEO-OPPORTUNITY
+    pp = os.path.join(AL, "gsc-pages.csv")
+    if os.path.exists(pp):
+        for r in csv.DictReader(open(pp, encoding="utf-8")):
+            pg = (r.get("page") or "")
+            for key, label in (("car-still-installment-loan", "รถผ่อนไม่หมด"),
+                               ("credit-card-salary-30000", "บัตร/เงินเดือน 30000")):
+                if key in pg:
+                    try:
+                        out["watch"].append({"label": label,
+                                             "impr": int(float(r.get("impressions", 0) or 0)),
+                                             "pos": round(float(r.get("position", 0) or 0), 1)})
+                    except Exception:
+                        pass
+    return out
+
+
+def _indexnudge():
+    """สถานะ index coverage จาก nudge log"""
+    import json
+    p = os.path.join(AL, "gsc-index-nudge-log.jsonl")
+    req = skip = 0
+    last = ""
+    if os.path.exists(p):
+        for line in open(p, encoding="utf-8"):
+            try:
+                r = json.loads(line)
+                a = r.get("action", "")
+                if a == "requested": req += 1
+                elif a == "skip": skip += 1
+                last = (r.get("ts", "") or "")[:10] or last
+            except Exception:
+                pass
+    return {"requested": req, "indexed_skip": skip, "last": last}
+
+
+def _funnel():
+    """สถานะปลายทางฟันเนล — อ่านจากบันทึกล่าสุด (funnel-endpoint-check เขียนไว้)"""
+    import glob as _g
+    files = sorted(_g.glob(os.path.join(AL, "LINE-FUNNEL-*.md")), reverse=True)
+    if not files:
+        return {"state": "ยังไม่มีรายงาน", "ok": None, "date": ""}
+    txt = open(files[0], encoding="utf-8").read()
+    ok = ("แชท | 🔴 ปิด | ✅ เปิด" in txt) or ("แชท** = เปิด" in txt) or ("✅ เปิด" in txt)
+    d = re.search(r"(\d{4})(\d{2})(\d{2})", os.path.basename(files[0]))
+    return {"state": "แชทเปิด + auto-reply 24 ชม." if ok else "ต้องตรวจ",
+            "ok": ok, "date": ("%s-%s-%s" % d.groups()) if d else ""}
+
+
 def build():
     rows, tot = _ga4()
     verdict, decision = _verdict()
     q = _queue()
     cr = _credits()
     lc = _launch()
+    sales = _sales()
+    gsc = _gsc()
+    idx = _indexnudge()
+    fn = _funnel()
     pkgs = len(glob.glob(os.path.join(AL, "content-packages",
               datetime.date.today().strftime("%Y%m%d") + "*")))
     now = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
@@ -158,29 +252,44 @@ td{border-top:1px solid #2a3540;padding:5px 4px;color:#cdd6e0}
 <h1><span class="dot"></span>ngernduangold — Live Dashboard</h1>
 <div class="sub">อัปเดตล่าสุด %NOW% · รีเจนเองทุกเช้า 07:00 (Task Scheduler) · ทุกอย่างฟรี</div>
 <div class="kpis">
-<div class="kpi"><b>%SESS%</b><span>GA4 sessions (28 วัน)</span></div>
-<div class="kpi"><b>%CONV%</b><span>affiliate_click (conversion)</span></div>
-<div class="kpi"><b>%QUIZ%</b><span>quiz_start</span></div>
-<div class="kpi"><b>%PKG%</b><span>แพ็กเกจคอนเทนต์วันนี้</span></div>
+<div class="kpi" style="border-color:#3d8f6a"><b style="color:#3ddc97">%SALEW%฿</b><span>🎯 North Star — ยอดขายสัปดาห์นี้ (%NSALEW% ดีล)</span></div>
+<div class="kpi"><b>%GIMPR%</b><span>GSC impressions (28 วัน)</span></div>
+<div class="kpi"><b>%GCLICK%</b><span>GSC clicks</span></div>
+<div class="kpi"><b>%SESS%</b><span>GA4 sessions (รอง)</span></div>
 </div>
 %LAUNCH%
-<div class="card"><h2>💳 Flow credits (วิดีโอ AI)</h2><div class="bar"><span class="bl">ใช้ไป</span><span class="bt"><i style="width:%CREDPCT%%;background:linear-gradient(90deg,#BA7517,#e0a93c)"></i></span><span class="bv">%CREDUSED%/%CREDQUOTA% · เหลือ %CREDREM% (~%CREDCLIPS% คลิป)</span></div></div>
-<div class="card"><h2>conversion รายช่อง (GA4 จริง)</h2>%BARS%</div>
-<div class="card"><h2>VERDICT (พิสูจน์ consult)</h2>
-<div class="vd" style="color:%VCOLOR%">%VERDICT%</div><div class="dc">%DECISION%</div></div>
+<div class="card" style="border-color:#3d8f6a"><h2>🎯 North Star — ยอดขายจริง (sales-log)</h2>
+<div class="vd" style="color:#3ddc97">%SALEW%฿ สัปดาห์นี้ · %SALEM%฿ เดือนนี้</div>
+<div class="dc">%SALESRC%<br><span style="color:#8b98a5;font-size:11.5px">บันทึกทุกดีลด้วย <code>py tools/log_sale.py --product letter-kit-199 --amount 199 --source line</code> — ถ้าไม่บันทึก ตัวเลขนี้จะเป็น 0 ตลอด</span></div></div>
+<div class="card"><h2>🔍 SEO (patient · ตัววัดหลัก) — 2 cluster ที่เฝ้า</h2>
+<div class="dc">%GWATCH%</div>
+<div class="dc" style="margin-top:8px">index-nudge: ขอ index ไปแล้ว <b>%IDXREQ%</b> หน้า · ที่ index อยู่แล้ว %IDXOK% · ล่าสุด %IDXLAST%<br>
+<span style="color:#8b98a5;font-size:11.5px">เมตริกชัยชนะ = 2 cluster ขยับต่ำกว่าอันดับ 30 · คาด 6–12 สัปดาห์ · GA4 รายวันเงียบ = ปกติของเกมนี้</span></div></div>
+<div class="card"><h2>💬 ปลายทางฟันเนล (LINE OA) — จุดที่เคยตายเงียบ</h2>
+<div class="vd" style="color:%FNCOLOR%;font-size:13.5px">%FNSTATE%</div>
+<div class="dc"><span style="color:#8b98a5;font-size:11.5px">ตรวจอัตโนมัติทุกพุธ 09:40 (funnel-endpoint-check) · เคสเดิม 25 ก.ค.: แชทถูกปิด = ขายไม่ได้เลยทั้งที่ต้นทางปกติ</span></div></div>
+<div class="card"><h2>conversion รายช่อง (GA4 · ตัววัดรอง)</h2>%BARS%</div>
 <div class="card"><h2>🗓️ ตารางคิวโพสต์ (post_agent · เวลาดีสุดจาก GA4)</h2>
 <table>%QROWS%</table></div>
-<div class="ft">ngernduangold growth loop · GA4 ปิดวง · คนกดโพสต์/deploy เท่านั้น</div>
+<div class="ft">ngernduangold growth loop · ยุทธศาสตร์: patient SEO งบศูนย์ (เคาะ 21 ก.ค.) · North Star = ยอดขายจริง · คนกดโพสต์/deploy เท่านั้น</div>
 </div></body></html>"""
     doc = (doc.replace("%NOW%", now).replace("%SESS%", str(tot["sessions"]))
            .replace("%CONV%", str(tot["conv"])).replace("%QUIZ%", str(tot["quiz"]))
            .replace("%PKG%", str(pkgs)).replace("%BARS%", bars or "<i style='color:#8b98a5'>ยังไม่มีข้อมูล</i>")
            .replace("%VCOLOR%", vcolor).replace("%VERDICT%", html.escape(verdict))
            .replace("%DECISION%", html.escape(decision)).replace("%QROWS%", qrows or "<tr><td>—</td></tr>")
-           .replace("%CREDPCT%", str(cr["pct"])).replace("%CREDUSED%", str(cr["used"]))
-           .replace("%CREDQUOTA%", str(cr["quota"])).replace("%CREDREM%", str(cr["remaining"]))
-           .replace("%CREDCLIPS%", str(cr["clips"]))
-           .replace("%LAUNCH%", lc))
+           .replace("%LAUNCH%", lc)
+           .replace("%SALEW%", format(sales["week"], ",.0f")).replace("%SALEM%", format(sales["month"], ",.0f"))
+           .replace("%NSALEW%", str(sales["n_week"]))
+           .replace("%SALESRC%", (" · ".join("%s %s฿" % (k, format(v, ",.0f")) for k, v in sorted(sales["by_src"].items(), key=lambda x: -x[1]))
+                                  or "<i style='color:#8b98a5'>ยังไม่มีดีลบันทึกสัปดาห์นี้ — ถ้าปิดการขายได้ อย่าลืมบันทึก</i>"))
+           .replace("%GIMPR%", str(gsc["impr"])).replace("%GCLICK%", str(gsc["clicks"]))
+           .replace("%GWATCH%", (" · ".join("<b>%s</b> %d imp · อันดับ %s" % (w["label"], w["impr"], w["pos"]) for w in gsc["watch"])
+                                 or "<i style='color:#8b98a5'>ยังไม่มีข้อมูล GSC — รัน pipeline/gsc_pull.py</i>"))
+           .replace("%IDXREQ%", str(idx["requested"])).replace("%IDXOK%", str(idx["indexed_skip"]))
+           .replace("%IDXLAST%", idx["last"] or "—")
+           .replace("%FNSTATE%", html.escape(fn["state"]))
+           .replace("%FNCOLOR%", "#3ddc97" if fn["ok"] else "#BA7517"))
     open(OUT, "w", encoding="utf-8").write(doc)
     print("[dashboard_agent] -> " + OUT + " | sessions=%d conv=%d verdict=%s" % (tot["sessions"], tot["conv"], verdict[:30]))
     return OUT
