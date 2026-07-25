@@ -191,3 +191,13 @@ TO SHIP (owner): git add build_site.py site/ && git commit -m "home: feature Kep
 - **กรองหน้า noindex ออกจากเป้าหมาย** (infographic 6 หน้า) — ยัดลิงก์ให้หน้า noindex = เสียแรงเปล่า
 - `index.html` เป็น **source ได้** (กันออกเฉพาะจากการเป็น target)
 - เกณฑ์: หน้า content indexable ควรมี contextual inbound >= 3
+
+## 7. NEGATION BUG ในโค้ดตรวจ compliance — ระเบิดเวลาที่เงียบที่สุด (บทเรียน CC 25 ก.ค. 2026)
+`grep "มีลิงก์พันธมิตร"` ไป match `"ไม่มีลิงก์พันธมิตร"` ด้วย → **gate บอก "ผ่าน" ทั้งที่หน้าไม่มี disclosure จริง**
+- บั๊กเดียวกันอยู่ **3 ที่** รวม `tools/postdeploy_smoke.py` (build gate ที่ Netlify รันจริง — fail = deploy ล้ม) · `build_site.py` `affil_disclose()` · `.system_control/validate.py`
+- แก้ด้วย **negative lookbehind** `(?<!ไม่)มีลิงก์พันธมิตร` + comment กันแก้กลับ · regression 3 เคส (มี disclosure=จับ / มีแต่คำปฏิเสธ=ไม่จับ / ไม่มีเลย=ไม่จับ)
+- ยังไม่มีหน้าไหนตกหลุมจริง = ปิดก่อนระเบิด
+
+**กฎถาวร:** เวลาเขียน/แก้โค้ดตรวจ compliance ในภาษาไทย ต้องคิดถึง **คำปฏิเสธนำหน้า** (ไม่/ไม่มี/ยังไม่) เสมอ · false-negative ใน gate อันตรายกว่า false-positive มาก (ปล่อยของผิดขึ้น live เงียบๆ) · ทุก gate ที่แก้ต้องมี regression test อย่างน้อย 3 เคส: ผ่านจริง / คำปฏิเสธ / ไม่มีเลย
+
+**มาตรฐาน disclosure ของเว็บ (ยืนยัน 25 ก.ค.):** หน้ามี affiliate link ≥1 → `* มีลิงก์พันธมิตร — เราอาจได้รับค่าตอบแทน...` เหนือ CTA แรก (FTC clear & conspicuous) · หน้า affiliate=0 → `· หน้านี้ไม่มีลิงก์พันธมิตร` ท้าย footer · ตรวจด้วยการนับ affiliate link จริง (`href="https://atth.me`) ไม่ใช่ grep ข้อความอย่างเดียว
