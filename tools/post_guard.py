@@ -724,6 +724,7 @@ def readiness_preview(target: date, items: list[dict[str, Any]], upload_log: dic
         except ValueError:
             continue
     planned_days = sorted({d for d in planned_all if checked_at.date() <= d <= horizon_end})
+    last_planned = max(planned_all, default=None)
     if planned_days:
         tiktok_note = (
             "TikTok manual scheduling window is open for: "
@@ -731,13 +732,29 @@ def readiness_preview(target: date, items: list[dict[str, Any]], upload_log: dic
             + ". Schedule once if not already set."
         )
     else:
-        last_planned = max(planned_all, default=None)
         tiktok_note = (
             f"No planned clip inside the next 10 days; manifest ends {last_planned.isoformat()} -- produce the next batch."
             if last_planned
             else "Manifest has no dated clips -- produce the next batch."
         )
-    return {"date": tomorrow.isoformat(), "checks": checks, "tiktok_schedule_note": tiktok_note}
+
+    # EARLY WARNING for the content cliff.  One manifest feeds four channels at once (Threads
+    # daily, TikTok nudge, YouTube Shorts, FB Reel), so when it runs out they all go quiet on the
+    # same day.  Producing a batch takes days, so warning only after the clip queue is empty is
+    # too late -- surface it while there is still runway.  Escalates as the deadline approaches.
+    runway_note = None
+    if last_planned is not None:
+        days_left = (last_planned - checked_at.date()).days
+        if days_left < 0:
+            runway_note = f"CONTENT CLIFF: manifest ended {last_planned.isoformat()} -- Threads/TikTok/YouTube/FB Reel have no clips."
+        elif days_left <= 3:
+            runway_note = f"CONTENT CLIFF in {days_left} day(s) (manifest ends {last_planned.isoformat()}) -- 4 channels go quiet together. Produce the next batch now."
+        elif days_left <= 10:
+            runway_note = f"Clip runway: {days_left} days left (manifest ends {last_planned.isoformat()}). Start the next batch."
+    payload = {"date": tomorrow.isoformat(), "checks": checks, "tiktok_schedule_note": tiktok_note}
+    if runway_note:
+        payload["content_runway_note"] = runway_note
+    return payload
 
 
 def markdown_cell(value: str) -> str:
@@ -769,6 +786,9 @@ def render_markdown(payload: dict[str, Any]) -> str:
         for check in readiness["checks"]:
             lines.append(f"- {check['name']}: {check['status']} — {check['detail']}")
         lines.extend(["", f"- TikTok: {readiness['tiktok_schedule_note']}"])
+        runway = readiness.get("content_runway_note")
+        if runway:
+            lines.append(f"- ⚠️ คลังคลิป: {runway}")
     return "\n".join(lines) + "\n"
 
 
