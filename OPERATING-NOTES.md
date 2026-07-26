@@ -201,3 +201,20 @@ TO SHIP (owner): git add build_site.py site/ && git commit -m "home: feature Kep
 **กฎถาวร:** เวลาเขียน/แก้โค้ดตรวจ compliance ในภาษาไทย ต้องคิดถึง **คำปฏิเสธนำหน้า** (ไม่/ไม่มี/ยังไม่) เสมอ · false-negative ใน gate อันตรายกว่า false-positive มาก (ปล่อยของผิดขึ้น live เงียบๆ) · ทุก gate ที่แก้ต้องมี regression test อย่างน้อย 3 เคส: ผ่านจริง / คำปฏิเสธ / ไม่มีเลย
 
 **มาตรฐาน disclosure ของเว็บ (ยืนยัน 25 ก.ค.):** หน้ามี affiliate link ≥1 → `* มีลิงก์พันธมิตร — เราอาจได้รับค่าตอบแทน...` เหนือ CTA แรก (FTC clear & conspicuous) · หน้า affiliate=0 → `· หน้านี้ไม่มีลิงก์พันธมิตร` ท้าย footer · ตรวจด้วยการนับ affiliate link จริง (`href="https://atth.me`) ไม่ใช่ grep ข้อความอย่างเดียว
+
+## 8. "push แล้ว" ≠ "ขึ้น production แล้ว" — Netlify ignore rule ที่ใช้ `HEAD^..HEAD` (บทเรียน 26 ก.ค. 2026)
+**อาการ:** งานทั้งวันของ 25 ก.ค. (intent guard 12 หน้า + LINE CTA 13 หน้า) commit ครบ · `git log origin/main..HEAD` = **0 ตัว** (อยู่บน remote หมดแล้ว) · local build มีของใหม่ครบ · smoke 71/71 PASS
+**แต่ production ยังเป็นของเก่าทั้งวัน** และ header ตอบ `Age=0` = ของสดจริง ไม่ใช่ cache ค้าง
+
+**ต้นเหตุ:** ignore rule ของ Netlify เทียบ diff แค่ `HEAD^..HEAD` (commit ล่าสุดตัวเดียว)
+commit ที่แตะ `build_site.py` ถูก push รวมชุดกับ commit อื่น แล้วมี **runlog cron ตามหลังอีก 5 ตัว** ซึ่งแตะแต่ `automation-log/` (excluded path)
+→ Netlify มองเห็นแต่ `automation-log/` → **skip build เงียบๆ ไม่มี error ไม่มีแจ้งเตือน** → เว็บค้างที่ก่อนงานทั้งหมด
+
+**แก้ (commit `4696c9d`):** เปลี่ยนเป็น `$CACHED_COMMIT_REF $COMMIT_REF` — เทียบกับ commit ที่ **build สำเร็จล่าสุด** แทน HEAD^ · fail-safe: ถ้า `CACHED_COMMIT_REF` ว่างหรือ git diff error → **build** (ไม่มีทาง skip เงียบ) · ยัง skip push ที่เป็น runlog ล้วนตามเดิม จึงไม่เปลือง build minutes
+
+**กฎถาวร:**
+1. **หลัง push ทุกครั้ง ต้อง verify จาก production จริง** — `git log origin/main..HEAD = 0` พิสูจน์แค่ว่า *push ถึง remote* ไม่ได้พิสูจน์ว่า *deploy เกิด* · เช็กเนื้อหาจริงบนหน้าเว็บเสมอ
+2. **ระวัง ignore rule ที่เทียบ diff แบบ single-commit** — พังทันทีที่ push เป็นชุดหลาย commit หรือมี cron commit ตามหลัง ให้เทียบกับ last-successful-build เสมอ
+3. **deploy ที่ skip = ไม่มี error** ต่างจาก deploy ที่ fail — ระบบเตือนจับไม่ได้ ต้องดูผลลัพธ์ปลายทางอย่างเดียว
+
+**เกี่ยวข้องกับข้อ 5:** ข้อ 5 บอกว่าอย่าเชื่อ `?cb=` ให้ดู `Age`/`Cache-Status` — แต่เคสนี้ `Age=0` ยังหลอกได้ เพราะของสดจริง...แค่เป็นของสดของ **build เก่า** · หลักที่ถูกคือ **verify เนื้อหา ไม่ใช่ verify header**
