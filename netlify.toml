@@ -8,7 +8,14 @@
   # Exit 0 => Netlify ignores the build. Any change to build_site.py, *.html, media/, reels/, assets,
   # or this file still rebuilds. tools/ is excluded as a TRIGGER only — the build command still runs the
   # checked-out tools/postdeploy_smoke.py at build time (WO decision D3, 2026-07-12). Saves build minutes.
-  ignore = "git diff --quiet HEAD^ HEAD -- . ':(exclude)automation-log' ':(exclude)pipeline' ':(exclude)tiktok-pipeline' ':(exclude).system_control' ':(exclude)social-autopost' ':(exclude)tools' ':(exclude)data'"
+  # Compare against the last SUCCESSFULLY BUILT commit ($CACHED_COMMIT_REF), not HEAD^.
+  # Why (incident 26 Jul 2026): site commits were pushed in a batch whose LAST commit only
+  # touched an excluded path, and cron runlog commits landed after them. HEAD^..HEAD saw
+  # nothing but automation-log, so Netlify skipped the build and a whole day of site work
+  # never reached production even though every commit was on origin/main.
+  # Fail-safe: if CACHED_COMMIT_REF is empty/unknown (first build, cleared cache, force push)
+  # git diff errors -> non-zero exit -> Netlify builds. Never silently skips.
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- . ':(exclude)automation-log' ':(exclude)pipeline' ':(exclude)tiktok-pipeline' ':(exclude).system_control' ':(exclude)social-autopost' ':(exclude)tools' ':(exclude)data'"
 
 [build.environment]
   SITE_BASE = "https://ngernduangold.com"
