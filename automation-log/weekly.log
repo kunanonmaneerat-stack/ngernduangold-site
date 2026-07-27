@@ -50,3 +50,20 @@ Sent to telegram home channel (chat_id: 8431211539)
 ping skip: Command '['C:\\Users\\nL_ku\\AppData\\Local\\hermes\\hermes-
 weekly growth review -> C:\Users\nL_ku\ngernduangold-site\automation-log\weekly-growth-20260720.md | sessions=311 conv=33
 [Mon 07/20/2026 21:36:00.21] run_weekly end exit=0 
+[Mon 07/27/2026  9:16:11.55] comply_gate_stitch scan (components\stitch) 
+
+SUMMARY: 0 file(s), 0 FAIL finding(s).
+[Mon 07/27/2026  9:16:11.67] run_weekly start 
+[2026-07-27T09:16:13] auth = OAuth token (secrets/ga4-token.json)
+[2026-07-27T09:16:15] OK -> ga4-metrics.csv | source=6 sessions=223 quiz=2 conv=9
+[2026-07-27T09:16:15] auth = OAuth token (secrets/ga4-token.json)
+[2026-07-27T09:16:17] OK -> ga4-pages.csv | pages=35
+[2026-07-27T09:16:17] auth = OAuth token (secrets/ga4-token.json)
+[2026-07-27T09:16:17] OK -> ga4-funnel.csv | quiz_start=2 -> quiz_complete=2 -> recommendation_view=2 -> affiliate_click=9
+Sent to telegram home channel (chat_id: 8431211539)
+[2026-07-27T09:16:18] auth = ga4-token.json
+[2026-07-27T09:16:18] GSC property = https://ngernduangold.com/
+[2026-07-27T09:16:19] OK -> gsc-queries.csv | queries=14
+[2026-07-27T09:16:19] OK -> gsc-pages.csv | pages=16
+weekly growth review -> C:\Users\nL_ku\ngernduangold-site\automation-log\weekly-growth-20260727.md | sessions=223 conv=9
+[Mon 07/27/2026  9:16:45.61] run_weekly end exit=0 
