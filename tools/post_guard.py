@@ -47,10 +47,29 @@ UI_SCHEDULED_IG_DATES = {
 # Without this window the guard would report TIKTOK=NOT-POSTED -> has_fail -> exit 2
 # EVERY single day for a channel we deliberately are not feeding. A guard that fails
 # every day teaches people to ignore it, which is worse than having no guard.
+def _policy_pause(channel: str, default_until: str) -> date:
+    """Read the pause window from .system_control/policy.json, not from a constant here.
+
+    ABLATION 31 Jul 2026 (after the 'Delete Your CLAUDE.md' talk): the same fact -- which
+    channel is paused and until when -- was duplicated across two python files and four
+    task prompts. When TikTok was dropped on 31 Jul, post_guard and the daily card kept
+    asking for it, because nobody could update five copies at once. That is the same
+    one-truth-many-places drift that caused the 27-30 Jul blackout. One fact, one file.
+    """
+    try:
+        import json as _json
+        with open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                               ".system_control", "policy.json"), encoding="utf-8") as fh:
+            until = (_json.load(fh)["channels"].get(channel) or {}).get("until") or default_until
+    except Exception:
+        until = default_until      # fail safe: behave exactly as before if policy is unreadable
+    return date.fromisoformat(until)
+
+
 TIKTOK_PAUSED_FROM = date(2026, 7, 31)
-TIKTOK_PAUSED_UNTIL = date(2026, 8, 6)   # ngernduangold-batch4-gate decides on 6 Aug
+TIKTOK_PAUSED_UNTIL = _policy_pause("tiktok", "2026-08-06")
 IG_PAUSED_FROM = date(2026, 7, 26)
-IG_PAUSED_UNTIL = date(2026, 8, 25)
+IG_PAUSED_UNTIL = _policy_pause("instagram", "2026-08-25")
 FB_MANUAL_DATE = date(2026, 7, 20)
 # Facebook publishing is manual via Business Suite from 21 Jul 2026 ONWARDS -- this is a
 # standing decision (Meta token revoked 18 Jul 2026), not a temporary window.  It was

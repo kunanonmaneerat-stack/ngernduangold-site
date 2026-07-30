@@ -1,0 +1,92 @@
+{
+  "_readme": [
+    "Single source of truth for CHANNEL STATE and DECISION DATES.",
+    "Written 31 Jul 2026 after the Boris Cherny / YC talk 'Delete Your CLAUDE.md'.",
+    "Rule: anything that CHANGES lives here. Prose files (OPERATING-NOTES) keep only",
+    "timeless, counterintuitive lessons. Task prompts must READ this, never restate it.",
+    "Why: on 30-31 Jul the same fact (IG paused, TikTok paused, Meta token revoked) was",
+    "copied into 4+ task prompts and 2 python files. When TikTok was dropped, post_guard",
+    "and the daily card still asked for it -- the exact drift that caused the 4-day",
+    "blackout, just in a different file. One fact, one place."
+  ],
+  "updated": "2026-07-31",
+  "channels": {
+    "youtube": {
+      "state": "active",
+      "auto": true,
+      "note": "uploader tools/yt_upload_batch2.py --live --dates YYYY-MM-DD"
+    },
+    "facebook": {
+      "state": "manual",
+      "auto": false,
+      "note": "Business Suite by hand; Meta token revoked 18 Jul 2026 - never ask for tokens"
+    },
+    "threads": {
+      "state": "active",
+      "auto": true,
+      "note": "video attach broken since 26 Jul; see threads-video-idle-retry"
+    },
+    "tiktok": {
+      "state": "paused",
+      "auto": false,
+      "until": "2026-08-06",
+      "reason": "28 days = 1 real post, 0 sessions; upload depends on owner's phone so the input cannot be controlled",
+      "decided_by": "ngernduangold-batch4-gate"
+    },
+    "instagram": {
+      "state": "paused",
+      "auto": false,
+      "until": "2026-08-25",
+      "reason": "GA4 28d: 1 session / 0 conv",
+      "decided_by": "owner review"
+    },
+    "pinterest": {
+      "state": "paused",
+      "auto": false,
+      "until": "2026-08-25",
+      "reason": "GA4 28d: 0 sessions from 9 pins",
+      "decided_by": "owner review"
+    },
+    "pantip": {
+      "state": "limited",
+      "auto": false,
+      "weekly_quota": 3,
+      "reason": "FINAL WARNING on the brand account - one more violation = permanent ban",
+      "account": "9373300"
+    }
+  },
+  "gates": [
+    {
+      "date": "2026-08-06",
+      "task": "ngernduangold-batch4-gate",
+      "decides": [
+        "batch4 production volume",
+        "tiktok channel fate"
+      ]
+    },
+    {
+      "date": "2026-08-25",
+      "task": "owner review",
+      "decides": [
+        "instagram return",
+        "pinterest return"
+      ]
+    },
+    {
+      "date": "2026-10-09",
+      "task": "ngernduangold-90day-gate-debt-pivot",
+      "decides": [
+        "debt-wedge pivot go/park/productize"
+      ]
+    }
+  ],
+  "specs": {
+    "reel_width": 1080,
+    "reel_height": 1920,
+    "post_slot_local": "19:00"
+  },
+  "slack": {
+    "ops": "C0BLWT5EEG1",
+    "action": "C0BLRL411V3"
+  }
+}
