@@ -38,4 +38,17 @@ echo [%date% %time%] hermes_digest start >> "%LOG%"
 "%PY%" "%BASE%\hermes_digest.py" >> "%LOG%" 2>&1
 echo [%date% %time%] cc_monitor (Claude Code status -> Cowork) >> "%LOG%"
 "%PY%" "%BASE%\cc_monitor.py" >> "%LOG%" 2>&1
+REM preflight: the one standing checklist (queue / delivery gap / captions / posted
+REM records / disclosure / attribution). Runs HERE because the dispatcher keeps running
+REM even when every Cowork scheduled task is disabled -- which is exactly what happened
+REM 27-30 Jul 2026: dispatcher fired daily, nothing shipped, and no guard said a word.
+REM exit 2 = FAIL -> drop an alert file that the morning routines will surface.
+echo [%date% %time%] preflight start >> "%LOG%"
+"%PY%" "%BASE%\..\tools\preflight.py" >> "%LOG%" 2>&1
+if errorlevel 2 (
+  echo PREFLIGHT FAIL - see automation-log\dispatcher.log for the failing check. Do not post until resolved. > "%BASE%\..\automation-log\cowork-inbox\PREFLIGHT-ALERT.md"
+  echo [%date% %time%] !! preflight FAIL - alert written >> "%LOG%"
+) else (
+  if exist "%BASE%\..\automation-log\cowork-inbox\PREFLIGHT-ALERT.md" del "%BASE%\..\automation-log\cowork-inbox\PREFLIGHT-ALERT.md"
+)
 echo [%date% %time%] run_daily end exit=%errorlevel% >> "%LOG%"
