@@ -161,6 +161,44 @@ def check_posted_truth():
         add("posted records", "PASS", "manifest agrees with yt_upload_log")
 
 
+def check_queued_clip_spec():
+    """Every clip queued for TODAY or later must already meet the posting spec.
+
+    Gap found 31 Jul 2026: nothing verified the spec of a clip UNTIL video-post-verify ran
+    at 21:30 -- i.e. after it had already been posted. A 720x1280 or watermarked clip could
+    sit in the queue for days and only be caught on the way out. This checks on the way IN.
+    Past dates are ignored on purpose: history is history, and 11-19 Jul really were 720p.
+    """
+    sched = _load(SCHEDULE, {}) or {}
+    today = datetime.date.today().isoformat()
+    future = {d: v for d, v in sched.items() if d >= today}
+    if not future:
+        add("queued clip spec", "WARN", "nothing queued from today onward")
+        return
+    import shutil
+    if not shutil.which("ffprobe"):
+        add("queued clip spec", "WARN", "ffprobe not on PATH - spec not verified")
+        return
+    bad = []
+    for d, v in sorted(future.items()):
+        rel = (v or {}).get("file", "")
+        path = os.path.join(REPO, "reels", rel)
+        if not os.path.exists(path):
+            bad.append(f"{d}: {rel or '<none>'} missing on disk")
+            continue
+        r = subprocess.run(
+            ["ffprobe", "-v", "error", "-select_streams", "v:0",
+             "-show_entries", "stream=width,height", "-of", "csv=p=0", path],
+            capture_output=True, text=True)
+        dims = (r.stdout or "").strip()
+        if dims != "1080,1920":
+            bad.append(f"{d}: {rel} is {dims or '?'} (spec 1080x1920)")
+    if bad:
+        add("queued clip spec", "FAIL", "; ".join(bad[:3]))
+    else:
+        add("queued clip spec", "PASS", f"{len(future)} queued clip(s), all 1080x1920 on disk")
+
+
 def check_competing_plan():
     """Nothing outside the manifest may claim to decide what gets posted today.
 
@@ -285,6 +323,7 @@ def main():
     check_delivery_gap()
     check_captions()
     check_posted_truth()
+    check_queued_clip_spec()
     check_competing_plan()
     check_disclosure()
     check_attribution()
