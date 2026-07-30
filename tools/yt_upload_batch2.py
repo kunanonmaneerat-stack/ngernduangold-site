@@ -17,7 +17,7 @@ import subprocess
 import sys
 import time
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -28,7 +28,13 @@ UPLOAD_LOG_PATH = ROOT / ".system_control" / "yt_upload_log.json"
 SECRETS_DIR = ROOT / "secrets"
 YOUTUBE_SCOPE = "https://www.googleapis.com/auth/youtube.upload"
 CHANNEL_ID = "UCVuqb7l5rJ4Q7PUKSIgsL4w"
-TARGET_DATES = tuple(f"2026-07-{day:02d}" for day in range(20, 27))
+# Default window kept for backwards compatibility (batch-2). Any other batch is
+# selected with --dates / --from / --to so this uploader is not batch-specific.
+# Added 30 Jul 2026: batch3 (b3-01..b3-07) could not be uploaded because this
+# constant silently excluded every date outside 20-26 Jul -> the script reported
+# "manifest is missing batch-2 dates" instead of uploading the clips that existed.
+DEFAULT_TARGET_DATES = tuple(f"2026-07-{day:02d}" for day in range(20, 27))
+TARGET_DATES = DEFAULT_TARGET_DATES  # rebound from CLI in main()
 MAX_UPLOADS_PER_RUN = 6
 TITLE_SUFFIX = " #Shorts"
 
@@ -62,7 +68,7 @@ class UploadPlan:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Schedule ngernduangold batch-2 YouTube Shorts. Dry-run is the default."
+        description="Schedule ngernduangold YouTube Shorts from the manifest. Dry-run is the default."
     )
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument(
@@ -86,10 +92,57 @@ def parse_args() -> argparse.Namespace:
         default=MAX_UPLOADS_PER_RUN,
         help=f"Maximum uploads in a live run (1-{MAX_UPLOADS_PER_RUN}; default %(default)s).",
     )
+    parser.add_argument(
+        "--dates",
+        default=None,
+        help="Comma-separated YYYY-MM-DD list to upload instead of the default batch-2 window.",
+    )
+    parser.add_argument(
+        "--from",
+        dest="date_from",
+        default=None,
+        help="Start of an inclusive YYYY-MM-DD range (use with --to).",
+    )
+    parser.add_argument(
+        "--to",
+        dest="date_to",
+        default=None,
+        help="End of an inclusive YYYY-MM-DD range (use with --from).",
+    )
     args = parser.parse_args()
     if not 1 <= args.limit <= MAX_UPLOADS_PER_RUN:
         parser.error(f"--limit must be between 1 and {MAX_UPLOADS_PER_RUN}")
+    if args.dates and (args.date_from or args.date_to):
+        parser.error("use either --dates or --from/--to, not both")
+    if bool(args.date_from) != bool(args.date_to):
+        parser.error("--from and --to must be used together")
     return args
+
+
+def resolve_target_dates(args: argparse.Namespace) -> tuple[str, ...]:
+    """Turn CLI date options into the tuple build_plans() filters on."""
+    import datetime as _dt
+
+    def _parse(label: str, value: str) -> _dt.date:
+        try:
+            return _dt.date.fromisoformat(value.strip())
+        except ValueError:
+            raise SetupError(f"{label} must be YYYY-MM-DD, got {value!r}") from None
+
+    if args.dates:
+        out = tuple(_parse("--dates", d).isoformat() for d in args.dates.split(",") if d.strip())
+        if not out:
+            raise SetupError("--dates was empty")
+        return out
+    if args.date_from:
+        start, end = _parse("--from", args.date_from), _parse("--to", args.date_to)
+        if end < start:
+            raise SetupError("--to must not be earlier than --from")
+        span = (end - start).days + 1
+        if span > 31:
+            raise SetupError(f"date range too wide ({span} days); cap is 31")
+        return tuple((start + _dt.timedelta(days=i)).isoformat() for i in range(span))
+    return DEFAULT_TARGET_DATES
 
 
 def load_manifest() -> tuple[dict[str, Any] | list[Any], list[dict[str, Any]]]:
@@ -186,7 +239,7 @@ def description_preview(description: str) -> str:
 
 
 def print_plan(plans: list[UploadPlan]) -> None:
-    print(f"Planned batch-2 Shorts: {len(plans)}")
+    print(f"Planned Shorts: {len(plans)}")
     for plan in plans:
         print(
             f"PLAN {plan.date} | file={plan.relative_video_path} | "
@@ -445,20 +498,35 @@ def run_check(plans: list[UploadPlan]) -> int:
         return 0
 
 
+# A scheduled publish time that has already passed is always a mistake: the YouTube API
+# rejects it (or silently strands the video as private forever). Added 30 Jul 2026 after
+# batch3 slipped past its own 19:00 slot -- catching up late must PUBLISH, not re-schedule
+# into the past. Small grace so a run that starts at 18:59 still schedules normally.
+PUBLISH_NOW_GRACE_MIN = 15
+
+
+def publishes_in_the_past(plan: UploadPlan, now: datetime | None = None) -> bool:
+    now = now or datetime.now(timezone.utc)
+    slot = datetime.strptime(plan.publish_at, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+    return slot <= now + timedelta(minutes=PUBLISH_NOW_GRACE_MIN)
+
+
 def upload_body(plan: UploadPlan) -> dict[str, Any]:
-    return {
-        "snippet": {
-            "title": plan.title,
-            "description": plan.description,
-            "categoryId": "27",
-            "defaultLanguage": "th",
-        },
-        "status": {
+    snippet = {
+        "title": plan.title,
+        "description": plan.description,
+        "categoryId": "27",
+        "defaultLanguage": "th",
+    }
+    if publishes_in_the_past(plan):
+        status = {"privacyStatus": "public", "selfDeclaredMadeForKids": False}
+    else:
+        status = {
             "privacyStatus": "private",
             "publishAt": plan.publish_at,
             "selfDeclaredMadeForKids": False,
-        },
-    }
+        }
+    return {"snippet": snippet, "status": status}
 
 
 def run_live(
@@ -493,7 +561,8 @@ def run_live(
     failed = False
 
     for plan in selected:
-        print(f"UPLOAD {plan.date}: {plan.relative_video_path} -> {plan.publish_at}")
+        _mode = "PUBLISH NOW (slot already passed)" if publishes_in_the_past(plan) else f"scheduled {plan.publish_at}"
+        print(f"UPLOAD {plan.date}: {plan.relative_video_path} -> {_mode}")
         try:
             media = MediaFileUpload(
                 str(plan.video_path), mimetype="video/mp4", chunksize=-1, resumable=True
@@ -514,7 +583,11 @@ def run_live(
             if not isinstance(posted, dict):
                 posted = {}
                 plan.item["posted"] = posted
-            posted["youtube"] = f"scheduled (yt-api {video_id})"
+            # Record what ACTUALLY happened. Writing "scheduled" for a video that was
+            # published immediately makes downstream guards (video-post-verify,
+            # channel-heartbeat) reason about a state that never existed.
+            _how = "published" if publishes_in_the_past(plan) else "scheduled"
+            posted["youtube"] = f"{_how} (yt-api {video_id})"
             save_manifest(manifest)
             print(f"SUCCESS {plan.date}: videoId={video_id}")
             try:  # C-fix 23Jul: confirmed post must reach post-ledger (never breaks upload flow)
@@ -543,8 +616,10 @@ def run_live(
 
 
 def main() -> int:
+    global TARGET_DATES
     args = parse_args()
     try:
+        TARGET_DATES = resolve_target_dates(args)
         manifest, items = load_manifest()
         plans = build_plans(items)
         upload_log = load_upload_log()

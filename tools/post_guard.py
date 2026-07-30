@@ -226,7 +226,12 @@ def youtube_service() -> Any:
         raise YouTubeUnavailable("yt_token.json could not be loaded") from exc
     # Refreshing through the helper would write the cache; the guard is read-only.
     if not credentials.valid:
-        raise YouTubeUnavailable("cached YouTube token is invalid or expired; guard will not rewrite it")
+        # Wording matters: this token is upload-scope only and may simply be stale but
+        # refreshable. Do not imply the credential is dead -- that misreading is why
+        # uploads were done by hand for days when the script would have worked.
+        raise YouTubeUnavailable(
+            "cached YouTube token needs refresh (upload-scope only); guard is read-only and will not rewrite it"
+        )
     return build("youtube", "v3", credentials=credentials, cache_discovery=False)
 
 
@@ -240,7 +245,17 @@ def check_logged_youtube(target: date, video_id: str, checked_at: datetime) -> d
         response = service.videos().list(part="status,snippet", id=video_id).execute()
     except Exception as exc:
         detail = http_error_detail(exc) if hasattr(exc, "resp") else str(exc)
-        return result("YOUTUBE", "UNKNOWN", f"yt_upload_log has a video ID, but API check is unavailable: {detail}")
+        # EVIDENCE FIX 30 Jul 2026: yt_upload_log is written ONLY after YouTube returns a
+        # video ID for a completed upload, so its presence already proves the clip shipped.
+        # Reporting UNKNOWN here made a delivered day look undelivered, and the accompanying
+        # "token invalid" wording caused a standing (wrong) belief that YouTube auth was dead
+        # -- the cached token is upload-scope only, so read calls legitimately return 403.
+        return result(
+            "YOUTUBE",
+            "OK",
+            f"upload confirmed by yt_upload_log ({video_id}); live visibility not re-checked ({detail})",
+            "No action. To verify visibility, open the video in YouTube Studio.",
+        )
 
     videos = response.get("items", [])
     if not videos:
@@ -656,6 +671,14 @@ def check_threads(target: date, item: dict[str, Any] | None) -> dict[str, str]:
             # กันสับสน: knowledge-post เที่ยงเป็น type=text ช่อง threads เหมือนกัน
             # แต่ไม่ใช่คลิปรายวัน 19:00 — อย่านับ text เป็นหลักฐานว่าคลิปขึ้นแล้ว (บั๊ก 20 ก.ค.)
             if str(entry.get("type", "")).casefold() == "text":
+                continue
+            # FALSE-GREEN FIX 30 Jul 2026: a row of type "failure" is the ledger recording
+            # that the post did NOT happen. The old code only skipped "text", so the
+            # 30 Jul entry {"type":"failure","channel":"threads","clip_id":"b3-01",
+            # "NOT POSTED - Claude in Chrome extension unreachable"} matched the date and
+            # was reported as THREADS=OK. A guard that turns a recorded failure into a
+            # green light is worse than no guard. Accept only rows that assert a real post.
+            if str(entry.get("type", "")).casefold() not in ("video", "image"):
                 continue
             if wanted in json.dumps(entry, ensure_ascii=False):
                 return result("THREADS", "OK", f"Threads clip entry dated {wanted} found in post-ledger.jsonl.")

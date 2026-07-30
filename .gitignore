@@ -47,3 +47,7 @@ automation-log/_*
 # social-autopost: browser session + logs (ห้าม commit — มี cookies/credentials)
 social-autopost/.tiktok-profile/
 social-autopost/logs/
+
+# dated safety backups (30 Jul 2026) - never commit these
+*.bak_*
+

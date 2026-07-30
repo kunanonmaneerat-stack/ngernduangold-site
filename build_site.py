@@ -333,13 +333,13 @@ FOOTER = f"""<footer><div class="wrap">
 # end-of-article entry to the quiz (internal link; no affiliate, no PII)
 QUIZ_CTA = '<div style="margin:26px 0;padding:15px 18px;background:#fff7e6;border:1px solid #f0d9a0;border-radius:12px;text-align:center"><a href="/quiz" style="color:#6b5b2a;font-weight:700;text-decoration:none;font-size:15px">🧭 ไม่แน่ใจว่าตัวไหนเหมาะกับคุณ? ทำ Quiz 30 วิ หาคำตอบ →</a></div>'
 
-def cta(merchant, url, slug, text):
+def cta(merchant, url, slug, text, channel="website"):
     free = (merchant == 'Kept')
     cls = 'cta free' if free else 'cta'
     badge = '<span class="freebadge">สมัครฟรี</span>' if free else ''
     sub = ('ไม่มีค่าใช้จ่าย · ไม่เช็กเครดิต · ดอกสูงกว่าบัญชีออมทรัพย์ทั่วไป' if free
            else 'กดดูเกณฑ์/ดอกเบี้ยเบื้องต้นได้ฟรี ไม่ผูกมัด · ลิงก์ทางการของผู้ให้บริการ ปลอดภัย · *เงื่อนไข/การอนุมัติเป็นไปตามผู้ให้บริการ')
-    return f'<a class="{cls}" rel="sponsored noopener nofollow" target="_blank" data-provider="{_pcode(merchant)}" href="{utm(url,merchant,slug)}">{badge}{text}<small>{sub}</small></a>'
+    return f'<a class="{cls}" rel="sponsored noopener nofollow" target="_blank" data-provider="{_pcode(merchant)}" href="{utm(url,merchant,slug,channel=channel)}">{badge}{text}<small>{sub}</small></a>'
 
 AFF_DISC = ('<div class="aff-disc" style="margin:12px 0;padding:9px 13px;background:#fff7e6;'
             'border:1px solid #f0d9a0;border-radius:9px;font-size:12.5px;color:#6b5b2a;line-height:1.55">'
@@ -536,7 +536,14 @@ def top_offer(camp, slug):
         m, u, t = "Krungsri", KRUNGSRI, "สมัครบัตรเครดิตกรุงศรีออนไลน์"
     else:
         return ""
-    return f'<div style="margin:14px 0 8px">{cta(m, u, slug, t)}</div>'
+    # ATTRIBUTION FIX 30 Jul 2026: pages that own a dedicated channel must not emit the
+    # generic channel="website" on their inline CTA. Symptom caught by clicktest (fail 3/3
+    # since 19 Jul): /lifestyle-credit-card-2026 had 4 CTAs tagged lifestyle_* and 1 tagged
+    # website_* -> GA4 could not tell lifestyle-intent clicks from generic page clicks.
+    # Keep this a slug->channel map, not an if-chain, so new owned channels are one line.
+    _CH_BY_SLUG = (("lifestyle-credit-card", "lifestyle"),)
+    _ch = next((v for k, v in _CH_BY_SLUG if k in sl), "website")
+    return f'<div style="margin:14px 0 8px">{cta(m, u, slug, t, channel=_ch)}</div>'
 
 
 CLIP_SLUGS = {"credit-bureau-check-2026", "debt-consolidation-2026", "emergency-fund-2026",
