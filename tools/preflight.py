@@ -161,6 +161,49 @@ def check_posted_truth():
         add("posted records", "PASS", "manifest agrees with yt_upload_log")
 
 
+def check_competing_plan():
+    """Nothing outside the manifest may claim to decide what gets posted today.
+
+    Found 31 Jul 2026: pipeline/post_dispatcher.py (legacy, plans from the raw Google Flow
+    library) rewrote automation-log/post-plan.json every morning naming 720x1280 WATERMARKED
+    clips for the exact days b3-05..b3-07 were queued -- and its paths pointed at a dead
+    sandbox mount. Two sources of truth for one decision is the same failure class as the
+    27-30 Jul blackout; the only difference is which file won. So: assert there is no second
+    plan, or that if one exists it agrees with the manifest.
+    """
+    plan_path = os.path.join(REPO, "automation-log", "post-plan.json")
+    if not os.path.exists(plan_path):
+        add("competing plan", "PASS", "no rival post-plan.json - manifest is the only source")
+        return
+    plan = _load(plan_path, None)
+    if plan is None:
+        add("competing plan", "WARN", "post-plan.json exists but is unreadable")
+        return
+    items = plan if isinstance(plan, list) else (plan.get("items") or plan.get("plan") or [])
+    man = {i.get("date"): i for i in (_load(MANIFEST, {}) or {}).get("items", [])}
+    today = datetime.date.today().isoformat()
+    bad = []
+    for it in items:
+        if not isinstance(it, dict):
+            continue
+        day = it.get("day") or it.get("date")
+        if not day or day < today:
+            continue                      # only future/today matters
+        f = str(it.get("file") or "")
+        if not f:
+            continue
+        norm = f.replace("\\", "/")
+        if "/reels/" not in norm:
+            bad.append(f"{day}: plans {os.path.basename(norm) or f} which is not a reels/ clip")
+        elif day in man and os.path.basename(man[day].get("reel", "")) != os.path.basename(norm):
+            bad.append(f"{day}: plan says {os.path.basename(norm)}, manifest says "
+                       f"{os.path.basename(man[day].get('reel',''))}")
+    if bad:
+        add("competing plan", "FAIL", "; ".join(bad[:3]))
+    else:
+        add("competing plan", "PASS", "post-plan.json agrees with the manifest")
+
+
 def check_disclosure():
     """Affiliate disclosure must be driven by real anchors, never by grep-for-words.
     Guards the negation bug (a page saying 'no affiliate links' matched 'affiliate links')."""
@@ -242,6 +285,7 @@ def main():
     check_delivery_gap()
     check_captions()
     check_posted_truth()
+    check_competing_plan()
     check_disclosure()
     check_attribution()
     if args.full:

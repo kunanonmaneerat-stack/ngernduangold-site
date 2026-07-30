@@ -29,11 +29,21 @@ echo [%date% %time%] credit_tracker status >> "%LOG%"
 "%PY%" "%BASE%\credit_tracker.py" status >> "%LOG%" 2>&1
 echo [%date% %time%] dashboard_agent start (dashboard.html) >> "%LOG%"
 "%PY%" "%BASE%\dashboard_agent.py" >> "%LOG%" 2>&1
-echo [%date% %time%] post_dispatcher (video -> post plan) >> "%LOG%"
-"%PY%" "%BASE%\post_dispatcher.py" >> "%LOG%" 2>&1
+REM DISABLED 31 Jul 2026 -- post_dispatcher + daily_post_reminder are a LEGACY pair that
+REM plan from automation-log/video-out/ (raw Google Flow clips, June, 720x1280 WITH the Veo
+REM sparkle watermark) and know nothing about the current pipeline (manifest -> reels/*.mp4,
+REM 1080x1920, watermark-free). They were still writing post-plan.json every morning, telling
+REM the reminder to post hard-blocked footage on the exact days b3-05..b3-07 are queued, and
+REM the paths inside it pointed at a dead sandbox mount. video-post-verify caught it 30 Jul
+REM 21:45 (watermark on 9-30 of 30 frames). Same watermark class that burned 5 IG reels 9 Jul.
+REM The daily card is now produced by the Cowork task `daily-social-post-reminder` (08:00)
+REM straight from the manifest, so nothing here is lost. Re-enable ONLY after post_dispatcher
+REM is rewritten to read .system_control/content_manifest.json instead of video-out/.
+REM echo [%date% %time%] post_dispatcher (video -> post plan) >> "%LOG%"
+REM "%PY%" "%BASE%\post_dispatcher.py" >> "%LOG%" 2>&1
 "%PY%" "%BASE%\posting_kit.py" >> "%LOG%" 2>&1
-echo [%date% %time%] daily_post_reminder >> "%LOG%"
-"%PY%" "%BASE%\daily_post_reminder.py" >> "%LOG%" 2>&1
+REM echo [%date% %time%] daily_post_reminder >> "%LOG%"
+REM "%PY%" "%BASE%\daily_post_reminder.py" >> "%LOG%" 2>&1
 echo [%date% %time%] hermes_digest start >> "%LOG%"
 "%PY%" "%BASE%\hermes_digest.py" >> "%LOG%" 2>&1
 echo [%date% %time%] cc_monitor (Claude Code status -> Cowork) >> "%LOG%"
