@@ -169,6 +169,11 @@ def check_queued_clip_spec():
     sit in the queue for days and only be caught on the way out. This checks on the way IN.
     Past dates are ignored on purpose: history is history, and 11-19 Jul really were 720p.
     """
+    # Spec comes from policy.json, not from a literal here -- same one-fact-one-place rule
+    # that moved the channel pause windows out of post_guard on 31 Jul.
+    spec = (_load(os.path.join(REPO, ".system_control", "policy.json"), {}) or {}).get("specs", {})
+    want_w, want_h = spec.get("reel_width", 1080), spec.get("reel_height", 1920)
+    want = f"{want_w},{want_h}"
     sched = _load(SCHEDULE, {}) or {}
     today = datetime.date.today().isoformat()
     future = {d: v for d, v in sched.items() if d >= today}
@@ -191,12 +196,12 @@ def check_queued_clip_spec():
              "-show_entries", "stream=width,height", "-of", "csv=p=0", path],
             capture_output=True, text=True)
         dims = (r.stdout or "").strip()
-        if dims != "1080,1920":
-            bad.append(f"{d}: {rel} is {dims or '?'} (spec 1080x1920)")
+        if dims != want:
+            bad.append(f"{d}: {rel} is {dims or '?'} (spec {want_w}x{want_h})")
     if bad:
         add("queued clip spec", "FAIL", "; ".join(bad[:3]))
     else:
-        add("queued clip spec", "PASS", f"{len(future)} queued clip(s), all 1080x1920 on disk")
+        add("queued clip spec", "PASS", f"{len(future)} queued clip(s), all {want_w}x{want_h} on disk")
 
 
 def check_competing_plan():
