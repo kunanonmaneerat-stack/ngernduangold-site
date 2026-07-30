@@ -171,8 +171,14 @@ def check_queued_clip_spec():
     """
     # Spec comes from policy.json, not from a literal here -- same one-fact-one-place rule
     # that moved the channel pause windows out of post_guard on 31 Jul.
-    spec = (_load(os.path.join(REPO, ".system_control", "policy.json"), {}) or {}).get("specs", {})
+    pol_path = os.path.join(REPO, ".system_control", "policy.json")
+    spec = (_load(pol_path, {}) or {}).get("specs", {})
     want_w, want_h = spec.get("reel_width", 1080), spec.get("reel_height", 1920)
+    if not os.path.exists(pol_path):
+        add("queued clip spec", "WARN",
+            "policy.json is MISSING - falling back to %dx%d; restore it before trusting this"
+            % (want_w, want_h))
+        return
     want = f"{want_w},{want_h}"
     sched = _load(SCHEDULE, {}) or {}
     today = datetime.date.today().isoformat()
@@ -202,6 +208,66 @@ def check_queued_clip_spec():
         add("queued clip spec", "FAIL", "; ".join(bad[:3]))
     else:
         add("queued clip spec", "PASS", f"{len(future)} queued clip(s), all {want_w}x{want_h} on disk")
+
+
+SCHEDULED_DIR = os.path.join(os.path.expanduser("~"), "Claude", "Scheduled")
+
+
+def check_prompt_drift():
+    """Scheduled-task prompts may quote a policy date, but it must still be the real one.
+
+    Twice on 31 Jul the same fact lived in a prompt AND in policy/code, and the copies
+    disagreed: TikTok was dropped but two prompts still asked for it, and the clip spec was
+    written in both policy.json and preflight. Banning dates in prompts would be useless --
+    context helps. So the rule is narrower and checkable: IF a prompt names a date that
+    policy.json also owns for that channel, the two must match. A prompt quoting a date
+    policy no longer holds is drift, and drift is what goes unnoticed for days.
+
+    Skips silently when the Scheduled directory is not visible (e.g. the Linux sandbox);
+    the Windows-side runs are the ones that matter.
+    """
+    if not os.path.isdir(SCHEDULED_DIR):
+        add("prompt drift", "WARN", "Scheduled dir not visible here - run this check on the Windows host")
+        return
+    pol_path = os.path.join(REPO, ".system_control", "policy.json")
+    if not os.path.exists(pol_path):
+        # Distinguish "policy has no dates" from "policy is gone". The first is fine; the
+        # second means this check has no input and would otherwise PASS while blind --
+        # exactly the failure mode this repo keeps writing rules about.
+        add("prompt drift", "WARN", "policy.json is MISSING - this check has nothing to compare against")
+        return
+    pol = _load(pol_path, {}) or {}
+    channels = pol.get("channels", {})
+    # channel -> the ONE date policy currently owns for it
+    owned = {ch: v["until"] for ch, v in channels.items() if v.get("until")}
+    if not owned:
+        add("prompt drift", "PASS", "policy owns no channel dates to drift from")
+        return
+    alias = {"instagram": ("instagram", "ig"), "tiktok": ("tiktok",),
+             "pinterest": ("pinterest",), "threads": ("threads",),
+             "youtube": ("youtube", "yt"), "facebook": ("facebook", "fb")}
+    stale, checked = [], 0
+    for name in sorted(os.listdir(SCHEDULED_DIR)):
+        skill = os.path.join(SCHEDULED_DIR, name, "SKILL.md")
+        if not os.path.isfile(skill):
+            continue
+        try:
+            text = io.open(skill, encoding="utf-8", errors="ignore").read()
+        except Exception:
+            continue
+        checked += 1
+        low = text.lower()
+        for ch, good in owned.items():
+            if not any(a in low for a in alias.get(ch, (ch,))):
+                continue
+            # every ISO date this prompt mentions for a month policy also talks about
+            for found in set(re.findall(r"20\d\d-\d\d-\d\d", text)):
+                if found[:7] == good[:7] and found != good:
+                    stale.append(f"{name}: says {found} for {ch}, policy says {good}")
+    if stale:
+        add("prompt drift", "FAIL", "; ".join(sorted(set(stale))[:3]))
+    else:
+        add("prompt drift", "PASS", f"{checked} task prompt(s) agree with policy.json")
 
 
 def check_competing_plan():
@@ -330,6 +396,7 @@ def main():
     check_posted_truth()
     check_queued_clip_spec()
     check_competing_plan()
+    check_prompt_drift()
     check_disclosure()
     check_attribution()
     if args.full:
