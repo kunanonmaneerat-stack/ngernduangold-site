@@ -181,6 +181,84 @@ def manifest_posted_status(
     return None
 
 
+LEDGER_POST_TYPES = ("video", "image")  # rows that assert a real post happened
+
+
+def ledger_evidence(channel: str, target: date) -> tuple[str, dict[str, Any] | None]:
+    """Read post-ledger.jsonl once and say what it knows about `channel` on `target`.
+
+    Returns ("posted"|"failed"|"none", entry).  Precedence: a real post row wins over a
+    failure row for the same day (a retry that finally succeeded must not read as failed).
+
+    Rows of type "text" are ignored on purpose: the noon knowledge-post writes to the same
+    channel but is not the daily clip, and counting it green hid a missing clip on 20 Jul.
+    Rows of type "failure" are the ledger stating the post did NOT happen -- treating them
+    as evidence of success is the false-green bug fixed in e85fa55 (30 Jul).
+    """
+    ledger = AUTOMATION_LOG / "post-ledger.jsonl"
+    if not ledger.is_file():
+        return "none", None
+    wanted = target.isoformat()
+    failure: dict[str, Any] | None = None
+    try:
+        for raw_line in ledger.read_text(encoding="utf-8", errors="replace").splitlines():
+            try:
+                entry = json.loads(raw_line)
+            except json.JSONDecodeError:
+                continue
+            if str(entry.get("channel", "")).casefold() != channel.casefold():
+                continue
+            if wanted not in json.dumps(entry, ensure_ascii=False):
+                continue
+            kind = str(entry.get("type", "")).casefold()
+            if kind in LEDGER_POST_TYPES:
+                return "posted", entry
+            if kind == "failure" and failure is None:
+                failure = entry
+    except OSError:
+        return "none", None
+    return ("failed", failure) if failure is not None else ("none", None)
+
+
+def ledger_note(entry: dict[str, Any] | None) -> str:
+    if not entry:
+        return ""
+    for key in ("text_first80", "note"):
+        value = entry.get(key)
+        if isinstance(value, str) and value.strip():
+            return clean_text(value)[:90]
+    return ""
+
+
+def source_side_or_not_posted(
+    target: date,
+    item: dict[str, Any] | None,
+    channel: str,
+    manifest_key: str,
+    evidence: str,
+) -> dict[str, str]:
+    """Downstream verification failed. Fall back to what WE control (ledger + manifest).
+
+    Never returns UNKNOWN: every outcome must translate into an action.
+      SOURCE-SIDE = we recorded/scheduled it but cannot confirm on the platform.
+      FAILED      = the ledger says the attempt failed -> fix the pipeline.
+      NOT-POSTED  = no evidence anywhere -> it did not go out; post it.
+    (order 30 Jul: "UNKNOWN ทำให้คนมองข้าม NOT-POSTED ทำให้คนแก้")
+    """
+    kind, entry = ledger_evidence(manifest_key, target)
+    if kind == "posted":
+        return result(channel, "SOURCE-SIDE", f"{evidence} · ledger บันทึกว่าโพสต์แล้ว", "ยืนยันปลายทางด้วยตาเมื่อสะดวก")
+    manifest_status = manifest_posted_status(item, channel, manifest_key)
+    if manifest_status is not None:
+        detail = manifest_status["evidence"]
+        return result(channel, "SOURCE-SIDE", f"{evidence} · ต้นทางตั้งค่าไว้แล้ว {detail}",
+                      "ยืนยันปลายทางด้วยตาเมื่อสะดวก")
+    if kind == "failed":
+        note = ledger_note(entry)
+        return result(channel, "FAILED", f"{evidence} · ledger บันทึกความล้มเหลว: {note}", "ซ่อม pipeline แล้วโพสต์ซ้ำ")
+    return result(channel, "NOT-POSTED", f"{evidence} · ไม่มีหลักฐานทั้งใน ledger และ manifest", "โพสต์ให้เรียบร้อย")
+
+
 def manifest_or_unknown(
     item: dict[str, Any] | None,
     channel: str,
@@ -616,11 +694,15 @@ def tiktok_created_on(value: Any, target: date) -> bool:
 
 
 def check_tiktok(target: date, item: dict[str, Any] | None, checked_at: datetime) -> dict[str, str]:
+    # Logged-out profile scraping stopped working (interest modal / no rehydration JSON).
+    # When downstream verification is impossible we report from the source side instead of
+    # UNKNOWN, which never told anyone what to do (order 30 Jul, task 2.1a).
     if target in TIKTOK_UI_SCHEDULED_DATES and checked_at.time() < time(19, 5):
         return result("TIKTOK", "SCHEDULED-UI", "UI-scheduled through 26 Jul; public verification begins after 19:05 Asia/Bangkok.")
     prefix = clean_text(channel_caption(item, "tiktok"))[:25]
     if not prefix:
-        return manifest_or_unknown(
+        return source_side_or_not_posted(
+            target,
             item,
             "TIKTOK",
             "tiktok",
@@ -628,7 +710,8 @@ def check_tiktok(target: date, item: dict[str, Any] | None, checked_at: datetime
         )
     page, error_name = public_profile_page("https://www.tiktok.com/@ngernduangold")
     if page is None:
-        return manifest_or_unknown(
+        return source_side_or_not_posted(
+            target,
             item,
             "TIKTOK",
             "tiktok",
@@ -636,7 +719,8 @@ def check_tiktok(target: date, item: dict[str, Any] | None, checked_at: datetime
         )
     document = tiktok_embedded_json(page)
     if document is None:
-        return manifest_or_unknown(
+        return source_side_or_not_posted(
+            target,
             item,
             "TIKTOK",
             "tiktok",
@@ -647,7 +731,8 @@ def check_tiktok(target: date, item: dict[str, Any] | None, checked_at: datetime
         return result("TIKTOK", "OK", "Manifest caption prefix appears in a public TikTok item description.")
     if any(tiktok_created_on(created_at, target) for _, created_at in items):
         return result("TIKTOK", "OK", "an item was published on the target date (caption mismatch)")
-    return manifest_or_unknown(
+    return source_side_or_not_posted(
+        target,
         item,
         "TIKTOK",
         "tiktok",
@@ -656,44 +741,31 @@ def check_tiktok(target: date, item: dict[str, Any] | None, checked_at: datetime
 
 
 def check_threads(target: date, item: dict[str, Any] | None) -> dict[str, str]:
-    ledger = AUTOMATION_LOG / "post-ledger.jsonl"
-    if not ledger.is_file():
-        return result("THREADS", "UNKNOWN", "post-ledger.jsonl is absent.", "Ask Cowork/Threads profile.")
+    """Threads is a channel WE post to ourselves, so the ledger is the source of truth.
+
+    No ledger row does not mean "unknown" -- it means nobody posted (order 30 Jul, task 2.2).
+    The public-profile scrape stays only as a free upside: Threads renders client-side so the
+    HTML almost never contains the caption, and a miss there must not downgrade the verdict.
+    """
     wanted = target.isoformat()
-    try:
-        for raw_line in ledger.read_text(encoding="utf-8", errors="replace").splitlines():
-            try:
-                entry = json.loads(raw_line)
-            except json.JSONDecodeError:
-                continue
-            if str(entry.get("channel", "")).casefold() != "threads":
-                continue
-            # กันสับสน: knowledge-post เที่ยงเป็น type=text ช่อง threads เหมือนกัน
-            # แต่ไม่ใช่คลิปรายวัน 19:00 — อย่านับ text เป็นหลักฐานว่าคลิปขึ้นแล้ว (บั๊ก 20 ก.ค.)
-            if str(entry.get("type", "")).casefold() == "text":
-                continue
-            # FALSE-GREEN FIX 30 Jul 2026: a row of type "failure" is the ledger recording
-            # that the post did NOT happen. The old code only skipped "text", so the
-            # 30 Jul entry {"type":"failure","channel":"threads","clip_id":"b3-01",
-            # "NOT POSTED - Claude in Chrome extension unreachable"} matched the date and
-            # was reported as THREADS=OK. A guard that turns a recorded failure into a
-            # green light is worse than no guard. Accept only rows that assert a real post.
-            if str(entry.get("type", "")).casefold() not in ("video", "image"):
-                continue
-            if wanted in json.dumps(entry, ensure_ascii=False):
-                return result("THREADS", "OK", f"Threads clip entry dated {wanted} found in post-ledger.jsonl.")
-    except OSError as exc:
-        return result("THREADS", "UNKNOWN", f"Could not read post-ledger.jsonl: {type(exc).__name__}", "Ask Cowork/Threads profile.")
+    kind, entry = ledger_evidence("threads", target)
+    if kind == "posted":
+        return result("THREADS", "OK", f"Threads clip entry dated {wanted} found in post-ledger.jsonl.")
+
     prefix = clean_text(channel_caption(item, "threads"))[:30]
-    if not prefix:
-        return result("THREADS", "UNKNOWN", f"No Threads ledger entry dated {wanted}; manifest captions.threads is missing.", "Ask Cowork/Threads profile.")
-    page, error_name = public_profile_page("https://www.threads.com/@ngernduangold")
-    if page is None:
-        return result("THREADS", "UNKNOWN", f"Public Threads profile GET was unavailable: {error_name}", "Ask Cowork/Threads profile.")
-    page_text = clean_text(html.unescape(re.sub(r"<[^>]+>", " ", page)))
-    if prefix in page_text:
-        return result("THREADS", "OK", "caption prefix found on public profile")
-    return result("THREADS", "UNKNOWN", "Caption prefix was not found on the public Threads profile.", "Ask Cowork/Threads profile.")
+    if prefix:
+        page, _error_name = public_profile_page("https://www.threads.com/@ngernduangold")
+        if page is not None:
+            page_text = clean_text(html.unescape(re.sub(r"<[^>]+>", " ", page)))
+            if prefix in page_text:
+                return result("THREADS", "OK", "caption prefix found on public profile")
+
+    if kind == "failed":
+        note = ledger_note(entry)
+        return result("THREADS", "FAILED", f"ledger บันทึกว่าโพสต์ไม่สำเร็จ ({wanted}): {note}",
+                      "ซ่อมเส้นทางแนบไฟล์แล้วโพสต์ซ้ำวันนี้")
+    return result("THREADS", "NOT-POSTED", f"ไม่มีแถวคลิป Threads ลงวันที่ {wanted} ใน post-ledger.jsonl",
+                  "โพสต์คลิปวันนี้ลง Threads แล้วบันทึก ledger")
 
 
 def readiness_preview(target: date, items: list[dict[str, Any]], upload_log: dict[str, str], checked_at: datetime) -> dict[str, Any]:
@@ -851,7 +923,14 @@ def main() -> int:
     ]
     if youtube_action != "-":
         channels[0]["action"] = youtube_action
-    has_fail = any(channel["status"] == "FAIL" for channel in channels)
+    # Statuses that mean "a human must do something today".  Before 30 Jul this only
+    # matched the literal "FAIL", so the new actionable verdicts would have been
+    # reported in the body while the summary line said "ไม่พบ FAIL" -- a guard
+    # contradicting itself is how a dead channel stays dead for five days.
+    # SOURCE-SIDE is deliberately NOT here: it means we did our part and only the
+    # platform-side confirmation is unavailable.
+    ACTION_REQUIRED = {"FAIL", "FAILED", "NOT-POSTED"}
+    has_fail = any(channel["status"] in ACTION_REQUIRED for channel in channels)
     payload: dict[str, Any] = {
         "checked_date": target.isoformat(),
         "checked_at": iso_timestamp(checked_at),
