@@ -67,3 +67,20 @@ Sent to telegram home channel (chat_id: 8431211539)
 [2026-07-27T09:16:19] OK -> gsc-pages.csv | pages=16
 weekly growth review -> C:\Users\nL_ku\ngernduangold-site\automation-log\weekly-growth-20260727.md | sessions=223 conv=9
 [Mon 07/27/2026  9:16:45.61] run_weekly end exit=0 
+[Fri 07/31/2026  2:11:58.99] comply_gate_stitch scan (components\stitch) 
+
+SUMMARY: 0 file(s), 0 FAIL finding(s).
+[Fri 07/31/2026  2:11:59.29] run_weekly start 
+[2026-07-31T02:12:03] auth = OAuth token (secrets/ga4-token.json)
+[2026-07-31T02:12:07] OK -> ga4-metrics.csv | source=7 sessions=207 quiz=2 conv=8
+[2026-07-31T02:12:07] auth = OAuth token (secrets/ga4-token.json)
+[2026-07-31T02:12:09] OK -> ga4-pages.csv | pages=34
+[2026-07-31T02:12:09] auth = OAuth token (secrets/ga4-token.json)
+[2026-07-31T02:12:10] OK -> ga4-funnel.csv | quiz_start=2 -> quiz_complete=2 -> recommendation_view=2 -> affiliate_click=8
+Sent to telegram home channel (chat_id: 8431211539)
+[2026-07-31T02:12:11] auth = ga4-token.json
+[2026-07-31T02:12:12] GSC property = https://ngernduangold.com/
+[2026-07-31T02:12:12] OK -> gsc-queries.csv | queries=16
+[2026-07-31T02:12:12] OK -> gsc-pages.csv | pages=27
+weekly growth review -> C:\Users\nL_ku\ngernduangold-site\automation-log\weekly-growth-20260731.md | sessions=207 conv=8
+[Fri 07/31/2026  2:13:13.04] run_weekly end exit=0 

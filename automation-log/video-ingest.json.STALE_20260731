@@ -1,0 +1,330 @@
+{
+  "seen": [
+    "Young_adult_holding_credit_cards_202606220951.mp4",
+    "Hands_writing_minimum_payment_chart_202606220951.mp4",
+    "Desk_with_loan_approval_letter_202606220951.mp4",
+    "Hands_placing_coins_jars_202606220951.mp4",
+    "Smartphone_showing_bank_app_202606220951.mp4",
+    "Young_adult_tapping_smartphone_b…_202606220951.mp4",
+    "Hands_writing_in_notebook_202606220951.mp4",
+    "Smartphone_auto-transfer_setting…_202606220951.mp4",
+    "Person_holding_notebook_and_pen_202606220951.mp4",
+    "Three_coins_dropping_on_surface_202606220951.mp4",
+    "Planner_with_pen_and_coffee_202606220951.mp4",
+    "Thai_adult_sitting_in_car_202606220951.mp4",
+    "Hands_counting_cash_unpaid_bills_202606220951.mp4",
+    "Car_parked_in_driveway_person_202606220951.mp4",
+    "Desk_with_calculator_and_chart_202606220951.mp4",
+    "Smartphone_loan_comparison_scree…_202606220951.mp4",
+    "Young_adult_looking_anxious_bill_202606220951.mp4",
+    "Hands_opening_empty_wallet_202606220951.mp4",
+    "Hand_placing_cash_in_jar_202606220951.mp4",
+    "Person_writing_monthly_planner_desk_202606220951.mp4",
+    "Smartphone_savings_app_progress_202606220951.mp4",
+    "Young_adult_holding_blank_card_202606220951.mp4",
+    "Hands_flipping_paper_document_202606220951.mp4",
+    "Desk_with_notebook_and_pen_202606220951.mp4",
+    "Hands_placing_card_desk_calendar_202606220951.mp4",
+    "Smartphone_interface_finger_tapping_202606220951.mp4",
+    "Adult_looking_at_home_loan_202606220951.mp4",
+    "Hand_using_calculator_rising_chart_202606220951.mp4",
+    "Hands_comparing_documents_on_desk_202606220951.mp4",
+    "Checklist_with_pen_and_calendar_202606220951.mp4",
+    "Finger_tapping_loan_app_screen_202606220951.mp4",
+    "Thai_adult_looking_at_smartphone_202606220951.mp4",
+    "Person_reading_letter_puzzled_202606220951.mp4",
+    "Hands_holding_printed_report_202606220951.mp4",
+    "Desk_calendar_payment_dates_circled_202606220951.mp4",
+    "Smartphone_credit_score_app_dash…_202606220951.mp4"
+  ],
+  "items": [
+    {
+      "topic": "debt-consolidate",
+      "topic_th": "หนี้บัตร/รวมหนี้",
+      "label": "01-hook ความรู้สึกติดกับดัก",
+      "src": "Young_adult_holding_credit_cards_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/debt-consolidate/01.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "debt-consolidate",
+      "topic_th": "หนี้บัตร/รวมหนี้",
+      "label": "02-problem ยอดไม่ลด",
+      "src": "Hands_writing_minimum_payment_chart_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/debt-consolidate/02.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "debt-consolidate",
+      "topic_th": "หนี้บัตร/รวมหนี้",
+      "label": "03-solution ทางเลือก",
+      "src": "Desk_with_loan_approval_letter_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/debt-consolidate/03.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "debt-consolidate",
+      "topic_th": "หนี้บัตร/รวมหนี้",
+      "label": "04-caution รับผิดชอบ",
+      "src": "Hands_placing_coins_jars_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/debt-consolidate/04.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "debt-consolidate",
+      "topic_th": "หนี้บัตร/รวมหนี้",
+      "label": "05-action เช็กสิทธิ์",
+      "src": "Smartphone_showing_bank_app_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/debt-consolidate/05.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "save-paycheck",
+      "topic_th": "เงินเดือนชนเดือน/ออม",
+      "label": "01-hook เงินหายวันเดียว",
+      "src": "Young_adult_tapping_smartphone_b…_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/save-paycheck/01.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "save-paycheck",
+      "topic_th": "เงินเดือนชนเดือน/ออม",
+      "label": "02-เขียนโน้ตหักก่อนใช้",
+      "src": "Hands_writing_in_notebook_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/save-paycheck/02.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "save-paycheck",
+      "topic_th": "เงินเดือนชนเดือน/ออม",
+      "label": "03-ตั้งโอนอัตโนมัติ",
+      "src": "Smartphone_auto-transfer_setting…_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/save-paycheck/03.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "save-paycheck",
+      "topic_th": "เงินเดือนชนเดือน/ออม",
+      "label": "04-ยิ้มถือสมุด",
+      "src": "Person_holding_notebook_and_pen_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/save-paycheck/04.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "save-paycheck",
+      "topic_th": "เงินเดือนชนเดือน/ออม",
+      "label": "05-เหรียญหยอด",
+      "src": "Three_coins_dropping_on_surface_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/save-paycheck/05.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "save-paycheck",
+      "topic_th": "เงินเดือนชนเดือน/ออม",
+      "label": "06-planner เปิด",
+      "src": "Planner_with_pen_and_coffee_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/save-paycheck/06.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "title-loan",
+      "topic_th": "สินเชื่อทะเบียนรถ",
+      "label": "01-hook นั่งในรถกังวล",
+      "src": "Thai_adult_sitting_in_car_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/title-loan/01.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "title-loan",
+      "topic_th": "สินเชื่อทะเบียนรถ",
+      "label": "02-นับเงินไม่พอ",
+      "src": "Hands_counting_cash_unpaid_bills_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/title-loan/02.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "title-loan",
+      "topic_th": "สินเชื่อทะเบียนรถ",
+      "label": "03-ใช้รถได้ระหว่างกู้",
+      "src": "Car_parked_in_driveway_person_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/title-loan/03.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "title-loan",
+      "topic_th": "สินเชื่อทะเบียนรถ",
+      "label": "04-เทียบดอกเบี้ย",
+      "src": "Desk_with_calculator_and_chart_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/title-loan/04.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "title-loan",
+      "topic_th": "สินเชื่อทะเบียนรถ",
+      "label": "05-เช็กสิทธิ์",
+      "src": "Smartphone_loan_comparison_scree…_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/title-loan/05.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "emergency-fund",
+      "topic_th": "เงินสำรองฉุกเฉิน",
+      "label": "01-hook บิลไม่คาดฝัน",
+      "src": "Young_adult_looking_anxious_bill_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/emergency-fund/01.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "emergency-fund",
+      "topic_th": "เงินสำรองฉุกเฉิน",
+      "label": "02-กระเป๋าว่าง",
+      "src": "Hands_opening_empty_wallet_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/emergency-fund/02.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "emergency-fund",
+      "topic_th": "เงินสำรองฉุกเฉิน",
+      "label": "03-หยอดเงินใส่โหล",
+      "src": "Hand_placing_cash_in_jar_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/emergency-fund/03.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "emergency-fund",
+      "topic_th": "เงินสำรองฉุกเฉิน",
+      "label": "04-วางแผนทีละขั้น",
+      "src": "Person_writing_monthly_planner_desk_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/emergency-fund/04.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "emergency-fund",
+      "topic_th": "เงินสำรองฉุกเฉิน",
+      "label": "05-แอปออมเงิน",
+      "src": "Smartphone_savings_app_progress_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/emergency-fund/05.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "first-card",
+      "topic_th": "บัตรเครดิตใบแรก",
+      "label": "01-hook ถือบัตรเปล่า",
+      "src": "Young_adult_holding_blank_card_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/first-card/01.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "first-card",
+      "topic_th": "บัตรเครดิตใบแรก",
+      "label": "02-อ่าน fine print",
+      "src": "Hands_flipping_paper_document_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/first-card/02.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "first-card",
+      "topic_th": "บัตรเครดิตใบแรก",
+      "label": "03-จดข้อควรรู้",
+      "src": "Desk_with_notebook_and_pen_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/first-card/03.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "first-card",
+      "topic_th": "บัตรเครดิตใบแรก",
+      "label": "04-จ่ายเต็มตามรอบ",
+      "src": "Hands_placing_card_desk_calendar_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/first-card/04.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "first-card",
+      "topic_th": "บัตรเครดิตใบแรก",
+      "label": "05-เทียบ-เช็กสิทธิ์",
+      "src": "Smartphone_interface_finger_tapping_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/first-card/05.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "refinance",
+      "topic_th": "รีไฟแนนซ์บ้าน",
+      "label": "01-hook กองเอกสารกู้บ้าน",
+      "src": "Adult_looking_at_home_loan_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/refinance/01.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "refinance",
+      "topic_th": "รีไฟแนนซ์บ้าน",
+      "label": "02-ดอกเบี้ยพุ่ง",
+      "src": "Hand_using_calculator_rising_chart_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/refinance/02.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "refinance",
+      "topic_th": "รีไฟแนนซ์บ้าน",
+      "label": "03-เทียบสัญญา",
+      "src": "Hands_comparing_documents_on_desk_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/refinance/03.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "refinance",
+      "topic_th": "รีไฟแนนซ์บ้าน",
+      "label": "04-เช็กลิสต์ค่าธรรมเนียม",
+      "src": "Checklist_with_pen_and_calendar_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/refinance/04.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "refinance",
+      "topic_th": "รีไฟแนนซ์บ้าน",
+      "label": "05-เทียบ-เช็กสิทธิ์",
+      "src": "Finger_tapping_loan_app_screen_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/refinance/05.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "credit-score",
+      "topic_th": "เครดิตบูโร/สกอร์",
+      "label": "01-hook ดูสกอร์ในมือถือ",
+      "src": "Thai_adult_looking_at_smartphone_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/credit-score/01.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "credit-score",
+      "topic_th": "เครดิตบูโร/สกอร์",
+      "label": "02-จดหมายปฏิเสธ",
+      "src": "Person_reading_letter_puzzled_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/credit-score/02.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "credit-score",
+      "topic_th": "เครดิตบูโร/สกอร์",
+      "label": "03-อ่านรายงานเครดิต",
+      "src": "Hands_holding_printed_report_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/credit-score/03.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "credit-score",
+      "topic_th": "เครดิตบูโร/สกอร์",
+      "label": "04-จ่ายตรงเวลา",
+      "src": "Desk_calendar_payment_dates_circled_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/credit-score/04.mp4",
+      "ts": "2026-06-22 03:04"
+    },
+    {
+      "topic": "credit-score",
+      "topic_th": "เครดิตบูโร/สกอร์",
+      "label": "05-เช็กสกอร์ในแอป",
+      "src": "Smartphone_credit_score_app_dash…_202606220951.mp4",
+      "dest": "/sessions/zealous-adoring-ride/mnt/ngernduangold-site/automation-log/video-out/credit-score/05.mp4",
+      "ts": "2026-06-22 03:04"
+    }
+  ]
+}

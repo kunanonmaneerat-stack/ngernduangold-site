@@ -1,7 +1,8 @@
 source,sessions,quiz_start,conversion
+(data not available),1,0,0
 bing,1,0,0
-chatgpt,4,0,1
-direct,175,0,2
+chatgpt,5,0,1
+direct,169,0,3
 fb,13,0,0
-pantip,14,2,4
-yt,1,0,0
+pantip,16,2,4
+yt,2,0,0
