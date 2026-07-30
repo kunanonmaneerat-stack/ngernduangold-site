@@ -7,52 +7,60 @@
     "Why: on 30-31 Jul the same fact (IG paused, TikTok paused, Meta token revoked) was",
     "copied into 4+ task prompts and 2 python files. When TikTok was dropped, post_guard",
     "and the daily card still asked for it -- the exact drift that caused the 4-day",
-    "blackout, just in a different file. One fact, one place."
+    "blackout, just in a different file. One fact, one place.",
+    "kind = which pipeline a channel belongs to. Added 31 Jul after a dry-run of the daily card rule (state != paused AND auto == false) pulled PANTIP into the VIDEO card - pantip is a forum-comment flow with its own approval path, not a clip upload. Selection rules must filter on kind, never on state alone."
   ],
   "updated": "2026-07-31",
   "channels": {
     "youtube": {
       "state": "active",
       "auto": true,
-      "note": "uploader tools/yt_upload_batch2.py --live --dates YYYY-MM-DD"
+      "note": "uploader tools/yt_upload_batch2.py --live --dates YYYY-MM-DD",
+      "kind": "video"
     },
     "facebook": {
       "state": "manual",
       "auto": false,
-      "note": "Business Suite by hand; Meta token revoked 18 Jul 2026 - never ask for tokens"
+      "note": "Business Suite by hand; Meta token revoked 18 Jul 2026 - never ask for tokens",
+      "kind": "video"
     },
     "threads": {
       "state": "active",
       "auto": true,
-      "note": "video attach broken since 26 Jul; see threads-video-idle-retry"
+      "note": "video attach broken since 26 Jul; see threads-video-idle-retry",
+      "kind": "video"
     },
     "tiktok": {
       "state": "paused",
       "auto": false,
       "until": "2026-08-06",
       "reason": "28 days = 1 real post, 0 sessions; upload depends on owner's phone so the input cannot be controlled",
-      "decided_by": "ngernduangold-batch4-gate"
+      "decided_by": "ngernduangold-batch4-gate",
+      "kind": "video"
     },
     "instagram": {
       "state": "paused",
       "auto": false,
       "until": "2026-08-25",
       "reason": "GA4 28d: 1 session / 0 conv",
-      "decided_by": "owner review"
+      "decided_by": "owner review",
+      "kind": "video"
     },
     "pinterest": {
       "state": "paused",
       "auto": false,
       "until": "2026-08-25",
       "reason": "GA4 28d: 0 sessions from 9 pins",
-      "decided_by": "owner review"
+      "decided_by": "owner review",
+      "kind": "image"
     },
     "pantip": {
       "state": "limited",
       "auto": false,
       "weekly_quota": 3,
       "reason": "FINAL WARNING on the brand account - one more violation = permanent ban",
-      "account": "9373300"
+      "account": "9373300",
+      "kind": "forum"
     }
   },
   "gates": [
