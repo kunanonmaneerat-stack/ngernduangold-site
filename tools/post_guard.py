@@ -40,6 +40,15 @@ UI_SCHEDULED_IG_DATES = {
     date(2026, 7, day) for day in range(13, 20)
 }
 # Channel paused by decision 25 Jul 2026 (see automation-log/CHANNEL-DECISION_20260725.md).
+# TikTok is on hold until the batch-3 gate decides its fate (31 Jul 2026).
+# WHY THIS MATTERS FOR THE GUARD: the daily nudge task was permanently closed on
+# 31 Jul ("TikTok removed from the tested channels") because uploads depend on the
+# owner's phone, so the input cannot be controlled and it is not a fair channel test.
+# Without this window the guard would report TIKTOK=NOT-POSTED -> has_fail -> exit 2
+# EVERY single day for a channel we deliberately are not feeding. A guard that fails
+# every day teaches people to ignore it, which is worse than having no guard.
+TIKTOK_PAUSED_FROM = date(2026, 7, 31)
+TIKTOK_PAUSED_UNTIL = date(2026, 8, 6)   # ngernduangold-batch4-gate decides on 6 Aug
 IG_PAUSED_FROM = date(2026, 7, 26)
 IG_PAUSED_UNTIL = date(2026, 8, 25)
 FB_MANUAL_DATE = date(2026, 7, 20)
@@ -694,6 +703,14 @@ def tiktok_created_on(value: Any, target: date) -> bool:
 
 
 def check_tiktok(target: date, item: dict[str, Any] | None, checked_at: datetime) -> dict[str, str]:
+    if TIKTOK_PAUSED_FROM <= target <= TIKTOK_PAUSED_UNTIL:
+        return result(
+            "TIKTOK",
+            "PAUSED",
+            f"TikTok on hold until the batch-3 gate on {TIKTOK_PAUSED_UNTIL.isoformat()} "
+            "(28 days = 1 real post, 0 sessions; upload depends on the owner's phone).",
+            "No action -- the gate decides. Do not treat as a missed delivery.",
+        )
     # Logged-out profile scraping stopped working (interest modal / no rehydration JSON).
     # When downstream verification is impossible we report from the source side instead of
     # UNKNOWN, which never told anyone what to do (order 30 Jul, task 2.1a).
