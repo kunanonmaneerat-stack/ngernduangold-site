@@ -53,6 +53,16 @@ REM records / disclosure / attribution). Runs HERE because the dispatcher keeps 
 REM even when every Cowork scheduled task is disabled -- which is exactly what happened
 REM 27-30 Jul 2026: dispatcher fired daily, nothing shipped, and no guard said a word.
 REM exit 2 = FAIL -> drop an alert file that the morning routines will surface.
+REM guard self-test FIRST: a guard that has gone blind still prints PASS, so the
+REM checklist is only worth reading if its own checks are proven to still fire.
+echo [%date% %time%] guard self-test >> "%LOG%"
+"%PY%" "%BASE%\..\tools\test_preflight_checks.py" >> "%LOG%" 2>&1
+if errorlevel 1 (
+  echo GUARD SELF-TEST FAIL - preflight results cannot be trusted until this is fixed. See dispatcher.log. > "%BASE%\..\automation-log\cowork-inbox\GUARD-SELFTEST-ALERT.md"
+  echo [%date% %time%] !! guard self-test FAIL >> "%LOG%"
+) else (
+  if exist "%BASE%\..\automation-log\cowork-inbox\GUARD-SELFTEST-ALERT.md" del "%BASE%\..\automation-log\cowork-inbox\GUARD-SELFTEST-ALERT.md"
+)
 echo [%date% %time%] preflight start >> "%LOG%"
 "%PY%" "%BASE%\..\tools\preflight.py" >> "%LOG%" 2>&1
 if errorlevel 2 (

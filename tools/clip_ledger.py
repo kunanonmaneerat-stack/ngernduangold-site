@@ -66,6 +66,10 @@ def append_row(channel, date, source="cc-dispatcher", text=None, ledger=None, dr
         "clip_id": clip_id,
         "text_first80": text[:80],
         "ts": datetime.now(timezone(timedelta(hours=7))).isoformat(timespec="seconds"),
+        # The day the AUDIENCE sees this, which is not the upload moment for a
+        # scheduled clip. A catch-up run uploads several days' clips minutes apart;
+        # without this the per-day posting cap counts them all against upload day.
+        "publish_at": date,
         "source": source,
     }
     if dry_run:

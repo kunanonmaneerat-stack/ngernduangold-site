@@ -49,11 +49,32 @@ POLICY = os.path.join(REPO, ".system_control", "policy.json")
 
 # POSTING-POLICY_antispam_20260702.md rule 2: <=2 posts/day/channel and >=3h between
 # posts on the same channel (Pinterest gets 5 pins/day). Comments are not posts.
-POST_CAP_DEFAULT = 2
-POST_CAP_BY_CHANNEL = {"pinterest": 5}
-POST_MIN_GAP_HOURS = 3
-POST_TYPES = {"text", "video", "image"}
 POST_CAP_LOOKBACK_DAYS = 2
+
+
+def _limits():
+    """Read the anti-spam numbers from policy.json, falling back to the documented
+    values. Fail-safe on purpose: a missing/broken policy must not silently disable
+    the cap - it must behave exactly as the written policy says."""
+    fallback = {"default": 2, "pinterest": 5}, 3, {"text", "video", "image"}
+    try:
+        with io.open(POLICY, encoding="utf-8") as fh:
+            lim = (json.load(fh) or {}).get("limits") or {}
+        caps = lim.get("posts_per_day") or {}
+        if not isinstance(caps, dict) or "default" not in caps:
+            return fallback
+        gap = lim.get("min_gap_hours")
+        types = lim.get("post_types")
+        return (caps,
+                gap if isinstance(gap, (int, float)) else 3,
+                set(types) if isinstance(types, list) and types else fallback[2])
+    except Exception:
+        return fallback
+
+
+_CAPS, POST_MIN_GAP_HOURS, POST_TYPES = _limits()
+POST_CAP_DEFAULT = _CAPS.get("default", 2)
+POST_CAP_BY_CHANNEL = {k: v for k, v in _CAPS.items() if k != "default"}
 
 results = []
 
@@ -520,18 +541,26 @@ def check_posting_cap():
         ts = r.get("ts")
         if not isinstance(ts, str) or len(ts) < 16:
             continue
+        # A scheduled clip is seen by the audience on publish_at, not when it was
+        # uploaded. Counting by upload time made a legitimate multi-day catch-up run
+        # look like a same-day spam burst.
+        sched = isinstance(r.get("publish_at"), str) and len(r["publish_at"]) >= 10
+        key_day = r["publish_at"][:10] if sched else ts[:10]
         try:
-            day = datetime.date.fromisoformat(ts[:10])
+            day = datetime.date.fromisoformat(key_day)
         except Exception:
             continue
         if day < cutoff:
             continue
-        buckets.setdefault((str(r.get("channel", "?")), ts[:10]), []).append(ts)
+        buckets.setdefault((str(r.get("channel", "?")), key_day), []).append((ts, sched))
 
     today = datetime.date.today().isoformat()
     problems, history = [], []
-    for (ch, day), stamps in sorted(buckets.items()):
-        stamps.sort()
+    for (ch, day), entries in sorted(buckets.items()):
+        entries.sort()
+        stamps = [t for t, _ in entries]
+        # spacing only means something between rows that were actually posted live
+        live = [t for t, sched in entries if not sched]
         cap = POST_CAP_BY_CHANNEL.get(ch, POST_CAP_DEFAULT)
         # Today is a GATE - it decides whether the next post may go out.
         # An earlier day is HISTORY - you cannot un-post it, so it must not hold the
@@ -540,7 +569,7 @@ def check_posting_cap():
         bucket = problems if day == today else history
         if len(stamps) > cap:
             bucket.append("%s %s: %d posts (cap %d)" % (ch, day, len(stamps), cap))
-        for a, b in zip(stamps, stamps[1:]):
+        for a, b in zip(live, live[1:]):
             try:
                 gap = (datetime.datetime.fromisoformat(b)
                        - datetime.datetime.fromisoformat(a)).total_seconds() / 3600.0
