@@ -22,7 +22,12 @@
       "state": "manual",
       "auto": false,
       "note": "Business Suite by hand; Meta token revoked 18 Jul 2026 - never ask for tokens",
-      "kind": "video"
+      "kind": "video",
+      "auto_legs": [
+        "text",
+        "comment"
+      ],
+      "auto_note": "auto=false refers to the VIDEO slot only (owner posts Reels by hand). text+comment legs are automated - see auto_legs."
     },
     "threads": {
       "state": "active",

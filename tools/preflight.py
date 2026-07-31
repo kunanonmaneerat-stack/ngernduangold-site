@@ -448,9 +448,15 @@ def check_repeat_failures():
         # The drift that kept this invisible: policy says nothing automates this
         # channel, yet automation is writing failure rows for it. One of them is wrong.
         cfg = channels.get(ch)
-        if isinstance(cfg, dict) and cfg.get("auto") is False:
-            note += (" [DRIFT: policy has auto=false/%s so guards call it expected,"
-                     " but automation IS posting to it]" % cfg.get("state", "?"))
+        if isinstance(cfg, dict) and cfg.get("auto") is False and not cfg.get("auto_legs"):
+            # policy claims nobody automates this channel, yet automation is writing
+            # failure rows for it. One of the two is wrong - do not just report it green.
+            # (If the channel is only partly manual, declare which legs are automated in
+            #  policy.json -> channels.<ch>.auto_legs, and this stops being drift.)
+            note += (" [DRIFT: policy has auto=false/%s and declares no auto_legs, so guards"
+                     " call it expected - but automation IS posting to it]" % cfg.get("state", "?"))
+        elif isinstance(cfg, dict) and cfg.get("auto_legs"):
+            note += " [automated legs: %s]" % ",".join(cfg["auto_legs"])
         notes.append(note)
 
     if not notes:
