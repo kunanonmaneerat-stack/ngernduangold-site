@@ -651,6 +651,56 @@ def check_open_decisions():
             % (len(gates), DECISION_SOON_DAYS))
 
 
+def check_content_cliff():
+    """Catch a gate scheduled AFTER the queue it is supposed to refill runs out.
+
+    Found 31 Jul 2026: the manifest is filled to 5 Aug, and ngernduangold-batch4-gate
+    (which decides whether batch4 gets produced at all) fires 6 Aug. Even if the gate
+    says yes, production is not instant - so the queue is empty from 6 Aug by
+    construction. Neither runway_guard (which only counts days ahead) nor the gate
+    itself could see this, because each knew only half of it.
+
+    The point is not that the gate date is wrong - it was moved to 6 Aug deliberately
+    so its "YT >=100 views / 7 days" criterion has 7 real days. The point is that
+    nobody had checked the two dates against each other.
+    """
+    pol = _load(POLICY, None) or {}
+    gates = pol.get("gates") if isinstance(pol.get("gates"), list) else []
+    man = _load(MANIFEST, None)
+    items = (man or {}).get("items") if isinstance(man, dict) else None
+    if not items:
+        add("content cliff", "WARN", "cannot read the manifest queue")
+        return
+    dates = sorted(str(i.get("date", "")) for i in items if i.get("date"))
+    if not dates:
+        add("content cliff", "WARN", "manifest has no dated items")
+        return
+    last = dates[-1]
+    # a gate that decides future content production
+    KEY = ("batch", "content", "produce", "production")
+    deciders = []
+    for g in gates:
+        if not isinstance(g, dict) or str(g.get("status", "")).casefold() in DECISION_DONE:
+            continue
+        blob = (str(g.get("task", "")) + " " + " ".join(str(d) for d in (g.get("decides") or []))).casefold()
+        if any(k in blob for k in KEY) and isinstance(g.get("date"), str):
+            deciders.append((g["date"][:10], str(g.get("task", "?"))))
+    if not deciders:
+        add("content cliff", "PASS", "no pending gate decides content production")
+        return
+    worst = None
+    for when, what in sorted(deciders):
+        if when >= last:
+            gap = (datetime.date.fromisoformat(when) - datetime.date.fromisoformat(last)).days
+            worst = ("%s decides on %s but the queue ends %s -> at least %d empty day(s), "
+                     "and more while production runs" % (what, when, last, gap + 1))
+            break
+    if worst:
+        add("content cliff", "WARN", worst)
+    else:
+        add("content cliff", "PASS", "every content gate lands before the queue ends (last %s)" % last)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--full", action="store_true", help="also run the site build gate")
@@ -667,6 +717,7 @@ def main():
     check_competing_plan()
     check_prompt_drift()
     check_open_decisions()
+    check_content_cliff()
     check_disclosure()
     check_attribution()
     if args.full:

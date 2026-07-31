@@ -13,6 +13,7 @@ WHY THIS FILE EXISTS
     check_posting_cap      - <=2 posts/day/channel, >=3h apart (POSTING-POLICY rule 2)
     check_repeat_failures  - same channel failing repeatedly, and recovery detection
     check_open_decisions   - plan gates whose date passed with nobody closing them
+    check_content_cliff    - a gate scheduled after the queue it is meant to refill
     manifest_posted_status - the "published" vocabulary gap in post_guard
 
 USAGE
@@ -165,6 +166,45 @@ try:
 except OSError:
     pass
 P.POLICY = _real_policy
+
+print("\nCONTENT CLIFF  (a gate must not land after the queue it refills runs out)")
+_MAN = P.MANIFEST
+
+
+def run_cliff(last_queue_date, gates):
+    importlib.reload(P)
+    mp = os.path.join(HERE, "_test_manifest.tmp.json")
+    with io.open(mp, "w", encoding="utf-8", newline="\n") as fh:
+        fh.write(json.dumps({"items": [{"date": last_queue_date, "id": "x"}]},
+                            ensure_ascii=False))
+    pp = os.path.join(HERE, "_test_policy.tmp.json")
+    with io.open(pp, "w", encoding="utf-8", newline="\n") as fh:
+        base = json.load(io.open(_MAN.replace("content_manifest.json", "policy.json"),
+                                 encoding="utf-8"))
+        base["gates"] = gates
+        fh.write(json.dumps(base, ensure_ascii=False))
+    P.MANIFEST, P.POLICY = mp, pp
+    P.results[:] = []
+    P.check_content_cliff()
+    return P.results[0]["status"]
+
+
+_g = lambda d: [{"date": d, "task": "batch4-gate", "decides": ["batch4 production volume"]}]
+check("gate lands AFTER the queue ends", run_cliff("2026-08-05", _g("2026-08-06")), "WARN")
+check("gate lands ON the last queued day", run_cliff("2026-08-05", _g("2026-08-05")), "WARN")
+check("gate lands well BEFORE the queue ends", run_cliff("2026-08-05", _g("2026-08-01")), "PASS")
+check("gate that decides something else entirely",
+      run_cliff("2026-08-05", [{"date": "2026-08-09", "task": "owner review",
+                                "decides": ["instagram return"]}]), "PASS")
+check("a content gate already marked DONE",
+      run_cliff("2026-08-05", [{"date": "2026-08-09", "task": "batch4-gate",
+                                "decides": ["batch4 production"], "status": "DONE"}]), "PASS")
+for _f in ("_test_manifest.tmp.json", "_test_policy.tmp.json"):
+    try:
+        os.remove(os.path.join(HERE, _f))
+    except OSError:
+        pass
+importlib.reload(P)
 
 print("\nMANIFEST VOCABULARY  (post_guard must understand what the uploader writes)")
 def status(v):
