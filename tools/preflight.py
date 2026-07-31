@@ -528,12 +528,18 @@ def check_posting_cap():
             continue
         buckets.setdefault((str(r.get("channel", "?")), ts[:10]), []).append(ts)
 
-    problems = []
+    today = datetime.date.today().isoformat()
+    problems, history = [], []
     for (ch, day), stamps in sorted(buckets.items()):
         stamps.sort()
         cap = POST_CAP_BY_CHANNEL.get(ch, POST_CAP_DEFAULT)
+        # Today is a GATE - it decides whether the next post may go out.
+        # An earlier day is HISTORY - you cannot un-post it, so it must not hold the
+        # whole preflight red forever (see note 17/18: an alert that stays red after
+        # the fact is how alerts get ignored).
+        bucket = problems if day == today else history
         if len(stamps) > cap:
-            problems.append("%s %s: %d posts (cap %d)" % (ch, day, len(stamps), cap))
+            bucket.append("%s %s: %d posts (cap %d)" % (ch, day, len(stamps), cap))
         for a, b in zip(stamps, stamps[1:]):
             try:
                 gap = (datetime.datetime.fromisoformat(b)
@@ -541,11 +547,18 @@ def check_posting_cap():
             except Exception:
                 continue
             if gap < POST_MIN_GAP_HOURS:
-                problems.append("%s %s: only %.2fh between %s and %s (min %dh)"
-                                % (ch, day, gap, a[11:16], b[11:16], POST_MIN_GAP_HOURS))
+                bucket.append("%s %s: only %.2fh between %s and %s (min %dh)"
+                              % (ch, day, gap, a[11:16], b[11:16], POST_MIN_GAP_HOURS))
 
     if problems:
-        add("posting cap", "FAIL", " | ".join(problems))
+        detail = " | ".join(problems)
+        if history:
+            detail += "  [also breached earlier: %s]" % " | ".join(history)
+        add("posting cap", "FAIL", detail + " -- do NOT post again on that channel today")
+    elif history:
+        add("posting cap", "WARN",
+            "today is clean; earlier breach on record (cannot be undone): %s"
+            % " | ".join(history))
     else:
         add("posting cap", "PASS",
             "all channels within <=%d posts/day and >=%dh spacing (last %d days)"
