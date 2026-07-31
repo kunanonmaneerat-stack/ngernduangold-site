@@ -51,3 +51,7 @@ social-autopost/logs/
 # dated safety backups (30 Jul 2026) - never commit these
 *.bak_*
 
+
+# scratch files written by tools/test_preflight_checks.py
+tools/_test_*.tmp.*
+
