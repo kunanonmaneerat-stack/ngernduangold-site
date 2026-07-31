@@ -204,7 +204,11 @@ def manifest_posted_status(
     normalized = value.casefold()
     if "scheduled" in normalized:
         return result(channel, "SCHEDULED-UI", f"(จาก manifest: {value})")
-    if "posted" in normalized:
+    # "published" is what yt_upload_batch2 writes when the slot had already passed and
+    # the video went out immediately. It is a STRONGER claim than "posted", but this
+    # function used to understand only "posted"/"scheduled", so a genuinely published
+    # item returned None and read as no-signal-at-all. Found 31 Jul 2026.
+    if "posted" in normalized or "published" in normalized:
         return result(channel, "POSTED", "(จาก manifest)")
     return None
 

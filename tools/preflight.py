@@ -47,6 +47,14 @@ REPEAT_FAIL_WARN = 2
 REPEAT_FAIL_FAIL = 3
 POLICY = os.path.join(REPO, ".system_control", "policy.json")
 
+# POSTING-POLICY_antispam_20260702.md rule 2: <=2 posts/day/channel and >=3h between
+# posts on the same channel (Pinterest gets 5 pins/day). Comments are not posts.
+POST_CAP_DEFAULT = 2
+POST_CAP_BY_CHANNEL = {"pinterest": 5}
+POST_MIN_GAP_HOURS = 3
+POST_TYPES = {"text", "video", "image"}
+POST_CAP_LOOKBACK_DAYS = 2
+
 results = []
 
 
@@ -481,6 +489,69 @@ def check_repeat_failures():
     add("repeat failures", worst, " | ".join(notes))
 
 
+def check_posting_cap():
+    """Enforce the anti-spam posting cap that until now lived only in a markdown file.
+
+    POSTING-POLICY_antispam_20260702.md rule 2 says <=2 posts/day/channel with >=3h
+    between posts on the same channel. It was written after 23 Jul 2026 (3 Facebook
+    posts in 58 minutes) - and then broken again on 31 Jul 2026 (3 Facebook posts in
+    20 minutes), because nothing checked it: the only guard that knew the number ran
+    at 19:08, hours after the posts went out. A rule no tool enforces is a wish.
+    """
+    rows = []
+    try:
+        for line in io.open(LEDGER, encoding="utf-8"):
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                rows.append(json.loads(line))
+            except Exception:
+                pass
+    except Exception as exc:
+        add("posting cap", "FAIL", "cannot read post-ledger: %s" % exc)
+        return
+
+    cutoff = datetime.date.today() - datetime.timedelta(days=POST_CAP_LOOKBACK_DAYS - 1)
+    buckets = {}
+    for r in rows:
+        if r.get("type") not in POST_TYPES:
+            continue
+        ts = r.get("ts")
+        if not isinstance(ts, str) or len(ts) < 16:
+            continue
+        try:
+            day = datetime.date.fromisoformat(ts[:10])
+        except Exception:
+            continue
+        if day < cutoff:
+            continue
+        buckets.setdefault((str(r.get("channel", "?")), ts[:10]), []).append(ts)
+
+    problems = []
+    for (ch, day), stamps in sorted(buckets.items()):
+        stamps.sort()
+        cap = POST_CAP_BY_CHANNEL.get(ch, POST_CAP_DEFAULT)
+        if len(stamps) > cap:
+            problems.append("%s %s: %d posts (cap %d)" % (ch, day, len(stamps), cap))
+        for a, b in zip(stamps, stamps[1:]):
+            try:
+                gap = (datetime.datetime.fromisoformat(b)
+                       - datetime.datetime.fromisoformat(a)).total_seconds() / 3600.0
+            except Exception:
+                continue
+            if gap < POST_MIN_GAP_HOURS:
+                problems.append("%s %s: only %.2fh between %s and %s (min %dh)"
+                                % (ch, day, gap, a[11:16], b[11:16], POST_MIN_GAP_HOURS))
+
+    if problems:
+        add("posting cap", "FAIL", " | ".join(problems))
+    else:
+        add("posting cap", "PASS",
+            "all channels within <=%d posts/day and >=%dh spacing (last %d days)"
+            % (POST_CAP_DEFAULT, POST_MIN_GAP_HOURS, POST_CAP_LOOKBACK_DAYS))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--full", action="store_true", help="also run the site build gate")
@@ -490,6 +561,7 @@ def main():
     check_queue()
     check_delivery_gap()
     check_repeat_failures()
+    check_posting_cap()
     check_captions()
     check_posted_truth()
     check_queued_clip_spec()
