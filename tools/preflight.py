@@ -594,6 +594,63 @@ def check_posting_cap():
             % (POST_CAP_DEFAULT, POST_MIN_GAP_HOURS, POST_CAP_LOOKBACK_DAYS))
 
 
+DECISION_SOON_DAYS = 3
+DECISION_DONE = {"done", "decided", "closed", "resolved"}
+
+
+def check_open_decisions():
+    """Surface plan decisions whose date has passed and that nobody has closed.
+
+    policy.json already carries a gates[] array with dates, but until now the ONLY
+    thing that read it was the 08:07 watchdog. So on 31 Jul 2026 the Pantip phase-2
+    gate sat at status OVERDUE (expired 30 Jul) while five enabled task prompts kept
+    operating under the expired phase-1 rule, and the daily 07:00 dispatcher run had
+    no idea. An expired plan is a plan nobody is following.
+
+    Deliberately WARN, never FAIL: an unmade decision must be visible on every run,
+    but it must not write PREFLIGHT-ALERT.md and block unrelated posting.
+    """
+    pol = _load(POLICY, None)
+    if pol is None:
+        add("open decisions", "WARN", "policy.json is MISSING - cannot see any gate")
+        return
+    gates = pol.get("gates")
+    if not isinstance(gates, list) or not gates:
+        add("open decisions", "PASS", "policy declares no gates")
+        return
+    today = datetime.date.today()
+    overdue, soon = [], []
+    for g in gates:
+        if not isinstance(g, dict):
+            continue
+        raw = g.get("date")
+        if not isinstance(raw, str):
+            continue
+        try:
+            when = datetime.date.fromisoformat(raw[:10])
+        except Exception:
+            continue
+        if str(g.get("status", "")).strip().casefold() in DECISION_DONE:
+            continue
+        what = str(g.get("task", "?"))
+        decides = g.get("decides")
+        if isinstance(decides, list) and decides:
+            what += " (" + ", ".join(str(d) for d in decides[:2]) + ")"
+        days = (when - today).days
+        if days < 0:
+            overdue.append("%s: %s -- %d day(s) OVERDUE" % (raw, what, -days))
+        elif days <= DECISION_SOON_DAYS:
+            soon.append("%s: %s -- in %d day(s)" % (raw, what, days))
+    if overdue:
+        add("open decisions", "WARN", "OVERDUE -> " + " | ".join(overdue)
+            + ((" ; due soon -> " + " | ".join(soon)) if soon else ""))
+    elif soon:
+        add("open decisions", "WARN", "due soon -> " + " | ".join(soon))
+    else:
+        add("open decisions", "PASS", "%d gate(s), none overdue or due within %d days"
+            % (len(gates), DECISION_SOON_DAYS))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--full", action="store_true", help="also run the site build gate")
@@ -609,6 +666,7 @@ def main():
     check_queued_clip_spec()
     check_competing_plan()
     check_prompt_drift()
+    check_open_decisions()
     check_disclosure()
     check_attribution()
     if args.full:

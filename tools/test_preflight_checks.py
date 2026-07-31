@@ -12,6 +12,7 @@ WHY THIS FILE EXISTS
   Covers:
     check_posting_cap      - <=2 posts/day/channel, >=3h apart (POSTING-POLICY rule 2)
     check_repeat_failures  - same channel failing repeatedly, and recovery detection
+    check_open_decisions   - plan gates whose date passed with nobody closing them
     manifest_posted_status - the "published" vocabulary gap in post_guard
 
 USAGE
@@ -132,6 +133,38 @@ _r = run_fail([fail("tiktok", "09"), fail("tiktok", "11")])
 check("auto=false + no auto_legs is tagged as drift", "DRIFT" in _r["detail"], True)
 _r = run_fail([fail("facebook", "09"), fail("facebook", "11")])
 check("a channel with declared auto_legs is not drift", "DRIFT" in _r["detail"], False)
+
+print("\nOPEN DECISIONS  (an expired plan gate must stay visible on every run)")
+_real_policy = P.POLICY
+
+
+def run_gates(gates):
+    importlib.reload(P)
+    with io.open(os.path.join(HERE, "_test_policy.tmp.json"), "w",
+                 encoding="utf-8", newline="\n") as fh:
+        base = json.load(io.open(_real_policy, encoding="utf-8"))
+        base["gates"] = gates
+        fh.write(json.dumps(base, ensure_ascii=False))
+    P.POLICY = os.path.join(HERE, "_test_policy.tmp.json")
+    P.results[:] = []
+    P.check_open_decisions()
+    return P.results[0]["status"]
+
+
+_t = datetime.date.today()
+_fut = lambda n: (_t + datetime.timedelta(days=n)).isoformat()
+_past = lambda n: (_t - datetime.timedelta(days=n)).isoformat()
+check("far-future gate only", run_gates([{"date": _fut(30), "task": "far"}]), "PASS")
+check("gate due in 2 days", run_gates([{"date": _fut(2), "task": "soon"}]), "WARN")
+check("gate overdue and not closed", run_gates([{"date": _past(5), "task": "x"}]), "WARN")
+check("gate overdue but marked DONE",
+      run_gates([{"date": _past(5), "task": "x", "status": "DONE"}]), "PASS")
+check("no gates declared", run_gates([]), "PASS")
+try:
+    os.remove(os.path.join(HERE, "_test_policy.tmp.json"))
+except OSError:
+    pass
+P.POLICY = _real_policy
 
 print("\nMANIFEST VOCABULARY  (post_guard must understand what the uploader writes)")
 def status(v):
