@@ -193,6 +193,10 @@ _g = lambda d: [{"date": d, "task": "batch4-gate", "decides": ["batch4 productio
 check("gate lands AFTER the queue ends", run_cliff("2026-08-05", _g("2026-08-06")), "WARN")
 check("gate lands ON the last queued day", run_cliff("2026-08-05", _g("2026-08-05")), "WARN")
 check("gate lands well BEFORE the queue ends", run_cliff("2026-08-05", _g("2026-08-01")), "PASS")
+# the real 31 Jul shape: a late gate is fine IF an earlier content gate can refill first
+check("a bridge gate before the queue end covers a later one",
+      run_cliff("2026-08-05", [{"date": "2026-08-03", "task": "bridge-clips",
+                                "decides": ["produce bridge clips"]}] + _g("2026-08-06")), "PASS")
 check("gate that decides something else entirely",
       run_cliff("2026-08-05", [{"date": "2026-08-09", "task": "owner review",
                                 "decides": ["instagram return"]}]), "PASS")

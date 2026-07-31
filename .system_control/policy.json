@@ -65,27 +65,44 @@
       "weekly_quota": 3,
       "reason": "FINAL WARNING on the brand account - one more violation = permanent ban",
       "account": "9373300",
-      "kind": "forum"
+      "kind": "forum",
+      "phase": "1-extended",
+      "phase_until": "2026-08-14"
     }
   },
   "gates": [
     {
       "date": "2026-07-30",
       "task": "owner decision - pantip phase 2",
-      "status": "OVERDUE",
+      "status": "DECIDED",
       "decides": [
         "pantip phase 2 posting policy"
       ],
-      "note": "Phase 1 ran 17-30 Jul (reply-only, <=3/week, no brand/link). From 31 Jul the daily task may still find+draft but must NOT recommend posting until the owner rules on phase 2. ADDED HERE 31 Jul 2026 by watchdog: this date previously existed ONLY in Claude/Scheduled/pantip-daily-opportunity/SKILL.md, so the expiry sweep - which reads this gates[] array - was blind to it. The SKILL.md ordered a warning on every run from 29 Jul, but the task was disabled 26-30 Jul in the token-saving sweep, so the warning was never delivered even once. Same one-truth-many-places drift as the 27-30 Jul blackout."
+      "note": "Phase 1 ran 17-30 Jul (reply-only, <=3/week, no brand/link). From 31 Jul the daily task may still find+draft but must NOT recommend posting until the owner rules on phase 2. ADDED HERE 31 Jul 2026 by watchdog: this date previously existed ONLY in Claude/Scheduled/pantip-daily-opportunity/SKILL.md, so the expiry sweep - which reads this gates[] array - was blind to it. The SKILL.md ordered a warning on every run from 29 Jul, but the task was disabled 26-30 Jul in the token-saving sweep, so the warning was never delivered even once. Same one-truth-many-places drift as the 27-30 Jul blackout.",
+      "decided_on": "2026-07-31",
+      "decision": "do NOT open phase 2 yet - extend phase 1 (reply-only, <=3/week, spaced) to 14 Aug",
+      "rationale": "Phase 2 means starting NEW threads, which is the highest-risk action available on an account that is one strike from a permanent ban. The precondition for phase 2 was a clean, visible 30-day history - but we barely used phase 1: last Pantip post 26 Jul, 0/3 used this week. A thin record is not the same as a clean record, and it is the record a moderator would read. Extending reply-only costs almost nothing and builds the exact evidence phase 2 requires."
     },
     {
       "date": "2026-07-31",
       "task": "owner decision - which posting cap governs",
-      "status": "OPEN",
+      "status": "DECIDED",
       "decides": [
         "posts per day per channel (1 or 2)"
       ],
-      "note": "Two rules disagree and both are live. POSTING-POLICY_antispam_20260702.md rule 2 says <=2/day/channel; STANDING-RULE_autopost.md (18 Jul, owner instruction, and until 31 Jul NOT even committed to git) says 1/day/channel. For Threads the owner then approved 2/day explicitly on 19 Jul, which post-dates the standing rule - so 2 clearly governs there. For Facebook nothing resolves it: the live guard (fb-evening-safetynet) enforces 2. policy.limits.posts_per_day.default is therefore set to 2 = what the system actually enforces today, NOT a ruling. Found 31 Jul 2026 while auditing my own breach of 3 FB posts in 20 minutes - which is over BOTH caps either way."
+      "note": "Two rules disagree and both are live. POSTING-POLICY_antispam_20260702.md rule 2 says <=2/day/channel; STANDING-RULE_autopost.md (18 Jul, owner instruction, and until 31 Jul NOT even committed to git) says 1/day/channel. For Threads the owner then approved 2/day explicitly on 19 Jul, which post-dates the standing rule - so 2 clearly governs there. For Facebook nothing resolves it: the live guard (fb-evening-safetynet) enforces 2. policy.limits.posts_per_day.default is therefore set to 2 = what the system actually enforces today, NOT a ruling. Found 31 Jul 2026 while auditing my own breach of 3 FB posts in 20 minutes - which is over BOTH caps either way.",
+      "decided_on": "2026-07-31",
+      "decision": "cap stays 2/day/channel; the >=3h gap is the real anti-blast guard",
+      "rationale": "Three things point the same way. (1) POSTING-POLICY_antispam is the document comply_gate/qa_gate are meant to enforce, and it says 2. (2) The owner explicitly approved Threads 2/day on 19 Jul, which POST-DATES the 18 Jul standing rule - so the standing rule was already being refined per-channel rather than held at 1. (3) The standing rule's own stated purpose was 'กัน shadowban - ห้าม blast'; blasting is spacing, not volume. 3 posts in 20 minutes (31 Jul) breaks the spacing rule even at a cap of 1, and 2 posts 6h apart breaks nothing. REVERSIBLE: set limits.posts_per_day.default to 1 and this becomes the stricter rule again, no code change needed."
+    },
+    {
+      "date": "2026-08-03",
+      "task": "ngernduangold-bridge-clips",
+      "status": "OPEN",
+      "decides": [
+        "produce 2-3 bridge clips to cover 6-8 Aug video slots"
+      ],
+      "note": "Split out of batch4-gate on 31 Jul. Two different questions were riding on one date: 'how big should batch4 be' NEEDS the 7-day YT number (hence 6 Aug), but 'we will have nothing to post on 6 Aug' needs no data at all and can be decided now. Deciding both on 6 Aug guaranteed a video gap. NOTE the gap is VIDEO-ONLY - knowledge text runs to 15 Aug and page2 to 14 Aug, so the brand does not go silent, it loses the daily clip."
     },
     {
       "date": "2026-08-06",

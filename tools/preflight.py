@@ -688,17 +688,20 @@ def check_content_cliff():
     if not deciders:
         add("content cliff", "PASS", "no pending gate decides content production")
         return
-    worst = None
-    for when, what in sorted(deciders):
-        if when >= last:
-            gap = (datetime.date.fromisoformat(when) - datetime.date.fromisoformat(last)).days
-            worst = ("%s decides on %s but the queue ends %s -> at least %d empty day(s), "
-                     "and more while production runs" % (what, when, last, gap + 1))
-            break
-    if worst:
-        add("content cliff", "WARN", worst)
-    else:
-        add("content cliff", "PASS", "every content gate lands before the queue ends (last %s)" % last)
+    # ONE content gate landing before the queue ends is enough to cover the cliff -
+    # that gate can still refill it. Only warn when EVERY content gate lands at or
+    # after the queue end, because then the gap is guaranteed no matter what is decided.
+    covering = [(w, t) for w, t in sorted(deciders) if w < last]
+    if covering:
+        w, t = covering[0]
+        add("content cliff", "PASS",
+            "queue ends %s and %s decides on %s - early enough to refill it" % (last, t, w))
+        return
+    when, what = sorted(deciders)[0]
+    gap = (datetime.date.fromisoformat(when) - datetime.date.fromisoformat(last)).days
+    add("content cliff", "WARN",
+        "%s decides on %s but the queue ends %s -> at least %d empty day(s), "
+        "and more while production runs" % (what, when, last, gap + 1))
 
 
 def main():
