@@ -417,6 +417,13 @@ def check_repeat_failures():
         return
 
     cutoff = datetime.date.today() - datetime.timedelta(days=REPEAT_FAIL_WINDOW_DAYS - 1)
+    # Newest successful delivery per channel - used to tell "still broken" from "fixed".
+    last_ok = {}
+    for r in rows:
+        if r.get("type") in DELIVERY_TYPES and isinstance(r.get("ts"), str):
+            ch = str(r.get("channel", "?"))
+            if r["ts"] > last_ok.get(ch, ""):
+                last_ok[ch] = r["ts"]
     recent = {}
     for r in rows:
         if r.get("type") != "failure":
@@ -439,6 +446,14 @@ def check_repeat_failures():
     for ch in sorted(recent):
         hits = sorted(recent[ch])
         if len(hits) < REPEAT_FAIL_WARN:
+            continue
+        # A channel that has delivered successfully SINCE its last failure is fixed.
+        # Without this the check stays red for the whole window after a real repair,
+        # which is how alerts get ignored.
+        recovered = last_ok.get(ch, "") > hits[-1][0]
+        if recovered:
+            notes.append("%s: %d failures since %s, but RECOVERED - delivered again at %s"
+                         % (ch, len(hits), hits[0][0][:10], last_ok[ch][:16]))
             continue
         status = "FAIL" if len(hits) >= REPEAT_FAIL_FAIL else "WARN"
         if status == "FAIL" or worst == "PASS":
