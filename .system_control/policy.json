@@ -79,6 +79,15 @@
       "note": "Phase 1 ran 17-30 Jul (reply-only, <=3/week, no brand/link). From 31 Jul the daily task may still find+draft but must NOT recommend posting until the owner rules on phase 2. ADDED HERE 31 Jul 2026 by watchdog: this date previously existed ONLY in Claude/Scheduled/pantip-daily-opportunity/SKILL.md, so the expiry sweep - which reads this gates[] array - was blind to it. The SKILL.md ordered a warning on every run from 29 Jul, but the task was disabled 26-30 Jul in the token-saving sweep, so the warning was never delivered even once. Same one-truth-many-places drift as the 27-30 Jul blackout."
     },
     {
+      "date": "2026-07-31",
+      "task": "owner decision - which posting cap governs",
+      "status": "OPEN",
+      "decides": [
+        "posts per day per channel (1 or 2)"
+      ],
+      "note": "Two rules disagree and both are live. POSTING-POLICY_antispam_20260702.md rule 2 says <=2/day/channel; STANDING-RULE_autopost.md (18 Jul, owner instruction, and until 31 Jul NOT even committed to git) says 1/day/channel. For Threads the owner then approved 2/day explicitly on 19 Jul, which post-dates the standing rule - so 2 clearly governs there. For Facebook nothing resolves it: the live guard (fb-evening-safetynet) enforces 2. policy.limits.posts_per_day.default is therefore set to 2 = what the system actually enforces today, NOT a ruling. Found 31 Jul 2026 while auditing my own breach of 3 FB posts in 20 minutes - which is over BOTH caps either way."
+    },
+    {
       "date": "2026-08-06",
       "task": "ngernduangold-batch4-gate",
       "decides": [
@@ -122,6 +131,7 @@
       "text",
       "video",
       "image"
-    ]
+    ],
+    "_conflict": "STANDING-RULE_autopost.md says 1/day/channel; this file holds 2 because that is what the live guards enforce. See gates[] 2026-07-31 - unresolved."
   }
 }
