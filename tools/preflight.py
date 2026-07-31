@@ -40,6 +40,13 @@ DELIVERY_TYPES = {"text", "video", "image", "comment"}
 DELIVERY_WARN_DAYS = 2     # nothing shipped for this long -> WARN
 DELIVERY_FAIL_DAYS = 3     # ...this long -> FAIL (the 27-30 Jul blackout was 4)
 
+# One failure row is noise. The SAME channel failing again inside this window is a
+# standing outage that nobody is watching.
+REPEAT_FAIL_WINDOW_DAYS = 3
+REPEAT_FAIL_WARN = 2
+REPEAT_FAIL_FAIL = 3
+POLICY = os.path.join(REPO, ".system_control", "policy.json")
+
 results = []
 
 
@@ -384,6 +391,75 @@ def check_build_gate():
     add("build gate", "PASS" if r.returncode == 0 else "FAIL", tail[-1][:160] if tail else "")
 
 
+def check_repeat_failures():
+    """Catch a channel that fails every day for one root cause.
+
+    Blind spot this closes (found 31 Jul 2026): Facebook's web session expired on
+    30 Jul. THREE automated legs failed across two days - knowledge-post-noon FB text
+    (30 Jul 21:31, 31 Jul 12:50) and fb-comment-daily (30 Jul 22:05) - and no guard
+    said a word, because policy.json marks facebook state=manual/auto=false, so every
+    report classified it as MANUAL-ONLY = expected, not broken.
+    "This channel is meant to be manual" and "automation is trying and failing on this
+    channel" are different facts. Only the first one was ever checked.
+    """
+    rows = []
+    try:
+        for line in io.open(LEDGER, encoding="utf-8"):
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                rows.append(json.loads(line))
+            except Exception:
+                pass
+    except Exception as exc:
+        add("repeat failures", "FAIL", "cannot read post-ledger: %s" % exc)
+        return
+
+    cutoff = datetime.date.today() - datetime.timedelta(days=REPEAT_FAIL_WINDOW_DAYS - 1)
+    recent = {}
+    for r in rows:
+        if r.get("type") != "failure":
+            continue
+        ts = r.get("ts")
+        if not isinstance(ts, str):
+            continue
+        try:
+            day = datetime.date.fromisoformat(ts[:10])
+        except Exception:
+            continue
+        if day < cutoff:
+            continue
+        recent.setdefault(str(r.get("channel", "?")), []).append((ts, r))
+
+    policy = _load(POLICY, {}) or {}
+    channels = policy.get("channels", {}) if isinstance(policy, dict) else {}
+
+    worst, notes = "PASS", []
+    for ch in sorted(recent):
+        hits = sorted(recent[ch])
+        if len(hits) < REPEAT_FAIL_WARN:
+            continue
+        status = "FAIL" if len(hits) >= REPEAT_FAIL_FAIL else "WARN"
+        if status == "FAIL" or worst == "PASS":
+            worst = status
+        why = str(hits[-1][1].get("text_first80", ""))[:70]
+        note = "%s: %d failures since %s -> %s" % (ch, len(hits), hits[0][0][:10], why)
+        # The drift that kept this invisible: policy says nothing automates this
+        # channel, yet automation is writing failure rows for it. One of them is wrong.
+        cfg = channels.get(ch)
+        if isinstance(cfg, dict) and cfg.get("auto") is False:
+            note += (" [DRIFT: policy has auto=false/%s so guards call it expected,"
+                     " but automation IS posting to it]" % cfg.get("state", "?"))
+        notes.append(note)
+
+    if not notes:
+        add("repeat failures", "PASS",
+            "no channel failed twice in the last %d days" % REPEAT_FAIL_WINDOW_DAYS)
+        return
+    add("repeat failures", worst, " | ".join(notes))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--full", action="store_true", help="also run the site build gate")
@@ -392,6 +468,7 @@ def main():
 
     check_queue()
     check_delivery_gap()
+    check_repeat_failures()
     check_captions()
     check_posted_truth()
     check_queued_clip_spec()
