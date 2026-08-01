@@ -424,7 +424,11 @@ LETTER_CLUSTER = {"debt-consolidation-2026.html", "debt-restructuring-2026.html"
                   # ขยายเข้าหน้าวิกฤต/ความรู้ที่เพิ่งถอด affiliate above-fold ออก (25 ก.ค.)
                   "wage-garnishment-debt-2026.html", "debt-collection-rights-2026.html",
                   "move-informal-debt-2026.html", "rebuild-credit-after-debt-2026.html",
-                  "credit-bureau-check-2026.html", "krungsri-credit-card-rejected-2026.html"}
+                  "credit-bureau-check-2026.html", "krungsri-credit-card-rejected-2026.html",
+                  # 1 ส.ค. 2026: GA4 28 วันชี้ว่าสองหน้านี้ทำ engagement ดีที่สุดในบรรดาหน้าบทความ
+                  # (bureau-blacklist 9 views/2 clicks - personal-loan 6/2) แต่ไม่มีลิงก์ไปหน้าสินค้าเลย
+                  # ผู้อ่านที่พร้อมคุยกับเจ้าหนี้จึงเดินต่อไม่ได้ ทั้งที่เป็นกลุ่มที่ตรงที่สุด
+                  "bureau-blacklist-loan-2026.html", "personal-loan-2026.html"}
 def letter_cta(slug):
     """ท้ายบทความสายเจรจา/ลดดอก -> ชวนทัก LINE ด้วยคำเฉพาะ 'เคส' (มี auto-reply triage รออยู่จริง
     ตั้งไว้ใน LINE OA 25 ก.ค. 2026: keyword เคส/คุยกับแบงก์/ขอประโยค -> ถามสถานะ 3 ข้อ ไม่ขอ PII)
