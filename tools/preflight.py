@@ -274,14 +274,33 @@ def check_prompt_drift():
         return
     pol = _load(pol_path, {}) or {}
     channels = pol.get("channels", {})
-    # channel -> the ONE date policy currently owns for it
-    owned = {ch: v["until"] for ch, v in channels.items() if v.get("until")}
+    # channel -> the ONE date policy currently owns for it.
+    # 'until' = when a pause ends. 'phase_until' = when a posting phase ends -- Pantip uses
+    # the latter, and until 1 Aug 2026 this dict only read 'until', so the auditor prompt
+    # could sit on an expired Pantip phase date ("30 Jul") for two days and this check
+    # still said PASS. A drift check that only knows one field name is blind to the other.
+    owned = {}
+    for ch, v in channels.items():
+        for field in ("until", "phase_until"):
+            if v.get(field):
+                owned[ch] = v[field]
+                break
     if not owned:
         add("prompt drift", "PASS", "policy owns no channel dates to drift from")
         return
     alias = {"instagram": ("instagram", "ig"), "tiktok": ("tiktok",),
              "pinterest": ("pinterest",), "threads": ("threads",),
              "youtube": ("youtube", "yt"), "facebook": ("facebook", "fb")}
+    # Short aliases MUST match as whole words. On 1 Aug 2026 this check raised a FAIL on
+    # cowork-cc-review-loop -- "says 2026-08-01 for instagram" -- because the alias "ig"
+    # matched inside the word "ignore", and the date came from a filename it referenced
+    # (HANDOFF_2026-08-01.md). Neither had anything to do with Instagram. A false FAIL is
+    # worse than a false WARN here: FAIL is a hard gate, so it either blocks a posting slot
+    # or teaches everyone to scroll past the one line that will matter one day.
+    alias_re = {ch: re.compile(r"\b(?:%s)\b" % "|".join(re.escape(a) for a in al))
+                for ch, al in alias.items()}
+    # A date that lives inside a filename or identifier is a reference, not a policy claim.
+    FILEISH = re.compile(r"[\w/\\-]*20\d\d-\d\d-\d\d[\w-]*\.[A-Za-z0-9]{1,6}")
     stale, checked = [], 0
     for name in sorted(os.listdir(SCHEDULED_DIR)):
         skill = os.path.join(SCHEDULED_DIR, name, "SKILL.md")
@@ -293,11 +312,17 @@ def check_prompt_drift():
             continue
         checked += 1
         low = text.lower()
+        # strip filename-embedded dates before looking for policy claims
+        scannable = FILEISH.sub(" ", text)
         for ch, good in owned.items():
-            if not any(a in low for a in alias.get(ch, (ch,))):
+            rx = alias_re.get(ch)
+            if rx is None:
+                if ch not in low:
+                    continue
+            elif not rx.search(low):
                 continue
             # every ISO date this prompt mentions for a month policy also talks about
-            for found in set(re.findall(r"20\d\d-\d\d-\d\d", text)):
+            for found in set(re.findall(r"20\d\d-\d\d-\d\d", scannable)):
                 if found[:7] == good[:7] and found != good:
                     stale.append(f"{name}: says {found} for {ch}, policy says {good}")
     if stale:

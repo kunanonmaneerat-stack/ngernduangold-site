@@ -135,6 +135,60 @@ check("auto=false + no auto_legs is tagged as drift", "DRIFT" in _r["detail"], T
 _r = run_fail([fail("facebook", "09"), fail("facebook", "11")])
 check("a channel with declared auto_legs is not drift", "DRIFT" in _r["detail"], False)
 
+print("\nPROMPT DRIFT  (must know every date field policy owns, not just 'until')")
+importlib.reload(P)
+_pol = json.load(io.open(P.POLICY, encoding="utf-8"))
+_chan = _pol.get("channels", {})
+# Rebuild the same mapping check_prompt_drift builds, and assert it covers BOTH fields.
+_owned = {}
+for _ch, _v in _chan.items():
+    for _f in ("until", "phase_until"):
+        if _v.get(_f):
+            _owned[_ch] = _v[_f]
+            break
+check("a channel with 'until' is owned", _owned.get("instagram"), _chan["instagram"]["until"])
+check("a channel with only 'phase_until' is owned",
+      _owned.get("pantip"), _chan["pantip"].get("phase_until"))
+check("a channel with neither is not owned", "threads" in _owned, False)
+# The regression itself: on 1 Aug 2026 the auditor prompt carried an expired Pantip phase
+# date and this check said PASS, because the mapping only read 'until'.
+check("pantip contributes a date at all", bool(_owned.get("pantip")), True)
+
+# --- the two false-FAIL bugs found 1 Aug 2026 ---
+_sd = P.SCHEDULED_DIR
+
+
+def run_drift(body):
+    """Write ONE fake task prompt and see what the drift check says about it."""
+    importlib.reload(P)
+    d = os.path.join(HERE, "_test_sched.tmp")
+    t = os.path.join(d, "fake-task")
+    if not os.path.isdir(t):
+        os.makedirs(t)
+    with io.open(os.path.join(t, "SKILL.md"), "w", encoding="utf-8", newline="\n") as fh:
+        fh.write(body)
+    P.SCHEDULED_DIR = d
+    P.results[:] = []
+    P.check_prompt_drift()
+    return P.results[0]["status"]
+
+
+_ig = json.load(io.open(P.POLICY, encoding="utf-8"))["channels"]["instagram"]["until"]
+_wrong = _ig[:8] + ("01" if not _ig.endswith("01") else "02")     # same month, wrong day
+check("real claim: 'instagram' + a wrong date in that month",
+      run_drift("instagram is paused until %s" % _wrong), "FAIL")
+check("'ig' inside the word 'ignore' is NOT the channel",
+      run_drift("ignore anything older than %s" % _wrong), "PASS")
+check("a date inside a FILENAME is a reference, not a claim",
+      run_drift("instagram: read HANDOFF_%s.md for context" % _wrong), "PASS")
+check("bare alias 'ig' as a real word still counts",
+      run_drift("ig paused until %s" % _wrong), "FAIL")
+check("correct date for the channel is fine",
+      run_drift("instagram is paused until %s" % _ig), "PASS")
+import shutil
+shutil.rmtree(os.path.join(HERE, "_test_sched.tmp"), ignore_errors=True)
+P.SCHEDULED_DIR = _sd
+
 print("\nOPEN DECISIONS  (an expired plan gate must stay visible on every run)")
 _real_policy = P.POLICY
 
