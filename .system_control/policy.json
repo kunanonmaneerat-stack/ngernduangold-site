@@ -10,7 +10,7 @@
     "blackout, just in a different file. One fact, one place.",
     "kind = which pipeline a channel belongs to. Added 31 Jul after a dry-run of the daily card rule (state != paused AND auto == false) pulled PANTIP into the VIDEO card - pantip is a forum-comment flow with its own approval path, not a clip upload. Selection rules must filter on kind, never on state alone."
   ],
-  "updated": "2026-07-31",
+  "updated": "2026-08-01",
   "channels": {
     "youtube": {
       "state": "active",
@@ -32,8 +32,10 @@
     "threads": {
       "state": "active",
       "auto": true,
-      "note": "video attach broken since 26 Jul; see threads-video-idle-retry",
-      "kind": "video"
+      "note": "video attach WORKING again via native OS dialog (1 Aug 2026); see OPERATING-NOTES §OS-dialog",
+      "kind": "video",
+      "video_auto": true,
+      "video_note": "DISPROVEN AND REVERSED 1 Aug 2026 05:12 by threads-video-idle-window. The native OS file-dialog route WORKS and posted b3-01 successfully (first Threads video since 25 Jul). The 02:xx entry that closed this route was an INFERENCE from the Chrome-extension route (extension tabs run visibilityState='hidden'/hasFocus=false, so they cannot own a native dialog) - but this task never uses the extension. It drives a real VISIBLE FOCUSED Chrome window with OS-level mouse clicks (Windows-MCP Snapshot/Click). Clicking แนบสื่อ that way DID open dialog class #32770, and the composer rendered the preview (ลบออก button appeared, layout shifted 145px). STILL TRUE: file_upload into input[type=file] is dead on Threads (proven twice) - do not retry it. PRECONDITION: machine genuinely idle; verify GetForegroundWindow title before any keystroke. GOTCHA: keyboard layout is Thai - SendKeys/WM_SETTEXT both fail; type with SendInput KEYEVENTF_UNICODE."
     },
     "tiktok": {
       "state": "paused",
@@ -96,6 +98,20 @@
       "rationale": "Three things point the same way. (1) POSTING-POLICY_antispam is the document comply_gate/qa_gate are meant to enforce, and it says 2. (2) The owner explicitly approved Threads 2/day on 19 Jul, which POST-DATES the 18 Jul standing rule - so the standing rule was already being refined per-channel rather than held at 1. (3) The standing rule's own stated purpose was 'กัน shadowban - ห้าม blast'; blasting is spacing, not volume. 3 posts in 20 minutes (31 Jul) breaks the spacing rule even at a cap of 1, and 2 posts 6h apart breaks nothing. REVERSIBLE: set limits.posts_per_day.default to 1 and this becomes the stricter rule again, no code change needed."
     },
     {
+      "date": "2026-08-01",
+      "task": "owner decision - threads video route",
+      "status": "SUPERSEDED",
+      "decided_on": "2026-08-01",
+      "decisions": [
+        "threads 19:00 slot = caption as text, no video"
+      ],
+      "decision": "stop attempting Threads video upload; keep the slot with the caption as a text post",
+      "rationale": "The brief said to propose text-only only once the OS route was PROVEN dead rather than merely unattempted. It is now proven, with a mechanism rather than a run of failures: the extension's tabs are hidden, so no real click or native dialog can ever reach them. Keeping the slot as text costs nothing to produce, holds the 2/day cap, and the clip still reaches YouTube and Facebook. Reversible the moment either Threads or the tooling changes.",
+      "superseded_on": "2026-08-01",
+      "superseded_by": "threads-video-idle-window 05:12 run",
+      "superseded_note": "Kept for the record. The decision was sound given what was known, but its premise was wrong: the mechanism cited (hidden extension tabs) does not apply to the OS-dialog route, which had never actually been run. OPERATING-NOTES flagged this gap at 04:06 the same night; the 05:12 run then executed the route on a genuinely idle machine and it worked end-to-end."
+    },
+    {
       "date": "2026-08-03",
       "task": "ngernduangold-bridge-clips",
       "status": "OPEN",
@@ -126,6 +142,18 @@
       "decides": [
         "debt-wedge pivot go/park/productize"
       ]
+    },
+    {
+      "date": "2026-08-01",
+      "task": "threads video route - reversal on evidence",
+      "status": "DECIDED",
+      "decided_on": "2026-08-01",
+      "decided_by": "threads-video-idle-window (evidence-based, needs owner ack)",
+      "decisions": [
+        "threads 19:00 slot = video via native OS dialog, text-only fallback retired"
+      ],
+      "decision": "resume Threads video upload using the OS-dialog recipe when the machine is idle",
+      "rationale": "Direct evidence beats inference. Dialog #32770 opened, composer rendered the preview, post published and verified on profile as a single new post. The earlier same-day closure was reasoned from a different code path. OWNER ACK REQUESTED: the 19:00 slot still runs in a normal (non-idle) session, where foreground cannot be guaranteed - so the durable fix is either to keep video on this idle window or to give the 19:00 task the same foreground check."
     }
   ],
   "specs": {
