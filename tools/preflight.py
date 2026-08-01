@@ -363,7 +363,14 @@ def check_competing_plan():
         if not f:
             continue
         norm = f.replace("\\", "/")
-        if "/reels/" not in norm:
+        # Match reels/ at a PATH-SEGMENT boundary, not as a bare substring. The first
+        # version required "/reels/" with a leading slash, so a relative path -- which is
+        # exactly the form the manifest itself uses (items[].reel = "reels/2026-07-27_b3-01.mp4")
+        # -- was reported as "not a reels/ clip" and FAILed. Found 1 Aug 2026 by the first
+        # test ever written for this check. FAIL is a hard gate, so that false positive
+        # would have blocked a posting slot over a plan that actually agreed with us.
+        in_reels = norm.startswith("reels/") or "/reels/" in norm
+        if not in_reels:
             bad.append(f"{day}: plans {os.path.basename(norm) or f} which is not a reels/ clip")
         elif day in man and os.path.basename(man[day].get("reel", "")) != os.path.basename(norm):
             bad.append(f"{day}: plan says {os.path.basename(norm)}, manifest says "

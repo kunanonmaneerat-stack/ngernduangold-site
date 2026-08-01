@@ -30,6 +30,7 @@ TMP = os.path.join(HERE, "_test_ledger.tmp.jsonl")
 import preflight as P
 import post_guard as G
 
+REPO_REAL = os.path.dirname(HERE)
 TODAY = datetime.date.today().isoformat()
 YESTERDAY = (datetime.date.today() - datetime.timedelta(days=1)).isoformat()
 
@@ -41,6 +42,43 @@ def check(label, got, want):
     results.append(ok)
     print("  %-52s %-5s (want %-5s) %s" % (label, got, want, "OK" if ok else "*** FAIL"))
     return ok
+
+
+# Fixtures live in the OS temp dir, never inside the repo. Writing them under tools/
+# left junk beside the code that the sandbox could not delete, and one bad glob away
+# from being committed. Tests should leave no trace in the tree they are testing.
+import tempfile
+TMPDIR = tempfile.mkdtemp(prefix="pf_fixtures_")
+
+
+def _fresh_tmp():
+    return TMPDIR
+
+
+def write(rel, data):
+    """Write a fixture file under TMPDIR; dict/list -> json, str -> text."""
+    path = os.path.join(TMPDIR, rel)
+    d = os.path.dirname(path)
+    if d and not os.path.isdir(d):
+        os.makedirs(d)
+    with io.open(path, "w", encoding="utf-8", newline="\n") as fh:
+        fh.write(json.dumps(data, ensure_ascii=False) if isinstance(data, (dict, list)) else data)
+    return path
+
+
+def run_check(fn_name, **consts):
+    """Call one preflight check with module constants swapped for fixtures.
+
+    Why a generic runner: nine of the fourteen checks had no test at all, and writing a
+    bespoke harness per check is exactly the friction that let that happen. One runner
+    means adding a case is three lines, so there is no excuse to skip it.
+    """
+    importlib.reload(P)
+    for k, v in consts.items():
+        setattr(P, k, v)
+    P.results[:] = []
+    getattr(P, fn_name)()
+    return P.results[0]["status"] if P.results else "(no result)"
 
 
 def run_cap(rows):
@@ -275,6 +313,160 @@ check("empty string is not a claim", status(""), None)
 check("unknown word is not a claim", status("queued"), None)
 check("'scheduled ... published' stays scheduled",
       status("scheduled, will be published 19:00"), "SCHEDULED-UI")
+
+print("\nDELIVERY GAP  (the check that would have caught the 4-day blackout)")
+_fresh_tmp()
+_led = lambda days: write("led.jsonl", "\n".join(json.dumps(
+    {"type": "text", "channel": "facebook", "text_first80": "x",
+     "ts": "%sT09:00:00+07:00" % (datetime.date.today() - datetime.timedelta(days=days)).isoformat()})
+    for _ in [0]))
+check("posted today", run_check("check_delivery_gap", LEDGER=_led(0)), "PASS")
+check("silent %d days" % P.DELIVERY_WARN_DAYS,
+      run_check("check_delivery_gap", LEDGER=_led(P.DELIVERY_WARN_DAYS)), "WARN")
+check("silent %d days" % P.DELIVERY_FAIL_DAYS,
+      run_check("check_delivery_gap", LEDGER=_led(P.DELIVERY_FAIL_DAYS)), "FAIL")
+check("ledger with no content rows at all",
+      run_check("check_delivery_gap", LEDGER=write("empty.jsonl", "")), "FAIL")
+check("ledger file missing entirely",
+      run_check("check_delivery_gap", LEDGER=os.path.join(TMPDIR, "nope.jsonl")), "FAIL")
+
+print("\nCAPTIONS  (must reject what the posting policy forbids, and only that)")
+_cap = lambda txt, ch="threads": write("man.json", {"items": [{"id": "x", "captions": {ch: txt}}]})
+check("clean caption", run_check("check_captions", MANIFEST=_cap("\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25")), "PASS")
+check("literal backslash-n token", run_check("check_captions", MANIFEST=_cap("a\\nb")), "FAIL")
+check("banned word 'guarantee'",
+      run_check("check_captions", MANIFEST=_cap("\u0e01\u0e32\u0e23\u0e31\u0e19\u0e15\u0e35 100")), "FAIL")
+check("a percentage figure", run_check("check_captions", MANIFEST=_cap("\u0e14\u0e2d\u0e01 5%")), "FAIL")
+check("url on a non-youtube channel",
+      run_check("check_captions", MANIFEST=_cap("see https://x.com")), "FAIL")
+check("url IS allowed on youtube",
+      run_check("check_captions", MANIFEST=_cap("see https://x.com", "youtube")), "PASS")
+check("empty manifest is a failure, not a pass",
+      run_check("check_captions", MANIFEST=write("m0.json", {"items": []})), "FAIL")
+
+print("\nPOSTED TRUTH  (a 'posted' record must not outrun the evidence)")
+_pt = lambda vid, logged: (write("m.json", {"items": [{"id": "x", "date": "2026-08-01",
+                                                       "posted": {"youtube": "published (yt-api %s)" % vid}}]}),
+                           write("y.json", {"2026-08-01": logged}))
+_m, _y = _pt("ABC123", "ABC123")
+check("manifest agrees with upload log", run_check("check_posted_truth", MANIFEST=_m, YTLOG=_y), "PASS")
+_m, _y = _pt("ABC123", "ZZZ999")
+check("manifest claims a different videoId", run_check("check_posted_truth", MANIFEST=_m, YTLOG=_y), "FAIL")
+_m, _y = _pt("ABC123", None)
+check("upload log has no row for that date", run_check("check_posted_truth", MANIFEST=_m, YTLOG=_y), "FAIL")
+check("no youtube claim at all = nothing to contradict",
+      run_check("check_posted_truth",
+                MANIFEST=write("m2.json", {"items": [{"id": "x", "date": "2026-08-01"}]}),
+                YTLOG=write("y2.json", {})), "PASS")
+
+print("\nCOMPETING PLAN  (only the manifest may decide what gets posted)")
+_today = datetime.date.today().isoformat()
+check("no rival plan file",
+      run_check("check_competing_plan", REPO=TMPDIR, MANIFEST=write("m3.json", {"items": []})), "PASS")
+_al = os.path.join(TMPDIR, "automation-log")
+os.makedirs(_al, exist_ok=True)
+write("automation-log/post-plan.json", [{"day": _today, "file": "reels/2026-08-01_b3-02.mp4"}])
+check("rival plan naming the same clip as the manifest",
+      run_check("check_competing_plan", REPO=TMPDIR,
+                MANIFEST=write("m4.json", {"items": [{"date": _today, "reel": "reels/2026-08-01_b3-02.mp4"}]})),
+      "PASS")
+write("automation-log/post-plan.json", [{"day": _today, "file": "C:\\\\repo\\\\reels\\\\x.mp4"}])
+check("rival plan using a WINDOWS absolute path to reels",
+      run_check("check_competing_plan", REPO=TMPDIR,
+                MANIFEST=write("m4b.json", {"items": [{"date": _today, "reel": "reels/x.mp4"}]})), "PASS")
+write("automation-log/post-plan.json", [{"day": _today, "file": "reels/2026-08-01_b3-02.mp4"}])
+check("rival plan naming a DIFFERENT clip",
+      run_check("check_competing_plan", REPO=TMPDIR,
+                MANIFEST=write("m5.json", {"items": [{"date": _today, "reel": "reels/other.mp4"}]})), "FAIL")
+write("automation-log/post-plan.json", [{"day": _today, "file": "media/clips-web/old.mp4"}])
+check("rival plan naming a non-reels/ file (the 31 Jul legacy bug)",
+      run_check("check_competing_plan", REPO=TMPDIR, MANIFEST=write("m6.json", {"items": []})), "FAIL")
+write("automation-log/post-plan.json", "{not json")
+check("rival plan that is unreadable",
+      run_check("check_competing_plan", REPO=TMPDIR, MANIFEST=write("m7.json", {"items": []})), "WARN")
+
+print("\nDISCLOSURE  (driven by real anchors - must survive the negation trap)")
+AFF = '<a href="https://atth.me/x?utm_content=fb_home_scb">go</a>'
+HAS = u"\u0e21\u0e35\u0e25\u0e34\u0e07\u0e01\u0e4c\u0e1e\u0e31\u0e19\u0e18\u0e21\u0e34\u0e15\u0e23"
+BOX = u"* " + HAS + u" \u2014 \u0e40\u0e23\u0e32\u0e2d\u0e32\u0e08\u0e44\u0e14\u0e49\u0e23\u0e31\u0e1a"
+
+
+def site_with(html):
+    d = os.path.join(TMPDIR, "site_%d" % abs(hash(html)))
+    os.makedirs(d, exist_ok=True)
+    with io.open(os.path.join(d, "p.html"), "w", encoding="utf-8", newline="\n") as fh:
+        fh.write(html)
+    return d
+
+
+check("affiliate links WITH the disclosure box",
+      run_check("check_disclosure", SITE=site_with(AFF + BOX)), "PASS")
+check("affiliate links with NO disclosure box",
+      run_check("check_disclosure", SITE=site_with(AFF)), "FAIL")
+check("affiliate links on a page claiming it has none",
+      run_check("check_disclosure", SITE=site_with(AFF + BOX + u"\u0e44\u0e21\u0e48" + HAS)), "FAIL")
+check("page with NO affiliate links and no box is fine",
+      run_check("check_disclosure", SITE=site_with("<p>hello</p>")), "PASS")
+check("over-disclosing (box, no links) is not a violation",
+      run_check("check_disclosure", SITE=site_with(BOX)), "PASS")
+check("site/ not built is a WARN, never a silent PASS",
+      run_check("check_disclosure", SITE=os.path.join(TMPDIR, "no-site")), "WARN")
+
+print("\nATTRIBUTION  (every affiliate button needs a channel_page_provider sub id)")
+check("well-formed sub id", run_check("check_attribution", SITE=site_with(AFF)), "PASS")
+check("sub id with too few parts",
+      run_check("check_attribution",
+                SITE=site_with('<a href="https://atth.me/x?utm_content=fb_home">go</a>')), "FAIL")
+check("no utm_content at all",
+      run_check("check_attribution", SITE=site_with('<a href="https://atth.me/x">go</a>')), "FAIL")
+check("site/ not built is a WARN",
+      run_check("check_attribution", SITE=os.path.join(TMPDIR, "no-site2")), "WARN")
+
+print("\nQUEUED CLIP SPEC  (checks on the way IN, not on the way out)")
+check("policy.json missing -> WARN, not a silent pass",
+      run_check("check_queued_clip_spec", REPO=os.path.join(TMPDIR, "no-repo")), "WARN")
+check("nothing queued from today onward -> WARN",
+      run_check("check_queued_clip_spec", REPO=REPO_REAL,
+                SCHEDULE=write("s0.json", {"2020-01-01": {"file": "old.mp4"}})), "WARN")
+check("queued clip missing on disk -> FAIL",
+      run_check("check_queued_clip_spec", REPO=REPO_REAL,
+                SCHEDULE=write("s1.json", {_today: {"file": "definitely-not-here.mp4"}})),
+      "FAIL" if __import__("shutil").which("ffprobe") else "FAIL")
+
+print("\nDELEGATED CHECKS  (queue + build gate shell out - prove the mapping)")
+
+
+def fake_tool(name, code, out):
+    d = _sub = os.path.join(TMPDIR, "bin"); os.makedirs(d, exist_ok=True)
+    with io.open(os.path.join(d, name), "w", encoding="utf-8", newline="\n") as fh:
+        fh.write("import sys\nprint(%r)\nsys.exit(%d)\n" % (out, code))
+    return d
+
+
+check("runway_guard says OK",
+      run_check("check_queue", HERE=fake_tool("runway_guard.py", 0, '{"verdict":"OK","effective_runway_days":9}')),
+      "PASS")
+check("runway_guard says LOW_RUNWAY",
+      run_check("check_queue", HERE=fake_tool("runway_guard.py", 0, '{"verdict":"LOW_RUNWAY","effective_runway_days":1}')),
+      "WARN")
+check("runway_guard says anything else",
+      run_check("check_queue", HERE=fake_tool("runway_guard.py", 2, '{"verdict":"BROKEN","problems":["x"]}')),
+      "FAIL")
+check("runway_guard cannot run at all",
+      run_check("check_queue", HERE=os.path.join(TMPDIR, "no-bin")), "FAIL")
+check("smoke test passes", run_check("check_build_gate", HERE=fake_tool("postdeploy_smoke.py", 0, "ok")), "PASS")
+check("smoke test fails", run_check("check_build_gate", HERE=fake_tool("postdeploy_smoke.py", 1, "boom")), "FAIL")
+
+print("\nMETA  (no check may exist without proof it can both fire and stay quiet)")
+importlib.reload(P)
+_all = sorted(n for n in dir(P) if n.startswith("check_") and callable(getattr(P, n)))
+_src = io.open(os.path.join(HERE, "test_preflight_checks.py"), encoding="utf-8").read()
+_uncovered = [n for n in _all if ('"%s"' % n) not in _src and ("P.%s(" % n) not in _src]
+check("every check_* in preflight has a test here", _uncovered, [])
+print("     %d check(s) in preflight, all exercised" % len(_all))
+
+import shutil
+shutil.rmtree(TMPDIR, ignore_errors=True)
 
 try:
     os.remove(TMP)
