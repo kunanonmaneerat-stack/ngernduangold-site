@@ -37,8 +37,28 @@ TARGETS = [
     ("/travel-insurance-vacation-2026", 'a.cta[href*="atth.me"]', "ins", "ins_"),
 ]
 
+# GA4 measurement id ของเว็บนี้ (ตัวเดียว) - ใช้สร้าง opt-out flag ด้านล่าง
+GA4_ID = os.environ.get("SITE_GA", "G-17PPE0M1B8")
+
 # wrap dataLayer.push BEFORE page scripts → จับ affiliate_click ทุกแบบ (gtag args หรือ dict)
+#
+# กันคลิกของหุ่นยนต์ปนสถิติเงิน (1 ส.ค. 2026)
+# -----------------------------------------------------------------------------
+# งานนี้กดปุ่ม affiliate จริงทุกรอบโดยเจตนา ~7 ครั้ง x 3 รอบ/เดือน = ~21 คลิก ขณะที่ตัวเลข
+# affiliate_click ทั้งเดือนที่ใช้ตัดสินธุรกิจมีแค่ 9  ตรวจด้วย Playwright แล้วพบว่า hit ถูกส่ง
+# ถึง GA4 จริง (POST /g/collect) เพียงแต่ UA เป็น HeadlessChrome + navigator.webdriver=true
+# ซึ่ง GA4 กรอง known bots ให้เอง จึงน่าจะทิ้งไปเกือบหมด -- แต่นั่นคือพฤติกรรมที่เราไม่ได้ควบคุม
+# และพิสูจน์ไม่ได้ว่ากรอง 100% ถ้าวันหนึ่ง Google เปลี่ยนเกณฑ์ เราจะตัดสินใจธุรกิจจากคลิกตัวเอง
+# โดยไม่รู้ตัว จึงปิดการส่งที่ต้นทางแทน สองชั้น:
+#   1) ga-disable-<ID> = true  -> gtag ไม่ยิง hit ออกเลย (กลไก opt-out ทางการของ GA)
+#   2) traffic_type=internal   -> ถ้ามี hit หลุดออกไป GA4 ยังกรองให้ได้อีกชั้น (ต้องเปิด Data
+#      Filter "Internal Traffic" เป็น Active - อยู่ใน OWNER-CHECKLIST ข้อ 3)
+# การตรวจของงานนี้ไม่กระทบเลย เพราะมันอ่านจาก dataLayer.push ที่ถูก wrap ไว้ด้านล่าง
+# ซึ่งทำงาน "ก่อน" ขั้นตอนส่งออกของ gtag -- คลิกยังเกิดจริง sub_id ยังถูกตรวจเหมือนเดิม
 WRAP = """
+window['ga-disable-__GA4_ID__'] = true;
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'traffic_type': 'internal'});
 window.__aff = [];
 window.__ev = [];
 window.dataLayer = window.dataLayer || [];
@@ -80,7 +100,7 @@ def run(base, targets):
             fails, got = [], None
             ctx = browser.new_context()
             page = ctx.new_page()
-            page.add_init_script(WRAP)
+            page.add_init_script(WRAP.replace("__GA4_ID__", GA4_ID))
             page.route(re.compile(r"atth\.me"), lambda r: r.abort())  # ไม่โหลด affiliate จริง
             try:
                 page.goto(base + path, wait_until="domcontentloaded", timeout=30000)
@@ -133,7 +153,7 @@ def run_quiz(base, q1="urgent", q2="car"):
         browser = pw.chromium.launch(headless=True)
         ctx = browser.new_context()
         page = ctx.new_page()
-        page.add_init_script(WRAP)
+        page.add_init_script(WRAP.replace("__GA4_ID__", GA4_ID))
         page.route(re.compile(r"atth\.me"), lambda r: r.abort())
         try:
             page.goto(base + "/quiz", wait_until="domcontentloaded", timeout=30000)
@@ -179,7 +199,7 @@ def run_events(base):
     with sync_playwright() as pw:
         browser = pw.chromium.launch(headless=True)
         ctx = browser.new_context(); page = ctx.new_page()
-        page.add_init_script(WRAP)
+        page.add_init_script(WRAP.replace("__GA4_ID__", GA4_ID))
         page.route(re.compile(r"atth\.me"), lambda r: r.abort())
         try:
             page.goto(base + "/title-loan-2026", wait_until="domcontentloaded", timeout=30000)
