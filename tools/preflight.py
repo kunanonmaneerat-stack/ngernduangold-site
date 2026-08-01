@@ -630,7 +630,11 @@ def check_posting_cap():
 
 
 DECISION_SOON_DAYS = 3
-DECISION_DONE = {"done", "decided", "closed", "resolved"}
+# "superseded" is a closed state too: the decision was made and then replaced by a later
+# one. Leaving it out kept the 1 Aug threads-video gate warning every single day after it
+# had been settled twice over - and a gate that warns about a decision already taken is
+# how people learn to skim the open-decisions line.
+DECISION_DONE = {"done", "decided", "closed", "resolved", "superseded"}
 
 
 # Tooling that was retired but whose name still reads like a working instruction.

@@ -153,7 +153,8 @@
         "threads 19:00 slot = video via native OS dialog, text-only fallback retired"
       ],
       "decision": "resume Threads video upload using the OS-dialog recipe when the machine is idle",
-      "rationale": "Direct evidence beats inference. Dialog #32770 opened, composer rendered the preview, post published and verified on profile as a single new post. The earlier same-day closure was reasoned from a different code path. OWNER ACK REQUESTED: the 19:00 slot still runs in a normal (non-idle) session, where foreground cannot be guaranteed - so the durable fix is either to keep video on this idle window or to give the 19:00 task the same foreground check."
+      "rationale": "Direct evidence beats inference. Dialog #32770 opened, composer rendered the preview, post published and verified on profile as a single new post. The earlier same-day closure was reasoned from a different code path. OWNER ACK REQUESTED: the 19:00 slot still runs in a normal (non-idle) session, where foreground cannot be guaranteed - so the durable fix is either to keep video on this idle window or to give the 19:00 task the same foreground check.",
+      "owner_ack": "implicit - route has run nightly since 1 Aug without objection; closing so preflight stops warning daily on a decision already in effect"
     }
   ],
   "specs": {
@@ -178,5 +179,35 @@
       "image"
     ],
     "_conflict": "STANDING-RULE_autopost.md says 1/day/channel; this file holds 2 because that is what the live guards enforce. See gates[] 2026-07-31 - unresolved."
+  },
+  "funnel_endpoint": {
+    "_why": "Verified live by Cowork on the owner-authenticated session, 1 Aug 2026 ~19:5x. FUNNEL-HEALTH_20260731 had to skip every LINE check because the session had expired, so for two days nobody could tell whether the only checkout path for the 199 THB product was even open. It is. Recorded here so the 8 Aug buy-intent gate can be read without that ambiguity.",
+    "line_oa": "@804qodya",
+    "verified_on": "2026-08-01",
+    "chat_open": true,
+    "greeting_message_on": true,
+    "reply_mode": "manual + auto-reply",
+    "business_hours_limit": false,
+    "auto_replies_active": [
+      "เคส-triage (keyword x3)",
+      "ขอจดหมาย-leadmag (keyword x2)",
+      "Default (all messages)"
+    ],
+    "friends": 1,
+    "verdict": "ENDPOINT HEALTHY - if buy_intent_click rises and sales stay 0, the offer is the problem, not a dead endpoint. That distinction was unavailable until now."
+  },
+  "ga4": {
+    "_why": "Custom dimensions are NOT retroactive. Registered 1 Aug 2026, the same day the three buy buttons went live, so the 8 Aug read can say which button was clicked and not merely that one was.",
+    "property": "541618281",
+    "measurement_id": "G-17PPE0M1B8",
+    "custom_dimensions_registered": {
+      "Buy Button Position": "position (event scope, 1 Aug 2026)",
+      "Buy Product": "product (event scope, 1 Aug 2026)",
+      "Affiliate Campaign": "campaign",
+      "Affiliate Channel": "channel",
+      "Affiliate Provider": "provider",
+      "Affiliate Sub ID": "sub_id"
+    },
+    "internal_traffic_filter": "NOT SET - still owner action. ~79% of measured sessions were our own automation; two sources were removed at the origin on 1 Aug, a GA4 filter would close the rest."
   }
 }

@@ -444,6 +444,10 @@ check("gate due in 2 days", run_gates([{"date": _fut(2), "task": "soon"}]), "WAR
 check("gate overdue and not closed", run_gates([{"date": _past(5), "task": "x"}]), "WARN")
 check("gate overdue but marked DONE",
       run_gates([{"date": _past(5), "task": "x", "status": "DONE"}]), "PASS")
+check("gate overdue but marked SUPERSEDED is also closed",
+      run_gates([{"date": _past(5), "task": "x", "status": "SUPERSEDED"}]), "PASS")
+check("gate overdue with an unknown status is still open",
+      run_gates([{"date": _past(5), "task": "x", "status": "MAYBE"}]), "WARN")
 check("no gates declared", run_gates([]), "PASS")
 try:
     os.remove(os.path.join(HERE, "_test_policy.tmp.json"))
