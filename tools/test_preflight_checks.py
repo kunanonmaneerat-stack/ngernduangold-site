@@ -551,6 +551,20 @@ _a, _b = two_roots({"cc-only": ORDER}, {})
 check("a cc-only task is scanned too (clicktest was not)",
       run_check("check_dead_tooling", OWN_TASKS_DIR=_a, SCHEDULED_DIR=_b), "FAIL")
 
+# A retired task naming a dead tool is history, not an order. Nine permanently-closed
+# Cowork prompts sat in this warning line, which is how a warning stops being read.
+_RET = '---\nname: t\ndescription: [ปิด 19 มิ.ย. 2026] Postiz เลิกใช้\n---\nrun Postiz to refill the queue\n'
+_LIVE = '---\nname: t\ndescription: daily queue refill\n---\nrun Postiz to refill the queue\n'
+_a, _b = two_roots({}, {"t": _RET})
+check("retired task naming a dead tool is history, not drift",
+      run_check("check_dead_tooling", OWN_TASKS_DIR=_a, SCHEDULED_DIR=_b), "PASS")
+_a, _b = two_roots({}, {"t": _LIVE})
+check("a LIVE task with the same body still warns",
+      run_check("check_dead_tooling", OWN_TASKS_DIR=_a, SCHEDULED_DIR=_b), "WARN")
+_a, _b = two_roots({"t": _RET}, {})
+check("retired cc task does not FAIL the gate either",
+      run_check("check_dead_tooling", OWN_TASKS_DIR=_a, SCHEDULED_DIR=_b), "PASS")
+
 print("\nTASK MIRROR  (one id must not mean two different sets of orders)")
 _a, _b = two_roots({"t": "same"}, {"t": "same"})
 check("identical in both roots", run_check("check_task_mirror", OWN_TASKS_DIR=_a, SCHEDULED_DIR=_b), "PASS")

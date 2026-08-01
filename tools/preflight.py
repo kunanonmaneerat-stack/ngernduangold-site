@@ -647,6 +647,19 @@ DEAD_TOOLING = [
 # unqualified mention is drift. Same lesson as the disclosure gate on 25 Jul, where
 # grep("มีลิงก์พันธมิตร") happily matched "ไม่มีลิงก์พันธมิตร" and passed a page that said
 # the opposite of what the check believed.
+# Retirement markers the repo already uses at the START of a description.
+_RETIRED = re.compile(r"\[\s*(?:\u0e1b\u0e34\u0e14|\u0e1e\u0e31\u0e01|PAUSED|DISABLED|DONE|\u0e40\u0e25\u0e34\u0e01\u0e43\u0e0a\u0e49)")
+
+
+def _description_of(body):
+    """The frontmatter description line only - retirement is declared there, not in the body."""
+    if not body.startswith("---"):
+        return ""
+    head = body.split("---", 2)[1] if body.count("---") >= 2 else ""
+    m = re.search(r"^description:\s*(.*)$", head, re.M)
+    return m.group(1) if m else ""
+
+
 _FORBIDDING = re.compile(
     r"ห้าม|เลิกใช้|ยกเลิก|ตายไปแล้ว|ไม่ใช้|อย่าใช้|ปิดถาวร|ใช้ไม่ได้|ไม่มีอยู่แล้ว|อย่าเสียเวลา|301|"
     r"do not|don't|retired|revoked|deprecated|no longer"
@@ -737,11 +750,20 @@ def check_dead_tooling():
     offenders = []
     others = []
     scanned = 0
+    skipped_retired = 0
     for name, root_label, path in task_prompts():
         scanned += 1
         try:
             body = io.open(path, encoding="utf-8", errors="replace").read()
         except OSError:
+            continue
+        # A RETIRED task naming a dead tool is a historical record, not an order anyone
+        # will follow. Flagging those kept nine permanently-closed prompts in the warning
+        # line forever, which is how a warning stops being read (see the alarm-fatigue note
+        # on check_posting_cap). The repo already marks retirement in the description, so
+        # use that convention rather than inventing a new field.
+        if _RETIRED.search(_description_of(body)):
+            skipped_retired += 1
             continue
         for line in body.split("\n"):
             if _FORBIDDING.search(line):
@@ -763,7 +785,8 @@ def check_dead_tooling():
             "retired tooling -> %s" % (scanned, len(uniq), " | ".join(uniq[:5])))
         return
     add("dead tooling", "PASS",
-        "%d task prompt(s) across both roots: no orders pointing at retired tooling" % scanned)
+        "%d task prompt(s) across both roots (%d retired, skipped): no orders pointing at "
+        "retired tooling" % (scanned, skipped_retired))
 
 
 def check_open_decisions():
