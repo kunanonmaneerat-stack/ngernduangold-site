@@ -789,6 +789,77 @@ def check_dead_tooling():
         "retired tooling" % (scanned, skipped_retired))
 
 
+# Channel names as they appear in prompts, mapped to whole-word patterns. Short aliases
+# must not match inside longer words -- "ig" inside "ignore" produced a false FAIL in
+# check_prompt_drift on 1 Aug, and a false FAIL is worse than no check because it trains
+# everyone to skip the output.
+_CH_WORDS = {
+    "pantip": r"pantip|\u0e1e\u0e31\u0e19\u0e17\u0e34\u0e1b",
+    "threads": r"threads",
+    "tiktok": r"tiktok",
+    "instagram": r"instagram|(?<![a-z])ig(?![a-z])",
+    "facebook": r"facebook|(?<![a-z])fb(?![a-z])",
+    "youtube": r"youtube|(?<![a-z])yt(?![a-z])",
+    "pinterest": r"pinterest",
+}
+# A date in ISO form or written in Thai ("16 ก.ค." / "16 ก.ค. 2026").
+_DATE_ANY = re.compile(r"\d{4}-\d{2}-\d{2}|\d{1,2}\s*(?:%s)" % r"ม.ค.|ก.พ.|มี.ค.|เม.ย.|พ.ค.|มิ.ย.|ก.ค.|ส.ค.|ก.ย.|ต.ค.|พ.ย.|ธ.ค.")
+# Filenames carry dates as identifiers, not as claims: HANDOFF_2026-08-01.md, status-2026-07-30.md
+_FILENAMEish = re.compile(r"[\w./\\-]*\d{4}-\d{2}-\d{2}[\w./\\-]*\.(?:md|json|jsonl|csv|py|html)")
+# A date only matters here when it acts as a DEADLINE for the channel - 'paused until X',
+# 'frozen through X'. Recording when something happened ('token revoked 18 Jul', '[closed
+# 19 Jun]') is history and must pass: banning every date next to a channel name produced
+# five false FAILs on the first run, and a check people learn to ignore protects nothing.
+_DEADLINE = re.compile(
+    r"ถึง|จนถึง|หมดอายุ|"
+    r"ครบกำหนด|สิ้นสุด|"
+    r"กลับมา|เปิดอีกครั้ง|"
+    r"until|through|resume|expires?|deadline|reopen", re.I)
+
+
+def check_policy_dates_in_prompts():
+    """A prompt must never carry a channel's own expiry/decision date - it must point at policy.json.
+
+    check_prompt_drift only compares ISO dates, so "Pantip FROZEN ถึง 16 ก.ค." sat in a live
+    prompt for two weeks while preflight said PASS. The dangerous reading is not the stale
+    date itself, it is the inference: "16 ก.ค. has passed, so the freeze is over."
+    The rule is therefore about WHERE the fact lives, not whether the copy is currently right.
+
+    FAIL for prompts this agent owns; WARN with names for the other root, same split as
+    check_dead_tooling -- we cannot rewrite Cowork's prompts, but the finding must stay visible.
+    """
+    own, other, scanned = [], [], 0
+    for name, label, path in task_prompts():
+        scanned += 1
+        try:
+            body = io.open(path, encoding="utf-8", errors="replace").read()
+        except OSError:
+            continue
+        for line in body.split("\n"):
+            probe = _FILENAMEish.sub(" ", line)      # drop filenames before looking for dates
+            if not _DATE_ANY.search(probe):
+                continue
+            if not _DEADLINE.search(probe):           # a record of what happened, not a deadline
+                continue
+            for ch, pat in _CH_WORDS.items():
+                if re.search(pat, probe, re.I):
+                    (own if label == "cc" else other).append("%s: %s" % (name, ch))
+                    break
+    if own:
+        uniq = sorted(set(own))
+        add("policy dates", "FAIL",
+            "%d own prompt(s) hard-code a channel date instead of reading policy.json -> %s"
+            % (len(uniq), " | ".join(uniq[:4])))
+        return
+    if other:
+        uniq = sorted(set(other))
+        add("policy dates", "WARN",
+            "own prompts clean (%d scanned); %d Cowork prompt(s) hard-code a channel date -> %s"
+            % (scanned, len(uniq), " | ".join(uniq[:5])))
+        return
+    add("policy dates", "PASS", "%d prompt(s): channel dates live in policy.json only" % scanned)
+
+
 def check_open_decisions():
     """Surface plan decisions whose date has passed and that nobody has closed.
 
@@ -911,6 +982,7 @@ def main():
     check_competing_plan()
     check_prompt_drift()
     check_dead_tooling()
+    check_policy_dates_in_prompts()
     check_task_mirror()
     check_open_decisions()
     check_content_cliff()

@@ -284,6 +284,58 @@ P.OWN_TASKS_DIR = _od
 shutil.rmtree(os.path.join(HERE, "_test_dead.tmp"), ignore_errors=True)
 P.SCHEDULED_DIR = _sd2
 
+print("\nPOLICY DATES IN PROMPTS  (a channel deadline belongs in policy.json, not in a prompt)")
+_od3 = P.OWN_TASKS_DIR
+_sd3 = P.SCHEDULED_DIR
+
+
+def run_dates(body, owned=True):
+    """Write one fake prompt and read the verdict. owned=False puts it in the other root."""
+    d = os.path.join(HERE, "_test_dates.tmp")
+    t3 = os.path.join(d, "fake-task")
+    if not os.path.isdir(t3):
+        os.makedirs(t3)
+    with io.open(os.path.join(t3, "SKILL.md"), "w", encoding="utf-8", newline=chr(10)) as fh:
+        fh.write(body)
+    empty = os.path.join(HERE, "_test_dates_empty.tmp")
+    if not os.path.isdir(empty):
+        os.makedirs(empty)
+    P.OWN_TASKS_DIR = d if owned else empty
+    P.SCHEDULED_DIR = empty if owned else d
+    P.results[:] = []
+    P.check_policy_dates_in_prompts()
+    return P.results[0]["status"]
+
+
+# --- must fire: the date is acting as the channel deadline ---
+check("Thai date as a channel deadline",
+      run_dates("Pantip FROZEN \u0e16\u0e36\u0e07 16 \u0e01.\u0e04. \u2014 \u0e2b\u0e49\u0e32\u0e21\u0e42\u0e1e\u0e2a\u0e15\u0e4c"), "FAIL")
+check("ISO date as a channel deadline",
+      run_dates("instagram paused until 2026-08-25"), "FAIL")
+check("Thai date + Thai channel word",
+      run_dates("\u0e1e\u0e31\u0e19\u0e17\u0e34\u0e1b \u0e40\u0e1b\u0e34\u0e14\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07 14 \u0e2a.\u0e04. 2026"), "FAIL")
+
+# --- must stay quiet: history, filenames, unrelated words ---
+check("recording WHEN something died is history, not a deadline",
+      run_dates("Meta MCP get_instagram_posts \u2014 token \u0e22\u0e01\u0e40\u0e25\u0e34\u0e01\u0e16\u0e32\u0e27\u0e23 18 \u0e01.\u0e04. 2026"), "PASS")
+check("a date inside a FILENAME is a reference",
+      run_dates("threads: \u0e2d\u0e48\u0e32\u0e19 HANDOFF_2026-08-01.md \u0e08\u0e19\u0e16\u0e36\u0e07\u0e17\u0e49\u0e32\u0e22"), "PASS")
+check("deadline without any channel name is not ours to police",
+      run_dates("\u0e2a\u0e48\u0e07\u0e23\u0e32\u0e22\u0e07\u0e32\u0e19\u0e16\u0e36\u0e07 2026-08-14"), "PASS")
+check("pointing at policy.json is the correct form",
+      run_dates("pantip: \u0e2d\u0e48\u0e32\u0e19\u0e2a\u0e16\u0e32\u0e19\u0e30\u0e08\u0e32\u0e01 policy.json \u2192 channels.pantip"), "PASS")
+check("'ig' inside a longer word is not the channel",
+      run_dates("ignore rows until 2026-08-25"), "PASS")
+
+# --- ownership split, same rule as dead tooling ---
+check("same drift in someone else's prompt only warns",
+      run_dates("Pantip FROZEN \u0e16\u0e36\u0e07 16 \u0e01.\u0e04.", owned=False), "WARN")
+
+shutil.rmtree(os.path.join(HERE, "_test_dates.tmp"), ignore_errors=True)
+shutil.rmtree(os.path.join(HERE, "_test_dates_empty.tmp"), ignore_errors=True)
+P.OWN_TASKS_DIR = _od3
+P.SCHEDULED_DIR = _sd3
+
 print("\nOPEN DECISIONS  (an expired plan gate must stay visible on every run)")
 _real_policy = P.POLICY
 
