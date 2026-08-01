@@ -44,6 +44,15 @@ must actually render.
 """
 import io, os, sys, time, json, argparse, datetime
 
+# Same reason as preflight.py: run_daily.cmd sets PYTHONIOENCODING=utf-8 but a hand-run
+# from a Thai Windows console (cp874) does not, and the alert path prints a URL and a
+# reason that may contain anything the page returned.
+for _s in (sys.stdout, sys.stderr):
+    try:
+        _s.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 try:
     from urllib.request import Request, urlopen
     from urllib.error import URLError, HTTPError
@@ -55,6 +64,23 @@ REPO = os.path.dirname(HERE)
 INBOX = os.path.join(REPO, "automation-log", "cowork-inbox")
 ALERT = os.path.join(INBOX, "SITE-DOWN-ALERT.md")
 URL = "https://ngernduangold.com/"
+
+# --- host public IP -------------------------------------------------------
+# Why this lives in the uptime check and not somewhere tidier: GA4's internal
+# traffic rule can only match on IP, and on 1 Aug 2026 the rule was found still
+# pinned to 184.22.17.215 while this machine had long since been rotated to
+# 27.130.5.93 by the ISP. The rule existed, the Data Filter was Active, and the
+# whole arrangement had been silently matching nothing - so every automated
+# page view we generated was being counted as a real reader (~79% of sessions).
+#
+# Nothing detected it because nothing could: no file anywhere recorded what IP
+# this box actually goes out on. This script is the only thing that runs daily
+# from Windows Task Scheduler AND has network, so it is the only place that can
+# observe the fact. It records; preflight compares. Recording must never be able
+# to change the uptime verdict - an IP lookup failing says nothing about the site.
+IP_URL = "https://api.ipify.org?format=json"
+HOST_IP_FILE = os.path.join(REPO, ".system_control", "host_ip.json")
+IP_TIMEOUT = 8
 TIMEOUT = 20
 
 # The brand name, then the four category cards. Rendered page must show the
@@ -93,6 +119,77 @@ def fetch():
         return None, "", "network: %s" % (getattr(e, "reason", e),)
     except Exception as e:                              # noqa: BLE001
         return None, "", "%s: %s" % (type(e).__name__, e)
+
+
+def parse_ip_payload(raw):
+    """-> dotted-quad string, or None. Pure, so the selftest can exercise it.
+
+    Deliberately strict. A proxy error page, a captive portal, or ipify changing
+    its shape must yield None rather than a plausible-looking string, because the
+    value gets written to disk and then trusted by preflight. A wrong IP recorded
+    confidently is worse than no IP at all: it turns the guard back into the thing
+    it was built to catch.
+    """
+    if not raw:
+        return None
+    try:
+        ip = (json.loads(raw) or {}).get("ip")
+    except Exception:
+        return None
+    if not isinstance(ip, str):
+        return None
+    ip = ip.strip()
+    parts = ip.split(".")
+    if len(parts) != 4:
+        return None
+    for p in parts:
+        if not p.isdigit() or not (0 <= int(p) <= 255) or (len(p) > 1 and p[0] == "0"):
+            return None
+    return ip
+
+
+def record_host_ip():
+    """Best-effort: write this machine's public IP to .system_control/host_ip.json.
+
+    Returns the ip on success, None otherwise. Never raises, never affects exit code.
+    """
+    try:
+        req = Request(IP_URL, headers={"User-Agent": "ngernduangold-uptime-check/1.0"})
+        raw = urlopen(req, timeout=IP_TIMEOUT).read().decode("utf-8", "replace")
+    except Exception:
+        return None
+    ip = parse_ip_payload(raw)
+    if not ip:
+        return None
+    try:
+        d = os.path.dirname(HOST_IP_FILE)
+        if d and not os.path.isdir(d):
+            os.makedirs(d)
+        try:
+            import platform
+            node = platform.node() or "?"
+        except Exception:
+            node = "?"
+        payload = {
+            "ip": ip,
+            "checked_at": datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+            "source": "api.ipify.org",
+            # Which box observed it. The Linux sandbox and the Windows host go out on
+            # DIFFERENT public IPs, and only the Windows one matches what Chrome (and
+            # therefore GA4) sees. Recording the hostname means a value captured from
+            # the wrong machine is visible instead of quietly wrong - the same class of
+            # bug this whole file exists to prevent.
+            "host": node,
+            "_why": "preflight/check_ga4_internal_ip compares this against the CIDRs "
+                    "pinned in policy.json ga4.internal_traffic.ips. If they diverge, "
+                    "the GA4 internal-traffic rule has stopped matching and the traffic "
+                    "numbers include our own automation.",
+        }
+        with io.open(HOST_IP_FILE, "w", encoding="utf-8", newline="\n") as fh:
+            fh.write(json.dumps(payload, ensure_ascii=False, indent=2) + "\n")
+    except Exception:
+        return None
+    return ip
 
 
 def judge(status, body):
@@ -183,7 +280,34 @@ def selftest():
         print("  %-34s %-8s (want %-8s) %s" % (label, got, want, "OK" if ok else "*** FAIL"))
         if not ok:
             print("      reason: %s" % why)
-    print("\n%d cases, %d failed" % (len(cases), bad))
+
+    # parse_ip_payload: the value it returns is written to disk and then trusted by
+    # preflight, so a confident wrong answer is the expensive failure. Prove it says
+    # None for every shape that is not an IP.
+    print("\n  parse_ip_payload")
+    ip_cases = [
+        ('{"ip":"27.130.5.93"}',            "27.130.5.93"),
+        ('{"ip":" 27.130.5.93 "}',          "27.130.5.93"),
+        ('{"ip":"184.22.17.215"}',          "184.22.17.215"),
+        ('{"ip":"999.1.1.1"}',              None),
+        ('{"ip":"27.130.5"}',               None),
+        ('{"ip":"27.130.5.93.7"}',          None),
+        ('{"ip":"01.2.3.4"}',               None),   # leading zero = not a dotted quad
+        ('{"ip":"2001:db8::1"}',            None),   # v6: rule below is v4-only, say so
+        ('{"ip":null}',                     None),
+        ('{}',                              None),
+        ('<html>captive portal</html>',     None),
+        ('',                                None),
+        (None,                              None),
+    ]
+    for raw, want in ip_cases:
+        got = parse_ip_payload(raw)
+        ok = got == want
+        bad += 0 if ok else 1
+        shown = (raw if raw is not None else "None")
+        print("    %-34s %-14s (want %-14s) %s"
+              % (shown[:34], got, want, "OK" if ok else "*** FAIL"))
+    print("\n%d cases, %d failed" % (len(cases) + len(ip_cases), bad))
     return 1 if bad else 0
 
 
@@ -220,9 +344,15 @@ def main():
             print("uptime  UNKNOWN  %s (not treated as an outage)" % reason)
         code = 1
 
+    # Observe the public IP AFTER the verdict is settled, so a failure here cannot
+    # reach into the exit code. See the HOST_IP_FILE comment at the top of the file.
+    ip = record_host_ip()
+    if not args.quiet:
+        print("hostip  %s" % (ip if ip else "unknown (not recorded; preflight will say so)"))
+
     if args.json:
-        print(json.dumps({"verdict": verdict, "http": status, "reason": reason},
-                         ensure_ascii=False))
+        print(json.dumps({"verdict": verdict, "http": status, "reason": reason,
+                          "host_ip": ip}, ensure_ascii=False))
     return code
 
 

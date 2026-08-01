@@ -24,7 +24,20 @@ USAGE
 EXIT CODES
   0 = all pass    1 = at least one WARN    2 = at least one FAIL
 """
-import os, sys, re, json, io, argparse, subprocess, datetime
+import os, sys, re, json, io, argparse, subprocess, datetime, ipaddress
+
+# run_daily.cmd sets PYTHONIOENCODING=utf-8, so the DAILY path always printed fine and
+# nobody noticed that the INTERACTIVE path did not: a Thai Windows console is cp874, so
+# `py tools\preflight.py` typed by hand (which is exactly what the watchdog and the
+# agent-auditor prompts tell an agent to do) rendered every Thai detail as mojibake, and
+# any character outside cp874 killed the process outright with UnicodeEncodeError.
+# Seven other tools in this repo already do this line; these three had been missed.
+# The covered path and the uncovered path were different paths - same shape as note 29.
+for _s in (sys.stdout, sys.stderr):
+    try:
+        _s.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HERE)
@@ -46,6 +59,11 @@ REPEAT_FAIL_WINDOW_DAYS = 3
 REPEAT_FAIL_WARN = 2
 REPEAT_FAIL_FAIL = 3
 POLICY = os.path.join(REPO, ".system_control", "policy.json")
+
+# Written daily by tools/uptime_check.py (the only thing that runs from Task Scheduler
+# AND has network). check_ga4_internal_ip compares it against the CIDRs pinned in GA4.
+HOST_IP_FILE = os.path.join(REPO, ".system_control", "host_ip.json")
+HOST_IP_STALE_DAYS = 7
 
 # POSTING-POLICY_antispam_20260702.md rule 2: <=2 posts/day/channel and >=3h between
 # posts on the same channel (Pinterest gets 5 pins/day). Comments are not posts.
@@ -1030,6 +1048,90 @@ def check_synthetic_traffic():
         % (direct_sessions, total, share * 100, direct_quiz))
 
 
+def check_ga4_internal_ip():
+    """GA4 กันทราฟฟิกตัวเองด้วย "ไอพี" เท่านั้น - พอ ISP หมุนไอพี กฎก็ตายเงียบ.
+
+    เคสจริง 1 ส.ค. 2026: ใน GA4 มีครบทุกชิ้นอยู่แล้ว - internal traffic rule ชื่อ
+    "Internal Traffic - My IP" ตั้ง traffic_type=internal และ Data Filter "Internal Traffic"
+    สถานะ Active/Exclude แต่ไอพีที่ปักไว้คือ 184.22.17.215 ขณะที่เครื่องจริงออกเน็ตด้วย
+    27.130.5.93 ไปแล้ว **กฎจึงไม่ match อะไรเลยมาตลอด** ทุกครั้งที่ agent เปิดหน้าเว็บ
+    จึงถูกนับเป็นคนอ่านจริง (คิดเป็น ~79% ของ session ที่วัดได้)
+
+    นี่คือบทเรียนเดิมในรูปแบบใหม่: **guard ที่ตั้งค่าครั้งเดียวแล้วไม่มีใครวัดว่ามันยัง match อยู่ไหม
+    หน้าตาเหมือน guard ที่ทำงานปกติทุกประการ** ไม่มี error ไม่มี log ไม่มีใครรู้
+    ครั้งนี้เลยไม่แก้แค่ไอพี แต่ทำให้ "ไอพีเปลี่ยน" กลายเป็นสิ่งที่ตรวจจับได้อัตโนมัติ
+
+    ทำไมเป็น WARN ไม่ใช่ FAIL: ไอพีเพี้ยนไม่ได้ทำให้โพสต์ผิดหรือทำให้เว็บพัง (FAIL = ห้ามโพสต์)
+    แต่มันทำให้ **ตัวเลขทราฟฟิกทุกตัวเชื่อไม่ได้** จึงต้องดังพอที่ watchdog จะยกขึ้นรายงาน
+    """
+    ga4 = (_load(POLICY, {}) or {}).get("ga4") or {}
+    blk = ga4.get("internal_traffic")
+    if not isinstance(blk, dict):
+        add("ga4 internal ip", "WARN",
+            "policy.json ยังไม่มี ga4.internal_traffic - ตรวจไม่ได้ว่ากันทราฟฟิกตัวเองอยู่จริงไหม")
+        return
+
+    state = (blk.get("filter_state") or "").strip().lower()
+    if state != "active":
+        add("ga4 internal ip", "WARN",
+            "Data Filter 'Internal Traffic' สถานะ %r (ไม่ใช่ Active) - กฎถูกตั้งไว้แต่ยังไม่ตัดข้อมูลจริง"
+            % (blk.get("filter_state") or "ไม่ระบุ"))
+        return
+
+    nets = []
+    for cidr in (blk.get("ips") or []):
+        try:
+            nets.append(ipaddress.ip_network(str(cidr).strip(), strict=False))
+        except ValueError:
+            add("ga4 internal ip", "WARN",
+                "policy.json ga4.internal_traffic.ips มีค่าที่ไม่ใช่ CIDR: %r" % (cidr,))
+            return
+    if not nets:
+        add("ga4 internal ip", "WARN",
+            "policy.json ga4.internal_traffic.ips ว่าง - เท่ากับไม่ได้กันทราฟฟิกตัวเองเลย")
+        return
+
+    host = _load(HOST_IP_FILE)
+    if not isinstance(host, dict) or not host.get("ip"):
+        add("ga4 internal ip", "WARN",
+            "ยังไม่มี .system_control/host_ip.json - ไม่รู้ว่าเครื่องออกเน็ตด้วยไอพีอะไร"
+            " จึงพิสูจน์ไม่ได้ว่ากฎ GA4 ยัง match อยู่ (รัน py tools\\uptime_check.py หนึ่งครั้ง)")
+        return
+
+    seen = host.get("checked_at") or ""
+    try:
+        age = (datetime.datetime.now() - datetime.datetime.strptime(seen[:19], "%Y-%m-%dT%H:%M:%S")).days
+    except Exception:
+        age = None
+    if age is None:
+        add("ga4 internal ip", "WARN",
+            "host_ip.json อ่าน checked_at ไม่ได้ (%r) - ถือว่าตรวจไม่ได้" % (seen,))
+        return
+    if age > HOST_IP_STALE_DAYS:
+        add("ga4 internal ip", "WARN",
+            "host_ip.json เก่า %d วัน (เกิน %d) - uptime_check ไม่ได้รันมานาน ค่าที่เทียบอยู่อาจไม่ใช่ของจริง"
+            % (age, HOST_IP_STALE_DAYS))
+        return
+
+    try:
+        ip = ipaddress.ip_address(str(host["ip"]).strip())
+    except ValueError:
+        add("ga4 internal ip", "WARN", "host_ip.json มีไอพีที่อ่านไม่ออก: %r" % (host.get("ip"),))
+        return
+
+    if not any(ip in n for n in nets):
+        add("ga4 internal ip", "WARN",
+            "เครื่องออกเน็ตด้วย %s แต่ GA4 ปักไว้ %s -> กฎ internal traffic ไม่ match อะไรเลย"
+            " ทราฟฟิกของ agent กำลังถูกนับเป็นคนอ่านจริง **ตัวเลข GA4 ทั้งหมดเชื่อไม่ได้จนกว่าจะแก้**"
+            " (GA4 > Admin > Data streams > Configure tag settings > Define internal traffic)"
+            % (ip, ", ".join(str(n) for n in nets)))
+        return
+
+    add("ga4 internal ip", "PASS",
+        "%s อยู่ใน %s และ Data Filter = Active (บันทึกจากเครื่อง %s เมื่อ %d วันก่อน)"
+        % (ip, ", ".join(str(n) for n in nets), host.get("host") or "?", age))
+
+
 def check_open_decisions():
     """Surface plan decisions whose date has passed and that nobody has closed.
 
@@ -1155,6 +1257,7 @@ def main():
     check_policy_dates_in_prompts()
     check_sales_recorded()
     check_synthetic_traffic()
+    check_ga4_internal_ip()
     check_task_mirror()
     check_open_decisions()
     check_content_cliff()

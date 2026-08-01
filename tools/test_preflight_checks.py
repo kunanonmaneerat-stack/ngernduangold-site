@@ -23,6 +23,17 @@ ASCII-ONLY SOURCE: repo rule - scripts that touch Thai must not contain Thai lit
 """
 import io, os, sys, json, datetime, importlib
 
+# A Thai Windows console is cp874. This file prints fixture text containing U+26D4 and
+# other symbols that cp874 cannot encode, so running it by hand died with
+# UnicodeEncodeError *before reaching the meta-tests* - i.e. the suite whose entire job
+# is to prove no guard is blind was itself unable to report on Windows, while passing
+# in the sandbox. Tests that only pass where nobody runs them are not tests.
+for _s in (sys.stdout, sys.stderr):
+    try:
+        _s.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 TMP = os.path.join(HERE, "_test_ledger.tmp.jsonl")
@@ -739,6 +750,68 @@ check("retired task quoting an expired window is history, not drift",
 _a, _b = two_roots({}, {"t": _FLD_P})
 check("'phase_until' is a FIELD NAME, not the deadline word 'until'",
       run_check("check_policy_dates_in_prompts", OWN_TASKS_DIR=_a, SCHEDULED_DIR=_b), "PASS")
+
+print("\nGA4 INTERNAL IP  (the rule that existed, was Active, and matched nothing)")
+# 1 Aug 2026: GA4 had an internal-traffic rule pinned to 184.22.17.215 and an ACTIVE
+# Exclude filter, while the machine had been rotated to 27.130.5.93 by the ISP. Every
+# visible signal said "protected". Nothing on disk recorded the real egress IP, so
+# nothing could contradict it. These cases exist so the next rotation is loud.
+
+
+def ga4_env(pinned, host_ip, days_ago=0, state="Active", drop_block=False, no_host=False):
+    """Build a policy + host_ip fixture pair and return them as constant overrides."""
+    ga4 = {} if drop_block else {"internal_traffic": {"filter_state": state, "ips": pinned}}
+    pol = write("pol_%s.json" % abs(hash((str(pinned), host_ip, days_ago, state,
+                                          drop_block, no_host))),
+                {"ga4": ga4})
+    if no_host:
+        return {"POLICY": pol, "HOST_IP_FILE": os.path.join(TMPDIR, "no_such_host_ip.json")}
+    seen = (datetime.datetime.now() - datetime.timedelta(days=days_ago)).strftime(
+        "%Y-%m-%dT%H:%M:%S")
+    hip = write("hip_%s.json" % abs(hash((host_ip, days_ago))),
+                {"ip": host_ip, "checked_at": seen})
+    return {"POLICY": pol, "HOST_IP_FILE": hip}
+
+
+check("egress ip is inside the pinned CIDR",
+      run_check("check_ga4_internal_ip", **ga4_env(["27.130.5.93/32"], "27.130.5.93")), "PASS")
+check("THE REAL 1 Aug CASE: pinned 184.22.17.215, box is on 27.130.5.93",
+      run_check("check_ga4_internal_ip", **ga4_env(["184.22.17.215/32"], "27.130.5.93")), "WARN")
+check("both old and new pinned -> still covered",
+      run_check("check_ga4_internal_ip",
+                **ga4_env(["184.22.17.215/32", "27.130.5.93/32"], "27.130.5.93")), "PASS")
+check("real CIDR math, not string compare (/24 contains .93)",
+      run_check("check_ga4_internal_ip", **ga4_env(["27.130.5.0/24"], "27.130.5.93")), "PASS")
+check("neighbouring /24 does NOT contain it",
+      run_check("check_ga4_internal_ip", **ga4_env(["27.130.6.0/24"], "27.130.5.93")), "WARN")
+check("Data Filter left in Testing = configured but not excluding",
+      run_check("check_ga4_internal_ip",
+                **ga4_env(["27.130.5.93/32"], "27.130.5.93", state="Testing")), "WARN")
+check("no ga4.internal_traffic block at all",
+      run_check("check_ga4_internal_ip",
+                **ga4_env(["27.130.5.93/32"], "27.130.5.93", drop_block=True)), "WARN")
+check("ips list empty = not protected, must not read as PASS",
+      run_check("check_ga4_internal_ip", **ga4_env([], "27.130.5.93")), "WARN")
+check("unparseable CIDR in policy is surfaced, not skipped",
+      run_check("check_ga4_internal_ip", **ga4_env(["27.130.5.93/nope"], "27.130.5.93")), "WARN")
+check("host_ip.json missing = blind, and blind must never print PASS",
+      run_check("check_ga4_internal_ip",
+                **ga4_env(["27.130.5.93/32"], "27.130.5.93", no_host=True)), "WARN")
+check("host_ip.json 30 days old = uptime_check stopped running",
+      run_check("check_ga4_internal_ip",
+                **ga4_env(["27.130.5.93/32"], "27.130.5.93", days_ago=30)), "WARN")
+check("6 days old is still inside the freshness window",
+      run_check("check_ga4_internal_ip",
+                **ga4_env(["27.130.5.93/32"], "27.130.5.93", days_ago=6)), "PASS")
+_p = write("pol_badip.json", {"ga4": {"internal_traffic":
+                                      {"filter_state": "Active", "ips": ["27.130.5.93/32"]}}})
+_h = write("hip_badip.json", {"ip": "not-an-ip", "checked_at":
+                              datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")})
+check("garbage recorded as the host ip is a WARN, not a crash",
+      run_check("check_ga4_internal_ip", POLICY=_p, HOST_IP_FILE=_h), "WARN")
+_h = write("hip_badts.json", {"ip": "27.130.5.93", "checked_at": "yesterday-ish"})
+check("unreadable checked_at is a WARN, not an assumed-fresh PASS",
+      run_check("check_ga4_internal_ip", POLICY=_p, HOST_IP_FILE=_h), "WARN")
 
 print("\nMETA  (no check may exist without proof it can both fire and stay quiet)")
 importlib.reload(P)

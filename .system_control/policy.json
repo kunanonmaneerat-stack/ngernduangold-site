@@ -208,6 +208,20 @@
       "Affiliate Provider": "provider",
       "Affiliate Sub ID": "sub_id"
     },
-    "internal_traffic_filter": "NOT SET - still owner action. ~79% of measured sessions were our own automation; two sources were removed at the origin on 1 Aug, a GA4 filter would close the rest."
+    "internal_traffic": {
+      "_why": "GA4 can only mark internal traffic by IP. On 1 Aug 2026 the rule and the Data Filter both existed and looked healthy, but the pinned IP (184.22.17.215) had been rotated by the ISP to 27.130.5.93, so the rule matched nothing and every page our own automation opened was counted as a real reader (~79% of sessions). A guard configured once and never measured again looks exactly like a working guard. tools/uptime_check.py now records the real egress IP daily and preflight/check_ga4_internal_ip compares it against the list below.",
+      "rule_name": "Internal Traffic - My IP",
+      "traffic_type": "internal",
+      "filter_name": "Internal Traffic",
+      "filter_state": "Active",
+      "filter_operation": "Exclude",
+      "ips": [
+        "184.22.17.215/32",
+        "27.130.5.93/32"
+      ],
+      "verified_at": "2026-08-01",
+      "verified_how": "Opened GA4 Admin > Data streams > ngernduangold web > Configure tag settings > Define internal traffic, added 27.130.5.93/32 and re-opened the rule to confirm it persisted; Admin > Data filters shows Internal Traffic / Exclude / Active.",
+      "on_mismatch": "preflight WARNs. Fix by adding the new CIDR in GA4 Define internal traffic AND here. Do not widen to a /24 - a Thai residential /24 can contain real readers, and excluding them is a worse error than counting a few of our own hits."
+    }
   }
 }
