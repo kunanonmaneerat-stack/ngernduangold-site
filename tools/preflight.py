@@ -265,8 +265,8 @@ def check_prompt_drift():
     Skips silently when the Scheduled directory is not visible (e.g. the Linux sandbox);
     the Windows-side runs are the ones that matter.
     """
-    if not os.path.isdir(SCHEDULED_DIR):
-        add("prompt drift", "WARN", "Scheduled dir not visible here - run this check on the Windows host")
+    if not (os.path.isdir(SCHEDULED_DIR) or os.path.isdir(OWN_TASKS_DIR)):
+        add("prompt drift", "WARN", "no task root visible here - run this check on the Windows host")
         return
     pol_path = os.path.join(REPO, ".system_control", "policy.json")
     if not os.path.exists(pol_path):
@@ -305,10 +305,10 @@ def check_prompt_drift():
     # A date that lives inside a filename or identifier is a reference, not a policy claim.
     FILEISH = re.compile(r"[\w/\\-]*20\d\d-\d\d-\d\d[\w-]*\.[A-Za-z0-9]{1,6}")
     stale, checked = [], 0
-    for name in sorted(os.listdir(SCHEDULED_DIR)):
-        skill = os.path.join(SCHEDULED_DIR, name, "SKILL.md")
-        if not os.path.isfile(skill):
-            continue
+    # Both roots, same reason as check_dead_tooling: until 1 Aug 2026 this scanned only the
+    # Cowork mirror, so the ten prompts Claude Code actually executes were never compared
+    # against policy at all. See task_prompts().
+    for name, root_label, skill in task_prompts():
         try:
             text = io.open(skill, encoding="utf-8", errors="ignore").read()
         except Exception:
@@ -327,7 +327,7 @@ def check_prompt_drift():
             # every ISO date this prompt mentions for a month policy also talks about
             for found in set(re.findall(r"20\d\d-\d\d-\d\d", scannable)):
                 if found[:7] == good[:7] and found != good:
-                    stale.append(f"{name}: says {found} for {ch}, policy says {good}")
+                    stale.append(f"{name} [{root_label}]: says {found} for {ch}, policy says {good}")
     if stale:
         add("prompt drift", "FAIL", "; ".join(sorted(set(stale))[:3]))
     else:
@@ -653,28 +653,91 @@ _FORBIDDING = re.compile(
 )
 
 
+def task_prompts():
+    """Every prompt a scheduler can actually execute, from BOTH roots.
+
+    WHY THIS EXISTS (1 Aug 2026, the most expensive lesson of the day)
+      There are two task directories and they are not copies of each other:
+        ~/.claude/scheduled-tasks/   10 prompts - what Claude Code's scheduler runs
+        ~/Claude/Scheduled/          97 prompts - what Cowork's scheduler runs
+      Nine names exist in both, and on 1 Aug FOUR of those nine had different contents.
+      `ngernduangold-weekly-review` is not even the same job in the two roots: Cowork's is
+      an enabled Monday review, CC's is its own GSC-first routine. Same id, different work.
+
+      The first version of check_dead_tooling took the NAMES from the CC root but read the
+      CONTENT from the Cowork root. So for exactly the tasks it was built to police, it
+      graded the wrong file - and `ngernduangold-clicktest`, which exists only in the CC
+      root, was never scanned at all. That is the same failure as everything else found
+      today: the guard looked where it was easy to look, not where the truth was.
+
+    Yields (name, root_label, path). A name in both roots is yielded TWICE on purpose --
+    they are two live files and both must be clean.
+    """
+    for label, root in (("cc", OWN_TASKS_DIR), ("cowork", SCHEDULED_DIR)):
+        if not os.path.isdir(root):
+            continue
+        for name in sorted(os.listdir(root)):
+            path = os.path.join(root, name, "SKILL.md")
+            if os.path.isfile(path):
+                yield name, label, path
+
+
+def check_task_mirror():
+    """One task id must not mean two different sets of orders.
+
+    Not a style point. On 1 Aug a guard block was written into the Cowork copy of
+    `ngernduangold-pantip-monitor` believing it would change behaviour; the CC scheduler
+    reads its own copy and never saw it. Whoever reads the wrong file acts on orders that
+    are not in force. WARN, not FAIL: divergence is sometimes legitimate (two different
+    jobs that happen to share a name), but it must never be invisible.
+    """
+    if not (os.path.isdir(OWN_TASKS_DIR) and os.path.isdir(SCHEDULED_DIR)):
+        add("task mirror", "WARN", "one of the two task roots is not visible here")
+        return
+    diverged, only_cc = [], []
+    for name in sorted(os.listdir(OWN_TASKS_DIR)):
+        a = os.path.join(OWN_TASKS_DIR, name, "SKILL.md")
+        b = os.path.join(SCHEDULED_DIR, name, "SKILL.md")
+        if not os.path.isfile(a):
+            continue
+        if not os.path.isfile(b):
+            only_cc.append(name)
+            continue
+        try:
+            if io.open(a, encoding="utf-8", errors="replace").read() != \
+               io.open(b, encoding="utf-8", errors="replace").read():
+                diverged.append(name)
+        except OSError:
+            continue
+    bits = []
+    if diverged:
+        bits.append("%d id(s) mean different orders in the two roots -> %s"
+                    % (len(diverged), ", ".join(diverged[:4])))
+    if only_cc:
+        bits.append("%d cc-only task(s) absent from the mirror -> %s"
+                    % (len(only_cc), ", ".join(only_cc[:4])))
+    if bits:
+        add("task mirror", "WARN", "; ".join(bits))
+    else:
+        add("task mirror", "PASS", "both task roots agree on every shared id")
+
+
 def check_dead_tooling():
     """Task prompts must not still ORDER a tool that no longer exists.
 
     Naming a dead tool to ban it is correct and must keep passing; naming it as a step is
-    the drift. Skips when the Scheduled dir is not visible (Linux sandbox) - the Windows
-    runs are the ones that matter.
+    the drift. Reads BOTH task roots -- see task_prompts() for why that matters.
     """
-    if not os.path.isdir(SCHEDULED_DIR):
-        add("dead tooling", "WARN", "Scheduled dir not visible here - run this check on the Windows host")
+    if not (os.path.isdir(SCHEDULED_DIR) or os.path.isdir(OWN_TASKS_DIR)):
+        add("dead tooling", "WARN", "no task root visible here - run this check on the Windows host")
         return
-    # Only tasks THIS agent owns can be fixed here; the mirror also holds ~90 Cowork
-    # prompts. Ours fail the gate (a regression must block); theirs warn with names, so
-    # the finding stays visible every run instead of turning into a permanently red gate
-    # nobody can act on.
-    owned = set(os.listdir(OWN_TASKS_DIR)) if os.path.isdir(OWN_TASKS_DIR) else set()
+    # Ours fail the gate (a regression must block); Cowork's warn with names, so the
+    # finding stays visible every run instead of becoming a permanently red gate nobody
+    # can act on. Severity now follows the root the file was READ from, not a name lookup.
     offenders = []
     others = []
     scanned = 0
-    for name in sorted(os.listdir(SCHEDULED_DIR)):
-        path = os.path.join(SCHEDULED_DIR, name, "SKILL.md")
-        if not os.path.isfile(path):
-            continue
+    for name, root_label, path in task_prompts():
         scanned += 1
         try:
             body = io.open(path, encoding="utf-8", errors="replace").read()
@@ -685,7 +748,8 @@ def check_dead_tooling():
                 continue
             for label, pattern, _why in DEAD_TOOLING:
                 if re.search(pattern, line):
-                    (offenders if name in owned else others).append("%s: %s" % (name, label))
+                    tag = "%s [%s]: %s" % (name, root_label, label)
+                    (offenders if root_label == "cc" else others).append(tag)
                     break
     if offenders:
         uniq = sorted(set(offenders))
@@ -695,10 +759,11 @@ def check_dead_tooling():
     if others:
         uniq = sorted(set(others))
         add("dead tooling", "WARN",
-            "own prompts clean (%d scanned); %d Cowork prompt(s) still name retired tooling -> %s"
-            % (scanned, len(uniq), " | ".join(uniq[:5])))
+            "cc prompts clean (%d scanned across both roots); %d Cowork prompt(s) still name "
+            "retired tooling -> %s" % (scanned, len(uniq), " | ".join(uniq[:5])))
         return
-    add("dead tooling", "PASS", "%d task prompt(s): no orders pointing at retired tooling" % scanned)
+    add("dead tooling", "PASS",
+        "%d task prompt(s) across both roots: no orders pointing at retired tooling" % scanned)
 
 
 def check_open_decisions():
@@ -823,6 +888,7 @@ def main():
     check_competing_plan()
     check_prompt_drift()
     check_dead_tooling()
+    check_task_mirror()
     check_open_decisions()
     check_content_cliff()
     check_disclosure()

@@ -514,13 +514,72 @@ check("runway_guard cannot run at all",
 check("smoke test passes", run_check("check_build_gate", HERE=fake_tool("postdeploy_smoke.py", 0, "ok")), "PASS")
 check("smoke test fails", run_check("check_build_gate", HERE=fake_tool("postdeploy_smoke.py", 1, "boom")), "FAIL")
 
+print("\nTWO TASK ROOTS  (the guard must read the file the scheduler runs, not the mirror)")
+
+
+def two_roots(cc_files, cowork_files):
+    """Build a fake pair of task roots and return (OWN_TASKS_DIR, SCHEDULED_DIR)."""
+    base = os.path.join(TMPDIR, "roots_%d" % abs(hash(str(cc_files) + str(cowork_files))))
+    a, b = os.path.join(base, "cc"), os.path.join(base, "cowork")
+    for root, files in ((a, cc_files), (b, cowork_files)):
+        for name, body in files.items():
+            d = os.path.join(root, name)
+            os.makedirs(d, exist_ok=True)
+            with io.open(os.path.join(d, "SKILL.md"), "w", encoding="utf-8", newline="\n") as fh:
+                fh.write(body)
+        if not os.path.isdir(root):
+            os.makedirs(root)
+    return a, b
+
+
+ORDER = "run Postiz to refill the queue"
+BAN = u"\u0e2b\u0e49\u0e32\u0e21\u0e43\u0e0a\u0e49 Postiz"          # "do not use Postiz"
+
+# The exact 1 Aug shape: the CC file is dirty, the mirror is clean. Reading the mirror
+# (what the first version did) reports everything fine.
+_a, _b = two_roots({"t": ORDER}, {"t": BAN})
+check("dirty cc file, clean mirror -> must FAIL",
+      run_check("check_dead_tooling", OWN_TASKS_DIR=_a, SCHEDULED_DIR=_b), "FAIL")
+_a, _b = two_roots({"t": BAN}, {"t": ORDER})
+check("clean cc file, dirty mirror -> WARN (not ours to fix)",
+      run_check("check_dead_tooling", OWN_TASKS_DIR=_a, SCHEDULED_DIR=_b), "WARN")
+_a, _b = two_roots({"t": BAN}, {"t": BAN})
+check("both roots merely forbid the dead tool -> PASS",
+      run_check("check_dead_tooling", OWN_TASKS_DIR=_a, SCHEDULED_DIR=_b), "PASS")
+# clicktest lives only in the cc root and was never scanned before
+_a, _b = two_roots({"cc-only": ORDER}, {})
+check("a cc-only task is scanned too (clicktest was not)",
+      run_check("check_dead_tooling", OWN_TASKS_DIR=_a, SCHEDULED_DIR=_b), "FAIL")
+
+print("\nTASK MIRROR  (one id must not mean two different sets of orders)")
+_a, _b = two_roots({"t": "same"}, {"t": "same"})
+check("identical in both roots", run_check("check_task_mirror", OWN_TASKS_DIR=_a, SCHEDULED_DIR=_b), "PASS")
+_a, _b = two_roots({"t": "orders A"}, {"t": "orders B"})
+check("same id, different orders", run_check("check_task_mirror", OWN_TASKS_DIR=_a, SCHEDULED_DIR=_b), "WARN")
+_a, _b = two_roots({"only-cc": "x"}, {"other": "y"})
+check("cc task absent from the mirror", run_check("check_task_mirror", OWN_TASKS_DIR=_a, SCHEDULED_DIR=_b), "WARN")
+check("a root that does not exist is a WARN, never a silent PASS",
+      run_check("check_task_mirror", OWN_TASKS_DIR=os.path.join(TMPDIR, "nope"),
+                SCHEDULED_DIR=os.path.join(TMPDIR, "nope2")), "WARN")
+
 print("\nMETA  (no check may exist without proof it can both fire and stay quiet)")
 importlib.reload(P)
 _all = sorted(n for n in dir(P) if n.startswith("check_") and callable(getattr(P, n)))
 _src = io.open(os.path.join(HERE, "test_preflight_checks.py"), encoding="utf-8").read()
 _uncovered = [n for n in _all if ('"%s"' % n) not in _src and ("P.%s(" % n) not in _src]
 check("every check_* in preflight has a test here", _uncovered, [])
-print("     %d check(s) in preflight, all exercised" % len(_all))
+
+# Having a test is not the same as being RUN. check_task_mirror was written, tested and
+# passing on 1 Aug 2026 while main() never called it -- so preflight printed fifteen lines
+# and the sixteenth check simply did not exist at runtime. A guard nobody invokes looks
+# exactly like a guard that always passes, which is the failure this whole file is about.
+_pf = io.open(os.path.join(HERE, "preflight.py"), encoding="utf-8").read()
+_main = _pf.split("def main(")[1] if "def main(" in _pf else ""
+_unwired = [n for n in _all if ("%s()" % n) not in _main]
+# check_build_gate is inside `if args.full:` but still appears in main's text, so it
+# counts as wired -- the thing being asserted is "reachable from main", not "always run".
+check("every check_* is actually called by main()", _unwired, [])
+print("     %d check(s) in preflight, all exercised and wired" % len(_all))
 
 import shutil
 shutil.rmtree(TMPDIR, ignore_errors=True)
