@@ -247,6 +247,9 @@ def check_queued_clip_spec():
 
 
 SCHEDULED_DIR = os.path.join(os.path.expanduser("~"), "Claude", "Scheduled")
+# Tasks this agent owns and can therefore be held to a hard FAIL (the mirror above also
+# carries ~90 Cowork prompts we must not silently rewrite).
+OWN_TASKS_DIR = os.path.join(os.path.expanduser("~"), ".claude", "scheduled-tasks")
 
 
 def check_prompt_drift():
@@ -630,6 +633,74 @@ DECISION_SOON_DAYS = 3
 DECISION_DONE = {"done", "decided", "closed", "resolved"}
 
 
+# Tooling that was retired but whose name still reads like a working instruction.
+# Each entry: (label, regex, why it is dead). check_prompt_drift already catches a prompt
+# quoting a stale DATE; it says nothing about a prompt quoting a stale TOOL, which is how
+# six task prompts kept ordering Postiz and Meta-MCP calls a month after both were gone.
+DEAD_TOOLING = [
+    ("Postiz", r"[Pp]ostiz", "retired 19 Jun 2026 - bot posting was the spam-flag cause"),
+    ("Meta MCP", r"get_instagram_posts|get_facebook_posts|Meta MCP",
+     "Meta token revoked permanently 18 Jul 2026"),
+    ("netlify.app domain", r"ngernduangold\.netlify\.app", "canonical host is ngernduangold.com"),
+]
+# A prompt is allowed - encouraged - to NAME a dead tool in order to forbid it. Only an
+# unqualified mention is drift. Same lesson as the disclosure gate on 25 Jul, where
+# grep("มีลิงก์พันธมิตร") happily matched "ไม่มีลิงก์พันธมิตร" and passed a page that said
+# the opposite of what the check believed.
+_FORBIDDING = re.compile(
+    r"ห้าม|เลิกใช้|ยกเลิก|ตายไปแล้ว|ไม่ใช้|อย่าใช้|ปิดถาวร|ใช้ไม่ได้|ไม่มีอยู่แล้ว|อย่าเสียเวลา|301|"
+    r"do not|don't|retired|revoked|deprecated|no longer"
+)
+
+
+def check_dead_tooling():
+    """Task prompts must not still ORDER a tool that no longer exists.
+
+    Naming a dead tool to ban it is correct and must keep passing; naming it as a step is
+    the drift. Skips when the Scheduled dir is not visible (Linux sandbox) - the Windows
+    runs are the ones that matter.
+    """
+    if not os.path.isdir(SCHEDULED_DIR):
+        add("dead tooling", "WARN", "Scheduled dir not visible here - run this check on the Windows host")
+        return
+    # Only tasks THIS agent owns can be fixed here; the mirror also holds ~90 Cowork
+    # prompts. Ours fail the gate (a regression must block); theirs warn with names, so
+    # the finding stays visible every run instead of turning into a permanently red gate
+    # nobody can act on.
+    owned = set(os.listdir(OWN_TASKS_DIR)) if os.path.isdir(OWN_TASKS_DIR) else set()
+    offenders = []
+    others = []
+    scanned = 0
+    for name in sorted(os.listdir(SCHEDULED_DIR)):
+        path = os.path.join(SCHEDULED_DIR, name, "SKILL.md")
+        if not os.path.isfile(path):
+            continue
+        scanned += 1
+        try:
+            body = io.open(path, encoding="utf-8", errors="replace").read()
+        except OSError:
+            continue
+        for line in body.split("\n"):
+            if _FORBIDDING.search(line):
+                continue
+            for label, pattern, _why in DEAD_TOOLING:
+                if re.search(pattern, line):
+                    (offenders if name in owned else others).append("%s: %s" % (name, label))
+                    break
+    if offenders:
+        uniq = sorted(set(offenders))
+        add("dead tooling", "FAIL",
+            "%d OWN prompt(s) still instruct retired tooling -> %s" % (len(uniq), " | ".join(uniq[:4])))
+        return
+    if others:
+        uniq = sorted(set(others))
+        add("dead tooling", "WARN",
+            "own prompts clean (%d scanned); %d Cowork prompt(s) still name retired tooling -> %s"
+            % (scanned, len(uniq), " | ".join(uniq[:5])))
+        return
+    add("dead tooling", "PASS", "%d task prompt(s): no orders pointing at retired tooling" % scanned)
+
+
 def check_open_decisions():
     """Surface plan decisions whose date has passed and that nobody has closed.
 
@@ -751,6 +822,7 @@ def main():
     check_queued_clip_spec()
     check_competing_plan()
     check_prompt_drift()
+    check_dead_tooling()
     check_open_decisions()
     check_content_cliff()
     check_disclosure()

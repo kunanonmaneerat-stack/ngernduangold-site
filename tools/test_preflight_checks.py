@@ -227,6 +227,63 @@ import shutil
 shutil.rmtree(os.path.join(HERE, "_test_sched.tmp"), ignore_errors=True)
 P.SCHEDULED_DIR = _sd
 
+print("\nDEAD TOOLING  (a prompt may NAME a retired tool to ban it; ordering one is drift)")
+_sd2 = P.SCHEDULED_DIR
+
+
+def run_dead_unowned(body):
+    """เคสเดียวกันแต่ไม่ใช่ task ของเรา -> ต้อง WARN ไม่ใช่ FAIL"""
+    d = os.path.join(HERE, '_test_dead.tmp')
+    t2 = os.path.join(d, 'fake-task')
+    if not os.path.isdir(t2):
+        os.makedirs(t2)
+    with io.open(os.path.join(t2, 'SKILL.md'), 'w', encoding='utf-8', newline=chr(10)) as fh:
+        fh.write(body)
+    P.SCHEDULED_DIR = d
+    P.results[:] = []
+    P.check_dead_tooling()
+    return P.results[0]['status']
+
+
+def run_dead(body):
+    d = os.path.join(HERE, "_test_dead.tmp")
+    t2 = os.path.join(d, "fake-task")
+    if not os.path.isdir(t2):
+        os.makedirs(t2)
+    with io.open(os.path.join(t2, "SKILL.md"), "w", encoding="utf-8", newline="\n") as fh:
+        fh.write(body)
+    P.SCHEDULED_DIR = d
+    P.OWN_TASKS_DIR = d          # the fake task counts as ours, so drift is a hard FAIL
+    P.results[:] = []
+    P.check_dead_tooling()
+    return P.results[0]["status"]
+
+
+check("ordering a Postiz call is drift",
+      run_dead("2) เติมคิวด้วย integrationSchedulePostTool ผ่าน Postiz MCP"), "FAIL")
+check("ordering a Meta MCP call is drift",
+      run_dead("1) FB: get_facebook_posts(page_id=...) ดูโพสต์ล่าสุด"), "FAIL")
+check("pointing at the old netlify.app host is drift",
+      run_dead("ตรวจลิงก์บนเว็บ ngernduangold.netlify.app"), "FAIL")
+check("naming Postiz in order to BAN it must pass",
+      run_dead("ห้ามใช้ Postiz ทุกรูปแบบ - เลิกใช้ 19 มิ.ย. 2026"), "PASS")
+check("naming Meta MCP in order to BAN it must pass",
+      run_dead("**ห้ามทำ:** Meta MCP get_facebook_posts - token ยกเลิกถาวร 18 ก.ค. 2026"), "PASS")
+check("explaining the 301 from netlify.app must pass",
+      run_dead("โดเมนจริงคือ ngernduangold.com (ngernduangold.netlify.app 301 -> apex)"), "PASS")
+check("a clean prompt passes",
+      run_dead("อ่านสถานะจาก policy.json แล้วรายงาน"), "PASS")
+
+# ownership split: the same drift in a prompt we do NOT own must warn, never block, because
+# this agent has no mandate to rewrite Cowork's prompts.
+_od = P.OWN_TASKS_DIR
+P.OWN_TASKS_DIR = os.path.join(HERE, "_nonexistent_owned.tmp")
+check("someone else's prompt with the same drift only warns",
+      run_dead_unowned("2) เติมคิวผ่าน Postiz MCP"), "WARN")
+P.OWN_TASKS_DIR = _od
+shutil.rmtree(os.path.join(HERE, "_test_dead.tmp"), ignore_errors=True)
+P.SCHEDULED_DIR = _sd2
+
 print("\nOPEN DECISIONS  (an expired plan gate must stay visible on every run)")
 _real_policy = P.POLICY
 
