@@ -11,6 +11,14 @@ echo [%date% %time%] comply_gate_stitch scan (components\stitch) >> "%LOG%"
 "%PY%" "%BASE%\..\tools\comply_gate_stitch.py" "%BASE%\..\components\stitch" >> "%LOG%" 2>&1
 if errorlevel 1 echo [%date% %time%] !! comply_gate_stitch FAIL - fix components\stitch before deploy >> "%LOG%"
 echo [%date% %time%] run_daily start >> "%LOG%"
+REM uptime: is the site actually serving? Added 1 Aug 2026 by the token audit.
+REM Was a Cowork agent task firing every 6h (120 LLM runs/month + a Chrome tab on the
+REM owner's screen) to answer a yes/no that one HTTP request answers. It also reads the
+REM page BODY, because Netlify's paused / usage-limit pages return a healthy 200 - which
+REM is exactly the outage we care about. exit 2 = down (writes SITE-DOWN-ALERT.md),
+REM exit 1 = could not look (no network) and is deliberately NOT reported as an outage.
+"%PY%" "%BASE%\..\tools\uptime_check.py" >> "%LOG%" 2>&1
+if errorlevel 2 echo [%date% %time%] !! SITE DOWN - see cowork-inbox\SITE-DOWN-ALERT.md >> "%LOG%"
 "%PY%" "%BASE%\dispatcher.py" >> "%LOG%" 2>&1
 echo [%date% %time%] daily_content start >> "%LOG%"
 "%PY%" "%BASE%\daily_content.py" >> "%LOG%" 2>&1
