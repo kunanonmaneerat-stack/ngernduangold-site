@@ -53,7 +53,7 @@ def _pct(n, d):
 
 def _load_ga4():
     """อ่าน conversion จริงจาก GA4 (ga4-metrics.csv) — ตัวปิดช่องวัดผลของ loop"""
-    res = {"sessions": 0, "quiz_start": 0, "conversion": 0, "channels": [],
+    res = {"sessions": 0, "quiz_start": 0, "conversion": 0, "buy_intent": 0, "channels": [],
            "connected": False, "by_channel": {}}
     if not os.path.exists(GA4_FILE):
         return res
@@ -68,6 +68,7 @@ def _load_ga4():
                 res["sessions"] += s
                 res["quiz_start"] += q
                 res["conversion"] += c
+                res["buy_intent"] += int(row.get("buy_intent_click") or 0)
                 res["by_channel"][src] = {"sessions": s, "quiz_start": q, "conversion": c}
                 if s > 0:
                     res["channels"].append(src)
@@ -162,6 +163,7 @@ def analyze():
     out += ["",
             "## ตัวเลขสองบรรทัดที่ห้ามสลับกัน",
             "- **affiliate_click (คลิก ≠ เงิน)** : %d — จะเป็นเงินต่อเมื่อ AccessTrade อนุมัติ conversion" % (tot["conversion"] + ga4["conversion"]),
+            "- **buy_intent_click (กดปุ่มซื้อสินค้าเรา)** : %d — ความตั้งใจซื้อ ยังไม่ใช่เงิน แต่บอกว่าคนเดินมาถึงปุ่มแล้ว" % ga4.get("buy_intent", 0),
             "- **ยอดขายจริง (sales-log.jsonl)** : %d ชิ้น · %.0f บาท%s" % (
                 sales["count"], sales["baht"],
                 "" if sales["has_log"] else "  ⚠️ ยังไม่มีไฟล์ sales-log.jsonl"),

@@ -17,6 +17,10 @@ LOG = os.path.join(ROOT, "automation-log", "ga4_pull.log")
 DAYS = 28
 QUIZ_PATH = os.environ.get("GA4_QUIZ_PATH", "/quiz")
 CONV_EVENT = os.environ.get("GA4_CONV_EVENT", "affiliate_click")
+# ความตั้งใจซื้อสินค้าของเราเอง (ปุ่มบนหน้าขาย) - คนละเรื่องกับ affiliate_click ซึ่งเป็นการคลิก
+# ออกไปหาผู้ให้บริการภายนอก ถ้ารวมเป็นตัวเลขเดียวจะแยกไม่ออกว่าคนสนใจ "สินค้าเรา" หรือ
+# "ข้อเสนอของคนอื่น" ซึ่งเป็นคำถามที่ต้องตอบในรอบวัดผล 8 ส.ค. 2026
+BUY_INTENT_EVENT = os.environ.get("GA4_BUY_INTENT_EVENT", "buy_intent_click")
 SCOPES = ["https://www.googleapis.com/auth/analytics.readonly", "https://www.googleapis.com/auth/webmasters.readonly"]  # shared token with gsc_pull: keep BOTH so refresh-rewrite never strips webmasters
 
 
@@ -124,7 +128,7 @@ def pull():
         agg = {}
 
         def slot(c):
-            return agg.setdefault(c, {"sessions": 0, "quiz_start": 0, "affiliate_click": 0})
+            return agg.setdefault(c, {"sessions": 0, "quiz_start": 0, "affiliate_click": 0, "buy_intent_click": 0})
 
         rep = client.run_report(RunReportRequest(
             property=prop, date_ranges=dr, dimension_filter=hx,
@@ -150,23 +154,27 @@ def pull():
                 dimensions=[Dimension(name="sessionSource"), Dimension(name="eventName")],
                 metrics=[Metric(name="eventCount")]))
             for row in rep3.rows:
-                if (row.dimension_values[1].value or "") == CONV_EVENT:
+                ev = row.dimension_values[1].value or ""
+                if ev == BUY_INTENT_EVENT:
+                    slot(c)["buy_intent_click"] += int(row.metric_values[0].value or 0)
+                if ev == CONV_EVENT:
                     c = _norm(row.dimension_values[0].value, "")
                     slot(c)["affiliate_click"] += int(row.metric_values[0].value or 0)
         except Exception as e:
             _log("ดึง affiliate_click event ไม่ได้ (%s)" % e)
 
-        rows = [("source", "sessions", "quiz_start", "affiliate_click")]
+        rows = [("source", "sessions", "quiz_start", "affiliate_click", "buy_intent_click")]
         for c in sorted(agg):
             d = agg[c]
-            rows.append((c, d["sessions"], d["quiz_start"], d["affiliate_click"]))
+            rows.append((c, d["sessions"], d["quiz_start"], d["affiliate_click"], d["buy_intent_click"]))
         with open(OUT, "w", newline="", encoding="utf-8") as f:
             csv.writer(f).writerows(rows)
         ts = sum(d["sessions"] for d in agg.values())
         tq = sum(d["quiz_start"] for d in agg.values())
         tc = sum(d["affiliate_click"] for d in agg.values())
-        _log("OK -> ga4-metrics.csv | source=%d sessions=%d quiz=%d affiliate_click=%d" % (len(agg), ts, tq, tc))
-        return {"file": OUT, "channels": len(agg), "sessions": ts, "quiz_start": tq, "affiliate_click": tc}
+        tb = sum(d["buy_intent_click"] for d in agg.values())
+        _log("OK -> ga4-metrics.csv | source=%d sessions=%d quiz=%d affiliate_click=%d buy_intent=%d" % (len(agg), ts, tq, tc, tb))
+        return {"file": OUT, "channels": len(agg), "sessions": ts, "quiz_start": tq, "affiliate_click": tc, "buy_intent_click": tb}
     except Exception as e:
         _log("ดึง GA4 ล้มเหลว (%s) - เช็ก Property ID / auth / สิทธิ์ property" % e)
         return None
