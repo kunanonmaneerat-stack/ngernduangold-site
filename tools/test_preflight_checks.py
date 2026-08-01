@@ -341,7 +341,7 @@ _sl, _repo = P.SALES_LOG, P.REPO
 
 
 def run_sales(sales_lines, ga4_csv=None):
-    d = os.path.join(HERE, "_test_sales.tmp")
+    d = os.path.join(TMPDIR, "_test_sales")
     al = os.path.join(d, "automation-log")
     if not os.path.isdir(al):
         os.makedirs(al)
@@ -380,7 +380,7 @@ check("empty log and no GA4 to compare", run_sales([_HEADER], None), "WARN")
 check("metadata header alone is not a sale", run_sales([_HEADER], _GA4_CLICKS), "WARN")
 check("old CSV header (conversion) is still read", run_sales([_HEADER], _GA4_OLDHEAD), "WARN")
 
-shutil.rmtree(os.path.join(HERE, "_test_sales.tmp"), ignore_errors=True)
+shutil.rmtree(os.path.join(TMPDIR, "_test_sales"), ignore_errors=True)
 P.SALES_LOG, P.REPO = _sl, _repo
 
 print("\nOPEN DECISIONS  (an expired plan gate must stay visible on every run)")
@@ -674,6 +674,31 @@ check("cc task absent from the mirror", run_check("check_task_mirror", OWN_TASKS
 check("a root that does not exist is a WARN, never a silent PASS",
       run_check("check_task_mirror", OWN_TASKS_DIR=os.path.join(TMPDIR, "nope"),
                 SCHEDULED_DIR=os.path.join(TMPDIR, "nope2")), "WARN")
+
+print("\nPOLICY DATES noise filters  (six times today a guard flagged the lesson about itself)")
+_a, _b = two_roots({}, {"t": '---\nname: t\ndescription: [⛔ PAUSED 2 ก.ค. 2026] retired\n---\nPantip FROZEN ถึง 16 ก.ค. — พัก\n'})
+check('retired task with a decorated marker [⛔ PAUSED ...]',
+      run_check("check_policy_dates_in_prompts", OWN_TASKS_DIR=_a, SCHEDULED_DIR=_b), 'PASS')
+_a, _b = two_roots({}, {"t": '---\nname: t\ndescription: live\n---\n**ห้ามเขียนวันซ้ำ** — ของเดิมมี "Pantip พักถึง 16 ก.ค."\n'})
+check('quoting the stale line in order to ban it',
+      run_check("check_policy_dates_in_prompts", OWN_TASKS_DIR=_a, SCHEDULED_DIR=_b), 'PASS')
+_a, _b = two_roots({}, {"t": '---\nname: t\ndescription: live\n---\nอ่านคลัง: ถึง 1 ส.ค. ใช้ไฟล์ A → ได้ threads_text\n'})
+check('a content-library rotation is a schedule, not channel policy',
+      run_check("check_policy_dates_in_prompts", OWN_TASKS_DIR=_a, SCHEDULED_DIR=_b), 'PASS')
+_a, _b = two_roots({}, {"t": '---\nname: t\ndescription: live\n---\ninstagram พักถึง 25 ส.ค.\n'})
+check('a real channel pause deadline still fires',
+      run_check("check_policy_dates_in_prompts", OWN_TASKS_DIR=_a, SCHEDULED_DIR=_b), 'WARN')
+
+print("\nPOLICY DATES follow-ups  (retired tasks + field names)")
+# --- two gaps found 1 Aug 2026 when the check listed 20 names and 13 were closed tasks ---
+_RET_P = '---\nname: t\ndescription: [ปิด 19 มิ.ย. 2026] retired\n---\ninstagram พักถึง 25 ส.ค.\n'
+_FLD_P = '---\nname: t\ndescription: live\n---\nอ่าน phase_until จาก policy.json แทน (pantip) 30 ก.ค.\n'
+_a, _b = two_roots({}, {"t": _RET_P})
+check("retired task quoting an expired window is history, not drift",
+      run_check("check_policy_dates_in_prompts", OWN_TASKS_DIR=_a, SCHEDULED_DIR=_b), "PASS")
+_a, _b = two_roots({}, {"t": _FLD_P})
+check("'phase_until' is a FIELD NAME, not the deadline word 'until'",
+      run_check("check_policy_dates_in_prompts", OWN_TASKS_DIR=_a, SCHEDULED_DIR=_b), "PASS")
 
 print("\nMETA  (no check may exist without proof it can both fire and stay quiet)")
 importlib.reload(P)

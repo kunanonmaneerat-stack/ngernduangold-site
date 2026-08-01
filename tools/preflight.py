@@ -648,7 +648,9 @@ DEAD_TOOLING = [
 # grep("มีลิงก์พันธมิตร") happily matched "ไม่มีลิงก์พันธมิตร" and passed a page that said
 # the opposite of what the check believed.
 # Retirement markers the repo already uses at the START of a description.
-_RETIRED = re.compile(r"\[\s*(?:\u0e1b\u0e34\u0e14|\u0e1e\u0e31\u0e01|PAUSED|DISABLED|DONE|\u0e40\u0e25\u0e34\u0e01\u0e43\u0e0a\u0e49)")
+# Allow decoration between the bracket and the word: "[\u26d4 PAUSED ...]" is how one
+# retired task is labelled, and \u26d4 is not whitespace, so \\[\\s*PAUSED missed it.
+_RETIRED = re.compile(r"\[[^\w\u0e00-\u0e7f]{0,4}\s*(?:\u0e1b\u0e34\u0e14|\u0e1e\u0e31\u0e01|PAUSED|DISABLED|DONE|\u0e40\u0e25\u0e34\u0e01\u0e43\u0e0a\u0e49)")
 
 
 def _description_of(body):
@@ -810,11 +812,34 @@ _FILENAMEish = re.compile(r"[\w./\\-]*\d{4}-\d{2}-\d{2}[\w./\\-]*\.(?:md|json|js
 # 'frozen through X'. Recording when something happened ('token revoked 18 Jul', '[closed
 # 19 Jun]') is history and must pass: banning every date next to a channel name produced
 # five false FAILs on the first run, and a check people learn to ignore protects nothing.
+# A line that quotes the stale phrase in order to ban it, or recalls what a file "used to"
+# say, is documentation OF the drift, not the drift. Six separate times on 1 Aug 2026 a
+# guard flagged the lesson written about the bug it hunts -- including this check flagging
+# the sentence that tells people not to do the thing. Same family as _FORBIDDING.
+_ABOUT_DRIFT = re.compile(
+    r"\u0e2b\u0e49\u0e32\u0e21\u0e40\u0e02\u0e35\u0e22\u0e19|\u0e40\u0e04\u0e22\u0e40\u0e02\u0e35\u0e22\u0e19|\u0e02\u0e2d\u0e07\u0e40\u0e14\u0e34\u0e21|\u0e40\u0e14\u0e34\u0e21\u0e40\u0e02\u0e35\u0e22\u0e19|\u0e15\u0e32\u0e23\u0e32\u0e07\u0e40\u0e14\u0e34\u0e21|"
+    r"\u0e40\u0e04\u0e22\u0e1e\u0e25\u0e32\u0e14|\u0e04\u0e49\u0e32\u0e07\u0e2d\u0e22\u0e39\u0e48|\u0e17\u0e35\u0e48\u0e04\u0e49\u0e32\u0e07|used to|previously|no longer")
+# Only a CHANNEL-STATE deadline belongs in policy.json. A content-library rotation
+# ("use file A until 1 Aug, file B after") is a schedule, not a channel policy, and the
+# check has no business owning it.
+_CH_STATE = re.compile(
+    # BOTH directions: a channel state word can announce the stop or the restart.
+    # First version listed only the stop side, so "\u0e1e\u0e31\u0e19\u0e17\u0e34\u0e1b \u0e40\u0e1b\u0e34\u0e14\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07 14 \u0e2a.\u0e04." -
+    # a real reopen deadline - slipped through and the suite caught it.
+    r"\u0e1e\u0e31\u0e01|\u0e1f\u0e23\u0e35\u0e0b|\u0e40\u0e1f\u0e2a|\u0e42\u0e04\u0e27\u0e15\u0e32|\u0e07\u0e14|\u0e2b\u0e22\u0e38\u0e14|"
+    r"\u0e40\u0e1b\u0e34\u0e14\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07|\u0e01\u0e25\u0e31\u0e1a\u0e21\u0e32|\u0e04\u0e37\u0e19\u0e0a\u0e48\u0e2d\u0e07|\u0e17\u0e1a\u0e17\u0e27\u0e19|FROZEN|"
+    r"pause|paused|frozen|freeze|quota|phase|hold|resume|reopen", re.I)
+
+
 _DEADLINE = re.compile(
     r"ถึง|จนถึง|หมดอายุ|"
     r"ครบกำหนด|สิ้นสุด|"
     r"กลับมา|เปิดอีกครั้ง|"
-    r"until|through|resume|expires?|deadline|reopen", re.I)
+    # \b on the English words: without it, "until" fires inside `phase_until` -- the very
+    # field name a prompt is supposed to point AT. That made two prompts that were doing the
+    # right thing look like offenders. Fifth substring bug of 1 Aug 2026, and this one was
+    # inside the check written to catch drift.
+    r"\buntil\b|\bthrough\b|\bresume\b|\bexpires?\b|\bdeadline\b|\breopen\b", re.I)
 
 
 def check_policy_dates_in_prompts():
@@ -828,18 +853,29 @@ def check_policy_dates_in_prompts():
     FAIL for prompts this agent owns; WARN with names for the other root, same split as
     check_dead_tooling -- we cannot rewrite Cowork's prompts, but the finding must stay visible.
     """
-    own, other, scanned = [], [], 0
+    own, other, scanned, skipped_retired = [], [], 0, 0
     for name, label, path in task_prompts():
         scanned += 1
         try:
             body = io.open(path, encoding="utf-8", errors="replace").read()
         except OSError:
             continue
+        # Same rule as check_dead_tooling: a retired task quoting an expired window is a
+        # record of what was true, not an instruction anyone will follow. Without this the
+        # warning listed 20 names of which 13 were closed tasks carrying the same 2 Jul
+        # boilerplate -- and a warning nobody can act on is one everybody learns to skip.
+        if _RETIRED.search(_description_of(body)):
+            skipped_retired += 1
+            continue
         for line in body.split("\n"):
             probe = _FILENAMEish.sub(" ", line)      # drop filenames before looking for dates
             if not _DATE_ANY.search(probe):
                 continue
             if not _DEADLINE.search(probe):           # a record of what happened, not a deadline
+                continue
+            if _ABOUT_DRIFT.search(probe):            # explaining the bug is not committing it
+                continue
+            if not _CH_STATE.search(probe):           # a library rotation is not a channel policy
                 continue
             for ch, pat in _CH_WORDS.items():
                 if re.search(pat, probe, re.I):
@@ -857,7 +893,9 @@ def check_policy_dates_in_prompts():
             "own prompts clean (%d scanned); %d Cowork prompt(s) hard-code a channel date -> %s"
             % (scanned, len(uniq), " | ".join(uniq[:5])))
         return
-    add("policy dates", "PASS", "%d prompt(s): channel dates live in policy.json only" % scanned)
+    add("policy dates", "PASS",
+        "%d prompt(s) (%d retired, skipped): channel dates live in policy.json only"
+        % (scanned, skipped_retired))
 
 
 SALES_LOG = os.path.join(REPO, "automation-log", "sales-log.jsonl")
