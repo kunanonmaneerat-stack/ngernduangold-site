@@ -4,7 +4,7 @@
 ปลอดภัย: อ่าน/เขียนไฟล์เท่านั้น (ไม่ลบ/ไม่ปิด agent เอง — แค่เสนอ decision ให้ Cowork)
 GA4: ใช้ ga4-metrics.csv (จาก ga4_pull.py) เป็น conversion จริง — คำนวณ % และจัดอันดับช่องจาก GA4
 """
-import os, sys, datetime
+import io, json, os, sys, datetime
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import traffic_monitor as tm
 
@@ -14,6 +14,37 @@ GA4_FILE = os.path.join(ROOT, "automation-log", "ga4-metrics.csv")
 REACH_BASELINE = 500   # traffic ที่ถือว่า "พ้น cold-start" พอจะทดสอบ funnel
 MIN_POSTS = 10
 MIN_CHANNELS = 2
+
+
+SALES_LOG = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                         "automation-log", "sales-log.jsonl")
+
+
+def read_sales():
+    """ยอดขายจริงจาก sales-log.jsonl — ตัวเดียวที่นับเป็นเงิน
+
+    แยกจาก affiliate_click โดยสิ้นเชิง: คลิกคือความสนใจ เงินคือผลลัพธ์ ถ้าไม่แยกสองอย่างนี้
+    รายงานจะสรุปว่า funnel ทำงานทั้งที่ยังไม่เคยมีใครจ่ายเงินสักบาท (เกิดจริง 28 วันก่อน 1 ส.ค. 2026)
+    """
+    n, baht = 0, 0.0
+    if not os.path.exists(SALES_LOG):
+        return {"count": 0, "baht": 0.0, "has_log": False}
+    try:
+        for line in io.open(SALES_LOG, encoding="utf-8"):
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                rec = json.loads(line)
+            except Exception:
+                continue
+            if not isinstance(rec, dict) or "amount_thb" not in rec:
+                continue          # แถว metadata/header ไม่ใช่ยอดขาย
+            n += 1
+            baht += float(rec.get("amount_thb") or 0)
+    except OSError:
+        return {"count": 0, "baht": 0.0, "has_log": False}
+    return {"count": n, "baht": baht, "has_log": True}
 
 
 def _pct(n, d):
@@ -32,7 +63,7 @@ def _load_ga4():
             for row in csv.DictReader(f):
                 s = int(row.get("sessions") or 0)
                 q = int(row.get("quiz_start") or 0)
-                c = int(row.get("conversion") or 0)
+                c = int(row.get("affiliate_click") or row.get("conversion") or 0)  # หัวเก่า=conversion (ก่อน 1 ส.ค. 2026)
                 src = row.get("source") or "?"
                 res["sessions"] += s
                 res["quiz_start"] += q
@@ -76,6 +107,7 @@ def analyze():
         gaps.append("ข้อมูลโพสต์น้อย (%d แถว < %d)" % (rows_n, MIN_POSTS))
 
     # ---- อัตราจาก GA4 (ของจริง) ----
+    sales = read_sales()
     conv_per_session = _pct(ga4["conversion"], ga4["sessions"])
     quiz_per_session = _pct(ga4["quiz_start"], ga4["sessions"])
     # ช่อง EV สูงสุด จาก GA4 conversion
@@ -91,20 +123,29 @@ def analyze():
                     "(1) เชื่อม GA4 หรือกรอกตัวเลขจริงต่อช่อง (2) รอ traffic ทดสอบได้ "
                     "(3) มีข้อมูล >=%d ช่อง ค่อยตัดสิน") % (MIN_CHANNELS)
     else:
-        total_conv = tot["conversion"] + ga4["conversion"]
+        total_clicks = tot["conversion"] + ga4["conversion"]   # affiliate_click รวม (คลิก ไม่ใช่เงิน)
         total_quiz = tot["quiz_start"] + ga4["quiz_start"]
-        if total_conv > 0 or total_quiz > 0:
-            verdict = "PROVEN: reach คือคอขวด (funnel แปลงผลจริงเมื่อมี traffic)"
-            decision = ("ทำตาม consult: FREEZE การสร้างระบบเพิ่ม + ทุ่ม reach ของช่องที่ converted ดีสุด "
-                        "(conv/session=%.0f%% · quiz/session=%.0f%% · conv รวม=%d) — ลงแรง: %s"
-                        % (conv_per_session, quiz_per_session, total_conv,
-                           ", ".join(k for k, _ in top_conv[:3]) or "Pantip/FB"))
+        # เงินเป็นตัวตัดสิน ไม่ใช่คลิก: verdict เดิมประกาศ PROVEN จาก affiliate_click อย่างเดียว
+        # ทำให้ทั้งระบบไปทุ่ม reach ขณะที่หน้าขายยังไม่มีปุ่มจ่ายเงินเลย (พบ 1 ส.ค. 2026)
+        if sales["count"] > 0:
+            verdict = "PROVEN: มีรายได้จริงแล้ว — reach คือคอขวดถัดไป"
+            decision = ("ทุ่ม reach ของช่องที่นำไปสู่ยอดขายจริง (ยอด %d ชิ้น · %.0f บาท · "
+                        "affiliate_click %d) — ลงแรง: %s"
+                        % (sales["count"], sales["baht"], total_clicks,
+                           ", ".join(k for k, _ in top_conv[:3]) or "Pantip"))
+        elif total_clicks > 0 or total_quiz > 0:
+            verdict = ("UNPROVEN: มีคนสนใจ (affiliate_click %d · quiz %d) แต่ยังไม่มีหลักฐานว่าปลายทางรับเงินได้ "
+                       "— ยอดขายที่บันทึกไว้ = 0" % (total_clicks, total_quiz))
+            decision = ("ห้ามสรุปว่า funnel แปลงผลจากคลิกอย่างเดียว · ก่อนเติม reach ให้ยืนยันปลายทางก่อน: "
+                        "หน้าขายมีปุ่มจ่ายเงินจริงไหม · ช่องทางรับเงิน (LINE/พร้อมเพย์) เปิดอยู่ไหม · "
+                        "ถ้าขายได้แล้วแต่ไม่ได้บันทึก ให้บันทึกด้วย tools/log_sale.py "
+                        "(คลิกที่ไม่กลายเป็นเงิน = เทน้ำใส่ถังรั่ว)")
         else:
-            verdict = "REFUTED: traffic ถึงเกณฑ์แล้วแต่ไม่มี conversion = ปัญหาอยู่ที่ funnel/conversion"
+            verdict = "REFUTED: traffic ถึงเกณฑ์แล้วแต่ไม่มีทั้งคลิกและยอดขาย = ปัญหาอยู่ที่ funnel"
             decision = "consult ถูกบางส่วน: ก่อน freeze ให้แก้ funnel (CTA/quiz/landing) เพราะ traffic มาแล้วแต่ไม่แปลงเป็นเงิน"
-        notes.append("ช่อง EV สูงสุด (GA4 conversion): " + top_str)
+        notes.append("ช่อง EV สูงสุด (GA4 affiliate_click): " + top_str)
         if conv_per_session > 0:
-            notes.append("อัตราแปลงรวม (GA4): conv/session=%.1f%% · quiz/session=%.1f%%" % (conv_per_session, quiz_per_session))
+            notes.append("อัตราคลิกรวม (GA4): affiliate_click/session=%.1f%% · quiz/session=%.1f%% (ยังไม่ใช่อัตราแปลงเป็นเงิน)" % (conv_per_session, quiz_per_session))
 
     ts = r["ts"]
     out = ["# Traffic Analyst — verdict ส่ง Cowork (" + ts + ")",
@@ -114,11 +155,17 @@ def analyze():
            "- แถวข้อมูล: %d · ช่องที่มีข้อมูล: %s" % (rows_n, ", ".join(sorted(chan_union)) or "—"),
            "- Meta reach: views=%d clicks=%d" % (tot["views"], tot["clicks"]),
            "- GA4 (เว็บจริง): %s" % (
-               "sessions=%d quiz_start=%d conversion=%d" % (ga4["sessions"], ga4["quiz_start"], ga4["conversion"])
+               "sessions=%d quiz_start=%d affiliate_click=%d" % (ga4["sessions"], ga4["quiz_start"], ga4["conversion"])
                if ga4["connected"] else "ยังไม่เชื่อม (รัน ga4_pull.py -> ปลดล็อก verdict)")]
     if ga4["connected"] and top_conv:
-        out += ["- GA4 conversion รายช่อง (สูงสุด): " + top_str]
+        out += ["- GA4 affiliate_click รายช่อง (สูงสุด): " + top_str]
     out += ["",
+            "## ตัวเลขสองบรรทัดที่ห้ามสลับกัน",
+            "- **affiliate_click (คลิก ≠ เงิน)** : %d — จะเป็นเงินต่อเมื่อ AccessTrade อนุมัติ conversion" % (tot["conversion"] + ga4["conversion"]),
+            "- **ยอดขายจริง (sales-log.jsonl)** : %d ชิ้น · %.0f บาท%s" % (
+                sales["count"], sales["baht"],
+                "" if sales["has_log"] else "  ⚠️ ยังไม่มีไฟล์ sales-log.jsonl"),
+            "",
             "## ช่องว่างข้อมูล (ทำไมพิสูจน์ได้/ไม่ได้)"]
     out += ["- " + g for g in gaps] or ["- (ข้อมูลพอ)"]
     out += ["", "## VERDICT", "**" + verdict + "**", "",

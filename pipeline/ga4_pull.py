@@ -1,4 +1,8 @@
-"""ga4_pull.py - ดึง conversion จริงจาก GA4 (Data API) -> ga4-metrics.csv + ga4-pages.csv
+"""ga4_pull.py - ดึงจำนวน affiliate_click จาก GA4 (Data API) -> ga4-metrics.csv + ga4-pages.csv
+
+ชื่อคอลัมน์คือ "affiliate_click" ไม่ใช่ "conversion" โดยตั้งใจ: มันคือ*การคลิก* ไม่ใช่เงิน
+จะเป็นเงินก็ต่อเมื่อ AccessTrade อนุมัติ conversion ทีหลัง การเรียกมันว่า conversion
+ทำให้รายงาน 1 ส.ค. 2026 สรุปว่า "funnel แปลงผลจริง" ขณะที่ยอดขายจริงเป็น 0 มาตลอด
 auth: (1) service-account secrets/ga4-sa.json ถ้ามี (2) OAuth secrets/ga4-token.json (3) ADC
 ปลอดภัย: อ่าน GA4 อย่างเดียว + เขียน csv เท่านั้น
 ต้องมี: pip install google-analytics-data google-auth ; ENV GA4_PROPERTY_ID (เลขล้วน)
@@ -120,7 +124,7 @@ def pull():
         agg = {}
 
         def slot(c):
-            return agg.setdefault(c, {"sessions": 0, "quiz_start": 0, "conversion": 0})
+            return agg.setdefault(c, {"sessions": 0, "quiz_start": 0, "affiliate_click": 0})
 
         rep = client.run_report(RunReportRequest(
             property=prop, date_ranges=dr, dimension_filter=hx,
@@ -148,21 +152,21 @@ def pull():
             for row in rep3.rows:
                 if (row.dimension_values[1].value or "") == CONV_EVENT:
                     c = _norm(row.dimension_values[0].value, "")
-                    slot(c)["conversion"] += int(row.metric_values[0].value or 0)
+                    slot(c)["affiliate_click"] += int(row.metric_values[0].value or 0)
         except Exception as e:
-            _log("ดึง conversion event ไม่ได้ (%s)" % e)
+            _log("ดึง affiliate_click event ไม่ได้ (%s)" % e)
 
-        rows = [("source", "sessions", "quiz_start", "conversion")]
+        rows = [("source", "sessions", "quiz_start", "affiliate_click")]
         for c in sorted(agg):
             d = agg[c]
-            rows.append((c, d["sessions"], d["quiz_start"], d["conversion"]))
+            rows.append((c, d["sessions"], d["quiz_start"], d["affiliate_click"]))
         with open(OUT, "w", newline="", encoding="utf-8") as f:
             csv.writer(f).writerows(rows)
         ts = sum(d["sessions"] for d in agg.values())
         tq = sum(d["quiz_start"] for d in agg.values())
-        tc = sum(d["conversion"] for d in agg.values())
-        _log("OK -> ga4-metrics.csv | source=%d sessions=%d quiz=%d conv=%d" % (len(agg), ts, tq, tc))
-        return {"file": OUT, "channels": len(agg), "sessions": ts, "quiz_start": tq, "conversion": tc}
+        tc = sum(d["affiliate_click"] for d in agg.values())
+        _log("OK -> ga4-metrics.csv | source=%d sessions=%d quiz=%d affiliate_click=%d" % (len(agg), ts, tq, tc))
+        return {"file": OUT, "channels": len(agg), "sessions": ts, "quiz_start": tq, "affiliate_click": tc}
     except Exception as e:
         _log("ดึง GA4 ล้มเหลว (%s) - เช็ก Property ID / auth / สิทธิ์ property" % e)
         return None
@@ -188,7 +192,7 @@ def pull_pages():
         pages = {}
 
         def slot(p):
-            return pages.setdefault(p, {"views": 0, "conversion": 0})
+            return pages.setdefault(p, {"views": 0, "affiliate_click": 0})
 
         rep = client.run_report(RunReportRequest(
             property=prop, date_ranges=dr, dimension_filter=hx,
@@ -203,12 +207,12 @@ def pull_pages():
                 metrics=[Metric(name="eventCount")]))
             for row in rep2.rows:
                 if (row.dimension_values[1].value or "") == CONV_EVENT:
-                    slot(row.dimension_values[0].value or "/")["conversion"] += int(row.metric_values[0].value or 0)
+                    slot(row.dimension_values[0].value or "/")["affiliate_click"] += int(row.metric_values[0].value or 0)
         except Exception:
             pass
-        rows = [("page", "views", "conversion")]
+        rows = [("page", "views", "affiliate_click")]
         for p in sorted(pages, key=lambda k: -pages[k]["views"]):
-            rows.append((p, pages[p]["views"], pages[p]["conversion"]))
+            rows.append((p, pages[p]["views"], pages[p]["affiliate_click"]))
         with open(OUT_PAGES, "w", newline="", encoding="utf-8") as f:
             csv.writer(f).writerows(rows)
         _log("OK -> ga4-pages.csv | pages=%d" % len(pages))
