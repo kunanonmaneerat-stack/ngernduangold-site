@@ -969,6 +969,63 @@ def check_sales_recorded():
     add("sales recorded", "PASS", "ยังไม่มีทั้งคลิกและยอดขาย - ไม่มีอะไรขัดกัน")
 
 
+GA4_METRICS = os.path.join(REPO, "automation-log", "ga4-metrics.csv")
+SYNTHETIC_DIRECT_SHARE = 0.50
+
+
+def _ga4_rows():
+    if not os.path.exists(GA4_METRICS):
+        return None
+    try:
+        import csv
+        with io.open(GA4_METRICS, encoding="utf-8", errors="replace") as fh:
+            return list(csv.DictReader(fh))
+    except (OSError, ValueError):
+        return None
+
+
+def check_synthetic_traffic():
+    """direct ท่วมแต่ไม่มี engagement เลย = น่าจะเป็น automation ของเราเอง ไม่ใช่คน.
+
+    1 ส.ค. 2026: direct = 166 จาก 209 sessions (79%) โดยมี quiz_start 0 และ affiliate_click 2
+    ขณะที่ pantip 18 sessions ให้ quiz_start ทั้ง 2 ครั้งของทั้งเดือน คนจริงที่อ่านจนจบมีพฤติกรรม
+    ต่างจากตัวเลขก้อนนี้อย่างสิ้นเชิง และเราเพิ่งพบว่า clicktest ยิง hit ถึง GA4 จริงทุกรอบ
+    ถ้าปล่อยไว้ ทุก verdict จะถูกคำนวณบนฐานที่มีทราฟฟิกของเราเองปนอยู่โดยไม่มีใครทักท้วง
+    """
+    rows = _ga4_rows()
+    if rows is None:
+        add("synthetic traffic", "WARN", "ยังไม่มี ga4-metrics.csv - ตรวจไม่ได้ว่ามีทราฟฟิกของเราเองปนไหม")
+        return
+    total = 0
+    direct_sessions = 0
+    direct_quiz = 0
+    for r in rows:
+        try:
+            sess = int(r.get("sessions") or 0)
+        except ValueError:
+            continue
+        total += sess
+        if (r.get("source") or "").strip().lower() == "direct":
+            direct_sessions += sess
+            try:
+                direct_quiz += int(r.get("quiz_start") or 0)
+            except ValueError:
+                pass
+    if total <= 0:
+        add("synthetic traffic", "PASS", "ยังไม่มี sessions ให้ประเมิน")
+        return
+    share = direct_sessions / float(total)
+    if share > SYNTHETIC_DIRECT_SHARE and direct_quiz == 0:
+        add("synthetic traffic", "WARN",
+            "direct %d sessions (%.0f%%) แต่ไม่มี engagement เลย - น่าจะเป็น automation ของเราเอง ไม่ใช่คน"
+            " -> เช็กว่างานอัตโนมัติตัวไหนเปิดหน้าเว็บโดยไม่ตั้ง traffic_type=internal"
+            % (direct_sessions, share * 100))
+        return
+    add("synthetic traffic", "PASS",
+        "direct %d/%d sessions (%.0f%%) quiz_start=%d - สัดส่วนกับ engagement ยังสมเหตุผล"
+        % (direct_sessions, total, share * 100, direct_quiz))
+
+
 def check_open_decisions():
     """Surface plan decisions whose date has passed and that nobody has closed.
 
@@ -1093,6 +1150,7 @@ def main():
     check_dead_tooling()
     check_policy_dates_in_prompts()
     check_sales_recorded()
+    check_synthetic_traffic()
     check_task_mirror()
     check_open_decisions()
     check_content_cliff()

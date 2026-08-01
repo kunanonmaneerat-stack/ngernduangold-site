@@ -383,6 +383,42 @@ check("old CSV header (conversion) is still read", run_sales([_HEADER], _GA4_OLD
 shutil.rmtree(os.path.join(TMPDIR, "_test_sales"), ignore_errors=True)
 P.SALES_LOG, P.REPO = _sl, _repo
 
+print("\nSYNTHETIC TRAFFIC  (our own robots must not be counted as an audience)")
+_gm = P.GA4_METRICS
+_syn_dir = tempfile.mkdtemp(prefix="pf_syn_")   # fixture อยู่นอก repo (ของเดิมเคยค้างใน tools/)
+
+
+def run_syn(csv_text):
+    p = os.path.join(_syn_dir, "ga4-metrics.csv")
+    if csv_text is None:
+        if os.path.exists(p):
+            os.remove(p)
+        P.GA4_METRICS = os.path.join(_syn_dir, "missing.csv")
+    else:
+        with io.open(p, "w", encoding="utf-8", newline=chr(10)) as fh:
+            fh.write(csv_text)
+        P.GA4_METRICS = p
+    P.results[:] = []
+    P.check_synthetic_traffic()
+    return P.results[0]["status"]
+
+
+_H = "source,sessions,quiz_start,affiliate_click" + chr(10)
+# ของจริง 1 ส.ค. 2026: direct 166/209 = 79% และ quiz_start 0
+_REAL = _H + "direct,166,0,2" + chr(10) + "pantip,18,2,5" + chr(10) + "fb,13,0,0" + chr(10) + "chatgpt,8,0,2" + chr(10) + "yt,3,0,0" + chr(10) + "bing,1,0,0" + chr(10)
+_DIRECT_ENGAGED = _H + "direct,166,4,2" + chr(10) + "pantip,18,2,5" + chr(10)
+_BALANCED = _H + "direct,40,0,1" + chr(10) + "pantip,120,6,5" + chr(10)
+_EMPTY = _H
+
+check("direct ท่วมและไม่มี engagement เลย", run_syn(_REAL), "WARN")
+check("direct ท่วมแต่มี engagement = คนจริง", run_syn(_DIRECT_ENGAGED), "PASS")
+check("direct ไม่ท่วม", run_syn(_BALANCED), "PASS")
+check("ยังไม่มี sessions", run_syn(_EMPTY), "PASS")
+check("ไม่มีไฟล์ ga4-metrics.csv", run_syn(None), "WARN")
+
+shutil.rmtree(_syn_dir, ignore_errors=True)
+P.GA4_METRICS = _gm
+
 print("\nOPEN DECISIONS  (an expired plan gate must stay visible on every run)")
 _real_policy = P.POLICY
 
