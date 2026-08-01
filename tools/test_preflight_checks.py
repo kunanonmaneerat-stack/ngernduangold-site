@@ -336,6 +336,53 @@ shutil.rmtree(os.path.join(HERE, "_test_dates_empty.tmp"), ignore_errors=True)
 P.OWN_TASKS_DIR = _od3
 P.SCHEDULED_DIR = _sd3
 
+print("\nSALES RECORDED  (clicks without a single recorded sale must not stay silent)")
+_sl, _repo = P.SALES_LOG, P.REPO
+
+
+def run_sales(sales_lines, ga4_csv=None):
+    d = os.path.join(HERE, "_test_sales.tmp")
+    al = os.path.join(d, "automation-log")
+    if not os.path.isdir(al):
+        os.makedirs(al)
+    sp = os.path.join(al, "sales-log.jsonl")
+    if sales_lines is None:
+        if os.path.exists(sp):
+            os.remove(sp)
+    else:
+        with io.open(sp, "w", encoding="utf-8", newline=chr(10)) as fh:
+            fh.write(chr(10).join(sales_lines) + chr(10))
+    gp = os.path.join(al, "ga4-metrics.csv")
+    if ga4_csv is None:
+        if os.path.exists(gp):
+            os.remove(gp)
+    else:
+        with io.open(gp, "w", encoding="utf-8", newline=chr(10)) as fh:
+            fh.write(ga4_csv)
+    P.SALES_LOG = sp
+    P.REPO = d
+    P.results[:] = []
+    P.check_sales_recorded()
+    return P.results[0]["status"]
+
+
+_HEADER = '{"note":"metadata header","created":"2026-07-24"}'
+_SALE = '{"date":"2026-08-01","product":"letter-kit-199","amount_thb":199,"source":"line"}'
+_GA4_CLICKS = "source,sessions,quiz_start,affiliate_click" + chr(10) + "pantip,18,2,5" + chr(10)
+_GA4_ZERO = "source,sessions,quiz_start,affiliate_click" + chr(10) + "direct,166,0,0" + chr(10)
+_GA4_OLDHEAD = "source,sessions,quiz_start,conversion" + chr(10) + "pantip,18,2,5" + chr(10)
+
+check("clicks but not one sale recorded", run_sales([_HEADER], _GA4_CLICKS), "WARN")
+check("a real sale on record", run_sales([_HEADER, _SALE], _GA4_CLICKS), "PASS")
+check("no clicks and no sales is consistent", run_sales([_HEADER], _GA4_ZERO), "PASS")
+check("no sales log at all", run_sales(None, _GA4_CLICKS), "WARN")
+check("empty log and no GA4 to compare", run_sales([_HEADER], None), "WARN")
+check("metadata header alone is not a sale", run_sales([_HEADER], _GA4_CLICKS), "WARN")
+check("old CSV header (conversion) is still read", run_sales([_HEADER], _GA4_OLDHEAD), "WARN")
+
+shutil.rmtree(os.path.join(HERE, "_test_sales.tmp"), ignore_errors=True)
+P.SALES_LOG, P.REPO = _sl, _repo
+
 print("\nOPEN DECISIONS  (an expired plan gate must stay visible on every run)")
 _real_policy = P.POLICY
 

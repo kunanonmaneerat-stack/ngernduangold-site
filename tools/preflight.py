@@ -860,6 +860,77 @@ def check_policy_dates_in_prompts():
     add("policy dates", "PASS", "%d prompt(s): channel dates live in policy.json only" % scanned)
 
 
+SALES_LOG = os.path.join(REPO, "automation-log", "sales-log.jsonl")
+CLICK_TO_SALE_WINDOW_DAYS = 14
+
+
+def _sales_rows():
+    """แถวยอดขายจริงใน sales-log.jsonl (แถว metadata ที่ไม่มี amount_thb ไม่นับ)."""
+    rows = []
+    if not os.path.exists(SALES_LOG):
+        return rows, False
+    try:
+        for line in io.open(SALES_LOG, encoding="utf-8", errors="replace"):
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                rec = json.loads(line)
+            except ValueError:
+                continue
+            if isinstance(rec, dict) and "amount_thb" in rec:
+                rows.append(rec)
+    except OSError:
+        return rows, False
+    return rows, True
+
+
+def _affiliate_clicks_recent():
+    """affiliate_click รวมจาก ga4-metrics.csv (คอลัมน์ชื่อใหม่ 1 ส.ค. 2026; รองรับหัวเก่า)."""
+    path = os.path.join(REPO, "automation-log", "ga4-metrics.csv")
+    if not os.path.exists(path):
+        return None
+    total = 0
+    try:
+        import csv
+        with io.open(path, encoding="utf-8", errors="replace") as fh:
+            for row in csv.DictReader(fh):
+                total += int(row.get("affiliate_click") or row.get("conversion") or 0)
+    except (OSError, ValueError):
+        return None
+    return total
+
+
+def check_sales_recorded():
+    """คนคลิกแล้วแต่ไม่มียอดถูกบันทึกเลยเกิน N วัน = ปลายทางพัง หรือลืมบันทึก อย่างใดอย่างหนึ่ง.
+
+    North Star ของโปรเจกต์คือรายได้จริง แต่ `sales-log.jsonl` ไม่เคยมีแถวยอดขายเลยตั้งแต่เปิดไฟล์
+    24 ก.ค. 2026 และไม่มี guard ตัวไหนถามถึงมัน ระบบจึงวัด "ความสำเร็จ" จาก affiliate_click แทน
+    เงินจริงอยู่หลายสัปดาห์ เช็กนี้ทำให้ความเงียบนั้นดังขึ้นมา — ไม่ตัดสินว่าใครผิด แต่บังคับให้ตอบ
+    ว่า 0 นั้นคือ "ยังไม่มีคนซื้อ" หรือ "ขายได้แต่ไม่ได้บันทึก" ซึ่งสองอย่างนี้แก้คนละทาง
+    """
+    rows, has_log = _sales_rows()
+    if not has_log:
+        add("sales recorded", "WARN",
+            "ไม่มี automation-log/sales-log.jsonl - North Star วัดไม่ได้เลย -> สร้างไฟล์แล้วบันทึกทุกดีลด้วย tools/log_sale.py")
+        return
+    clicks = _affiliate_clicks_recent()
+    if rows:
+        latest = max((str(r.get("date") or "") for r in rows), default="")
+        add("sales recorded", "PASS", "%d รายการในสมุดยอดขาย (ล่าสุด %s)" % (len(rows), latest or "-"))
+        return
+    if clicks is None:
+        add("sales recorded", "WARN",
+            "สมุดยอดขายว่าง และยังไม่มี ga4-metrics.csv ให้เทียบ -> รัน pipeline/ga4_pull.py แล้วดูว่ามีคนคลิกไหม")
+        return
+    if clicks > 0:
+        add("sales recorded", "WARN",
+            "affiliate_click %d ครั้ง แต่สมุดยอดขายว่างเปล่า - ปลายทางรับเงินไม่ได้ หรือขายแล้วไม่ได้บันทึก"
+            " -> เช็กว่าหน้าขายมีปุ่มจ่ายเงินและช่องทางรับเงินเปิดอยู่ ถ้าขายได้แล้วให้บันทึกด้วย tools/log_sale.py" % clicks)
+        return
+    add("sales recorded", "PASS", "ยังไม่มีทั้งคลิกและยอดขาย - ไม่มีอะไรขัดกัน")
+
+
 def check_open_decisions():
     """Surface plan decisions whose date has passed and that nobody has closed.
 
@@ -983,6 +1054,7 @@ def main():
     check_prompt_drift()
     check_dead_tooling()
     check_policy_dates_in_prompts()
+    check_sales_recorded()
     check_task_mirror()
     check_open_decisions()
     check_content_cliff()
