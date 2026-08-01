@@ -7562,3 +7562,177 @@ preflight [OK]  2026-07-31 07:19
   PASS  disclosure       78 pages: every page with affiliate links discloses them (counted by real anchors, not by word match)
   PASS  attribution      185 affiliate buttons, all sub ids well-formed
 [Fri 07/31/2026  7:19:37.91] run_daily end exit=0 
+[Sat 08/01/2026  7:00:02.29] comply_gate_stitch scan (components\stitch) 
+
+SUMMARY: 0 file(s), 0 FAIL finding(s).
+[Sat 08/01/2026  7:00:02.39] run_daily start 
+Sent to telegram home channel (chat_id: 8431211539)
+[free_llm] or-nemotron-ultra ERR 'choices' -> rotate
+queued: หนี้บัตรเครดิตหลายใบ จ่ายขั้นต่ำทุกเดือนแต | draft or-nemotron-ultra | final glm-4.5-flash
+queued: ผ่อนรถอยู่แต่เริ่มผ่อนไม่ไหว ควรขายดาวน์ ร | draft or-nemotron-ultra | final or-nemotron-ultra
+queued: ฟรีแลนซ์รายได้ไม่ประจำ อยากได้บัตร/สินเชื่ | draft or-nemotron-ultra | final or-nemotron-ultra
+queued: เงินเดือน 15000 อยากได้บัตรเครดิตใบแรก สมั | draft or-nemotron-ultra | final or-nemotron-ultra
+[free_llm] or-nemotron-ultra ERR 'choices' -> rotate
+queued: เงินเดือนชนเดือนทุกที เก็บเงินไม่อยู่ เริ่ | draft or-nemotron-ultra | final or-nemotron-ultra
+queued: สมัครบัตร/สินเชื่อไม่ผ่านบ่อย ควรเช็กเครดิ | draft or-nemotron-ultra | final or-nemotron-ultra
+queued: ผ่อนบ้านมาเกิน 3 ปี อยากรีไฟแนนซ์ลดดอก ดูอ | draft or-nemotron-ultra | final or-nemotron-ultra
+---
+ngernduangold daily queue: 7/7 draft ตรวจ 5 ชั้นแล้ว พร้อม approve -> automation-log/council-2026-08-01.md (ลิงก์ DM/bio เท่านั้น คนกดโพสต์)
+notified Telegram via Hermes
+[Sat 08/01/2026  7:16:49.86] daily_content start 
+[daily_content] วันนี้หัวข้อ #7/7: ผ่อนบ้านมาเกิน 3 ปี อยากรีไฟแนนซ์ลดดอก ดูอะไรก่อนต
+[content_review] -> C:\Users\nL_ku\ngernduangold-site\automation-log\cowork-inbox\review-20260801-0719.md
+[content_review] มีจุดต้อง verify
+[head_content] package -> C:\Users\nL_ku\ngernduangold-site\automation-log\content-packages\20260801-0716-ผ-อนบ-านมาเก-น-3-ป--อยากร-ไฟแนนซ.md
+[head_content] comply 6/6 OK
+[Sat 08/01/2026  7:19:17.90] ga4_pull start 
+[2026-08-01T07:19:20] auth = OAuth token (secrets/ga4-token.json)
+[2026-08-01T07:19:24] OK -> ga4-metrics.csv | source=6 sessions=209 quiz=2 conv=9
+[2026-08-01T07:19:24] auth = OAuth token (secrets/ga4-token.json)
+[2026-08-01T07:19:26] OK -> ga4-pages.csv | pages=34
+[2026-08-01T07:19:26] auth = OAuth token (secrets/ga4-token.json)
+[2026-08-01T07:19:26] OK -> ga4-funnel.csv | quiz_start=2 -> quiz_complete=2 -> recommendation_view=2 -> affiliate_click=9
+[Sat 08/01/2026  7:19:26.92] fb_queue_linkcheck (order-flow-fb-master B1) 
+OK all 7 pages 200 -> C:\Users\nL_ku\ngernduangold-site\automation-log\cowork-inbox\linkhealth-fb-2026-08-01.md
+[Sat 08/01/2026  7:19:31.83] qa_watermark gate: scan postable staging (FAIL = DO NOT POST) 
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\_vidout\clean\reel_auto-save-2026_clean.mp4 (track 0/60 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\_vidout\clean\reel_compound-interest-2026_clean.mp4 (track 0/60 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\_vidout\clean\reel_emergency-fund-2026_clean.mp4 (track 0/60 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\_vidout\clean\reel_save-small-2026_clean.mp4 (track 0/60 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\_vidout\clean\reel_title-loan-2026_clean.mp4 (track 0/60 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\automation-log\_social-stage\_final_dc01.mp4 (track 0/30 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\automation-log\_social-stage\_final_dc02.mp4 (track 0/30 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\automation-log\_social-stage\_final_dc03.mp4 (track 0/30 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\automation-log\_social-stage\_final_dc04.mp4 (track 0/30 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\automation-log\_social-stage\_final_dc05.mp4 (track 0/30 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\automation-log\_social-stage\_final_eb02.mp4 (track 0/24 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\automation-log\_social-stage\_final_eb03.mp4 (track 0/24 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\automation-log\_social-stage\_final_kp04.mp4 (track 0/24 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\automation-log\_social-stage\_final_kp05.mp4 (track 0/24 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\automation-log\_social-stage\_final_kp06.mp4 (track 0/24 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\automation-log\_social-stage\_final_sp01.mp4 (track 0/30 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\automation-log\_social-stage\_final_sp02.mp4 (track 0/30 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\automation-log\_social-stage\_final_tl01b.mp4 (track 0/30 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\automation-log\_social-stage\_final_tl03.mp4 (track 0/24 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\automation-log\_social-stage\_final_tl04.mp4 (track 0/24 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\automation-log\_social-stage\_final_tl05.mp4 (track 0/30 frames)
+[Sat 08/01/2026  7:20:31.47] traffic_analyst start 
+[traffic_monitor] -> C:\Users\nL_ku\ngernduangold-site\automation-log\traffic-monitor-20260801-0720.md
+[traffic_analyst] -> C:\Users\nL_ku\ngernduangold-site\automation-log\cowork-inbox\traffic-verdict-20260801-0720.md
+[traffic_analyst] VERDICT: PROVEN: reach คือคอขวด (funnel แปลงผลจริงเมื่อมี traffic)
+[traffic_analyst] DECISION: ทำตาม consult: FREEZE การสร้างระบบเพิ่ม + ทุ่ม reach ของช่องที่ converted ดีสุด (conv/session=4% · quiz/session=1% · conv รวม=9) — ลงแรง: pantip, direct, chatgp
+[Sat 08/01/2026  7:20:31.69] post_agent start (timing -
+[2026-08-01T07:20:32] auth = OAuth token (secrets/ga4-token.json)
+[post_timing] -> C:\Users\nL_ku\ngernduangold-site\automation-log\cowork-inbox\post-timing-20260801-0720.md | source: GA4 จริง (211 sessions) + heuristic
+[post_agent] -> C:\Users\nL_ku\ngernduangold-site\automation-log\cowork-inbox\post-queue-20260801-0720.md | 9 slots
+[Sat 08/01/2026  7:20:35.52] credit_tracker status 
+[credit_tracker] เหลือ 1000/1000 (~66 คลิป) · ใช้ไป 0%
+[Sat 08/01/2026  7:20:35.76] dashboard_agent start (dashboard.html) 
+[dashboard_agent] -> C:\Users\nL_ku\ngernduangold-site\automation-log\dashboard.html | sessions=209 conv=9 verdict=PROVEN: reach คือคอขวด (funnel
+Traceback (most recent call last):
+  File "C:\Users\nL_ku\ngernduangold-site\pipeline\posting_kit.py", line 111, in <module>
+    build()
+    ~~~~~^^
+  File "C:\Users\nL_ku\ngernduangold-site\pipeline\posting_kit.py", line 31, in build
+    plan = json.load(open(PLAN, encoding="utf-8")).get("plan", [])
+                     ~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\nL_ku\\ngernduangold-site\\automation-log\\post-plan.json'
+[Sat 08/01/2026  7:20:36.56] hermes_digest start 
+Sent to telegram home channel (chat_id: 8431211539)
+Sent to telegram home channel (chat_id: 8431211539)
+[traffic_monitor] -> C:\Users\nL_ku\ngernduangold-site\automation-log\traffic-monitor-20260801-0720.md
+[traffic_monitor] -> C:\Users\nL_ku\ngernduangold-site\automation-log\traffic-monitor-20260801-0720.md
+[traffic_analyst] -> C:\Users\nL_ku\ngernduangold-site\automation-log\cowork-inbox\traffic-verdict-20260801-0720.md
+[traffic_analyst] VERDICT: PROVEN: reach คือคอขวด (funnel แปลงผลจริงเมื่อมี traffic)
+[traffic_analyst] DECISION: ทำตาม consult: FREEZE การสร้างระบบเพิ่ม + ทุ่ม reach ของช่องที่ converted ดีสุด (conv/session=4% · quiz/session=1% · conv รวม=9) — ลงแรง: pantip, direct, chatgp
+[summary_card] -> C:\Users\nL_ku\ngernduangold-site\automation-log\summary.png
+[hermes_digest] ส่งภาพสรุปเข้า Telegram แล้ว
+[hermes_digest] digest:
+ngernduangold — สรุปรายวัน 2026-08-01
+traffic: Meta reach 1557 views · GA4 209 sessions
+conversion (GA4 จริง): quiz_start=2 · affiliate_click=9
+ช่อง converted ดีสุด: pantip(5), direct(2), chatgpt(2)
+คอนเทนต์ผลิตวันนี้: 1 แพ็กเกจ (ดราฟต์ รอรีวิว+โพสต์)
+Flow credits: 1000/1000 เหลือ (~66 คลิป @ 15)
+คลิปดีสุด: หนี้บัตรหลายใบ-รวมก้อนเดียว-0713 (151 views)
+ยังไม่มีคลิป reach >= 500 (ยังไม่พ้น cold-start)
+VERDICT: PROVEN: reach คือคอขวด (funnel แปลงผลจริงเมื่อมี traffic)
+DECISION: ทำตาม consult: FREEZE การสร้างระบบเพิ่ม + ทุ่ม reach ของช่องที่ converted ดีสุด (conv/session=4% · quiz/session=1% · conv รวม=9) — ลงแรง: pantip, direct, chatgpt
+งาน owner วันนี้: Pantip value 1-2 โพสต์ + โพสต์ใหม่ใช้ CTA 'คอมเมนต์ เช็กสิทธิ์'
+[hermes_digest] Telegram: ส่งแล้ว
+[Sat 08/01/2026  7:21:08.20] cc_monitor (Claude Code status -
+Sent to telegram home channel (chat_id: 8431211539)
+CC STATUS -> C:\Users\nL_ku\ngernduangold-site\automation-log\cowork-inbox\cc-status-20260801-072108.md | 📥 มีผล CC 25 รอ Cowork review/consume
+[Sat 08/01/2026  7:21:22.76] guard self-test 
+POSTING CAP  (POSTING-POLICY rule 2: <=2/day/channel, >=3h apart)
+  live posts 5h apart                                  PASS  (want PASS ) OK
+  live posts 1h apart                                  FAIL  (want FAIL ) OK
+  3 live posts, well spaced -> over cap                FAIL  (want FAIL ) OK
+  comment does not count as a post                     PASS  (want PASS ) OK
+  empty ledger                                         PASS  (want PASS ) OK
+  breach dated yesterday is history, not a gate        WARN  (want WARN ) OK
+  YT catch-up, 3 clips publishing on 3 days            PASS  (want PASS ) OK
+  YT 3 clips all publishing the SAME day               FAIL  (want FAIL ) OK
+  one scheduled + one live on the same day             PASS  (want PASS ) OK
+  pinterest 3 pins spaced (cap is 5)                   PASS  (want PASS ) OK
+  pinterest 6 pins                                     FAIL  (want FAIL ) OK
+
+POLICY WIRING  (numbers must come from policy.json, and fail safe without it)
+  cap default read from policy                         2     (want 2    ) OK
+  pinterest override read from policy                  5     (want 5    ) OK
+  min gap read from policy                             3     (want 3    ) OK
+  missing policy still enforces the written rule       (2, 3) (want (2, 3)) OK
+
+REPEAT FAILURES  (must fire when broken, go quiet once genuinely fixed)
+  one failure is noise                                 PASS  (want PASS ) OK
+  two failures same channel                            WARN  (want WARN ) OK
+  three failures same channel                          FAIL  (want FAIL ) OK
+  delivered again after the last failure = recovered   PASS  (want PASS ) OK
+  a success BEFORE the last failure is not recovery    FAIL  (want FAIL ) OK
+  failures older than the window are ignored           PASS  (want PASS ) OK
+  auto=false + no auto_legs is tagged as drift         True  (want True ) OK
+  a channel with declared auto_legs is not drift       False (want False) OK
+
+OPEN DECISIONS  (an expired plan gate must stay visible on every run)
+  far-future gate only                                 PASS  (want PASS ) OK
+  gate due in 2 days                                   WARN  (want WARN ) OK
+  gate overdue and not closed                          WARN  (want WARN ) OK
+  gate overdue but marked DONE                         PASS  (want PASS ) OK
+  no gates declared                                    PASS  (want PASS ) OK
+
+CONTENT CLIFF  (a gate must not land after the queue it refills runs out)
+  gate lands AFTER the queue ends                      WARN  (want WARN ) OK
+  gate lands ON the last queued day                    WARN  (want WARN ) OK
+  gate lands well BEFORE the queue ends                PASS  (want PASS ) OK
+  a bridge gate before the queue end covers a later one PASS  (want PASS ) OK
+  gate that decides something else entirely            PASS  (want PASS ) OK
+  a content gate already marked DONE                   PASS  (want PASS ) OK
+
+MANIFEST VOCABULARY  (post_guard must understand what the uploader writes)
+  'published (...)' - what yt_upload writes past its slot POSTED (want POSTED) OK
+  'scheduled (...)'                                    SCHEDULED-UI (want SCHEDULED-UI) OK
+  'posted (...)'                                       POSTED (want POSTED) OK
+  empty string is not a claim                          None  (want None ) OK
+  unknown word is not a claim                          None  (want None ) OK
+  'scheduled ... published' stays scheduled            SCHEDULED-UI (want SCHEDULED-UI) OK
+
+40 checks, 0 failed
+ALL PASS
+[Sat 08/01/2026  7:21:24.16] preflight start 
+preflight [WARN]  2026-08-01 07:21
+  PASS  content queue    5 day(s) queued, 3 sources agree
+  PASS  delivery gap     last real post 2026-08-01 (0 day(s) ago)
+  PASS  repeat failures  facebook: 3 failures since 2026-07-30, but RECOVERED - delivered again at 2026-07-31T21:35
+  WARN  posting cap      today is clean; earlier breach on record (cannot be undone): facebook 2026-07-31: 3 posts (cap 2) | facebook 2026-07-31: only 0.28h between 13:59 and 14:16 (min 3h) | facebook 2026-07-31: only 0.05h between 14:16 and 14:19 (min 3h)
+  PASS  captions         23 items clean (no stray escapes, no %, no off-channel URL)
+  PASS  posted records   manifest agrees with yt_upload_log
+  PASS  queued clip spec 5 queued clip(s), all 1080x1920 on disk
+  PASS  competing plan   no rival post-plan.json - manifest is the only source
+  PASS  prompt drift     95 task prompt(s) agree with policy.json
+  WARN  open decisions   due soon -> 2026-08-01: owner decision - threads video route -- in 0 day(s) | 2026-08-03: ngernduangold-bridge-clips (produce 2-3 bridge clips to cover 6-8 Aug video slots) -- in 2 day(s)
+  PASS  content cliff    queue ends 2026-08-05 and ngernduangold-bridge-clips decides on 2026-08-03 - early enough to refill it
+  PASS  disclosure       78 pages: every page with affiliate links discloses them (counted by real anchors, not by word match)
+  PASS  attribution      185 affiliate buttons, all sub ids well-formed
+
+  0 fail / 2 warn -- fix before the next posting slot.
+[Sat 08/01/2026  7:21:39.35] run_daily end exit=1 
