@@ -155,6 +155,17 @@
       "decision": "resume Threads video upload using the OS-dialog recipe when the machine is idle",
       "rationale": "Direct evidence beats inference. Dialog #32770 opened, composer rendered the preview, post published and verified on profile as a single new post. The earlier same-day closure was reasoned from a different code path. OWNER ACK REQUESTED: the 19:00 slot still runs in a normal (non-idle) session, where foreground cannot be guaranteed - so the durable fix is either to keep video on this idle window or to give the 19:00 task the same foreground check.",
       "owner_ack": "implicit - route has run nightly since 1 Aug without objection; closing so preflight stops warning daily on a decision already in effect"
+    },
+    {
+      "date": "2026-08-08",
+      "task": "ngernduangold-buy-intent-gate",
+      "status": "OPEN",
+      "decides": [
+        "buy button placement",
+        "whether buy intent is real"
+      ],
+      "count_from": "2026-08-02",
+      "note": "READ THIS BEFORE COMPUTING ANYTHING. Do NOT compare against any window that includes data before 2 Aug 2026. Two separate sources of our own traffic were reaching GA4 until 1 Aug: (a) clicktest's Playwright clicks - hits did leave (POST /g/collect verified) and GA4 dropped most of them as known bots (HeadlessChrome + webdriver=true), but 'most' is not 'all' and the split is unknowable retroactively; (b) real-Chrome automation from this machine, which does NOT look like a bot and was NOT dropped - the GA4 internal-traffic rule that should have excluded it had been pinned to a rotated-away IP and matched nothing. So affiliate_click = 9 for Jul is an upper bound on real human clicks, not a baseline. Both sources were closed on 1 Aug; 2 Aug onward is clean. If the gate needs a comparison, compare clean days to clean days or say plainly that no valid baseline exists yet."
     }
   ],
   "specs": {
@@ -222,6 +233,12 @@
       "verified_at": "2026-08-01",
       "verified_how": "Opened GA4 Admin > Data streams > ngernduangold web > Configure tag settings > Define internal traffic, added 27.130.5.93/32 and re-opened the rule to confirm it persisted; Admin > Data filters shows Internal Traffic / Exclude / Active.",
       "on_mismatch": "preflight WARNs. Fix by adding the new CIDR in GA4 Define internal traffic AND here. Do not widen to a /24 - a Thai residential /24 can contain real readers, and excluding them is a worse error than counting a few of our own hits."
+    },
+    "clicktest_isolation": {
+      "_why": "Two different populations needed two different fixes and neither one covers the other. clicktest looks like a bot to GA4, so the IP rule was never what protected it; real-Chrome automation does not look like a bot, so source-side opt-out in clicktest was never what protected that. Writing this down because the next reader will otherwise assume one fix was enough.",
+      "mechanism": "ga-disable-<GA4_ID>=true injected before page scripts, plus traffic_type=internal",
+      "owner": "tools/postdeploy_click_test.py (CC, 1 Aug 2026)",
+      "self_check": "The run counts its own requests to */collect and FAILs if any escape, so the one-time manual proof (1 -> 0) is re-proved on every run. Reverse-tested 1 Aug: opt-out on = 0 hits, opt-out removed = 2 hits."
     }
   }
 }

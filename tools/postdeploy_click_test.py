@@ -76,6 +76,29 @@ window.dataLayer.push = function () {
 };
 """
 
+# --- proof that the opt-out above is still working, on EVERY run -------------
+# The two lines in WRAP were verified by hand once (1 ส.ค. 2026: 1 request -> 0) and that
+# proof rots the moment anyone edits WRAP, renames GA4_ID, or adds a fourth run_* function
+# that forgets to call _arm(). The failure would be invisible: clicktest still prints
+# 11/11 PASS whether or not it is also feeding GA4, because its assertions read
+# dataLayer, not the network. So the opt-out has to assert itself.
+#
+# ทำไมต้องรวมการตั้งค่าหน้าไว้ที่เดียว: ก่อนหน้านี้ WRAP + route ถูกก็อปไว้ 3 จุด
+# (run / run_quiz / run_events) — แก้จุดเดียวลืมอีกสองจุด = เส้นทางนั้นกลับมายิง GA4 เงียบๆ
+# เป็นบั๊กคลาสเดียวกับ "ข้อเท็จจริงเดียวเก็บไว้หลายที่" ใน OPERATING-NOTES ข้อ 6 ของ watchdog
+GA_HITS = []
+_GA_COLLECT = re.compile(r"(google-analytics\.com|analytics\.google\.com)/.*collect", re.I)
+
+
+def _arm(page):
+    """Every page in this file must go through here: opt-out injected, affiliate host
+    blocked, and any GA4 hit that still escapes is recorded so main() can fail on it."""
+    page.add_init_script(WRAP.replace("__GA4_ID__", GA4_ID))
+    page.route(re.compile(r"atth\.me"), lambda r: r.abort())   # ไม่โหลด affiliate จริง
+    page.on("request", lambda r: GA_HITS.append(r.url[:160]) if _GA_COLLECT.search(r.url) else None)
+    return page
+
+
 def _through_interstitial(page):
     """If the comparison interstitial modal opened (card/loan CTAs), click its continue button
     so the real affiliate_click fires on the original atth.me href (sub_id unchanged)."""
@@ -100,8 +123,7 @@ def run(base, targets):
             fails, got = [], None
             ctx = browser.new_context()
             page = ctx.new_page()
-            page.add_init_script(WRAP.replace("__GA4_ID__", GA4_ID))
-            page.route(re.compile(r"atth\.me"), lambda r: r.abort())  # ไม่โหลด affiliate จริง
+            _arm(page)
             try:
                 page.goto(base + path, wait_until="domcontentloaded", timeout=30000)
                 page.wait_for_timeout(1500)            # ให้ GA + hub JS รัน/rewrite
@@ -153,8 +175,7 @@ def run_quiz(base, q1="urgent", q2="car"):
         browser = pw.chromium.launch(headless=True)
         ctx = browser.new_context()
         page = ctx.new_page()
-        page.add_init_script(WRAP.replace("__GA4_ID__", GA4_ID))
-        page.route(re.compile(r"atth\.me"), lambda r: r.abort())
+        _arm(page)
         try:
             page.goto(base + "/quiz", wait_until="domcontentloaded", timeout=30000)
             page.wait_for_timeout(1200)
@@ -199,8 +220,7 @@ def run_events(base):
     with sync_playwright() as pw:
         browser = pw.chromium.launch(headless=True)
         ctx = browser.new_context(); page = ctx.new_page()
-        page.add_init_script(WRAP.replace("__GA4_ID__", GA4_ID))
-        page.route(re.compile(r"atth\.me"), lambda r: r.abort())
+        _arm(page)
         try:
             page.goto(base + "/title-loan-2026", wait_until="domcontentloaded", timeout=30000)
             page.wait_for_timeout(1200)
@@ -240,7 +260,22 @@ def main():
 
     npass = sum(1 for _, _, f in results if not f)
     ok = npass == len(results)
-    head = "%d/%d หน้า runtime ผ่าน" % (npass, len(results))
+
+    # ชั้นที่ทำให้การพิสูจน์ครั้งเดียวกลายเป็นการพิสูจน์ทุกครั้ง
+    # งานนี้กดปุ่ม affiliate จริง ~11 ครั้ง/รอบ ถ้า opt-out หลุด คลิกพวกนั้นจะไปโผล่ใน
+    # affiliate_click ซึ่งเป็นตัวเลขที่ใช้ตัดสินใจเรื่องเงิน และไม่มีอะไรส่งเสียงเลย เพราะ
+    # การตรวจของงานนี้อ่านจาก dataLayer ไม่ได้อ่าน network -- 11/11 PASS เหมือนกันทั้งสองกรณี
+    # จึงต้องให้ตัวมันเองเป็นคนบอกว่ามีคำขอหลุดออกไปหรือไม่ และถ้าหลุด = FAIL
+    if GA_HITS:
+        ok = False
+        print("❌ opt-out หลุด: มีคำขอถึง GA4 %d ครั้งระหว่างการทดสอบ"
+              " — คลิกของหุ่นยนต์กำลังปนเข้าสถิติเงิน" % len(GA_HITS))
+        for u in GA_HITS[:3]:
+            print("     %s" % u)
+        print("     ตรวจว่า WRAP ยังตั้ง ga-disable-%s และทุกหน้าเรียกผ่าน _arm() หรือไม่" % GA4_ID)
+
+    head = "%d/%d หน้า runtime ผ่าน%s" % (
+        npass, len(results), "" if not GA_HITS else " · GA4 hits %d (ต้องเป็น 0)" % len(GA_HITS))
     print("🖱️ click-test [%s] — %s · %s" % (a.base, head, "✅ PASS" if ok else "❌ FAIL"))
     for path, got, fails in results:
         info = ("sub_id=%s channel=%s" % (got.get("sub_id"), got.get("channel"))) if got else "no event"
