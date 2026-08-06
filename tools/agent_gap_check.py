@@ -39,15 +39,35 @@ WHAT COUNTS AS "THE AGENT LAYER DID SOMETHING"
     - automation-log/<YYYY-MM>.jsonl          CC-side routine events
   The newest timestamp across all three is the last sign of life.
 
-THREE-WAY VERDICT, deliberately (same rule as uptime_check)
-  ok       - something happened inside the window
-  silent   - nothing did, and we could read the files well enough to be sure
-  unknown  - the traces are missing or unparseable. NOT reported as silence:
-             "I could not look" must never be published as "it is dead", or the
-             alert becomes noise and gets ignored on the morning it is real.
+TWO AXES, JUDGED SEPARATELY (added 7 Aug 2026 - see below)
+  activity  : ok / silent / unknown     did anything happen at all?
+  reporting : ok / reporting-dark / unknown / n-a    did anyone get told?
+
+  Each axis keeps the three-way shape on purpose (same rule as uptime_check):
+  "I could not look" must never be published as "it is dead", or the alert
+  becomes noise and gets ignored on the morning it is real.
+
+WHY REPORTING NEEDED ITS OWN AXIS
+  The activity check alone would have said OK all week while nothing reached a
+  human. On 6 Aug 2026 four reporting tasks had a lastRunAt on that date and
+  content posted, yet Slack's last message was 4 days old and no watchdog log
+  had been written. Digging further: **the last watchdog log written at its
+  scheduled 08:07 slot is dated 26 Jul.** Every later log file was written
+  mid-day, i.e. by a manual or in-session run. The task was switched off with
+  15 others on 26 Jul and re-enabled on 31 Jul, and since re-enabling not one
+  scheduled run has completed - twelve days of a dead daily guard whose
+  lastRunAt advanced every single morning.
+
+  **lastRunAt proves a task STARTED, not that it FINISHED.** It is stamped by a
+  run that pauses on a permission prompt or loses a connector mid-way. Editing a
+  task's prompt can invalidate its stored tool approvals, so the very act of
+  fixing a task can silently stop it - and the only field anyone checks will
+  keep saying it is fine.
 
 EXIT CODES
-  0 = ok        1 = unknown      2 = silent (alert file written)
+  0 = ok
+  1 = unknown (could not tell - deliberately not treated as failure)
+  2 = silent OR reporting-dark (alert file written; the file says which)
 
 USAGE
   py tools\\agent_gap_check.py
