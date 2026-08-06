@@ -54,7 +54,7 @@ USAGE
   py tools\\agent_gap_check.py --json
   py tools\\agent_gap_check.py --selftest     # proves it can fire AND stay quiet
 """
-import io, os, sys, json, glob, argparse, datetime
+import io, os, re, sys, json, glob, argparse, datetime
 
 for _s in (sys.stdout, sys.stderr):
     try:
@@ -66,6 +66,12 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HERE)
 INBOX = os.path.join(REPO, "automation-log", "cowork-inbox")
 ALERT = os.path.join(INBOX, "AGENT-SILENT-ALERT.md")
+
+# Where the reporting layer leaves its receipts. Separate from the activity traces on
+# purpose - see REPORTING-DARK below. Outside the repo, so this only works on the
+# Windows host, which is exactly where run_daily.cmd fires it from.
+REPORT_DIRS = [os.path.join(os.path.expanduser("~"), "Claude", "watchdog-logs")]
+REPORT_STALE_HOURS = 48
 
 # 26h, not 24h: the agent tasks are jittered by several minutes and the owner's
 # machine is not switched on at a fixed hour. 24h would cry wolf on a late start;
@@ -136,6 +142,57 @@ def last_seen(path):
     return newest, rows
 
 
+def newest_report(dirs=None):
+    """-> (datetime or None, path). Newest dated file the reporting layer produced.
+
+    Only files named YYYY-MM-DD.* count. The directory also holds scratch files like
+    moji_out.txt whose mtime moves for unrelated reasons; trusting mtime there would
+    make a dead reporting layer look alive, which is the failure being detected.
+    """
+    best, where = None, None
+    for d in (dirs if dirs is not None else REPORT_DIRS):
+        if not os.path.isdir(d):
+            continue
+        for fn in os.listdir(d):
+            m = re.match(r"^(\d{4})-(\d{2})-(\d{2})\b", fn)
+            if not m:
+                continue
+            try:
+                dt = datetime.datetime(int(m.group(1)), int(m.group(2)), int(m.group(3)))
+            except ValueError:
+                continue
+            if best is None or dt > best:
+                best, where = dt, os.path.join(d, fn)
+    return best, where
+
+
+def judge_reporting(now, activity_hours, report_dt):
+    """-> (verdict, detail). verdict in {ok, reporting-dark, unknown, n/a}.
+
+    REPORTING-DARK is its own failure mode and it is the sneakiest of the three.
+    On 6 Aug 2026 cowork-task-watchdog, daily-social-post-reminder, post-guard-daily and
+    channel-heartbeat all have a lastRunAt on that date - they started. Content posted
+    that day too, so every activity trace is fresh and the plain silence check says OK.
+    Yet nothing reached Slack (last message 2 Aug) and no watchdog log was written (last
+    file 1 Aug). The tasks began, did partial work, and never reached their report step.
+
+    **lastRunAt proves a task STARTED, not that it FINISHED.** A run that stalls on a
+    permission prompt or loses a connector mid-way still stamps it. So "the agents are
+    running" and "anyone is being told anything" are two different questions, and until
+    now only the first one was ever asked.
+    """
+    if activity_hours is None or activity_hours >= WARN_HOURS:
+        return "n/a", "ชั้น agent เงียบอยู่แล้ว - ไม่ต้องแยกเคสนี้"
+    if report_dt is None:
+        return "unknown", "ไม่พบไฟล์รายงานลงวันที่เลย - ตรวจไม่ได้"
+    hours = (now - report_dt).total_seconds() / 3600.0
+    if hours >= REPORT_STALE_HOURS:
+        return "reporting-dark", (
+            "งานยังเดินอยู่ (ร่องรอยล่าสุด %.1f ชม.) แต่รายงานล่าสุดคือ %s (%.0f วันก่อน)"
+            % (activity_hours, report_dt.strftime("%Y-%m-%d"), hours / 24.0))
+    return "ok", "รายงานล่าสุด %s" % report_dt.strftime("%Y-%m-%d")
+
+
 def judge(now, seen):
     """(verdict, hours, detail). `seen` = [(label, datetime|None, rows)].
 
@@ -158,11 +215,44 @@ def judge(now, seen):
         lab, newest.strftime("%Y-%m-%d %H:%M"), hours)
 
 
-def write_alert(hours, detail, seen):
+def write_alert(hours, detail, seen, reporting=None):
     if not os.path.isdir(INBOX):
         os.makedirs(INBOX)
     days = hours / 24.0
     loud = hours >= LOUD_HOURS
+    if reporting:
+        L = [
+            "# 🔴 งานเดินอยู่ แต่ไม่มีรายงานออกมาเลย",
+            "",
+            "เขียนโดย `tools/agent_gap_check.py` จาก **ชั้น cron** เมื่อ %s"
+            % datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
+            "",
+            "- %s" % reporting,
+            "",
+            "## ทำไมเคสนี้ถึงอันตรายกว่า 'เงียบสนิท'",
+            "**`lastRunAt` พิสูจน์แค่ว่างาน *เริ่ม* ไม่ได้พิสูจน์ว่ามัน *จบ*** — งานที่ค้างรอ permission",
+            "หรือหลุด connector กลางทาง ก็ยังประทับ `lastRunAt` เหมือนกัน",
+            "",
+            "เคสจริง 6 ส.ค. 2026: `cowork-task-watchdog` · `daily-social-post-reminder` ·",
+            "`post-guard-daily` · `channel-heartbeat` **มี lastRunAt วันนั้นครบทั้งสี่ตัว** และมีคอนเทนต์",
+            "ขึ้นจริงด้วย → ร่องรอยกิจกรรมสดหมด ตัวตรวจ 'เงียบ' จึงบอกว่า OK",
+            "แต่ **ไม่มีข้อความเข้า Slack เลย** (ล่าสุด 2 ส.ค.) และ **ไม่มีไฟล์ watchdog log** (ล่าสุด 1 ส.ค.)",
+            "งานเริ่ม ทำได้บางส่วน แล้วไปไม่ถึงขั้นตอนรายงาน",
+            "",
+            "> **'agent ยังทำงานอยู่' กับ 'มีใครได้รับรู้อะไรบ้าง' เป็นคนละคำถาม**",
+            "> ที่ผ่านมาเราถามแค่ข้อแรก",
+            "",
+            "## ตรวจอะไรก่อน",
+            "1. เปิด task ที่ควรรายงาน แล้วดูว่ามันค้างที่ permission prompt หรือเปล่า (approval-trap)",
+            "2. เช็กว่า Slack MCP ต่ออยู่จริงในรอบนั้น",
+            "3. ถ้าเจอสาเหตุแล้ว ให้รายงานเข้า Slack ครั้งเดียวว่าเงียบไปกี่วันและพลาดอะไร แล้วลบไฟล์นี้",
+            "",
+            "_ไฟล์นี้จะถูกลบอัตโนมัติเมื่อมีรายงานใหม่ออกมา_",
+        ]
+        with io.open(ALERT, "w", encoding="utf-8", newline="\n") as fh:
+            fh.write("\n".join(L) + "\n")
+        return
+
     L = [
         "# %s ชั้น agent เงียบมา %.1f ชม. (%.1f วัน)" % ("🔴" if loud else "⚠️", hours, days),
         "",
@@ -256,7 +346,49 @@ def selftest():
         bad += 0 if ok else 1
         print("    %-40s %-28s %s" % (str(row)[:40], str(got)[:28], "OK" if ok else "*** FAIL"))
 
-    print("\n%d cases, %d failed" % (len(cases) + len(fields), bad))
+    # ชั้นที่สอง ต้องพิสูจน์ว่ามันทั้งดังได้และเงียบได้ เหมือนกันทุกประการ
+    print("\n  judge_reporting (งานเดิน แต่รายงานไม่ออก)")
+    def d(days_ago):
+        return (now - datetime.timedelta(days=days_ago)).replace(hour=0, minute=0, second=0)
+    rep_cases = [
+        ("activity 2h + report today",     2.0,  d(0),  "ok"),
+        ("activity 2h + report 1 day old", 2.0,  d(1),  "ok"),
+        ("THE REAL 6 Aug CASE: work fresh, report 6 days old", 2.0, d(6), "reporting-dark"),
+        ("exactly 48h old report",         2.0,  d(2),  "reporting-dark"),
+        ("47h is still inside the window", 2.0,  now - datetime.timedelta(hours=47), "ok"),
+        ("no report file at all",          2.0,  None,  "unknown"),
+        ("agent already silent -> skip",   99.0, d(9),  "n/a"),
+        ("activity unknown -> skip",       None, d(9),  "n/a"),
+        ("report dated in the future",     2.0,  now + datetime.timedelta(days=1), "ok"),
+    ]
+    for label, ah, rd, want in rep_cases:
+        got, why = judge_reporting(now, ah, rd)
+        ok = got == want
+        bad += 0 if ok else 1
+        print("    %-52s %-15s (want %-15s) %s" % (label, got, want, "OK" if ok else "*** FAIL"))
+        if not ok:
+            print("        %s" % why)
+
+    # newest_report ต้องไม่หลงไฟล์ที่ไม่ได้ลงวันที่ (เช่น moji_out.txt ที่อยู่ในโฟลเดอร์เดียวกันจริง)
+    print("\n  newest_report (ห้ามหลงไฟล์ scratch)")
+    import tempfile
+    td = tempfile.mkdtemp(prefix="agr_")
+    for fn in ("2026-08-01.md", "2026-07-30.md", "moji_out.txt", "notes.md", "2026-13-99.md"):
+        io.open(os.path.join(td, fn), "w", encoding="utf-8").write("x")
+    got, where = newest_report([td])
+    want = datetime.datetime(2026, 8, 1)
+    ok = got == want
+    bad += 0 if ok else 1
+    print("    %-52s %-15s (want %-15s) %s" % ("picks newest dated file, ignores scratch",
+          got.strftime("%Y-%m-%d") if got else None, "2026-08-01", "OK" if ok else "*** FAIL"))
+    got2, _ = newest_report([os.path.join(td, "nope")])
+    ok2 = got2 is None
+    bad += 0 if ok2 else 1
+    print("    %-52s %-15s (want %-15s) %s" % ("missing directory -> None, not a crash",
+          got2, "None", "OK" if ok2 else "*** FAIL"))
+    import shutil; shutil.rmtree(td, ignore_errors=True)
+
+    print("\n%d cases, %d failed" % (len(cases) + len(fields) + len(rep_cases) + 2, bad))
     return 1 if bad else 0
 
 
@@ -276,14 +408,22 @@ def main():
         seen.append((lab, dt, rows))
     verdict, hours, detail = judge(now, seen)
 
+    # ชั้นที่สอง: งานเดินอยู่ แต่ไม่มีรายงานออกมาเลย (เคส 6 ส.ค. 2026)
+    rep_dt, rep_path = newest_report()
+    rep_verdict, rep_detail = judge_reporting(now, hours, rep_dt)
+
     if verdict == "silent":
         write_alert(hours, detail, seen)
         code = 2
         msg = "agent-gap SILENT %.1fh -> wrote %s" % (hours, ALERT)
+    elif verdict == "ok" and rep_verdict == "reporting-dark":
+        write_alert(hours, detail, seen, reporting=rep_detail)
+        code = 2
+        msg = "agent-gap REPORTING-DARK  %s -> wrote %s" % (rep_detail, ALERT)
     elif verdict == "ok":
         cleared = clear_alert()
         code = 0
-        msg = "agent-gap OK  %s%s" % (detail, "  (cleared stale alert)" if cleared else "")
+        msg = "agent-gap OK  %s | รายงาน: %s" % (detail, rep_detail)
     else:
         code = 1
         msg = "agent-gap UNKNOWN  %s (ไม่ถือว่าเงียบ)" % detail
@@ -292,6 +432,7 @@ def main():
         print(msg)
     if a.json:
         print(json.dumps({"verdict": verdict, "hours": hours, "detail": detail,
+                          "reporting": rep_verdict, "reporting_detail": rep_detail,
                           "traces": [{"trace": l, "last": d.isoformat() if d else None, "rows": r}
                                      for l, d, r in seen]}, ensure_ascii=False))
     return code
