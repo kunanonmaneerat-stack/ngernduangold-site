@@ -38,12 +38,15 @@
       "video_note": "DISPROVEN AND REVERSED 1 Aug 2026 05:12 by threads-video-idle-window. The native OS file-dialog route WORKS and posted b3-01 successfully (first Threads video since 25 Jul). The 02:xx entry that closed this route was an INFERENCE from the Chrome-extension route (extension tabs run visibilityState='hidden'/hasFocus=false, so they cannot own a native dialog) - but this task never uses the extension. It drives a real VISIBLE FOCUSED Chrome window with OS-level mouse clicks (Windows-MCP Snapshot/Click). Clicking แนบสื่อ that way DID open dialog class #32770, and the composer rendered the preview (ลบออก button appeared, layout shifted 145px). STILL TRUE: file_upload into input[type=file] is dead on Threads (proven twice) - do not retry it. PRECONDITION: machine genuinely idle; verify GetForegroundWindow title before any keystroke. GOTCHA: keyboard layout is Thai - SendKeys/WM_SETTEXT both fail; type with SendInput KEYEVENTF_UNICODE."
     },
     "tiktok": {
-      "state": "paused",
+      "state": "retired",
       "auto": false,
       "until": "2026-08-06",
-      "reason": "28 days = 1 real post, 0 sessions; upload depends on owner's phone so the input cannot be controlled",
-      "decided_by": "ngernduangold-batch4-gate",
-      "kind": "video"
+      "reason": "Not restricted, just not working. 37 posts bought no audience and no measurable traffic. Retired rather than paused because 'paused pending evidence' is what it has been since 20 Jul and the evidence is now in.",
+      "decided_by": "Cowork (owner delegated)",
+      "kind": "video",
+      "decided_on": "2026-08-07",
+      "evidence": "Read TikTok Studio in the browser on 7 Aug - it does NOT need the owner's phone, which is why this sat open for 8 days. 37 posts live, 0 drafts, EVERY post privacy = public, no warning banner anywhere in Studio. So the account is NOT restricted and NOT shadowbanned - the theory that held this decision open was simply wrong. What is true: 12 followers, 1-2 views per post, 9 video views in the last 7 days, 0 profile views, 0 comments, 0 shares, and 0 sessions to the site ever. Last post 26 Jul; batch3 sent it nothing at all (0/7). The clips it did get were 10s, unlike the 20-21s used elsewhere.",
+      "reversible": "Set state back to 'testing' and give it a real run: same clips as the other channels, not 10s cut-downs, for 14 consecutive days. Anything less repeats a test that was never run."
     },
     "instagram": {
       "state": "paused",
@@ -118,11 +121,12 @@
     {
       "date": "2026-08-03",
       "task": "ngernduangold-bridge-clips",
-      "status": "OPEN",
+      "status": "SUPERSEDED",
       "decides": [
         "produce 2-3 bridge clips to cover 6-8 Aug video slots"
       ],
-      "note": "Split out of batch4-gate on 31 Jul. Two different questions were riding on one date: 'how big should batch4 be' NEEDS the 7-day YT number (hence 6 Aug), but 'we will have nothing to post on 6 Aug' needs no data at all and can be decided now. Deciding both on 6 Aug guaranteed a video gap. NOTE the gap is VIDEO-ONLY - knowledge text runs to 15 Aug and page2 to 14 Aug, so the brand does not go silent, it loses the daily clip."
+      "note": "Never ran - its date, 3 Aug, fell inside the 3-5 Aug agent blackout. Overtaken by events: the clips it was meant to bridge to already existed. b3-07 and b3-04 were rendered 18 Jul, sat unposted because their slots also fell in the blackout, and were re-dated to 7-8 Aug on 7 Aug. Producing bridge clips now would duplicate the Facebook backfill decided in batch4-gate, which covers 9-13 Aug.",
+      "decided_on": "2026-08-07"
     },
     {
       "date": "2026-08-06",
@@ -130,6 +134,36 @@
       "decides": [
         "batch4 production volume",
         "tiktok channel fate"
+      ],
+      "status": "DECIDED",
+      "decided_on": "2026-08-07",
+      "decided_by": "Cowork (owner delegated)",
+      "decision": [
+        "no batch4 yet - run batch3 again on the channels that never received it",
+        "tiktok retired"
+      ],
+      "note": "Delivery measured from post-ledger clip_id (the manifest posted fields were stale and were reconciled the same day): YouTube 5/7, Facebook 2/7, Threads 3/7, TikTok 0/7, with 3 of the 7 measurement days blank. YouTube is the only channel that got a fair test and it reaches 7/7 tomorrow. Producing batch4 now would pay a second time for an answer we still would not have. Instead backfill the SAME clips to Facebook, which is both the biggest gap and the channel with the most proven traffic (33 sessions vs threads 13). That buys 5 days of runway and completes the test in one move. Threads self-heals: threads-video-idle-window already picks the oldest unposted clip.",
+      "backfill_facebook": [
+        {
+          "date": "2026-08-09",
+          "clip": "b3-02"
+        },
+        {
+          "date": "2026-08-10",
+          "clip": "b3-06"
+        },
+        {
+          "date": "2026-08-11",
+          "clip": "b3-03"
+        },
+        {
+          "date": "2026-08-12",
+          "clip": "b3-07"
+        },
+        {
+          "date": "2026-08-13",
+          "clip": "b3-04"
+        }
       ]
     },
     {
