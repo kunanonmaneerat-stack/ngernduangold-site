@@ -1,7 +1,7 @@
 source,sessions,quiz_start,affiliate_click,buy_intent_click
 bing,1,0,0,0
-chatgpt,9,0,2,1
-direct,172,0,2,0
+chatgpt,11,0,2,0
+direct,149,0,1,0
 fb,11,0,0,0
-pantip,17,1,5,0
-yt,4,0,0,0
+pantip,16,1,4,2
+yt,3,0,0,0
