@@ -27,7 +27,15 @@
         "text",
         "comment"
       ],
-      "auto_note": "auto=false refers to the VIDEO slot only (owner posts Reels by hand). text+comment legs are automated - see auto_legs."
+      "auto_note": "auto=false refers to the VIDEO slot only (owner posts Reels by hand). text+comment legs are automated - see auto_legs.",
+      "video_path": {
+        "automated": false,
+        "owner": "Cowork (browser)",
+        "_evidence": "post-ledger has exactly 3 rows with channel=facebook type=video in its entire history: one 'cc-dispatcher-backfill' on 23 Jul with no clip_id, and two 'cowork-manual-recovery' on 31 Jul. Everything else automated on Facebook is text (knowledge-post-noon), comment (fb-comment-daily) or image (quote-card). Nothing posts a Reel on a schedule.",
+        "_why_it_matters": "This was never written down, so the 6 Aug gate and the first version of the 7 Aug CC order both planned around a Facebook video capability that does not exist. Meta token was revoked permanently on 18 Jul, so any Reel has to go through the browser on the owner's machine - which is Cowork's side, not CC's. Assigning it to CC would have produced a silent no-op.",
+        "current_task": "ngernduangold-fb-reel-backfill (Cowork, 1/day 15:00, 9-13 Aug 2026, then retire)",
+        "open_question": "CC to confirm what cc-dispatcher-backfill (23 Jul) was, and whether it still works."
+      }
     },
     "threads": {
       "state": "active",
