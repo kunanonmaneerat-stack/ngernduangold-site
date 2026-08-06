@@ -325,16 +325,39 @@
       "now_guarded_by": "tools/agent_gap_check.py on the cron layer"
     }
   ],
-  "orphan_task_files": [
-    {
-      "id": "ngernduangold-buy-intent-gate",
-      "found": "2026-08-07",
-      "live_root": "C:\\Users\\nL_ku\\.claude\\scheduled-tasks (CC)",
-      "orphan_root": "C:\\Users\\nL_ku\\Claude\\Scheduled (Cowork)",
-      "_what": "A byte-identical SKILL.md sits in BOTH roots (5549 bytes, same hash, both mtime 1 Aug 19:00), but list_scheduled_tasks does not contain this id at all - 90 tasks listed, 26 enabled, this one absent. So the Cowork-side file has no scheduler entry: it will never fire, and editing it changes nothing.",
-      "_why_it_matters": "preflight/check_task_mirror compares the two roots by FILE CONTENT. Identical files read as PASS. The guard proves the files agree; it cannot prove both sides are actually live. An orphan file with no registry entry is indistinguishable from a correctly mirrored task - which is note 29/30 in a new shape: not drift between two copies, but a decoy that looks healthy. Anyone 'fixing' the gate in the Cowork root would believe they had fixed it.",
-      "rule": "Edit the CC root only. Do not delete the Cowork copy - that root belongs to Cowork and deleting another agent's file is what caused the weekly-review incident on 1 Aug. Just know it is not the live one.",
-      "guard_gap": "check_task_mirror cannot see scheduler registration because the registry is not a file in either root - it lives in the app's own store, reachable only via list_scheduled_tasks, which preflight (offline, no MCP) cannot call. Left unguarded on purpose rather than faking a check that cannot actually run."
-    }
-  ]
+  "task_roots": {
+    "_swept": "2026-08-07",
+    "cowork_root": "C:\\Users\\nL_ku\\Claude\\Scheduled",
+    "cc_root": "C:\\Users\\nL_ku\\.claude\\scheduled-tasks",
+    "counts": {
+      "cowork_folders": 100,
+      "registry_entries": 90,
+      "cc_folders": 12,
+      "orphans": 10,
+      "ghosts": 0
+    },
+    "_finding": "A folder in the Cowork root is NOT proof of a live task. Ten folders there have no entry in list_scheduled_tasks, so nothing will ever fire them. Nine are copies of CC-side tasks - the CC root holds the live one and the Cowork copy is a decoy that editing does nothing to. The tenth, tiktok-vmok-window-watcher, exists in neither registry nor the CC root: nothing anywhere runs it.",
+    "decoy_copies_cc_is_live": [
+      "ngernduangold-buy-intent-gate",
+      "ngernduangold-clicktest",
+      "ngernduangold-comment-loop",
+      "ngernduangold-delivery-heartbeat",
+      "ngernduangold-delivery-verify",
+      "ngernduangold-first-signal",
+      "ngernduangold-gsc-weekly",
+      "ngernduangold-link-health",
+      "ngernduangold-queue-keeper"
+    ],
+    "dead_everywhere": [
+      "tiktok-vmok-window-watcher"
+    ],
+    "dual_owned_check_before_editing": [
+      "daily-pantip-threads-engine",
+      "ngernduangold-pantip-monitor",
+      "ngernduangold-weekly-review"
+    ],
+    "_why_it_matters": "preflight/check_task_mirror compares the two roots by FILE CONTENT, so a decoy whose bytes match the live copy reads as PASS. The guard proves the files agree; it cannot prove either side is actually scheduled. This is notes 29/30 in a new shape - not drift between copies, but a file that looks mirrored and healthy while being unreachable. On 1 Aug the weekly-review tombstone came from exactly this confusion about which root owns what.",
+    "rule": "Before editing any task prompt: confirm the id appears in list_scheduled_tasks. If it does not, the Cowork file is a decoy and the change must be made in the CC root instead. Never delete files from the other agent's root.",
+    "guarded_by": "cowork-task-watchdog step 2.6 (added 7 Aug). It is the only routine that can do this: the registry is not a file in either root - it lives in the app store and is reachable only through the MCP tool, which preflight cannot call because it runs offline. A preflight check would have to fake it."
+  }
 }
