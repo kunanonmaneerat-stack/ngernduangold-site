@@ -212,7 +212,14 @@
       "Default (all messages)"
     ],
     "friends": 1,
-    "verdict": "ENDPOINT HEALTHY - if buy_intent_click rises and sales stay 0, the offer is the problem, not a dead endpoint. That distinction was unavailable until now."
+    "verdict": "ENDPOINT HEALTHY - if buy_intent_click rises and sales stay 0, the offer is the problem, not a dead endpoint. That distinction was unavailable until now.",
+    "gumroad": {
+      "url": "https://ngernduangold.gumroad.com/l/debt-toolkit",
+      "verified_at": "2026-08-07",
+      "verified_how": "Opened the product page in a real browser: title renders, price $5.97 shown, 'I want this!' button present, 22.7 KB file attached, LINE contact live.",
+      "state": "PURCHASABLE",
+      "_meaning": "This closes the ambiguity in preflight's `sales recorded` WARN. The money endpoint is NOT broken, so an empty sales log means nobody has bought - a demand problem, not a plumbing one. Note the two figures the guard compares are different funnels: affiliate_click is AccessTrade bank commission, sales-log is the 199 THB own product. Keep the WARN - zero revenue is a real fact that should stay loud - but do not spend another session re-checking the plumbing."
+    }
   },
   "ga4": {
     "_why": "Custom dimensions are NOT retroactive. Registered 1 Aug 2026, the same day the three buy buttons went live, so the 8 Aug read can say which button was clicked and not merely that one was.",
@@ -235,11 +242,24 @@
       "filter_operation": "Exclude",
       "ips": [
         "184.22.17.215/32",
-        "27.130.5.93/32"
+        "27.130.5.93/32",
+        "27.130.8.134/32"
       ],
-      "verified_at": "2026-08-01",
+      "verified_at": "2026-08-07",
       "verified_how": "Opened GA4 Admin > Data streams > ngernduangold web > Configure tag settings > Define internal traffic, added 27.130.5.93/32 and re-opened the rule to confirm it persisted; Admin > Data filters shows Internal Traffic / Exclude / Active.",
-      "on_mismatch": "preflight WARNs. Fix by adding the new CIDR in GA4 Define internal traffic AND here. Do not widen to a /24 - a Thai residential /24 can contain real readers, and excluding them is a worse error than counting a few of our own hits."
+      "on_mismatch": "preflight WARNs within a day. Add the new CIDR in GA4 Define internal traffic AND here. Do NOT widen to /16 to 'stop the churn': 27.130.0.0/16 is a Thai consumer ISP range that certainly contains real readers, and excluding them is a worse error than a 30-second edit every few days. The rotation is cheap now precisely BECAUSE the guard catches it - before 1 Aug it went unnoticed for weeks.",
+      "rotation_history": [
+        {
+          "seen": "2026-08-01",
+          "ip": "27.130.5.93",
+          "note": "replaced 184.22.17.215 which had been dead for weeks"
+        },
+        {
+          "seen": "2026-08-07",
+          "ip": "27.130.8.134",
+          "note": "6 days later, and into a DIFFERENT /24 - the ISP does not keep this box inside one block"
+        }
+      ]
     },
     "clicktest_isolation": {
       "_why": "Two different populations needed two different fixes and neither one covers the other. clicktest looks like a bot to GA4, so the IP rule was never what protected it; real-Chrome automation does not look like a bot, so source-side opt-out in clicktest was never what protected that. Writing this down because the next reader will otherwise assume one fix was enough.",

@@ -433,7 +433,7 @@
         "tiktok": null,
         "ig": null,
         "fb": null,
-        "youtube": null,
+        "youtube": "scheduled (yt-api dJHvARwPcQQ)",
         "threads": null
       }
     },
@@ -456,7 +456,7 @@
         "tiktok": null,
         "ig": null,
         "fb": null,
-        "youtube": null,
+        "youtube": "scheduled (yt-api 4hgcMrX8cyI)",
         "threads": null
       }
     },
@@ -479,13 +479,13 @@
         "tiktok": null,
         "ig": null,
         "fb": null,
-        "youtube": null,
+        "youtube": "published (yt-api -AmDNeoPHxU)",
         "threads": null
       }
     },
     {
       "id": "b3-07",
-      "date": "2026-08-04",
+      "date": "2026-08-07",
       "topic_th": "เงินเดือนสามหมื่น ได้วงเงินบัตรเครดิตเท่าไหร่?",
       "status": "Rendered",
       "reel": "reels/2026-08-02_b3-07.mp4",
@@ -504,11 +504,12 @@
         "fb": null,
         "youtube": null,
         "threads": null
-      }
+      },
+      "redated_note": "moved 7 Aug 2026: original slot fell inside the 3-5 Aug agent blackout so it was never posted anywhere; clip was rendered 18 Jul and is still unused"
     },
     {
       "id": "b3-04",
-      "date": "2026-08-05",
+      "date": "2026-08-08",
       "topic_th": "รถอายุสิบห้าปีจัดไฟแนนซ์ได้ไหม?",
       "status": "Rendered",
       "reel": "reels/2026-07-30_b3-04.mp4",
@@ -527,7 +528,8 @@
         "fb": null,
         "youtube": null,
         "threads": null
-      }
+      },
+      "redated_note": "moved 7 Aug 2026: original slot fell inside the 3-5 Aug agent blackout so it was never posted anywhere; clip was rendered 18 Jul and is still unused"
     }
   ]
 }
