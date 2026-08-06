@@ -19,6 +19,17 @@ REM is exactly the outage we care about. exit 2 = down (writes SITE-DOWN-ALERT.m
 REM exit 1 = could not look (no network) and is deliberately NOT reported as an outage.
 "%PY%" "%BASE%\..\tools\uptime_check.py" >> "%LOG%" 2>&1
 if errorlevel 2 echo [%date% %time%] !! SITE DOWN - see cowork-inbox\SITE-DOWN-ALERT.md >> "%LOG%"
+REM agent-gap: did the AGENT layer do anything in the last 26h? Added 7 Aug 2026.
+REM This block exists because THIS layer is the only one that survives the failure it
+REM watches for. Cowork agent tasks fire only while the desktop app is open, so when the
+REM owner is away every agent stops silently - 27-30 Jul (4 days) and 3-5 Aug (3 days),
+REM neither noticed until someone asked. The ops Slack channel has a written rule saying
+REM "no message = the system is dead", but Slack can only be written BY an agent, so the
+REM alarm died with the thing it was alarming about. exit 2 = silent, writes the alert;
+REM exit 1 = could not tell, which is deliberately NOT reported as silence.
+echo [%date% %time%] agent_gap_check >> "%LOG%"
+"%PY%" "%BASE%\..\tools\agent_gap_check.py" >> "%LOG%" 2>&1
+if errorlevel 2 echo [%date% %time%] !! AGENT LAYER SILENT - see cowork-inbox\AGENT-SILENT-ALERT.md >> "%LOG%"
 "%PY%" "%BASE%\dispatcher.py" >> "%LOG%" 2>&1
 echo [%date% %time%] daily_content start >> "%LOG%"
 "%PY%" "%BASE%\daily_content.py" >> "%LOG%" 2>&1

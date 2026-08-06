@@ -163,13 +163,13 @@
     {
       "date": "2026-08-08",
       "task": "ngernduangold-buy-intent-gate",
-      "status": "OPEN",
+      "status": "OPEN - WINDOW DIRTY",
       "decides": [
         "buy button placement",
         "whether buy intent is real"
       ],
-      "count_from": "2026-08-02",
-      "note": "READ THIS BEFORE COMPUTING ANYTHING. Do NOT compare against any window that includes data before 2 Aug 2026. Two separate sources of our own traffic were reaching GA4 until 1 Aug: (a) clicktest's Playwright clicks - hits did leave (POST /g/collect verified) and GA4 dropped most of them as known bots (HeadlessChrome + webdriver=true), but 'most' is not 'all' and the split is unknowable retroactively; (b) real-Chrome automation from this machine, which does NOT look like a bot and was NOT dropped - the GA4 internal-traffic rule that should have excluded it had been pinned to a rotated-away IP and matched nothing. So affiliate_click = 9 for Jul is an upper bound on real human clicks, not a baseline. Both sources were closed on 1 Aug; 2 Aug onward is clean. If the gate needs a comparison, compare clean days to clean days or say plainly that no valid baseline exists yet."
+      "count_from": "2026-08-06",
+      "note": "REVISED 7 Aug 2026. count_from was 2026-08-02, but 3, 4 and 5 Aug were an agent-layer blackout - no posts, no traffic driven, nothing measured. The clean window is 6-7 Aug = TWO days, not seven. Firing this gate on schedule produces an automatic 'no' about a test that was never run - exactly what just happened to batch3. Either move the gate out by the number of blackout days, or state plainly in its output that the window was too short to decide. Do NOT compare against July: affiliate_click before 2 Aug includes our own automation (see ga4.internal_traffic and ga4.clicktest_isolation)."
     }
   ],
   "specs": {
@@ -179,7 +179,10 @@
   },
   "slack": {
     "ops": "C0BLWT5EEG1",
-    "action": "C0BLRL411V3"
+    "action": "C0BLRL411V3",
+    "canvas": "F0BPD85PR40",
+    "canvas_url": "https://cowork-z7y1217.slack.com/docs/T0BLGA1MG73/F0BPD85PR40",
+    "_how_to_use": "Canvas = state (open items, current numbers) - UPDATE it, never re-broadcast. ops channel = new events only. action channel = things needing the owner's hands. Audit 7 Aug 2026: ops was running 15.7 msg/day averaging 1,766 chars, 72% over 1,500 chars, carrying ~12 real decisions inside 70,633 characters, of which one was ever closed. Volume was hiding the signal, not delivering it."
   },
   "limits": {
     "_source": "POSTING-POLICY_antispam_20260702.md rule 2",
@@ -244,5 +247,20 @@
       "owner": "tools/postdeploy_click_test.py (CC, 1 Aug 2026)",
       "self_check": "The run counts its own requests to */collect and FAILs if any escape, so the one-time manual proof (1 -> 0) is re-proved on every run. Reverse-tested 1 Aug: opt-out on = 0 hits, opt-out removed = 2 hits."
     }
-  }
+  },
+  "blackouts": [
+    {
+      "dates": "2026-07-27..2026-07-30",
+      "days": 4,
+      "cause": "schedule.json pipe broken"
+    },
+    {
+      "dates": "2026-08-03..2026-08-05",
+      "days": 3,
+      "cause": "Cowork agent tasks only fire while the desktop app is open; owner away. The cron layer ran normally all three days, so nothing looked wrong on disk.",
+      "cost": "batch4-gate fired 6 Aug on a 7-day window with 3 blank days -> verdict 'cannot be measured'. A week of production bought no answer.",
+      "detected_by": "nobody at the time; found 7 Aug by auditing Slack silence",
+      "now_guarded_by": "tools/agent_gap_check.py on the cron layer"
+    }
+  ]
 }
