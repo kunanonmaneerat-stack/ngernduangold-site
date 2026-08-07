@@ -16,7 +16,10 @@
       "state": "active",
       "auto": true,
       "note": "uploader tools/yt_upload_batch2.py --live --dates YYYY-MM-DD",
-      "kind": "video"
+      "kind": "video",
+      "studio_url": "https://studio.youtube.com/channel/UCVuqb7l5rJ4Q7PUKSIgsL4w/videos/short",
+      "baseline_views": null,
+      "_baseline_note": "channel-heartbeat used to hard-code 'normal is 20-35 views/clip in 24-48h, under 10 after 48h = watch'. That was a July figure nobody ever refreshed, so the guard was judging against a number that had quietly stopped being true. Left null on purpose: the heartbeat now reports raw view counts instead of scoring them, and will only score again once someone sets a figure here with a date."
     },
     "facebook": {
       "state": "manual",
@@ -35,7 +38,10 @@
         "_why_it_matters": "This was never written down, so the 6 Aug gate and the first version of the 7 Aug CC order both planned around a Facebook video capability that does not exist. Meta token was revoked permanently on 18 Jul, so any Reel has to go through the browser on the owner's machine - which is Cowork's side, not CC's. Assigning it to CC would have produced a silent no-op.",
         "current_task": "ngernduangold-fb-reel-backfill (Cowork, 1/day 15:00, 9-13 Aug 2026, then retire)",
         "open_question": "CC to confirm what cc-dispatcher-backfill (23 Jul) was, and whether it still works."
-      }
+      },
+      "page_id": "583765282304956",
+      "composer_url": "https://business.facebook.com/latest/composer?asset_id=583765282304956",
+      "_id_note": "Was written literally into three prompts (fb-evening-safetynet, knowledge-post-noon, fb-reel-backfill) and existed nowhere in policy.json. Same one-fact-many-places class that caused the 27-30 Jul blackout. Prompts now read it from here."
     },
     "threads": {
       "state": "active",
@@ -359,5 +365,33 @@
     "_why_it_matters": "preflight/check_task_mirror compares the two roots by FILE CONTENT, so a decoy whose bytes match the live copy reads as PASS. The guard proves the files agree; it cannot prove either side is actually scheduled. This is notes 29/30 in a new shape - not drift between copies, but a file that looks mirrored and healthy while being unreachable. On 1 Aug the weekly-review tombstone came from exactly this confusion about which root owns what.",
     "rule": "Before editing any task prompt: confirm the id appears in list_scheduled_tasks. If it does not, the Cowork file is a decoy and the change must be made in the CC root instead. Never delete files from the other agent's root.",
     "guarded_by": "cowork-task-watchdog step 2.6 (added 7 Aug). It is the only routine that can do this: the registry is not a file in either root - it lives in the app store and is reachable only through the MCP tool, which preflight cannot call because it runs offline. A preflight check would have to fake it."
+  },
+  "audits": {
+    "prompt_sweep_20260807": {
+      "scanned": "25 enabled Cowork tasks + 2 CC-side reachable",
+      "found": {
+        "evidence_after_external_call": 10,
+        "designed_silent_failure": 3,
+        "hardcoded_facts": 13,
+        "start_signal_as_success": 3,
+        "cap_violation": 1,
+        "self_contradiction": 7
+      },
+      "fixed_same_day": [
+        "ngernduangold-fb-reel-backfill (cap violation 2h26m < 3h - self-inflicted 2h earlier)",
+        "ngernduangold-weekly-review (tombstone restored from .bak, live since 1 Aug)",
+        "daily-social-post-reminder (no evidence step at all; scheduled-vs-published conflated)",
+        "ngernduangold-channel-heartbeat (no branch for state=retired; hardcoded dates/quota/thresholds; best-effort log)",
+        "bybit-api-key-rotation (hardcoded '14 days left', actually 34; log-is-alive used as proof key was rotated)"
+      ],
+      "still_open": [
+        "ngernduangold-funnel-endpoint-check: checks 2 of 3 auto-replies, misses the one the whole FB-Groups funnel hangs on; proof-of-run sits after the step most likely to fail (LINE login wall)",
+        "ngernduangold-fb-page-comment-link: 'ไม่ fail ดัง' downgrades a real failure, and skipping the ledger append makes the guard report the day as not done - it says so itself",
+        "ngernduangold-yt-comment-link / threads-daily / knowledge-post-noon: ledger written after the post, so a post that succeeds then errors leaves no row and the next run may repost",
+        "cascade-bot-weekly-check: no local artifact at all, ends at Slack",
+        "cowork-cc-review-loop: Slack channel ids hard-coded in step 0 while step 2 says to read them from LOOP_POLICY.md"
+      ],
+      "_note": "Fixed in order of how soon each fires, not how bad each looked. The cap violation was two days from firing on a page with two prior anti-spam offences, and I had introduced it myself two hours earlier by doing the arithmetic wrong in a comment that claimed the gap was fine."
+    }
   }
 }
