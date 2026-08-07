@@ -185,6 +185,17 @@ def clean_text(value: str) -> str:
     return re.sub(r"\s+", " ", value).strip().casefold()
 
 
+# Which statuses mean "a human has to do something". Module-level on purpose (7 Aug 2026):
+# it used to be a local inside the summary function, so the one rule that decides whether
+# the guard exits 2 could not be imported, could not be tested, and could drift away from
+# the status strings the check_* functions actually return. That drift has already bitten
+# once - the note below records a verdict rename that stopped matching the literal "FAIL".
+# SKIPPED is deliberately absent: "the task ran and correctly did nothing" is a healthy
+# day and must not page anyone. FAILED is present: the ledger saying an attempt failed is
+# exactly the case that needs a person.
+ACTION_REQUIRED = {"FAIL", "FAILED", "NOT-POSTED"}
+
+
 def result(channel: str, status: str, evidence: str, action: str = "-") -> dict[str, str]:
     return {"channel": channel, "status": status, "evidence": evidence, "action": action}
 
@@ -621,6 +632,27 @@ def check_facebook(target: date, item: dict[str, Any] | None) -> dict[str, str]:
 
 
 def check_facebook_comment(target: date) -> dict[str, str]:
+    """OK / SKIPPED / FAILED / NONE for today's page comment-link.
+
+    SKIPPED and FAILED were added 7 Aug 2026. Before that this function knew only
+    "found a comment row" or "found nothing", so three genuinely different days looked
+    identical from here:
+
+      - the task ran and commented                      -> correct
+      - the task ran and correctly did nothing, because the page had already been
+        commented on, or there was no new page post to comment under
+      - the task never ran, or ran and failed
+
+    All three reported "no comment-link ledger entry today", i.e. a day that worked
+    perfectly and a day that silently failed produced the same line. The task's own
+    prompt admitted this - it said to skip the ledger append when idempotent and then
+    noted, in the same sentence, that the guard would therefore report the day as not
+    done. The prompt now writes an explicit row every run; this reads it.
+
+    Precedence matches ledger_evidence: a real comment wins over skipped, and skipped
+    wins over failure, because a retry that eventually succeeded must not read as failed.
+    """
+    found: dict[str, dict[str, str]] = {}
     if POST_LEDGER_PATH.is_file():
         try:
             for raw_line in POST_LEDGER_PATH.read_text(encoding="utf-8", errors="replace").splitlines():
@@ -630,7 +662,10 @@ def check_facebook_comment(target: date) -> dict[str, str]:
                     continue
                 if not isinstance(entry, dict):
                     continue
-                if entry.get("channel") != "facebook" or entry.get("type") != "comment":
+                if entry.get("channel") != "facebook":
+                    continue
+                kind = str(entry.get("type", "")).casefold()
+                if kind not in ("comment", "skipped", "failure"):
                     continue
                 timestamp = entry.get("ts")
                 if not isinstance(timestamp, str):
@@ -641,14 +676,32 @@ def check_facebook_comment(target: date) -> dict[str, str]:
                     continue
                 if parsed.tzinfo is None:
                     parsed = parsed.replace(tzinfo=BANGKOK)
-                if parsed.astimezone(BANGKOK).date() == target:
-                    return result("FACEBOOK-COMMENT", "OK", f"comment-link in ledger {timestamp}")
+                if parsed.astimezone(BANGKOK).date() != target:
+                    continue
+                # a skipped/failure row from the noon text post is not about the comment
+                # layer; only rows written by the comment task itself count here
+                if kind != "comment" and "comment" not in str(entry.get("source", "")).casefold():
+                    continue
+                found.setdefault(kind, {"ts": timestamp, "note": str(entry.get("note", ""))})
         except OSError:
             pass
+
+    if "comment" in found:
+        return result("FACEBOOK-COMMENT", "OK",
+                      f"comment-link in ledger {found['comment']['ts']}")
+    if "skipped" in found:
+        note = found["skipped"]["note"] or "no reason recorded"
+        return result("FACEBOOK-COMMENT", "SKIPPED",
+                      f"task ran and correctly did nothing: {note}")
+    if "failure" in found:
+        note = found["failure"]["note"] or "no reason recorded"
+        return result("FACEBOOK-COMMENT", "FAILED",
+                      f"task ran and failed: {note}",
+                      "read the note, then check the 21:30 task / extension bridge")
     return result(
         "FACEBOOK-COMMENT",
         "NONE",
-        "no comment-link ledger entry today",
+        "no comment-link row of any kind today - the task did not run, or died before writing",
         "check 21:30 task / extension bridge",
     )
 
@@ -969,7 +1022,6 @@ def main() -> int:
     # contradicting itself is how a dead channel stays dead for five days.
     # SOURCE-SIDE is deliberately NOT here: it means we did our part and only the
     # platform-side confirmation is unavailable.
-    ACTION_REQUIRED = {"FAIL", "FAILED", "NOT-POSTED"}
     has_fail = any(channel["status"] in ACTION_REQUIRED for channel in channels)
     payload: dict[str, Any] = {
         "checked_date": target.isoformat(),

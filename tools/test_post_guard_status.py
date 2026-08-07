@@ -104,6 +104,52 @@ def main() -> int:
         write_ledger([])
         check("missing: nothing anywhere", PG.check_tiktok(TARGET, ITEM_WITH_CAPTIONS, checked)["status"], "NOT-POSTED")
 
+        print("FACEBOOK-COMMENT  (three days that used to look identical)")
+        # check_facebook_comment reads POST_LEDGER_PATH, not AUTOMATION_LOG, so point it
+        # at the same temp file - otherwise this silently tests the real repo ledger and
+        # passes for the wrong reason, which is the failure mode this file exists to catch.
+        real_ledger_path = PG.POST_LEDGER_PATH
+        PG.POST_LEDGER_PATH = tmpdir / "post-ledger.jsonl"
+        try:
+            def fbrow(kind, note="", source="fb-comment-daily", day="2026-07-30T21:30:00+07:00"):
+                r = {"type": kind, "channel": "facebook", "ts": day, "source": source}
+                if note:
+                    r["note"] = note
+                return r
+
+            write_ledger([fbrow("comment")])
+            check("commented -> OK", PG.check_facebook_comment(TARGET)["status"], "OK")
+
+            write_ledger([fbrow("skipped", "idempotent - เพจคอมเมนต์ไปแล้ว")])
+            check("ran, correctly did nothing -> SKIPPED", PG.check_facebook_comment(TARGET)["status"], "SKIPPED")
+
+            write_ledger([fbrow("failure", "extension + fallback both dead")])
+            check("ran and failed -> FAILED", PG.check_facebook_comment(TARGET)["status"], "FAILED")
+
+            write_ledger([])
+            check("no row at all -> NONE", PG.check_facebook_comment(TARGET)["status"], "NONE")
+
+            # precedence: a retry that eventually worked must not read as failed or skipped
+            write_ledger([fbrow("failure", "first try died"), fbrow("skipped", "x"), fbrow("comment")])
+            check("comment beats skipped and failure", PG.check_facebook_comment(TARGET)["status"], "OK")
+            write_ledger([fbrow("failure", "first try died"), fbrow("skipped", "then correctly skipped")])
+            check("skipped beats failure", PG.check_facebook_comment(TARGET)["status"], "SKIPPED")
+
+            # a skipped row written by the NOON TEXT post is not about the comment layer
+            write_ledger([fbrow("skipped", "cap reached", source="knowledge-post-noon")])
+            check("noon-post skip must not read as comment done",
+                  PG.check_facebook_comment(TARGET)["status"], "NONE")
+
+            # yesterday's rows must not make today look done
+            write_ledger([fbrow("comment", day="2026-07-29T21:30:00+07:00")])
+            check("yesterday's comment does not count", PG.check_facebook_comment(TARGET)["status"], "NONE")
+
+            # SKIPPED must not escalate; FAILED must
+            check("SKIPPED is not action-required", "no" if "SKIPPED" in PG.ACTION_REQUIRED else "yes", "yes")
+            check("FAILED is action-required", "yes" if "FAILED" in PG.ACTION_REQUIRED else "no", "yes")
+        finally:
+            PG.POST_LEDGER_PATH = real_ledger_path
+
         print("INVARIANT")
         write_ledger([])
         for name, verdict in (("threads", PG.check_threads(TARGET, ITEM_WITH_CAPTIONS)),
@@ -117,7 +163,7 @@ def main() -> int:
             leftover.unlink()
         tmpdir.rmdir()
 
-    print("\n%d checks, %d failed" % (13, len(FAILS)))
+    print("\n%d checks, %d failed" % (23, len(FAILS)))
     if FAILS:
         print("FAILED:", ", ".join(FAILS))
         return 1
