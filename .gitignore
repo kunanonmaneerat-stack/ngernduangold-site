@@ -55,3 +55,11 @@ social-autopost/logs/
 # scratch files written by tools/test_preflight_checks.py
 tools/_test_*.tmp.*
 
+
+# build scratch swept in by a careless git add -A on 7 Aug 2026 - keep on disk, out of git
+_vidout/temp/
+_vidout/*_voice_tmp.wav
+_vidout/*.out
+_bh_tmp.py
+_build_head_tmp.py
+_show.py
