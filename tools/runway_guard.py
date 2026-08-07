@@ -22,7 +22,14 @@ USAGE
   python tools/runway_guard.py --json          # machine output for heartbeat/dispatcher
 
 EXIT CODES
-  0 = healthy      1 = runway below threshold      2 = sources disagree (drift)
+  0 = healthy (OK) or approved pause (PARKED)
+  1 = runway below threshold (LOW_RUNWAY), or an approved pause that has
+      expired with the queue still short (PARK_OVERRUN - report this loudly)
+  2 = sources disagree (DRIFT), or the park declaration itself is unusable
+
+VERDICTS
+  OK · PARKED · LOW_RUNWAY · PARK_OVERRUN · DRIFT
+  See the PLANNED PARK block below for why an empty queue is not always a fault.
 """
 import os, sys, json, io, argparse, datetime
 
@@ -33,8 +40,70 @@ MANIFEST = os.path.join(REPO, ".system_control", "content_manifest.json")
 SCHEDULE = os.path.join(REPO, "reels", "schedule.json")
 CONTENT_MAP = os.path.join(REPO, "social-autopost", "content_map.json")
 REELS_DIR = os.path.join(REPO, "reels")
+POLICY = os.path.join(REPO, ".system_control", "policy.json")
 
 DEFAULT_MIN_DAYS = 4
+
+
+# --------------------------------------------------------------------------
+# PLANNED PARK (added 7 Aug 2026)
+#
+# An empty queue is not always a failure. On 6 Aug the batch3 gate deliberately
+# parked video production for 9-10 Aug to wait for the 10 Aug decision, rather
+# than render clips that might be thrown away. Before this block, that planned
+# pause looked identical to the 27-30 Jul incident where the pipe silently broke.
+#
+# Two failure modes are possible here and BOTH must be avoided:
+#   crying wolf  - screaming LOW_RUNWAY every day of an approved pause, which
+#                  trains the owner to ignore this guard exactly when it matters
+#   sleeping     - a park with no end date, or an end date nobody enforces,
+#                  hides a genuinely dead pipe forever
+#
+# So a park is only honoured while it is unexpired. The moment `until` passes
+# with the queue still short, the verdict becomes PARK_OVERRUN and is LOUDER
+# than a plain low runway: the plan itself has now failed, not just the queue.
+# A park with a missing or unparseable `until` is refused outright - that is the
+# same "permanent rule written as a fixed date" bug class OPERATING-NOTES warns
+# about, just inverted into a permanent excuse.
+#
+# A park NEVER suppresses DRIFT (exit 2). Sources disagreeing means a clip
+# exists that the posting routines cannot see - that is broken plumbing, and
+# no scheduling decision makes it acceptable.
+# --------------------------------------------------------------------------
+def read_park(today, policy_path=None):
+    """-> (park_dict_or_None, note_or_None).
+
+    park_dict is returned only when today falls inside a well-formed window.
+    note carries a problem string when the park declaration itself is unusable.
+    """
+    path = policy_path or POLICY
+    try:
+        with io.open(path, encoding="utf-8") as fh:
+            pol = json.load(fh)
+    except Exception:
+        return None, None  # no policy = no park, not an error
+
+    park = (pol.get("content_supply") or {}).get("planned_park")
+    if not isinstance(park, dict):
+        return None, None
+
+    raw_until = park.get("until")
+    try:
+        until = datetime.date.fromisoformat(raw_until)
+    except Exception:
+        return None, ("planned_park has no usable 'until' (%r) - refusing to honour "
+                      "an open-ended pause" % (raw_until,))
+
+    try:
+        start = datetime.date.fromisoformat(park.get("from"))
+    except Exception:
+        start = None  # a park with only an end date still expires, so allow it
+
+    if start and today < start:
+        return None, None            # park has not begun
+    if today > until:
+        return None, "EXPIRED:%s" % until.isoformat()
+    return dict(park, _until=until.isoformat()), None
 
 
 def _load(path):
@@ -136,8 +205,35 @@ def main():
     if code == 0 and eff < args.min_days:
         code = 1
 
+    # A planned park can downgrade a low runway, but never a drift, and never
+    # once it has expired. See the PLANNED PARK block above.
+    park, park_note = read_park(today)
+    parked = False
+    if park_note and park_note.startswith("EXPIRED:"):
+        if code == 1:
+            code = 1
+            report["problems"].append(
+                "planned park ended %s and the queue is still short - the plan "
+                "failed, not just the queue" % park_note.split(":", 1)[1])
+            report["park_overrun"] = True
+    elif park_note:
+        report["problems"].append(park_note)
+        if code == 0:
+            code = 2
+    elif park and code == 1:
+        parked = True
+        report["park"] = {"until": park["_until"],
+                          "reason": park.get("reason"),
+                          "decided_by": park.get("decided_by")}
+        code = 0
+
     report["threshold_days"] = args.min_days
-    report["verdict"] = {0: "OK", 1: "LOW_RUNWAY", 2: "DRIFT"}[code]
+    if parked:
+        report["verdict"] = "PARKED"
+    elif report.get("park_overrun"):
+        report["verdict"] = "PARK_OVERRUN"
+    else:
+        report["verdict"] = {0: "OK", 1: "LOW_RUNWAY", 2: "DRIFT"}[code]
 
     if args.json:
         print(json.dumps(report, ensure_ascii=False))
@@ -153,7 +249,18 @@ def main():
         print("  PROBLEMS:")
         for p in report["problems"]:
             print("   - %s" % p)
-    if code == 1:
+    if parked:
+        p = report["park"]
+        print("  PARKED until %s by decision: %s" % (p["until"], p.get("decided_by")))
+        print("    reason: %s" % p.get("reason"))
+        print("  This is an approved pause, not a broken pipe. It stops being")
+        print("  approved at %s - after that this guard goes loud." % p["until"])
+    if report.get("park_overrun"):
+        print("  ACTION (LOUD): the approved pause has EXPIRED and nothing was queued.")
+        print("          Whatever the pause was waiting for either did not happen or")
+        print("          did not produce content. Escalate to the owner, do not extend")
+        print("          the park silently.")
+    elif code == 1:
         print("  ACTION: queue is running out. Render/wire the next batch now,")
         print("          or re-date unposted clips before the channels go silent.")
     if code == 2:

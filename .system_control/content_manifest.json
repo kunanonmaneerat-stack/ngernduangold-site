@@ -457,7 +457,7 @@
         "ig": null,
         "fb": null,
         "youtube": "scheduled (yt-api 4hgcMrX8cyI)",
-        "threads": null
+        "threads": "2026-08-07T05:09+07:00 (threads-video-idle-window)"
       }
     },
     {
@@ -502,7 +502,7 @@
         "tiktok": null,
         "ig": null,
         "fb": null,
-        "youtube": null,
+        "youtube": "scheduled (yt-api WihxvLH3wkI)",
         "threads": null
       },
       "redated_note": "moved 7 Aug 2026: original slot fell inside the 3-5 Aug agent blackout so it was never posted anywhere; clip was rendered 18 Jul and is still unused"

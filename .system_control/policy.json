@@ -393,5 +393,45 @@
       ],
       "_note": "Fixed in order of how soon each fires, not how bad each looked. The cap violation was two days from firing on a page with two prior anti-spam offences, and I had introduced it myself two hours earlier by doing the arithmetic wrong in a comment that claimed the gap was fine."
     }
+  },
+  "content_supply": {
+    "checked_at": "2026-08-07",
+    "checked_by": "cowork content-supply audit",
+    "video": {
+      "queued_days_from_today": 2,
+      "last_queued_day": "2026-08-08",
+      "unposted_rendered_clips_1080x1920": [
+        "b3-04"
+      ],
+      "clips_720p_unusable": [
+        "2026-07-11_kp04",
+        "2026-07-12_tl01b",
+        "2026-07-16_kp05",
+        "2026-07-17_eb02",
+        "2026-07-18_kp06",
+        "2026-07-19_eb03"
+      ],
+      "note_720p": "rendered but below the 1080x1920 clip spec - they FAIL check_queued_clip_spec. Do not queue them; they are not spare runway.",
+      "channel_runway": {
+        "youtube": "1 day (b3-04 on 8 Aug) then empty - this is the real gap",
+        "threads": "3 nights (b3-03, b3-07, b3-04 still unposted there)",
+        "facebook": "5 days via the 9-13 Aug backfill, which reuses already-published clips"
+      }
+    },
+    "text": {
+      "knowledge_posts_until": "2026-08-15",
+      "quote_cards_until": "2026-08-22",
+      "page2_posts_until": "2026-09-11",
+      "verdict": "sufficient - text is not the constraint"
+    },
+    "planned_park": {
+      "scope": "video queue only",
+      "from": "2026-08-09",
+      "until": "2026-08-10",
+      "reason": "batch3 gate deferred to 10 Aug; rendering batch4 before that risks producing clips that the gate then tells us not to post",
+      "decided_by": "automation-log/GATE-batch3_20260806.md section 4",
+      "resume_by": "2026-08-11",
+      "script_bottleneck_precleared": "automation-log/BATCH4-PRODUCTION-KIT.md"
+    }
   }
 }
