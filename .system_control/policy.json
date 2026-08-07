@@ -392,10 +392,27 @@
         "cowork-cc-review-loop: Slack channel ids hard-coded in step 0 while step 2 says to read them from LOOP_POLICY.md"
       ],
       "_note": "Fixed in order of how soon each fires, not how bad each looked. The cap violation was two days from firing on a page with two prior anti-spam offences, and I had introduced it myself two hours earlier by doing the arithmetic wrong in a comment that claimed the gap was fine."
+    },
+    "synthetic_traffic_20260808": {
+      "why": "preflight's `synthetic traffic` WARN has fired every run for weeks. Nobody had checked whether the number was moving, so each reader started the same investigation from scratch.",
+      "measured": "direct sessions in the 28-day rolling window, read from git history of automation-log/ga4-metrics.csv",
+      "series": {
+        "2026-07-26": 196,
+        "2026-07-27": 185,
+        "2026-07-30": 175,
+        "2026-07-31": 169,
+        "2026-08-01": 166,
+        "2026-08-02": 172,
+        "2026-08-06": 149,
+        "2026-08-07": 141
+      },
+      "reading": "falling steadily since 26 Jul, which is when 16 agent tasks were paused. Consistent with the direct traffic having been our own automation. NOT attributable to the 7 Aug GA4 internal-IP fix - the decline predates it.",
+      "prediction": "if this was our own robots, direct keeps falling as old days age out of the 28-day window. Re-read on 2026-08-20: below ~90 means the explanation held and the WARN can be re-tuned. Flat or rising with engagement still 0 means something ELSE is hitting the site and the real cause was never found.",
+      "do_not": "do not silence this WARN before that date - zero-engagement traffic at 77% is worth staying loud about"
     }
   },
   "content_supply": {
-    "checked_at": "2026-08-07",
+    "checked_at": "2026-08-08",
     "checked_by": "cowork content-supply audit",
     "video": {
       "queued_days_from_today": 2,

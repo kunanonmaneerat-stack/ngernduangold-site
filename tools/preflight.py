@@ -117,14 +117,104 @@ def check_queue():
         data = json.loads(out.stdout or "{}")
         v = data.get("verdict", "?")
         eff = data.get("effective_runway_days", "?")
+        probs = "; ".join(data.get("problems", []))[:200]
         if v == "OK":
             add("content queue", "PASS", f"{eff} day(s) queued, 3 sources agree")
         elif v == "LOW_RUNWAY":
             add("content queue", "WARN", f"only {eff} day(s) left - queue the next batch")
+        elif v == "PARKED":
+            # An approved pause is not a fault, but it must stay VISIBLE - a park
+            # that prints nothing is indistinguishable from a healthy queue, which
+            # is how a pause quietly becomes a permanent outage.
+            park = data.get("park", {})
+            add("content queue", "PASS",
+                f"queue parked until {park.get('until')} by {park.get('decided_by')} "
+                f"- goes loud the day after")
+        elif v == "PARK_OVERRUN":
+            add("content queue", "FAIL",
+                probs or "approved pause expired with the queue still empty")
+        elif v == "DRIFT":
+            add("content queue", "FAIL", probs or "runway sources disagree")
         else:
-            add("content queue", "FAIL", "; ".join(data.get("problems", []))[:200])
+            # Whoever adds the next verdict to runway_guard must be told that this
+            # consumer does not know it yet, instead of getting a blank FAIL.
+            # That is exactly what happened when PARKED was added on 7 Aug 2026.
+            add("content queue", "FAIL",
+                f"runway_guard returned a verdict preflight does not know: {v!r}"
+                + (f" ({probs})" if probs else ""))
     except Exception as exc:
         add("content queue", "FAIL", f"runway_guard did not run: {exc}")
+
+
+RUNLOG_DIR = os.path.join(REPO, "automation-log")
+STUCK_RUN_HOURS = 12
+
+
+def check_stuck_runs():
+    """A routine that wrote `started` and never wrote a result.
+
+    WHY THIS EXISTS (7 Aug 2026). Five task prompts were changed today to write
+    evidence BEFORE calling anything that can fail - the fix for the watchdog that
+    died silently for 12 days because its only trace came after the Slack call.
+    But evidence nobody reads is not evidence. `log_run.py` keeps the LAST row per
+    routine, so a round that begins and dies leaves `status: started` sitting there
+    forever, looking no different from a healthy table to anyone not diffing it.
+
+    This closes that loop: a `started` row older than STUCK_RUN_HOURS means a round
+    began and never finished. That is precisely the failure the ordering change was
+    meant to make visible, so it must be surfaced rather than merely recorded.
+
+    Deliberately NOT a FAIL: a long-running routine can legitimately be mid-flight,
+    and this check runs at 08:00 alongside tasks that fire at the same hour.
+    """
+    import glob as _glob
+    latest = {}
+    try:
+        files = sorted(_glob.glob(os.path.join(RUNLOG_DIR, "20??-??.jsonl")))
+    except Exception as exc:
+        add("stuck runs", "WARN", "cannot list runlogs: %s" % exc)
+        return
+    if not files:
+        add("stuck runs", "WARN", "no runlog files found - proof-of-run may not be wired")
+        return
+    for fn in files:
+        try:
+            for line in io.open(fn, encoding="utf-8"):
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    e = json.loads(line)
+                except Exception:
+                    continue
+                if "routine" in e and "ts" in e:
+                    latest[e["routine"]] = e          # keep last per routine
+        except OSError:
+            continue
+
+    now = datetime.datetime.now()
+    stuck = []
+    for routine, e in sorted(latest.items()):
+        if str(e.get("status", "")).lower() != "started":
+            continue
+        try:
+            ts = datetime.datetime.fromisoformat(str(e["ts"]))
+            if ts.tzinfo is not None:
+                ts = ts.replace(tzinfo=None)
+        except Exception:
+            stuck.append("%s (unreadable ts %r)" % (routine, e.get("ts")))
+            continue
+        age = (now - ts).total_seconds() / 3600.0
+        if age >= STUCK_RUN_HOURS:
+            stuck.append("%s (%.0fh ago)" % (routine, age))
+
+    if stuck:
+        add("stuck runs", "WARN",
+            "%d routine(s) wrote 'started' and never a result -> %s"
+            % (len(stuck), ", ".join(stuck[:4])))
+    else:
+        add("stuck runs", "PASS",
+            "%d routine(s) tracked, none stuck mid-run" % len(latest))
 
 
 def check_delivery_gap():
@@ -731,7 +821,7 @@ def check_task_mirror():
     if not (os.path.isdir(OWN_TASKS_DIR) and os.path.isdir(SCHEDULED_DIR)):
         add("task mirror", "WARN", "one of the two task roots is not visible here")
         return
-    diverged, only_cc = [], []
+    diverged, only_cc, settled = [], [], []
     for name in sorted(os.listdir(OWN_TASKS_DIR)):
         a = os.path.join(OWN_TASKS_DIR, name, "SKILL.md")
         b = os.path.join(SCHEDULED_DIR, name, "SKILL.md")
@@ -741,11 +831,26 @@ def check_task_mirror():
             only_cc.append(name)
             continue
         try:
-            if io.open(a, encoding="utf-8", errors="replace").read() != \
-               io.open(b, encoding="utf-8", errors="replace").read():
-                diverged.append(name)
+            ta = io.open(a, encoding="utf-8", errors="replace").read()
+            tb = io.open(b, encoding="utf-8", errors="replace").read()
         except OSError:
             continue
+        if ta == tb:
+            continue
+        # A collision that has ALREADY been resolved is not drift.
+        # `ngernduangold-weekly-review` is the worked example: one id once meant two
+        # unrelated jobs, so one side was replaced by a tombstone that says "this id
+        # moved, report and stop". The two files are supposed to differ - flagging it
+        # forever trains the reader to skim past this check, which is how the real
+        # divergence on `pantip-monitor` went unnoticed for a day.
+        # Only ONE side may be retired: if both sides are live and differ, that is the
+        # dangerous case and it still warns.
+        ra, rb = bool(_RETIRED.match(_description_of(ta).strip())), \
+                 bool(_RETIRED.match(_description_of(tb).strip()))
+        if ra != rb:
+            settled.append(name)
+        else:
+            diverged.append(name)
     bits = []
     if diverged:
         bits.append("%d id(s) mean different orders in the two roots -> %s"
@@ -754,7 +859,17 @@ def check_task_mirror():
         bits.append("%d cc-only task(s) absent from the mirror -> %s"
                     % (len(only_cc), ", ".join(only_cc[:4])))
     if bits:
+        if settled:
+            bits.append("(%d resolved collision(s) ignored: %s)"
+                        % (len(settled), ", ".join(settled[:3])))
         add("task mirror", "WARN", "; ".join(bits))
+    elif settled:
+        # Still say it out loud. A resolved collision is fine, but it must not
+        # become invisible either - if a tombstone is ever overwritten back into a
+        # live prompt, the reader needs to have known the tombstone was there.
+        add("task mirror", "PASS",
+            "roots agree, except %d id(s) deliberately retired on one side: %s"
+            % (len(settled), ", ".join(settled[:3])))
     else:
         add("task mirror", "PASS", "both task roots agree on every shared id")
 
@@ -1245,6 +1360,7 @@ def main():
     args = ap.parse_args()
 
     check_queue()
+    check_stuck_runs()
     check_delivery_gap()
     check_repeat_failures()
     check_posting_cap()

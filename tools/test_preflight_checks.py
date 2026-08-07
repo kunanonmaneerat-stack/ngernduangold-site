@@ -92,6 +92,22 @@ def run_check(fn_name, **consts):
     return P.results[0]["status"] if P.results else "(no result)"
 
 
+def run_check_detail(fn_name, **consts):
+    """Same as run_check but returns the DETAIL text, not the status.
+
+    Added 7 Aug 2026: a check can return the right status for the wrong reason,
+    or the right status with an empty message that tells the reader nothing.
+    check_queue's unknown-verdict branch was doing exactly that. Asserting on
+    status alone would not have caught it.
+    """
+    importlib.reload(P)
+    for k, v in consts.items():
+        setattr(P, k, v)
+    P.results[:] = []
+    getattr(P, fn_name)()
+    return P.results[0].get("detail", "") if P.results else ""
+
+
 def run_cap(rows):
     importlib.reload(P)
     with io.open(TMP, "w", encoding="utf-8", newline="\n") as fh:
@@ -640,6 +656,62 @@ check("queued clip missing on disk -> FAIL",
                 SCHEDULE=write("s1.json", {_today: {"file": "definitely-not-here.mp4"}})),
       "FAIL" if __import__("shutil").which("ffprobe") else "FAIL")
 
+print("\nSTUCK RUNS  (evidence written before the risky step, then actually read)")
+
+
+def runlog_dir(rows, name="2026-08.jsonl"):
+    """Build a fake automation-log holding one month file."""
+    d = os.path.join(TMPDIR, "runlogs_%d" % abs(hash(str(rows))))
+    os.makedirs(d, exist_ok=True)
+    for f in os.listdir(d):
+        os.unlink(os.path.join(d, f))
+    with io.open(os.path.join(d, name), "w", encoding="utf-8", newline="\n") as fh:
+        for r in rows:
+            fh.write(json.dumps(r, ensure_ascii=False) + "\n")
+    return d
+
+
+def _run(routine, status, hours_ago):
+    ts = (datetime.datetime.now() - datetime.timedelta(hours=hours_ago)).isoformat(timespec="seconds")
+    return {"ts": ts, "routine": routine, "status": status, "summary": "x", "metrics": {}}
+
+
+check("a finished run is not stuck",
+      run_check("check_stuck_runs", RUNLOG_DIR=runlog_dir([_run("a", "ok", 30)])), "PASS")
+check("started 30h ago and never finished",
+      run_check("check_stuck_runs", RUNLOG_DIR=runlog_dir([_run("a", "started", 30)])), "WARN")
+# The whole point of writing `started` first is that the finishing row overwrites it.
+check("started THEN ok is a completed run, not a stuck one",
+      run_check("check_stuck_runs",
+                RUNLOG_DIR=runlog_dir([_run("a", "started", 30), _run("a", "ok", 29)])), "PASS")
+check("started THEN fail is also finished (it reported)",
+      run_check("check_stuck_runs",
+                RUNLOG_DIR=runlog_dir([_run("a", "started", 30), _run("a", "fail", 29)])), "PASS")
+# A round that is genuinely mid-flight must not be called stuck - this check runs at
+# 08:00, the same hour several tasks fire.
+check("started 1h ago is mid-flight, not stuck",
+      run_check("check_stuck_runs", RUNLOG_DIR=runlog_dir([_run("a", "started", 1)])), "PASS")
+check("one stuck routine among healthy ones still fires",
+      run_check("check_stuck_runs",
+                RUNLOG_DIR=runlog_dir([_run("a", "ok", 2), _run("b", "started", 40),
+                                       _run("c", "ok", 1)])), "WARN")
+check("the stuck routine is NAMED, not just counted",
+      "b" in run_check_detail("check_stuck_runs",
+                RUNLOG_DIR=runlog_dir([_run("a", "ok", 2), _run("b", "started", 40)])),
+      True)
+check("an unreadable timestamp is surfaced, never skipped",
+      run_check("check_stuck_runs",
+                RUNLOG_DIR=runlog_dir([{"ts": "not-a-date", "routine": "a", "status": "started"}])),
+      "WARN")
+check("no runlog at all is a WARN, never a silent PASS",
+      run_check("check_stuck_runs", RUNLOG_DIR=os.path.join(TMPDIR, "no-runlogs")), "WARN")
+# post-ledger.jsonl lives in the same directory and has no `routine` key. Reading it
+# as a runlog would be the same class of bug as the 27-30 Jul manifest/schedule mixup.
+check("rows without a routine key are ignored, not crashed on",
+      run_check("check_stuck_runs",
+                RUNLOG_DIR=runlog_dir([{"type": "video", "channel": "threads", "ts": "2026-08-01"},
+                                       _run("a", "ok", 2)])), "PASS")
+
 print("\nDELEGATED CHECKS  (queue + build gate shell out - prove the mapping)")
 
 
@@ -656,9 +728,35 @@ check("runway_guard says OK",
 check("runway_guard says LOW_RUNWAY",
       run_check("check_queue", HERE=fake_tool("runway_guard.py", 0, '{"verdict":"LOW_RUNWAY","effective_runway_days":1}')),
       "WARN")
-check("runway_guard says anything else",
+check("runway_guard says PARKED (approved pause is not a fault)",
+      run_check("check_queue", HERE=fake_tool("runway_guard.py", 0,
+                '{"verdict":"PARKED","effective_runway_days":0,'
+                '"park":{"until":"2026-08-10","decided_by":"GATE"}}')),
+      "PASS")
+check("PARKED still prints WHY, never an empty pass",
+      "2026-08-10" in run_check_detail("check_queue", HERE=fake_tool("runway_guard.py", 0,
+                '{"verdict":"PARKED","effective_runway_days":0,'
+                '"park":{"until":"2026-08-10","decided_by":"GATE"}}')),
+      True)
+check("runway_guard says PARK_OVERRUN (the pause expired)",
+      run_check("check_queue", HERE=fake_tool("runway_guard.py", 1,
+                '{"verdict":"PARK_OVERRUN","effective_runway_days":0,'
+                '"problems":["park ended 2026-08-10"]}')),
+      "FAIL")
+check("runway_guard says DRIFT",
+      run_check("check_queue", HERE=fake_tool("runway_guard.py", 2,
+                '{"verdict":"DRIFT","problems":["schedule missing a day"]}')),
+      "FAIL")
+# The 7 Aug 2026 bug: PARKED was added to runway_guard and this consumer mapped
+# every unknown verdict to a FAIL with an EMPTY message. A blank FAIL tells the
+# next reader nothing, so the unknown branch must now name the verdict it saw.
+check("an unknown verdict fails LOUDLY and names itself",
       run_check("check_queue", HERE=fake_tool("runway_guard.py", 2, '{"verdict":"BROKEN","problems":["x"]}')),
       "FAIL")
+check("...and the message actually contains the unknown verdict",
+      "BROKEN" in run_check_detail("check_queue",
+                   HERE=fake_tool("runway_guard.py", 2, '{"verdict":"BROKEN","problems":["x"]}')),
+      True)
 check("runway_guard cannot run at all",
       run_check("check_queue", HERE=os.path.join(TMPDIR, "no-bin")), "FAIL")
 check("smoke test passes", run_check("check_build_gate", HERE=fake_tool("postdeploy_smoke.py", 0, "ok")), "PASS")
@@ -725,6 +823,32 @@ check("cc task absent from the mirror", run_check("check_task_mirror", OWN_TASKS
 check("a root that does not exist is a WARN, never a silent PASS",
       run_check("check_task_mirror", OWN_TASKS_DIR=os.path.join(TMPDIR, "nope"),
                 SCHEDULED_DIR=os.path.join(TMPDIR, "nope2")), "WARN")
+
+# RESOLVED COLLISIONS (7 Aug 2026). `ngernduangold-weekly-review` is one id that once
+# meant two unrelated jobs; the CC side was replaced by a tombstone on purpose. The two
+# files MUST differ, so warning about it forever is noise that teaches the reader to
+# skim past this check. But the loophole must stay shut: two LIVE prompts that differ is
+# still the dangerous case, and a tombstone must not be able to hide it.
+_TOMB = '---\nname: t\ndescription: [ปิด 1 ส.ค. 2026 - ย้ายชื่อ] moved to another id\n---\nreport and stop\n'
+_LIVE = '---\nname: t\ndescription: the real weekly review\n---\ndo the actual work\n'
+_a, _b = two_roots({"t": _TOMB}, {"t": _LIVE})
+check("one side is a tombstone -> resolved collision, not drift",
+      run_check("check_task_mirror", OWN_TASKS_DIR=_a, SCHEDULED_DIR=_b), "PASS")
+check("...but it must still be SAID, never silently swallowed",
+      "retired on one side" in run_check_detail("check_task_mirror", OWN_TASKS_DIR=_a, SCHEDULED_DIR=_b),
+      True)
+_a, _b = two_roots({"t": _LIVE}, {"t": _TOMB})
+check("the tombstone may be on either side", 
+      run_check("check_task_mirror", OWN_TASKS_DIR=_a, SCHEDULED_DIR=_b), "PASS")
+_a, _b = two_roots({"t": _LIVE}, {"t": _LIVE.replace("actual", "completely different")})
+check("two LIVE prompts that differ is still drift",
+      run_check("check_task_mirror", OWN_TASKS_DIR=_a, SCHEDULED_DIR=_b), "WARN")
+_a, _b = two_roots({"t": _TOMB}, {"t": _TOMB.replace("another", "a third")})
+check("two tombstones that differ still warns (only ONE side may be retired)",
+      run_check("check_task_mirror", OWN_TASKS_DIR=_a, SCHEDULED_DIR=_b), "WARN")
+_a, _b = two_roots({"t": _TOMB, "u": _LIVE}, {"t": _LIVE, "u": _LIVE.replace("actual", "other")})
+check("a resolved collision does not mask a real one alongside it",
+      run_check("check_task_mirror", OWN_TASKS_DIR=_a, SCHEDULED_DIR=_b), "WARN")
 
 print("\nPOLICY DATES noise filters  (six times today a guard flagged the lesson about itself)")
 _a, _b = two_roots({}, {"t": '---\nname: t\ndescription: [⛔ PAUSED 2 ก.ค. 2026] retired\n---\nPantip FROZEN ถึง 16 ก.ค. — พัก\n'})

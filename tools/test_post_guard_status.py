@@ -150,7 +150,37 @@ def main() -> int:
         finally:
             PG.POST_LEDGER_PATH = real_ledger_path
 
-        print("INVARIANT")
+        # ATTEMPT ROWS (added 7 Aug 2026). yt-comment-link and threads-daily now write
+        # an `attempt` row BEFORE touching the browser, so that a round which dies
+        # mid-way leaves a trace instead of looking identical to a day with nothing to
+        # do. That only helps if the guard reads those rows correctly: an attempt is
+        # evidence that we TRIED, never evidence that we SUCCEEDED. If it ever reads
+        # green, the fix would have made the blindness worse, not better - the exact
+        # mistake made on 30 Jul when a `failure` row counted as success.
+        print("ATTEMPT ROWS  (evidence of trying is not evidence of success)")
+        write_ledger([row("attempt", "threads")])
+        check("threads: attempt alone must NOT read as posted",
+              PG.check_threads(TARGET, ITEM_WITH_CAPTIONS)["status"], "NOT-POSTED")
+        write_ledger([row("attempt", "threads"), row("video", "threads")])
+        check("threads: attempt followed by the real video row",
+              PG.check_threads(TARGET, ITEM_WITH_CAPTIONS)["status"], "OK")
+        write_ledger([row("attempt", "threads"), row("failure", "threads")])
+        check("threads: attempt then failure is still a failure",
+              PG.check_threads(TARGET, ITEM_WITH_CAPTIONS)["status"], "FAILED")
+        # check_facebook_comment reads POST_LEDGER_PATH, which is a DIFFERENT constant
+        # from AUTOMATION_LOG and was already restored by the block above. Without
+        # re-pointing it this case would read the real production ledger and pass for
+        # the wrong reason - which is how it broke the first time it was written.
+        _real = PG.POST_LEDGER_PATH
+        try:
+            PG.POST_LEDGER_PATH = PG.AUTOMATION_LOG / "post-ledger.jsonl"
+            write_ledger([row("attempt", "facebook", day="2026-07-30T21:30:00+07:00")])
+            check("fb-comment: attempt alone is not a comment",
+                  PG.check_facebook_comment(TARGET)["status"], "NONE")
+        finally:
+            PG.POST_LEDGER_PATH = _real
+
+        print("\nINVARIANT")
         write_ledger([])
         for name, verdict in (("threads", PG.check_threads(TARGET, ITEM_WITH_CAPTIONS)),
                               ("tiktok", PG.check_tiktok(TARGET, ITEM_WITH_CAPTIONS, checked))):
@@ -163,7 +193,7 @@ def main() -> int:
             leftover.unlink()
         tmpdir.rmdir()
 
-    print("\n%d checks, %d failed" % (23, len(FAILS)))
+    print("\n%d checks, %d failed" % (27, len(FAILS)))
     if FAILS:
         print("FAILED:", ", ".join(FAILS))
         return 1

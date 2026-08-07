@@ -1,6 +1,6 @@
 {
   "ip": "27.130.8.134",
-  "checked_at": "2026-08-07T12:05:07",
+  "checked_at": "2026-08-08T00:05:32",
   "source": "api.ipify.org",
   "host": "NANON",
   "_why": "preflight/check_ga4_internal_ip compares this against the CIDRs pinned in policy.json ga4.internal_traffic.ips. If they diverge, the GA4 internal-traffic rule has stopped matching and the traffic numbers include our own automation."
