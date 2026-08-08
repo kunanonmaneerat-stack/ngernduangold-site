@@ -1,8 +1,8 @@
 source,sessions,quiz_start,affiliate_click,buy_intent_click
 bing,1,0,0,0
 chatgpt,12,0,2,0
-direct,128,0,0,0
-fb,11,0,0,0
-pantip,15,0,4,2
+direct,118,0,0,2
+fb,7,0,0,0
+pantip,14,0,4,0
 threads,1,0,0,0
 yt,3,0,0,0

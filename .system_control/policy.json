@@ -211,7 +211,10 @@
     {
       "date": "2026-08-08",
       "task": "ngernduangold-buy-intent-gate",
-      "status": "OPEN - WINDOW DIRTY",
+      "status": "SUPERSEDED",
+      "closed_on": "2026-08-09",
+      "outcome": "Fired on schedule and read (cc-outbox/result-buy-intent-gate-20260808.md). Verdict: undecidable, and that is the honest answer rather than a dodge. /debt-letter-kit had ZERO visitors between 2 and 8 Aug; the only 2 buy_intent_click events both landed on 1 Aug, the install day, and match our own verification click in time, device and path. position came back (not set) because the custom dimension was registered after those events fired and GA4 does not backfill - the next real click will resolve. Nothing here says anything about the offer. The same two questions now sit on the 2026-09-05 gate, which unlike this one states its precondition (a working checkout) up front.",
+      "superseded_by": "2026-09-05",
       "decides": [
         "buy button placement",
         "whether buy intent is real"
@@ -230,8 +233,8 @@
       "count_from": "2026-08-08",
       "why": "Until today nobody could answer 'why no sales' because the experiment had never been run. 28 days produced 14 sales-page views; at a 2% conversion that predicts 0.28 sales, so 0 was the expected result, not a signal. Worse, the sales page carries zero Gumroad links - the only checkout offered is 'add a stranger on LINE', and LINE friends = 1. This gate exists so the next reading is taken against a threshold set BEFORE the data arrives.",
       "preconditions": [
-        "A: Gumroad linked from site/debt-letter-kit.html and the 13 debt articles, above the LINE option",
-        "A2: reconcile the price - page says 199 THB, Gumroad charges $5.97 (~215 THB)",
+        "A: OWNER-GATED - a Gumroad product for the LETTER KIT must be created first. The existing l/debt-toolkit is an Excel toolkit; linking it here would mis-sell. Needs the 10-page PDF, which is not on this machine.",
+        "A2: dropped 9 Aug - the price mismatch it was written to fix does not exist (see funnel_endpoint.sales_page_paths.price_mismatch)",
         "B: Pantip resumed inside its allowed 3/week quota"
       ],
       "pass_if": {
@@ -287,18 +290,27 @@
     "verdict": "ENDPOINT HEALTHY - if buy_intent_click rises and sales stay 0, the offer is the problem, not a dead endpoint. That distinction was unavailable until now.",
     "gumroad": {
       "url": "https://ngernduangold.gumroad.com/l/debt-toolkit",
+      "sells": "Excel toolkit - planner / refinance / tracker / bank-call script. Fetched og:title live on 9 Aug 2026.",
+      "is_the_letter_kit": false,
+      "catalogue_20260809": {
+        "l/debt-toolkit": "Excel toolkit, $5.97. Its own description reads: price in Thailand 199 THB, Gumroad displays an approximate USD figure.",
+        "l/debt-payoff-planner": "credit-card payoff guide + worksheet (the 59 THB ebook), $1.77",
+        "letter kit (5 negotiation letters + call script, 10-page PDF, 199 THB)": "NO GUMROAD PRODUCT EXISTS"
+      },
       "verified_at": "2026-08-07",
       "verified_how": "Opened the product page in a real browser: title renders, price $5.97 shown, 'I want this!' button present, 22.7 KB file attached, LINE contact live.",
       "state": "PURCHASABLE",
       "_meaning": "This closes the ambiguity in preflight's `sales recorded` WARN. The money endpoint is NOT broken, so an empty sales log means nobody has bought - a demand problem, not a plumbing one. Note the two figures the guard compares are different funnels: affiliate_click is AccessTrade bank commission, sales-log is the 199 THB own product. Keep the WARN - zero revenue is a real fact that should stay loud - but do not spend another session re-checking the plumbing.",
       "linked_from_sales_page": false,
+      "_correction_20260809": "The 8 Aug note is right that the sales page has no checkout, but the prescribed fix does not work. l/debt-toolkit is a DIFFERENT PRODUCT: an Excel toolkit, not the 5 negotiation letters the page sells. Both happen to be priced 199 THB, which is what makes the substitution easy to miss. Wiring that button into site/debt-letter-kit.html would take money for letters and deliver a spreadsheet, so CC declined it on 1 Aug and declines it again today - this time with the live og:title fetched from both listings rather than from memory. Second blocker found today: the promised deliverable (PDF 10 pages) is not anywhere on this machine, so nobody here can create the missing product either. Order A is owner-gated, not a 1-hour CC task.",
       "_correction_20260808": "The 7 Aug note concluded 'endpoint is not broken, so 0 sales is a demand problem'. That was incomplete and the conclusion does not follow. Checked site/debt-letter-kit.html today: it contains ZERO Gumroad links - 8 LINE links and no checkout. All 13 debt articles that point at the sales page are the same. Gumroad appears only on /links, which the sales page does not link to. So the working checkout exists and nobody arriving at the sales page can see it; the only offered path is 'add a stranger on LINE' and LINE friends = 1. Demand remains untested."
     },
     "sales_page_paths": {
       "file": "site/debt-letter-kit.html",
       "gumroad_links": 0,
-      "line_links": 8,
-      "price_mismatch": "page says 199 THB, Gumroad charges $5.97 (~215 THB) - reconcile before driving traffic"
+      "line_links": 3,
+      "_line_links_note": "3 anchor tags. The earlier count of 8 counted string occurrences of line.me including script and meta text.",
+      "price_mismatch": "NOT A MISMATCH - checked the listing itself on 9 Aug: it already states price in Thailand 199 THB and explains that Gumroad shows an approximate USD figure. Nothing to reconcile in the copy. The real friction is smaller and different: a Thai card is billed $5.97, which clears at roughly 215 THB after FX, so the buyer pays about 8% over the advertised number. That is a disclosure line, not a price change - and it is moot until a letter-kit product exists at all."
     }
   },
   "ga4": {
@@ -461,7 +473,7 @@
         "youtube": "6 pieces -> 3 sessions"
       },
       "actions_ranked": [
-        "A: link Gumroad into the sales page and the 13 debt articles (~1h, cheapest)",
+        "A: BLOCKED 9 Aug - no Gumroad product exists for the letter kit; the one on file sells something else. Owner must create it (~15 min) and supply the PDF before any linking work is real.",
         "B: resume Pantip inside its allowed quota (+64 sessions/mo, 2.5x real traffic)",
         "C: stop producing Threads-only content",
         "D: write for AI citation - chatgpt already compounds unaided"

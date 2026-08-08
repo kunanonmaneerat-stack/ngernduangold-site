@@ -1154,7 +1154,7 @@ def check_synthetic_traffic():
     share = direct_sessions / float(total)
     if share > SYNTHETIC_DIRECT_SHARE and direct_quiz == 0:
         add("synthetic traffic", "WARN",
-            "direct %d sessions (%.0f%%) แต่ไม่มี engagement เลย - น่าจะเป็น automation ของเราเอง ไม่ใช่คน"
+            "direct %d sessions (%.0f%%) โดย quiz_start=0 - ไม่มีสัญญาณว่าอ่านจริง น่าจะเป็น automation ของเราเอง ไม่ใช่คน"
             " -> เช็กว่างานอัตโนมัติตัวไหนเปิดหน้าเว็บโดยไม่ตั้ง traffic_type=internal"
             % (direct_sessions, share * 100))
         return
@@ -1279,9 +1279,17 @@ def check_open_decisions():
             when = datetime.date.fromisoformat(raw[:10])
         except Exception:
             continue
-        if str(g.get("status", "")).strip().casefold() in DECISION_DONE:
+        st = str(g.get("status", "")).strip()
+        if st.casefold() in DECISION_DONE:
             continue
         what = str(g.get("task", "?"))
+        if st:
+            # A gate closed with prose ("CLOSED 9 Aug - ran, could not decide") reads
+            # EXACTLY like a gate nobody has touched, because the match is exact-set.
+            # Done once on 9 Aug 2026, and the only symptom was a stale OVERDUE line that
+            # invited someone to re-decide a question that had already been answered.
+            # Say which word is missing instead of staying silent about it.
+            what += ' [status "%s" is not one of: %s]' % (st, "/".join(sorted(DECISION_DONE)))
         decides = g.get("decides")
         if isinstance(decides, list) and decides:
             what += " (" + ", ".join(str(d) for d in decides[:2]) + ")"

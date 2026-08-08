@@ -98,6 +98,33 @@ def _credentials():
         return None
 
 
+def fold_event_rows(rows, slot):
+    """Add one GA4 event report into the per-channel aggregate.
+
+    rows: iterable of (session_source, event_name, count).  slot: channel -> dict.
+
+    Why this is a function instead of the inline loop it used to be
+    ---------------------------------------------------------------
+    Until 9 Aug 2026 the inline version computed the channel `c` only inside the
+    affiliate_click branch, so the buy_intent_click branch spent whatever channel the
+    PREVIOUS affiliate row had left in `c`.  GA4 returns rows ordered by count, so the
+    only two buy_intent_click events on record - both (direct), both our own install-day
+    test on 1 Aug - were filed under `pantip`, the last affiliate row seen.
+
+    That one leaked variable is what put "2 buy-intent clicks, both from Pantip" into the
+    8 Aug strategy note, which then ranked Pantip first partly because it looked like the
+    only channel producing purchase intent.  The bug is invisible in review and invisible
+    in the output file: every number still adds up, it is just filed under the wrong name.
+    Hence a test that pins the exact production ordering (test_ga4_attribution.py).
+    """
+    for src, ev, n in rows:
+        if ev not in (BUY_INTENT_EVENT, CONV_EVENT):
+            continue
+        c = _norm(src, "")
+        key = "buy_intent_click" if ev == BUY_INTENT_EVENT else "affiliate_click"
+        slot(c)[key] += int(n or 0)
+
+
 def _host_exclude():
     """Exclude synthetic localhost test traffic from every report (build once, reuse)."""
     from google.analytics.data_v1beta.types import Filter, FilterExpression
@@ -153,13 +180,9 @@ def pull():
                 property=prop, date_ranges=dr, dimension_filter=hx,
                 dimensions=[Dimension(name="sessionSource"), Dimension(name="eventName")],
                 metrics=[Metric(name="eventCount")]))
-            for row in rep3.rows:
-                ev = row.dimension_values[1].value or ""
-                if ev == BUY_INTENT_EVENT:
-                    slot(c)["buy_intent_click"] += int(row.metric_values[0].value or 0)
-                if ev == CONV_EVENT:
-                    c = _norm(row.dimension_values[0].value, "")
-                    slot(c)["affiliate_click"] += int(row.metric_values[0].value or 0)
+            fold_event_rows(((row.dimension_values[0].value or "",
+                              row.dimension_values[1].value or "",
+                              row.metric_values[0].value) for row in rep3.rows), slot)
         except Exception as e:
             _log("ดึง affiliate_click event ไม่ได้ (%s)" % e)
 

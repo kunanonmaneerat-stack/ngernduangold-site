@@ -410,6 +410,38 @@ check("old CSV header (conversion) is still read", run_sales([_HEADER], _GA4_OLD
 shutil.rmtree(os.path.join(TMPDIR, "_test_sales"), ignore_errors=True)
 P.SALES_LOG, P.REPO = _sl, _repo
 
+print("\nGATE STATUS VOCABULARY  (a prose status must not read as an unmade decision)")
+_pol_real = P.POLICY
+_gate_dir = tempfile.mkdtemp(prefix="pf_gate_")
+
+
+def run_gate(status):
+    g = {"date": "2020-01-01", "task": "t-gate", "decides": ["x"]}
+    if status is not None:
+        g["status"] = status
+    p = os.path.join(_gate_dir, "policy.json")
+    with io.open(p, "w", encoding="utf-8") as fh:
+        json.dump({"gates": [g]}, fh)
+    P.POLICY = p
+    P.results[:] = []
+    P.check_open_decisions()
+    return P.results[0]
+
+
+check("no status at all -> still overdue", run_gate(None)["status"], "WARN")
+check("SUPERSEDED closes the gate", run_gate("SUPERSEDED")["status"], "PASS")
+check("lowercase decided closes it too", run_gate("decided")["status"], "PASS")
+_prose = run_gate("CLOSED 2026-08-09 - RAN, COULD NOT DECIDE")
+check("prose status still warns", _prose["status"], "WARN")
+check("...but names the unusable word",
+      "yes" if "is not one of" in _prose["detail"] else "no", "yes")
+check("...and quotes it back", "yes" if "COULD NOT DECIDE" in _prose["detail"] else "no", "yes")
+check("a real unmade decision is not annotated",
+      "yes" if "is not one of" not in run_gate(None)["detail"] else "no", "yes")
+
+shutil.rmtree(_gate_dir, ignore_errors=True)
+P.POLICY = _pol_real
+
 print("\nSYNTHETIC TRAFFIC  (our own robots must not be counted as an audience)")
 _gm = P.GA4_METRICS
 _syn_dir = tempfile.mkdtemp(prefix="pf_syn_")   # fixture อยู่นอก repo (ของเดิมเคยค้างใน tools/)
