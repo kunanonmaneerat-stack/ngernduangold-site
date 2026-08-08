@@ -218,6 +218,30 @@
       ],
       "count_from": "2026-08-06",
       "note": "REVISED 7 Aug 2026. count_from was 2026-08-02, but 3, 4 and 5 Aug were an agent-layer blackout - no posts, no traffic driven, nothing measured. The clean window is 6-7 Aug = TWO days, not seven. Firing this gate on schedule produces an automatic 'no' about a test that was never run - exactly what just happened to batch3. Either move the gate out by the number of blackout days, or state plainly in its output that the window was too short to decide. Do NOT compare against July: affiliate_click before 2 Aug includes our own automation (see ga4.internal_traffic and ga4.clicktest_isolation)."
+    },
+    {
+      "date": "2026-09-05",
+      "task": "ngernduangold-sales-experiment-gate",
+      "status": "OPEN",
+      "decides": [
+        "whether the 199 THB offer has real demand",
+        "whether Pantip should become the primary channel"
+      ],
+      "count_from": "2026-08-08",
+      "why": "Until today nobody could answer 'why no sales' because the experiment had never been run. 28 days produced 14 sales-page views; at a 2% conversion that predicts 0.28 sales, so 0 was the expected result, not a signal. Worse, the sales page carries zero Gumroad links - the only checkout offered is 'add a stranger on LINE', and LINE friends = 1. This gate exists so the next reading is taken against a threshold set BEFORE the data arrives.",
+      "preconditions": [
+        "A: Gumroad linked from site/debt-letter-kit.html and the 13 debt articles, above the LINE option",
+        "A2: reconcile the price - page says 199 THB, Gumroad charges $5.97 (~215 THB)",
+        "B: Pantip resumed inside its allowed 3/week quota"
+      ],
+      "pass_if": {
+        "sales_page_views_28d": 50,
+        "real_sessions_28d": 90,
+        "pantip_pieces_28d": 10,
+        "sales": 1
+      },
+      "how_to_read": "sales_page_views >= 50 and still 0 sales -> demand can finally be discussed, the test was real. sales_page_views < 50 -> the bottleneck is still traffic; do NOT touch the offer, the price or the sales page copy, and do not read 0 sales as a demand signal. Preconditions not done -> the gate cannot decide anything; say so plainly rather than producing an automatic 'no', which is exactly what happened to batch3 on 6 Aug.",
+      "source": "automation-log/SALES-DIAGNOSIS_20260808.md"
     }
   ],
   "specs": {
@@ -266,7 +290,15 @@
       "verified_at": "2026-08-07",
       "verified_how": "Opened the product page in a real browser: title renders, price $5.97 shown, 'I want this!' button present, 22.7 KB file attached, LINE contact live.",
       "state": "PURCHASABLE",
-      "_meaning": "This closes the ambiguity in preflight's `sales recorded` WARN. The money endpoint is NOT broken, so an empty sales log means nobody has bought - a demand problem, not a plumbing one. Note the two figures the guard compares are different funnels: affiliate_click is AccessTrade bank commission, sales-log is the 199 THB own product. Keep the WARN - zero revenue is a real fact that should stay loud - but do not spend another session re-checking the plumbing."
+      "_meaning": "This closes the ambiguity in preflight's `sales recorded` WARN. The money endpoint is NOT broken, so an empty sales log means nobody has bought - a demand problem, not a plumbing one. Note the two figures the guard compares are different funnels: affiliate_click is AccessTrade bank commission, sales-log is the 199 THB own product. Keep the WARN - zero revenue is a real fact that should stay loud - but do not spend another session re-checking the plumbing.",
+      "linked_from_sales_page": false,
+      "_correction_20260808": "The 7 Aug note concluded 'endpoint is not broken, so 0 sales is a demand problem'. That was incomplete and the conclusion does not follow. Checked site/debt-letter-kit.html today: it contains ZERO Gumroad links - 8 LINE links and no checkout. All 13 debt articles that point at the sales page are the same. Gumroad appears only on /links, which the sales page does not link to. So the working checkout exists and nobody arriving at the sales page can see it; the only offered path is 'add a stranger on LINE' and LINE friends = 1. Demand remains untested."
+    },
+    "sales_page_paths": {
+      "file": "site/debt-letter-kit.html",
+      "gumroad_links": 0,
+      "line_links": 8,
+      "price_mismatch": "page says 199 THB, Gumroad charges $5.97 (~215 THB) - reconcile before driving traffic"
     }
   },
   "ga4": {
@@ -409,6 +441,43 @@
       "reading": "falling steadily since 26 Jul, which is when 16 agent tasks were paused. Consistent with the direct traffic having been our own automation. NOT attributable to the 7 Aug GA4 internal-IP fix - the decline predates it.",
       "prediction": "if this was our own robots, direct keeps falling as old days age out of the 28-day window. Re-read on 2026-08-20: below ~90 means the explanation held and the WARN can be re-tuned. Flat or rising with engagement still 0 means something ELSE is hitting the site and the real cause was never found.",
       "do_not": "do not silence this WARN before that date - zero-engagement traffic at 77% is worth staying loud about"
+    },
+    "sales_diagnosis_20260808": {
+      "doc": "automation-log/SALES-DIAGNOSIS_20260808.md",
+      "funnel_28d": {
+        "sessions_total": 171,
+        "direct_own_robots": 128,
+        "real_humans": 43,
+        "sales_page_views": 14,
+        "buy_intent_clicks": 2,
+        "sales": 0
+      },
+      "headline": "0 sales is the EXPECTED value at 14 sales-page views: 14 x 2% = 0.28. The selling experiment has never actually been run, so nothing about demand can be concluded yet.",
+      "labour_vs_return": {
+        "pantip": "0 pieces in 28d -> 15 sessions + 6 conversion events - the only channel with any conversion event, idle 6 weeks with an allowed 3/week quota unused",
+        "chatgpt": "0 pieces -> 12 sessions, growing 5 -> 11 -> 12 with no effort at all",
+        "threads": "25 pieces -> 1 session (0.04/piece). Pantip's historical rate is 133x this.",
+        "facebook": "17 pieces -> 11 sessions",
+        "youtube": "6 pieces -> 3 sessions"
+      },
+      "actions_ranked": [
+        "A: link Gumroad into the sales page and the 13 debt articles (~1h, cheapest)",
+        "B: resume Pantip inside its allowed quota (+64 sessions/mo, 2.5x real traffic)",
+        "C: stop producing Threads-only content",
+        "D: write for AI citation - chatgpt already compounds unaided"
+      ],
+      "do_not": [
+        "do not change price or rewrite the offer - n=14 cannot tell you what is wrong",
+        "do not add new channels while Pantip sits at 0/3",
+        "do not read 0 sales as a demand signal until the sales page gets >=50 views/month WITH a working checkout"
+      ],
+      "gate_date": "2026-09-05",
+      "gate_pass": {
+        "sales_page_views_28d": 50,
+        "real_sessions_28d": 90,
+        "pantip_pieces": 10,
+        "sales": 1
+      }
     }
   },
   "content_supply": {
