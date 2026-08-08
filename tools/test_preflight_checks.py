@@ -688,6 +688,77 @@ check("queued clip missing on disk -> FAIL",
                 SCHEDULE=write("s1.json", {_today: {"file": "definitely-not-here.mp4"}})),
       "FAIL" if __import__("shutil").which("ffprobe") else "FAIL")
 
+print("\nDELIVERABLES  (a page may not take money for a file that does not exist)")
+
+
+def products(items, repo=None):
+    """Write a policy.json holding a products block, return (POLICY, REPO)."""
+    d = os.path.join(TMPDIR, "prod_%d" % abs(hash(str(items))))
+    os.makedirs(os.path.join(d, ".system_control"), exist_ok=True)
+    pol = os.path.join(d, ".system_control", "policy.json")
+    with io.open(pol, "w", encoding="utf-8") as fh:
+        json.dump({"products": {"items": items}}, fh, ensure_ascii=False)
+    return pol, (repo or d)
+
+
+def make(repo, rel, size):
+    full = os.path.join(repo, rel)
+    os.makedirs(os.path.dirname(full), exist_ok=True)
+    with io.open(full, "wb") as fh:
+        fh.write(b"x" * size)
+    return rel
+
+
+_d = os.path.join(TMPDIR, "prodrepo"); os.makedirs(_d, exist_ok=True)
+_page = make(_d, "site/kit.html", 100)
+_file = make(_d, "files/kit.pdf", 600 * 1024)
+
+_pol, _ = products([{"id": "kit", "sold_on": _page, "deliverable": _file}])
+check("page + real file -> ready",
+      run_check("check_deliverables", POLICY=_pol, REPO=_d), "PASS")
+
+# THE 9 Aug CASE: the page is live, the promise is in it, the file does not exist.
+_pol, _ = products([{"id": "kit", "sold_on": _page, "deliverable": None}])
+check("page live, nothing to hand over -> FAIL",
+      run_check("check_deliverables", POLICY=_pol, REPO=_d), "FAIL")
+check("...and the product is NAMED",
+      "kit" in run_check_detail("check_deliverables", POLICY=_pol, REPO=_d), True)
+
+_pol, _ = products([{"id": "kit", "sold_on": _page, "deliverable": "files/nope.pdf"}])
+check("file listed in policy but absent on disk -> FAIL",
+      run_check("check_deliverables", POLICY=_pol, REPO=_d), "FAIL")
+
+# A 40-byte "PDF" is a placeholder someone forgot to replace, not a product.
+make(_d, "files/stub.pdf", 40)
+_pol, _ = products([{"id": "kit", "sold_on": _page, "deliverable": "files/stub.pdf"}])
+check("a placeholder-sized file is not a deliverable -> FAIL",
+      run_check("check_deliverables", POLICY=_pol, REPO=_d), "FAIL")
+
+# A retired product whose page is gone is not an outstanding promise. Without this
+# the check would nag forever about things nobody can buy any more.
+_pol, _ = products([{"id": "old", "sold_on": "site/deleted.html", "deliverable": None}])
+check("product whose page no longer exists is out of scope",
+      run_check("check_deliverables", POLICY=_pol, REPO=_d), "PASS")
+
+# Gumroad hosts the file; disk cannot answer. Must say 'cannot check', never assume.
+_pol, _ = products([{"id": "gr", "sold_on": _page, "deliverable": "gumroad:l/x"}])
+check("externally hosted product does not read as a local failure",
+      run_check("check_deliverables", POLICY=_pol, REPO=_d), "PASS")
+check("...and the report admits it could not verify it",
+      "not checkable" in run_check_detail("check_deliverables", POLICY=_pol, REPO=_d), True)
+
+# One good product must not mask one broken one.
+_pol, _ = products([{"id": "ok", "sold_on": _page, "deliverable": _file},
+                    {"id": "broken", "sold_on": _page, "deliverable": None}])
+check("a ready product does not hide a missing one",
+      run_check("check_deliverables", POLICY=_pol, REPO=_d), "FAIL")
+
+_pol, _ = products([])
+check("no products declared -> WARN, never a silent PASS",
+      run_check("check_deliverables", POLICY=_pol, REPO=_d), "WARN")
+check("unreadable policy -> WARN",
+      run_check("check_deliverables", POLICY=os.path.join(TMPDIR, "nope.json"), REPO=_d), "WARN")
+
 print("\nSTUCK RUNS  (evidence written before the risky step, then actually read)")
 
 

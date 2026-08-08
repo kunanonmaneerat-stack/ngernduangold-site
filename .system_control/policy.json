@@ -233,18 +233,19 @@
       "count_from": "2026-08-08",
       "why": "Until today nobody could answer 'why no sales' because the experiment had never been run. 28 days produced 14 sales-page views; at a 2% conversion that predicts 0.28 sales, so 0 was the expected result, not a signal. Worse, the sales page carries zero Gumroad links - the only checkout offered is 'add a stranger on LINE', and LINE friends = 1. This gate exists so the next reading is taken against a threshold set BEFORE the data arrives.",
       "preconditions": [
-        "A: OWNER-GATED - a Gumroad product for the LETTER KIT must be created first. The existing l/debt-toolkit is an Excel toolkit; linking it here would mis-sell. Needs the 10-page PDF, which is not on this machine.",
-        "A2: dropped 9 Aug - the price mismatch it was written to fix does not exist (see funnel_endpoint.sales_page_paths.price_mismatch)",
-        "B: Pantip resumed inside its allowed 3/week quota"
+        "A0 (BLOCKING, owner): the 10-page PDF must exist and be uploaded as its own Gumroad product. Until it does, the page is taking orders it cannot fill.",
+        "A1 (CC, ~20 min, only after A0): wire that listing into site/debt-letter-kit.html and the 13 debt articles",
+        "B (Cowork/owner): resume Pantip inside its 3/week quota - but pointed at articles and affiliate, NOT at the 199 THB CTA, until A0 is done"
       ],
       "pass_if": {
         "sales_page_views_28d": 50,
         "real_sessions_28d": 90,
         "pantip_pieces_28d": 10,
-        "sales": 1
+        "sales": "1 - but only counts if A0 was done before the window opened"
       },
       "how_to_read": "sales_page_views >= 50 and still 0 sales -> demand can finally be discussed, the test was real. sales_page_views < 50 -> the bottleneck is still traffic; do NOT touch the offer, the price or the sales page copy, and do not read 0 sales as a demand signal. Preconditions not done -> the gate cannot decide anything; say so plainly rather than producing an automatic 'no', which is exactly what happened to batch3 on 6 Aug.",
-      "source": "automation-log/SALES-DIAGNOSIS_20260808.md"
+      "source": "automation-log/SALES-DIAGNOSIS_20260808.md",
+      "_revised_20260809": "Original preconditions assumed the product existed and that l/debt-toolkit could be linked to the sales page. Both were wrong. A2 (reconcile price) is cancelled - there was never a conflict. If A0 is not done, this gate CANNOT decide anything about demand: driving traffic to an unfulfillable offer is not an experiment, it is an exposure."
     }
   ],
   "specs": {
@@ -290,7 +291,7 @@
     "verdict": "ENDPOINT HEALTHY - if buy_intent_click rises and sales stay 0, the offer is the problem, not a dead endpoint. That distinction was unavailable until now.",
     "gumroad": {
       "url": "https://ngernduangold.gumroad.com/l/debt-toolkit",
-      "sells": "Excel toolkit - planner / refinance / tracker / bank-call script. Fetched og:title live on 9 Aug 2026.",
+      "sells": "ชุดเครื่องมือปลดหนี้ (Excel) - NOT the 5-letter PDF kit",
       "is_the_letter_kit": false,
       "catalogue_20260809": {
         "l/debt-toolkit": "Excel toolkit, $5.97. Its own description reads: price in Thailand 199 THB, Gumroad displays an approximate USD figure.",
@@ -302,8 +303,9 @@
       "state": "PURCHASABLE",
       "_meaning": "This closes the ambiguity in preflight's `sales recorded` WARN. The money endpoint is NOT broken, so an empty sales log means nobody has bought - a demand problem, not a plumbing one. Note the two figures the guard compares are different funnels: affiliate_click is AccessTrade bank commission, sales-log is the 199 THB own product. Keep the WARN - zero revenue is a real fact that should stay loud - but do not spend another session re-checking the plumbing.",
       "linked_from_sales_page": false,
-      "_correction_20260809": "The 8 Aug note is right that the sales page has no checkout, but the prescribed fix does not work. l/debt-toolkit is a DIFFERENT PRODUCT: an Excel toolkit, not the 5 negotiation letters the page sells. Both happen to be priced 199 THB, which is what makes the substitution easy to miss. Wiring that button into site/debt-letter-kit.html would take money for letters and deliver a spreadsheet, so CC declined it on 1 Aug and declines it again today - this time with the live og:title fetched from both listings rather than from memory. Second blocker found today: the promised deliverable (PDF 10 pages) is not anywhere on this machine, so nobody here can create the missing product either. Order A is owner-gated, not a 1-hour CC task.",
-      "_correction_20260808": "The 7 Aug note concluded 'endpoint is not broken, so 0 sales is a demand problem'. That was incomplete and the conclusion does not follow. Checked site/debt-letter-kit.html today: it contains ZERO Gumroad links - 8 LINE links and no checkout. All 13 debt articles that point at the sales page are the same. Gumroad appears only on /links, which the sales page does not link to. So the working checkout exists and nobody arriving at the sales page can see it; the only offered path is 'add a stranger on LINE' and LINE friends = 1. Demand remains untested."
+      "_correction_20260809": "My 8 Aug correction said the fix was to link this Gumroad product from the sales page. That is WRONG and would have been harmful. This listing (l/debt-toolkit) delivers a spreadsheet; debt-letter-kit.html sells five letters as a PDF. Same 199 THB price, different product. The letters have no Gumroad listing and no file. Correct action: the owner creates the PDF and a new listing first; only then wire it up.",
+      "_correction_20260808": "The 7 Aug note concluded 'endpoint is not broken, so 0 sales is a demand problem'. That was incomplete and the conclusion does not follow. Checked site/debt-letter-kit.html today: it contains ZERO Gumroad links - 8 LINE links and no checkout. All 13 debt articles that point at the sales page are the same. Gumroad appears only on /links, which the sales page does not link to. So the working checkout exists and nobody arriving at the sales page can see it; the only offered path is 'add a stranger on LINE' and LINE friends = 1. Demand remains untested.",
+      "price_note": "The Gumroad page states 'ราคาไทย 199 บาท - แสดงเป็น USD โดยประมาณ'. There is no price conflict to fix; the card is simply charged ~215 THB after currency conversion. Tell the buyer, do not change the price. (Cancels action A2 from the 8 Aug note.)"
     },
     "sales_page_paths": {
       "file": "site/debt-letter-kit.html",
@@ -461,12 +463,13 @@
         "direct_own_robots": 128,
         "real_humans": 43,
         "sales_page_views": 14,
-        "buy_intent_clicks": 2,
-        "sales": 0
+        "buy_intent_clicks": 0,
+        "sales": 0,
+        "_buy_intent_correction": "Was recorded as 2 and attributed to pantip. Both events were (direct) on 1 Aug - our own test clicks when the button was installed. Cause: ga4_pull.py computed the channel name only inside the affiliate_click branch, so buy_intent rows inherited the previous row's channel. Every total was correct; only the attribution was wrong, which is why eight days of reports passed review. Human buy-intent clicks to date: ZERO. Fixed by fold_event_rows + pipeline/test_ga4_attribution.py, which pins the exact production row ordering."
       },
       "headline": "0 sales is the EXPECTED value at 14 sales-page views: 14 x 2% = 0.28. The selling experiment has never actually been run, so nothing about demand can be concluded yet.",
       "labour_vs_return": {
-        "pantip": "0 pieces in 28d -> 15 sessions + 6 conversion events - the only channel with any conversion event, idle 6 weeks with an allowed 3/week quota unused",
+        "pantip": "0 pieces in 28d -> 15 sessions and 4 affiliate clicks. Still the best channel in the system, but the reason is 'the only channel sending people who click anything at all', NOT 'the only channel producing purchase intent' - that claim came from the attribution bug.",
         "chatgpt": "0 pieces -> 12 sessions, growing 5 -> 11 -> 12 with no effort at all",
         "threads": "25 pieces -> 1 session (0.04/piece). Pantip's historical rate is 133x this.",
         "facebook": "17 pieces -> 11 sessions",
@@ -489,7 +492,9 @@
         "real_sessions_28d": 90,
         "pantip_pieces": 10,
         "sales": 1
-      }
+      },
+      "_uptime_check_exonerated": "The 8 Aug note blamed direct traffic on uptime_check. It uses urllib only, runs no JavaScript, and therefore cannot create a GA4 session at all. The real cause is the internal-traffic rule pinned to a rotated-out IP. Do not 'fix' uptime_check for this - it is the detector, not the source.",
+      "_product_missing": "The largest finding, and it was not in the 8 Aug note at all: site/debt-letter-kit.html promises a 10-page PDF three times and that PDF does not exist. See policy.products. Action A from the 8 Aug note is void - l/debt-toolkit sells an Excel toolkit, not the letters, and both happen to cost 199 THB, which is exactly why the mismatch was easy to miss. Wiring them together would have turned 'no sales' into 'shipped the wrong product'."
     }
   },
   "content_supply": {
@@ -531,5 +536,36 @@
       "resume_by": "2026-08-11",
       "script_bottleneck_precleared": "automation-log/BATCH4-PRODUCTION-KIT.md"
     }
+  },
+  "products": {
+    "_why": "Added 9 Aug 2026. site/debt-letter-kit.html promises 'ส่งสลิปในแชทเดิม แล้วรับไฟล์ PDF 10 หน้ากลับทางแชท' three times over. The PDF does not exist anywhere on this machine. Nobody noticed because every check in this repo watched whether the OFFER was reachable - never whether the THING could be handed over. A page that can take money for a file we cannot send is worse than a page nobody visits.",
+    "items": [
+      {
+        "id": "letter-kit-199",
+        "price_thb": 199,
+        "sold_on": "site/debt-letter-kit.html",
+        "promises": "จดหมาย 5 ฉบับ + สคริปต์โทรแบงก์ (PDF 10 หน้า)",
+        "deliverable": null,
+        "status": "PROMISED-BUT-MISSING",
+        "note": "Blocks the whole 199 THB funnel. Owner must produce the PDF; it cannot be generated from anything in the repo. Same shape as the 24 Jul ebook case."
+      },
+      {
+        "id": "ebook-59",
+        "price_thb": 59,
+        "sold_on": "site/links.html",
+        "promises": "ebook แผนปลดหนี้",
+        "deliverable": "automation-log/_ebook_debt-payoff_v1.2.pdf",
+        "status": "READY"
+      },
+      {
+        "id": "debt-toolkit-gumroad",
+        "price_thb": 199,
+        "sold_on": "site/links.html",
+        "promises": "ชุดเครื่องมือปลดหนี้ (Excel)",
+        "deliverable": "gumroad:l/debt-toolkit",
+        "status": "READY",
+        "note": "Hosted by Gumroad, verified purchasable 7 Aug. This is a DIFFERENT product from letter-kit-199 despite sharing the 199 THB price - linking the two would have shipped a spreadsheet to someone who paid for letters."
+      }
+    ]
   }
 }

@@ -217,6 +217,76 @@ def check_stuck_runs():
             "%d routine(s) tracked, none stuck mid-run" % len(latest))
 
 
+MIN_DELIVERABLE_BYTES = 10 * 1024
+
+
+def check_deliverables():
+    """Every product a page offers for sale must have something to hand over.
+
+    WHY THIS EXISTS (9 Aug 2026). site/debt-letter-kit.html says "send the slip in
+    this chat and get the 10-page PDF back" three separate times. That PDF does not
+    exist - not in the repo, not anywhere on the machine. The page has been live and
+    promoted for weeks, and the money endpoint was even audited twice and declared
+    healthy, because every check in this repo asked whether the OFFER was reachable
+    and none asked whether the THING could actually be delivered.
+
+    That is the worst failure mode available here: not "nobody buys" but "somebody
+    buys and we cannot ship". It is also the one that would only be discovered by the
+    first paying customer, at maximum cost to trust.
+
+    FAIL, not WARN. preflight FAIL writes an alert and does not halt posting, so this
+    is loud without being destructive - which is the correct shape for "stop promoting
+    this until you can fill the order".
+    """
+    try:
+        with io.open(POLICY, encoding="utf-8") as fh:
+            pol = json.load(fh)
+    except Exception as exc:
+        add("deliverables", "WARN", "cannot read policy.json: %s" % exc)
+        return
+    items = ((pol.get("products") or {}).get("items")) or []
+    if not items:
+        add("deliverables", "WARN",
+            "policy.json has no products block - cannot tell what this site sells")
+        return
+
+    missing, unverifiable, ready = [], [], 0
+    for it in items:
+        pid = it.get("id", "?")
+        page = it.get("sold_on") or ""
+        deliverable = it.get("deliverable")
+        # A product is only in scope if the page offering it actually exists: a
+        # retired product whose page is gone is not an outstanding promise.
+        if page and not os.path.exists(os.path.join(REPO, page)):
+            continue
+        if not deliverable:
+            missing.append("%s (%s promises it, nothing to send)" % (pid, page or "?"))
+            continue
+        if str(deliverable).startswith(("gumroad:", "http")):
+            # Hosted elsewhere - disk cannot answer this. Say so rather than assume.
+            unverifiable.append(pid)
+            continue
+        full = os.path.join(REPO, deliverable)
+        if not os.path.exists(full):
+            missing.append("%s (file listed but absent: %s)" % (pid, deliverable))
+        elif os.path.getsize(full) < MIN_DELIVERABLE_BYTES:
+            missing.append("%s (file is only %d bytes - placeholder?)"
+                           % (pid, os.path.getsize(full)))
+        else:
+            ready += 1
+
+    if missing:
+        add("deliverables", "FAIL",
+            "%d product(s) are on sale with nothing to hand over -> %s"
+            % (len(missing), "; ".join(missing[:3])))
+    else:
+        bits = "%d ready" % ready
+        if unverifiable:
+            bits += ", %d hosted externally (not checkable from disk): %s" % (
+                len(unverifiable), ", ".join(unverifiable[:3]))
+        add("deliverables", "PASS", bits)
+
+
 def check_delivery_gap():
     """The check that would have caught the 4-day blackout on day one."""
     rows = []
@@ -1368,6 +1438,7 @@ def main():
     args = ap.parse_args()
 
     check_queue()
+    check_deliverables()
     check_stuck_runs()
     check_delivery_gap()
     check_repeat_failures()
