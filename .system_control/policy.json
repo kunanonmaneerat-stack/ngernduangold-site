@@ -246,6 +246,31 @@
       "how_to_read": "sales_page_views >= 50 and still 0 sales -> demand can finally be discussed, the test was real. sales_page_views < 50 -> the bottleneck is still traffic; do NOT touch the offer, the price or the sales page copy, and do not read 0 sales as a demand signal. Preconditions not done -> the gate cannot decide anything; say so plainly rather than producing an automatic 'no', which is exactly what happened to batch3 on 6 Aug.",
       "source": "automation-log/SALES-DIAGNOSIS_20260808.md",
       "_revised_20260809": "Original preconditions assumed the product existed and that l/debt-toolkit could be linked to the sales page. Both were wrong. A2 (reconcile price) is cancelled - there was never a conflict. If A0 is not done, this gate CANNOT decide anything about demand: driving traffic to an unfulfillable offer is not an experiment, it is an exposure."
+    },
+    {
+      "date": "2026-08-10",
+      "task": "ngernduangold-batch3-gate-final",
+      "status": "OPEN",
+      "decides": [
+        "does batch3 pass the >=100 views/7d bar",
+        "how many clips batch4 gets, if any",
+        "what happens to content_supply.planned_park, which expires the same day"
+      ],
+      "count_from": "2026-08-03",
+      "why": "The 6 Aug gate decided 'cannot decide yet, defer to 10 Aug'. Nobody registered the 10 Aug date anywhere - no gates[] entry, and the task that made the decision fires once and auto-disables. Found on 9 Aug: the decision day was about to pass in silence while the park expired underneath it. A deferral nobody registers is an accidental cancellation.",
+      "blocked_by": "secrets/yt_token.json needs the youtube.readonly scope or view counts cannot be read at all; owner-only. Without it the honest output is 'cannot decide', never 'fail'.",
+      "how_to_read": "A test that was never run is not a test that failed. If views cannot be read, defer again WITH a registered date and extend planned_park to match."
+    },
+    {
+      "date": "2026-08-15",
+      "task": "ngernduangold-knowledge-library-refill",
+      "status": "OPEN",
+      "decides": [
+        "whether the daily noon post has anything left to publish from 16 Aug"
+      ],
+      "why": "KNOWLEDGE-POSTS-B ends 15 Aug with 7 entries left. The noon post fires every day and reads from that library. No task was watching this cliff. Refill task now fires 13 Aug, two days of slack so a failed round can still be fixed before the library runs dry.",
+      "content_gate": true,
+      "note": "Registered as a gate so check_content_cliff can see it. The 27-30 Jul blackout happened because content ran out and only the posting routines knew."
     }
   ],
   "specs": {
