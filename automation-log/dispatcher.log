@@ -10117,3 +10117,391 @@ preflight [WARN]  2026-08-08 07:29
 
   0 fail / 4 warn -- fix before the next posting slot.
 [Sat 08/08/2026  7:29:06.89] run_daily end exit=1 
+[Sun 08/09/2026  7:00:01.50] comply_gate_stitch scan (components\stitch) 
+
+SUMMARY: 0 file(s), 0 FAIL finding(s).
+[Sun 08/09/2026  7:00:01.61] run_daily start 
+uptime  UP    HTTP 200, brand + 4/4 category cards present, 43489 bytes
+hostip  27.130.8.134
+[Sun 08/09/2026  7:00:04.31] agent_gap_check 
+agent-gap OK  ร่องรอยล่าสุดคือ routine-log เมื่อ 2026-08-08 21:35 (9.4 ชม.ที่แล้ว) | รายงาน: รายงานล่าสุด 2026-08-08
+Sent to telegram home channel (chat_id: 8431211539)
+[free_llm] or-nemotron-ultra ERR 'choices' -> rotate
+queued: หนี้บัตรเครดิตหลายใบ จ่ายขั้นต่ำทุกเดือนแต | draft or-nemotron-ultra | final or-nemotron-ultra
+[free_llm] or-nemotron-ultra ERR 'choices' -> rotate
+[free_llm] or-nemotron-ultra ERR 'choices' -> rotate
+queued: ผ่อนรถอยู่แต่เริ่มผ่อนไม่ไหว ควรขายดาวน์ ร | draft or-nemotron-ultra | final glm-4.5-flash
+queued: ฟรีแลนซ์รายได้ไม่ประจำ อยากได้บัตร/สินเชื่ | draft or-nemotron-ultra | final or-nemotron-ultra
+queued: เงินเดือน 15000 อยากได้บัตรเครดิตใบแรก สมั | draft or-nemotron-ultra | final or-nemotron-ultra
+[free_llm] or-nemotron-ultra ERR 'choices' -> rotate
+queued: เงินเดือนชนเดือนทุกที เก็บเงินไม่อยู่ เริ่ | draft glm-4.5-flash | final or-nemotron-ultra
+[free_llm] or-nemotron-ultra ERR 'choices' -> rotate
+queued: สมัครบัตร/สินเชื่อไม่ผ่านบ่อย ควรเช็กเครดิ | draft or-nemotron-ultra | final or-nemotron-ultra
+queued: ผ่อนบ้านมาเกิน 3 ปี อยากรีไฟแนนซ์ลดดอก ดูอ | draft or-nemotron-ultra | final or-nemotron-ultra
+---
+ngernduangold daily queue: 7/7 draft ตรวจ 5 ชั้นแล้ว พร้อม approve -> automation-log/council-2026-08-09.md (ลิงก์ DM/bio เท่านั้น คนกดโพสต์)
+notified Telegram via Hermes
+[Sun 08/09/2026  7:19:20.24] daily_content start 
+[daily_content] วันนี้หัวข้อ #1/7: หนี้บัตรเครดิตหลายใบ จ่ายขั้นต่ำทุกเดือนแต่ยอดไม่ล
+[content_review] -> C:\Users\nL_ku\ngernduangold-site\automation-log\cowork-inbox\review-20260809-0721.md
+[content_review] มีจุดต้อง verify
+[head_content] package -> C:\Users\nL_ku\ngernduangold-site\automation-log\content-packages\20260809-0719-หน--บ-ตรเครด-ตหลายใบ-จ-ายข--นต-ำ.md
+[head_content] comply 6/6 OK
+[Sun 08/09/2026  7:21:41.47] ga4_pull start 
+[2026-08-09T07:21:43] auth = OAuth token (secrets/ga4-token.json)
+[2026-08-09T07:21:48] OK -> ga4-metrics.csv | source=7 sessions=156 quiz=0 affiliate_click=6 buy_intent=2
+[2026-08-09T07:21:48] auth = OAuth token (secrets/ga4-token.json)
+[2026-08-09T07:21:51] OK -> ga4-pages.csv | pages=26
+[2026-08-09T07:21:51] auth = OAuth token (secrets/ga4-token.json)
+[2026-08-09T07:21:52] OK -> ga4-funnel.csv | quiz_start=0 -> quiz_complete=0 -> recommendation_view=0 -> affiliate_click=6
+[Sun 08/09/2026  7:21:52.48] fb_queue_linkcheck (order-flow-fb-master B1) 
+OK all 7 pages 200 -> C:\Users\nL_ku\ngernduangold-site\automation-log\cowork-inbox\linkhealth-fb-2026-08-09.md
+[Sun 08/09/2026  7:21:58.71] qa_watermark gate: scan postable staging (FAIL = DO NOT POST) 
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\_vidout\clean\reel_auto-save-2026_clean.mp4 (track 0/60 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\_vidout\clean\reel_compound-interest-2026_clean.mp4 (track 0/60 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\_vidout\clean\reel_emergency-fund-2026_clean.mp4 (track 0/60 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\_vidout\clean\reel_save-small-2026_clean.mp4 (track 0/60 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\_vidout\clean\reel_title-loan-2026_clean.mp4 (track 0/60 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\automation-log\_social-stage\_final_dc01.mp4 (track 0/30 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\automation-log\_social-stage\_final_dc02.mp4 (track 0/30 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\automation-log\_social-stage\_final_dc03.mp4 (track 0/30 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\automation-log\_social-stage\_final_dc04.mp4 (track 0/30 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\automation-log\_social-stage\_final_dc05.mp4 (track 0/30 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\automation-log\_social-stage\_final_eb02.mp4 (track 0/24 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\automation-log\_social-stage\_final_eb03.mp4 (track 0/24 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\automation-log\_social-stage\_final_kp04.mp4 (track 0/24 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\automation-log\_social-stage\_final_kp05.mp4 (track 0/24 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\automation-log\_social-stage\_final_kp06.mp4 (track 0/24 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\automation-log\_social-stage\_final_sp01.mp4 (track 0/30 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\automation-log\_social-stage\_final_sp02.mp4 (track 0/30 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\automation-log\_social-stage\_final_tl01b.mp4 (track 0/30 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\automation-log\_social-stage\_final_tl03.mp4 (track 0/24 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\automation-log\_social-stage\_final_tl04.mp4 (track 0/24 frames)
+PASS    C:\Users\nL_ku\ngernduangold-site\pipeline\..\automation-log\_social-stage\_final_tl05.mp4 (track 0/30 frames)
+[Sun 08/09/2026  7:22:51.28] traffic_analyst start 
+[traffic_monitor] -> C:\Users\nL_ku\ngernduangold-site\automation-log\traffic-monitor-20260809-0722.md
+[traffic_analyst] -> C:\Users\nL_ku\ngernduangold-site\automation-log\cowork-inbox\traffic-verdict-20260809-0722.md
+[traffic_analyst] VERDICT: UNPROVEN: มีคนสนใจ (affiliate_click 6 · quiz 0) แต่ยังไม่มีหลักฐานว่าปลายทางรับเงินได้ — ยอดขายที่บันทึกไว้ = 0
+[traffic_analyst] DECISION: ห้ามสรุปว่า funnel แปลงผลจากคลิกอย่างเดียว · ก่อนเติม reach ให้ยืนยันปลายทางก่อน: หน้าขายมีปุ่มจ่ายเงินจริงไหม · ช่องทางรับเงิน (LINE/พร้อมเพย์) เปิดอยู่ไหม · ถ
+[Sun 08/09/2026  7:22:51.54] post_agent start (timing -
+[2026-08-09T07:22:51] auth = OAuth token (secrets/ga4-token.json)
+[post_timing] -> C:\Users\nL_ku\ngernduangold-site\automation-log\cowork-inbox\post-timing-20260809-0722.md | source: GA4 จริง (158 sessions) + heuristic
+[post_agent] -> C:\Users\nL_ku\ngernduangold-site\automation-log\cowork-inbox\post-queue-20260809-0722.md | 9 slots
+[Sun 08/09/2026  7:22:53.48] credit_tracker status 
+[credit_tracker] เหลือ 1000/1000 (~66 คลิป) · ใช้ไป 0%
+[Sun 08/09/2026  7:22:53.61] dashboard_agent start (dashboard.html) 
+[dashboard_agent] -> C:\Users\nL_ku\ngernduangold-site\automation-log\dashboard.html | sessions=156 conv=0 verdict=UNPROVEN: มีคนสนใจ (affiliate_
+Traceback (most recent call last):
+  File "C:\Users\nL_ku\ngernduangold-site\pipeline\posting_kit.py", line 111, in <module>
+    build()
+    ~~~~~^^
+  File "C:\Users\nL_ku\ngernduangold-site\pipeline\posting_kit.py", line 31, in build
+    plan = json.load(open(PLAN, encoding="utf-8")).get("plan", [])
+                     ~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\nL_ku\\ngernduangold-site\\automation-log\\post-plan.json'
+[Sun 08/09/2026  7:22:54.25] hermes_digest start 
+Sent to telegram home channel (chat_id: 8431211539)
+Sent to telegram home channel (chat_id: 8431211539)
+[traffic_monitor] -> C:\Users\nL_ku\ngernduangold-site\automation-log\traffic-monitor-20260809-0722.md
+[traffic_monitor] -> C:\Users\nL_ku\ngernduangold-site\automation-log\traffic-monitor-20260809-0722.md
+[traffic_analyst] -> C:\Users\nL_ku\ngernduangold-site\automation-log\cowork-inbox\traffic-verdict-20260809-0722.md
+[traffic_analyst] VERDICT: UNPROVEN: มีคนสนใจ (affiliate_click 6 · quiz 0) แต่ยังไม่มีหลักฐานว่าปลายทางรับเงินได้ — ยอดขายที่บันทึกไว้ = 0
+[traffic_analyst] DECISION: ห้ามสรุปว่า funnel แปลงผลจากคลิกอย่างเดียว · ก่อนเติม reach ให้ยืนยันปลายทางก่อน: หน้าขายมีปุ่มจ่ายเงินจริงไหม · ช่องทางรับเงิน (LINE/พร้อมเพย์) เปิดอยู่ไหม · ถ
+[summary_card] -> C:\Users\nL_ku\ngernduangold-site\automation-log\summary.png
+[hermes_digest] ส่งภาพสรุปเข้า Telegram แล้ว
+[hermes_digest] digest:
+ngernduangold — สรุปรายวัน 2026-08-09
+traffic: Meta reach 1557 views · GA4 156 sessions
+conversion (GA4 จริง): quiz_start=0 · affiliate_click=6
+ช่อง converted ดีสุด: pantip(4), chatgpt(2)
+คอนเทนต์ผลิตวันนี้: 1 แพ็กเกจ (ดราฟต์ รอรีวิว+โพสต์)
+Flow credits: 1000/1000 เหลือ (~66 คลิป @ 15)
+คลิปดีสุด: หนี้บัตรหลายใบ-รวมก้อนเดียว-0713 (151 views)
+ยังไม่มีคลิป reach >= 500 (ยังไม่พ้น cold-start)
+VERDICT: UNPROVEN: มีคนสนใจ (affiliate_click 6 · quiz 0) แต่ยังไม่มีหลักฐานว่าปลายทางรับเงินได้ — ยอดขายที่บันทึกไว้ = 0
+DECISION: ห้ามสรุปว่า funnel แปลงผลจากคลิกอย่างเดียว · ก่อนเติม reach ให้ยืนยันปลายทางก่อน: หน้าขายมีปุ่มจ่ายเงินจริงไหม · ช่องทางรับเงิน (LINE/พร้อมเพย์) เปิดอยู่ไหม · ถ้าขายได้แล
+งาน owner วันนี้: Pantip value 1-2 โพสต์ + โพสต์ใหม่ใช้ CTA 'คอมเมนต์ เช็กสิทธิ์'
+[hermes_digest] Telegram: ส่งแล้ว
+[Sun 08/09/2026  7:23:21.13] cc_monitor (Claude Code status -
+Sent to telegram home channel (chat_id: 8431211539)
+CC STATUS -> C:\Users\nL_ku\ngernduangold-site\automation-log\cowork-inbox\cc-status-20260809-072321.md | 📥 มีผล CC 25 รอ Cowork review/consume
+[Sun 08/09/2026  7:23:33.61] guard self-test 
+POSTING CAP  (POSTING-POLICY rule 2: <=2/day/channel, >=3h apart)
+  live posts 5h apart                                  PASS  (want PASS ) OK
+  live posts 1h apart                                  FAIL  (want FAIL ) OK
+  3 live posts, well spaced -> over cap                FAIL  (want FAIL ) OK
+  comment does not count as a post                     PASS  (want PASS ) OK
+  empty ledger                                         PASS  (want PASS ) OK
+  breach dated yesterday is history, not a gate        WARN  (want WARN ) OK
+  YT catch-up, 3 clips publishing on 3 days            PASS  (want PASS ) OK
+  YT 3 clips all publishing the SAME day               FAIL  (want FAIL ) OK
+  one scheduled + one live on the same day             PASS  (want PASS ) OK
+  pinterest 3 pins spaced (cap is 5)                   PASS  (want PASS ) OK
+  pinterest 6 pins                                     FAIL  (want FAIL ) OK
+
+POLICY WIRING  (numbers must come from policy.json, and fail safe without it)
+  cap default read from policy                         2     (want 2    ) OK
+  pinterest override read from policy                  5     (want 5    ) OK
+  min gap read from policy                             3     (want 3    ) OK
+  missing policy still enforces the written rule       (2, 3) (want (2, 3)) OK
+
+REPEAT FAILURES  (must fire when broken, go quiet once genuinely fixed)
+  one failure is noise                                 PASS  (want PASS ) OK
+  two failures same channel                            WARN  (want WARN ) OK
+  three failures same channel                          FAIL  (want FAIL ) OK
+  delivered again after the last failure = recovered   PASS  (want PASS ) OK
+  a success BEFORE the last failure is not recovery    FAIL  (want FAIL ) OK
+  failures older than the window are ignored           PASS  (want PASS ) OK
+  auto=false + no auto_legs is tagged as drift         True  (want True ) OK
+  a channel with declared auto_legs is not drift       False (want False) OK
+
+PROMPT DRIFT  (must know every date field policy owns, not just 'until')
+  a channel with 'until' is owned                      2026-08-25 (want 2026-08-25) OK
+  a channel with only 'phase_until' is owned           2026-08-14 (want 2026-08-14) OK
+  a channel with neither is not owned                  False (want False) OK
+  pantip contributes a date at all                     True  (want True ) OK
+  real claim: 'instagram' + a wrong date in that month FAIL  (want FAIL ) OK
+  'ig' inside the word 'ignore' is NOT the channel     PASS  (want PASS ) OK
+  a date inside a FILENAME is a reference, not a claim PASS  (want PASS ) OK
+  bare alias 'ig' as a real word still counts          FAIL  (want FAIL ) OK
+  correct date for the channel is fine                 PASS  (want PASS ) OK
+
+DEAD TOOLING  (a prompt may NAME a retired tool to ban it; ordering one is drift)
+  ordering a Postiz call is drift                      FAIL  (want FAIL ) OK
+  ordering a Meta MCP call is drift                    FAIL  (want FAIL ) OK
+  pointing at the old netlify.app host is drift        FAIL  (want FAIL ) OK
+  naming Postiz in order to BAN it must pass           PASS  (want PASS ) OK
+  naming Meta MCP in order to BAN it must pass         PASS  (want PASS ) OK
+  explaining the 301 from netlify.app must pass        PASS  (want PASS ) OK
+  a clean prompt passes                                PASS  (want PASS ) OK
+  someone else's prompt with the same drift only warns WARN  (want WARN ) OK
+
+POLICY DATES IN PROMPTS  (a channel deadline belongs in policy.json, not in a prompt)
+  Thai date as a channel deadline                      FAIL  (want FAIL ) OK
+  ISO date as a channel deadline                       FAIL  (want FAIL ) OK
+  Thai date + Thai channel word                        FAIL  (want FAIL ) OK
+  recording WHEN something died is history, not a deadline PASS  (want PASS ) OK
+  a date inside a FILENAME is a reference              PASS  (want PASS ) OK
+  deadline without any channel name is not ours to police PASS  (want PASS ) OK
+  pointing at policy.json is the correct form          PASS  (want PASS ) OK
+  'ig' inside a longer word is not the channel         PASS  (want PASS ) OK
+  same drift in someone else's prompt only warns       WARN  (want WARN ) OK
+
+SALES RECORDED  (clicks without a single recorded sale must not stay silent)
+  clicks but not one sale recorded                     WARN  (want WARN ) OK
+  a real sale on record                                PASS  (want PASS ) OK
+  no clicks and no sales is consistent                 PASS  (want PASS ) OK
+  no sales log at all                                  WARN  (want WARN ) OK
+  empty log and no GA4 to compare                      WARN  (want WARN ) OK
+  metadata header alone is not a sale                  WARN  (want WARN ) OK
+  old CSV header (conversion) is still read            WARN  (want WARN ) OK
+
+GATE STATUS VOCABULARY  (a prose status must not read as an unmade decision)
+  no status at all -> still overdue                    WARN  (want WARN ) OK
+  SUPERSEDED closes the gate                           PASS  (want PASS ) OK
+  lowercase decided closes it too                      PASS  (want PASS ) OK
+  prose status still warns                             WARN  (want WARN ) OK
+  ...but names the unusable word                       yes   (want yes  ) OK
+  ...and quotes it back                                yes   (want yes  ) OK
+  a real unmade decision is not annotated              yes   (want yes  ) OK
+
+SYNTHETIC TRAFFIC  (our own robots must not be counted as an audience)
+  direct ท่วมและไม่มี engagement เลย                   WARN  (want WARN ) OK
+  direct ท่วมแต่มี engagement = คนจริง                 PASS  (want PASS ) OK
+  direct ไม่ท่วม                                       PASS  (want PASS ) OK
+  ยังไม่มี sessions                                    PASS  (want PASS ) OK
+  ไม่มีไฟล์ ga4-metrics.csv                            WARN  (want WARN ) OK
+
+OPEN DECISIONS  (an expired plan gate must stay visible on every run)
+  far-future gate only                                 PASS  (want PASS ) OK
+  gate due in 2 days                                   WARN  (want WARN ) OK
+  gate overdue and not closed                          WARN  (want WARN ) OK
+  gate overdue but marked DONE                         PASS  (want PASS ) OK
+  gate overdue but marked SUPERSEDED is also closed    PASS  (want PASS ) OK
+  gate overdue with an unknown status is still open    WARN  (want WARN ) OK
+  no gates declared                                    PASS  (want PASS ) OK
+
+CONTENT CLIFF  (a gate must not land after the queue it refills runs out)
+  gate lands AFTER the queue ends                      WARN  (want WARN ) OK
+  gate lands ON the last queued day                    WARN  (want WARN ) OK
+  gate lands well BEFORE the queue ends                PASS  (want PASS ) OK
+  a bridge gate before the queue end covers a later one PASS  (want PASS ) OK
+  gate that decides something else entirely            PASS  (want PASS ) OK
+  a content gate already marked DONE                   PASS  (want PASS ) OK
+
+MANIFEST VOCABULARY  (post_guard must understand what the uploader writes)
+  'published (...)' - what yt_upload writes past its slot POSTED (want POSTED) OK
+  'scheduled (...)'                                    SCHEDULED-UI (want SCHEDULED-UI) OK
+  'posted (...)'                                       POSTED (want POSTED) OK
+  empty string is not a claim                          None  (want None ) OK
+  unknown word is not a claim                          None  (want None ) OK
+  'scheduled ... published' stays scheduled            SCHEDULED-UI (want SCHEDULED-UI) OK
+
+DELIVERY GAP  (the check that would have caught the 4-day blackout)
+  posted today                                         PASS  (want PASS ) OK
+  silent 2 days                                        WARN  (want WARN ) OK
+  silent 3 days                                        FAIL  (want FAIL ) OK
+  ledger with no content rows at all                   FAIL  (want FAIL ) OK
+  ledger file missing entirely                         FAIL  (want FAIL ) OK
+
+CAPTIONS  (must reject what the posting policy forbids, and only that)
+  clean caption                                        PASS  (want PASS ) OK
+  literal backslash-n token                            FAIL  (want FAIL ) OK
+  banned word 'guarantee'                              FAIL  (want FAIL ) OK
+  a percentage figure                                  FAIL  (want FAIL ) OK
+  url on a non-youtube channel                         FAIL  (want FAIL ) OK
+  url IS allowed on youtube                            PASS  (want PASS ) OK
+  empty manifest is a failure, not a pass              FAIL  (want FAIL ) OK
+
+POSTED TRUTH  (a 'posted' record must not outrun the evidence)
+  manifest agrees with upload log                      PASS  (want PASS ) OK
+  manifest claims a different videoId                  FAIL  (want FAIL ) OK
+  upload log has no row for that date                  FAIL  (want FAIL ) OK
+  no youtube claim at all = nothing to contradict      PASS  (want PASS ) OK
+
+COMPETING PLAN  (only the manifest may decide what gets posted)
+  no rival plan file                                   PASS  (want PASS ) OK
+  rival plan naming the same clip as the manifest      PASS  (want PASS ) OK
+  rival plan using a WINDOWS absolute path to reels    PASS  (want PASS ) OK
+  rival plan naming a DIFFERENT clip                   FAIL  (want FAIL ) OK
+  rival plan naming a non-reels/ file (the 31 Jul legacy bug) FAIL  (want FAIL ) OK
+  rival plan that is unreadable                        WARN  (want WARN ) OK
+
+DISCLOSURE  (driven by real anchors - must survive the negation trap)
+  affiliate links WITH the disclosure box              PASS  (want PASS ) OK
+  affiliate links with NO disclosure box               FAIL  (want FAIL ) OK
+  affiliate links on a page claiming it has none       FAIL  (want FAIL ) OK
+  page with NO affiliate links and no box is fine      PASS  (want PASS ) OK
+  over-disclosing (box, no links) is not a violation   PASS  (want PASS ) OK
+  site/ not built is a WARN, never a silent PASS       WARN  (want WARN ) OK
+
+ATTRIBUTION  (every affiliate button needs a channel_page_provider sub id)
+  well-formed sub id                                   PASS  (want PASS ) OK
+  sub id with too few parts                            FAIL  (want FAIL ) OK
+  no utm_content at all                                FAIL  (want FAIL ) OK
+  site/ not built is a WARN                            WARN  (want WARN ) OK
+
+QUEUED CLIP SPEC  (checks on the way IN, not on the way out)
+  policy.json missing -> WARN, not a silent pass       WARN  (want WARN ) OK
+  nothing queued from today onward -> WARN             WARN  (want WARN ) OK
+  queued clip missing on disk -> FAIL                  FAIL  (want FAIL ) OK
+
+DELIVERABLES  (a page may not take money for a file that does not exist)
+  page + real file -> ready                            PASS  (want PASS ) OK
+  page live, nothing to hand over -> FAIL              FAIL  (want FAIL ) OK
+  ...and the product is NAMED                          True  (want True ) OK
+  file listed in policy but absent on disk -> FAIL     FAIL  (want FAIL ) OK
+  a placeholder-sized file is not a deliverable -> FAIL FAIL  (want FAIL ) OK
+  product whose page no longer exists is out of scope  PASS  (want PASS ) OK
+  externally hosted product does not read as a local failure PASS  (want PASS ) OK
+  ...and the report admits it could not verify it      True  (want True ) OK
+  a ready product does not hide a missing one          FAIL  (want FAIL ) OK
+  no products declared -> WARN, never a silent PASS    WARN  (want WARN ) OK
+  unreadable policy -> WARN                            WARN  (want WARN ) OK
+
+STUCK RUNS  (evidence written before the risky step, then actually read)
+  a finished run is not stuck                          PASS  (want PASS ) OK
+  started 30h ago and never finished                   WARN  (want WARN ) OK
+  started THEN ok is a completed run, not a stuck one  PASS  (want PASS ) OK
+  started THEN fail is also finished (it reported)     PASS  (want PASS ) OK
+  started 1h ago is mid-flight, not stuck              PASS  (want PASS ) OK
+  one stuck routine among healthy ones still fires     WARN  (want WARN ) OK
+  the stuck routine is NAMED, not just counted         True  (want True ) OK
+  an unreadable timestamp is surfaced, never skipped   WARN  (want WARN ) OK
+  no runlog at all is a WARN, never a silent PASS      WARN  (want WARN ) OK
+  rows without a routine key are ignored, not crashed on PASS  (want PASS ) OK
+
+DELEGATED CHECKS  (queue + build gate shell out - prove the mapping)
+  runway_guard says OK                                 PASS  (want PASS ) OK
+  runway_guard says LOW_RUNWAY                         WARN  (want WARN ) OK
+  runway_guard says PARKED (approved pause is not a fault) PASS  (want PASS ) OK
+  PARKED still prints WHY, never an empty pass         True  (want True ) OK
+  runway_guard says PARK_OVERRUN (the pause expired)   FAIL  (want FAIL ) OK
+  runway_guard says DRIFT                              FAIL  (want FAIL ) OK
+  an unknown verdict fails LOUDLY and names itself     FAIL  (want FAIL ) OK
+  ...and the message actually contains the unknown verdict True  (want True ) OK
+  runway_guard cannot run at all                       FAIL  (want FAIL ) OK
+  smoke test passes                                    PASS  (want PASS ) OK
+  smoke test fails                                     FAIL  (want FAIL ) OK
+
+TWO TASK ROOTS  (the guard must read the file the scheduler runs, not the mirror)
+  dirty cc file, clean mirror -> must FAIL             FAIL  (want FAIL ) OK
+  clean cc file, dirty mirror -> WARN (not ours to fix) WARN  (want WARN ) OK
+  both roots merely forbid the dead tool -> PASS       PASS  (want PASS ) OK
+  a cc-only task is scanned too (clicktest was not)    FAIL  (want FAIL ) OK
+  retired task naming a dead tool is history, not drift PASS  (want PASS ) OK
+  a LIVE task with the same body still warns           WARN  (want WARN ) OK
+  retired cc task does not FAIL the gate either        PASS  (want PASS ) OK
+
+TASK MIRROR  (one id must not mean two different sets of orders)
+  identical in both roots                              PASS  (want PASS ) OK
+  same id, different orders                            WARN  (want WARN ) OK
+  cc task absent from the mirror                       WARN  (want WARN ) OK
+  a root that does not exist is a WARN, never a silent PASS WARN  (want WARN ) OK
+  one side is a tombstone -> resolved collision, not drift PASS  (want PASS ) OK
+  ...but it must still be SAID, never silently swallowed True  (want True ) OK
+  the tombstone may be on either side                  PASS  (want PASS ) OK
+  two LIVE prompts that differ is still drift          WARN  (want WARN ) OK
+  two tombstones that differ still warns (only ONE side may be retired) WARN  (want WARN ) OK
+  a resolved collision does not mask a real one alongside it WARN  (want WARN ) OK
+
+POLICY DATES noise filters  (six times today a guard flagged the lesson about itself)
+  retired task with a decorated marker [⛔ PAUSED ...]  PASS  (want PASS ) OK
+  quoting the stale line in order to ban it            PASS  (want PASS ) OK
+  a content-library rotation is a schedule, not channel policy PASS  (want PASS ) OK
+  a real channel pause deadline still fires            WARN  (want WARN ) OK
+
+POLICY DATES follow-ups  (retired tasks + field names)
+  retired task quoting an expired window is history, not drift PASS  (want PASS ) OK
+  'phase_until' is a FIELD NAME, not the deadline word 'until' PASS  (want PASS ) OK
+
+GA4 INTERNAL IP  (the rule that existed, was Active, and matched nothing)
+  egress ip is inside the pinned CIDR                  PASS  (want PASS ) OK
+  THE REAL 1 Aug CASE: pinned 184.22.17.215, box is on 27.130.5.93 WARN  (want WARN ) OK
+  both old and new pinned -> still covered             PASS  (want PASS ) OK
+  real CIDR math, not string compare (/24 contains .93) PASS  (want PASS ) OK
+  neighbouring /24 does NOT contain it                 WARN  (want WARN ) OK
+  Data Filter left in Testing = configured but not excluding WARN  (want WARN ) OK
+  no ga4.internal_traffic block at all                 WARN  (want WARN ) OK
+  ips list empty = not protected, must not read as PASS WARN  (want WARN ) OK
+  unparseable CIDR in policy is surfaced, not skipped  WARN  (want WARN ) OK
+  host_ip.json missing = blind, and blind must never print PASS WARN  (want WARN ) OK
+  host_ip.json 30 days old = uptime_check stopped running WARN  (want WARN ) OK
+  6 days old is still inside the freshness window      PASS  (want PASS ) OK
+  garbage recorded as the host ip is a WARN, not a crash WARN  (want WARN ) OK
+  unreadable checked_at is a WARN, not an assumed-fresh PASS WARN  (want WARN ) OK
+
+META  (no check may exist without proof it can both fire and stay quiet)
+  every check_* in preflight has a test here           []    (want []   ) OK
+  every check_* is actually called by main()           []    (want []   ) OK
+     22 check(s) in preflight, all exercised and wired
+
+193 checks, 0 failed
+ALL PASS
+[Sun 08/09/2026  7:23:42.28] preflight start 
+preflight [FAIL]  2026-08-09 07:24
+  PASS  content queue    queue parked until 2026-08-10 by automation-log/GATE-batch3_20260806.md section 4 - goes loud the day after
+  FAIL  deliverables     1 product(s) are on sale with nothing to hand over -> letter-kit-199 (site/debt-letter-kit.html promises it, nothing to send)
+  PASS  stuck runs       57 routine(s) tracked, none stuck mid-run
+  PASS  delivery gap     last real post 2026-08-08 (1 day(s) ago)
+  PASS  repeat failures  no channel failed twice in the last 3 days
+  PASS  posting cap      all channels within <=2 posts/day and >=3h spacing (last 2 days)
+  PASS  captions         23 items clean (no stray escapes, no %, no off-channel URL)
+  PASS  posted records   manifest agrees with yt_upload_log
+  WARN  queued clip spec nothing queued from today onward
+  PASS  competing plan   no rival post-plan.json - manifest is the only source
+  PASS  prompt drift     112 task prompt(s) agree with policy.json
+  PASS  dead tooling     112 task prompt(s) across both roots (44 retired, skipped): no orders pointing at retired tooling
+  PASS  policy dates     112 prompt(s) (44 retired, skipped): channel dates live in policy.json only
+  WARN  sales recorded   affiliate_click 6 ครั้ง แต่สมุดยอดขายว่างเปล่า - ปลายทางรับเงินไม่ได้ หรือขายแล้วไม่ได้บันทึก -> เช็กว่าหน้าขายมีปุ่มจ่ายเงินและช่องทางรับเงินเปิดอยู่ ถ้าขายได้แล้วให้บันทึกด้วย tools/log_sale.py
+  WARN  synthetic traffic direct 118 sessions (76%) โดย quiz_start=0 - ไม่มีสัญญาณว่าอ่านจริง น่าจะเป็น automation ของเราเอง ไม่ใช่คน -> เช็กว่างานอัตโนมัติตัวไหนเปิดหน้าเว็บโดยไม่ตั้ง traffic_type=internal
+  PASS  ga4 internal ip  27.130.8.134 อยู่ใน 184.22.17.215/32, 27.130.5.93/32, 27.130.8.134/32 และ Data Filter = Active (บันทึกจากเครื่อง NANON เมื่อ 0 วันก่อน)
+  PASS  task mirror      roots agree, except 1 id(s) deliberately retired on one side: ngernduangold-weekly-review
+  PASS  open decisions   10 gate(s), none overdue or due within 3 days
+  PASS  content cliff    no pending gate decides content production
+  PASS  disclosure       78 pages: every page with affiliate links discloses them (counted by real anchors, not by word match)
+  PASS  attribution      185 affiliate buttons, all sub ids well-formed
+
+  1 fail / 3 warn -- fix before the next posting slot.
+[Sun 08/09/2026  7:24:02.93] !! preflight FAIL - alert written 
+[Sun 08/09/2026  7:24:02.96] run_daily end exit=2 
