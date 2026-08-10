@@ -31,3 +31,6 @@
 {"ts": "2026-08-09T21:17:55+07:00", "routine": "ngernduangold-delivery-verify", "status": "ok", "summary": "guard exit2: Threads NOT-POSTED, FB-comment NONE, YouTube UNKNOWN(token); TikTok retired/IG paused = by design", "metrics": {}}
 {"ts": "2026-08-10T08:30:28+07:00", "routine": "ngernduangold-delivery-heartbeat", "status": "ok", "summary": "8 Aug->9 Aug: 9 Aug ไม่มีช่องไหนออกเลย (YT=UNKNOWN token, Threads=NOT-POSTED, FB-comment=NONE ติดกัน 5 วันตรวจ)", "metrics": {}}
 {"ts": "2026-08-10T08:31:31+07:00", "routine": "ngernduangold-pantip-monitor", "status": "ok", "summary": "scanned 5 pantip tags live; picked 1 unanswered thread + 1 backup; both pass comply_gate + dedup; quota 0/3 this week; note: 1 Aug and 7 Aug drafts still unposted", "metrics": {}}
+{"ts": "2026-08-10T09:08:52+07:00", "routine": "ngernduangold-weekly-review", "status": "started", "summary": "\"เริ่มรอบ\"", "metrics": {}}
+{"ts": "2026-08-10T10:01:14+07:00", "routine": "ngernduangold-batch3-gate-final", "status": "started", "summary": "เริ่มรอบ gate", "metrics": {}}
+{"ts": "2026-08-10T12:28:47+07:00", "routine": "ngernduangold-first-signal", "status": "ok", "summary": "no new signal: GA4 affiliate_click 6/28d (last click ~2 Aug, 0 in last 8 days); AccessTrade 1 conversion still the Jul KTC Proud one, 0 this month", "metrics": {}}
