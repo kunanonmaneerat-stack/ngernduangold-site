@@ -39,3 +39,4 @@
 {"ts": "2026-08-13T12:59:06+07:00", "routine": "ngernduangold-comment-loop", "status": "ok", "summary": "Swept FB/IG/Threads/YouTube via Chrome (logged-in session) - zero new comments across all channels; YouTube inbox filter confirms all existing comments already engaged", "metrics": {}}
 {"ts": "2026-08-14T08:24:15+07:00", "routine": "ngernduangold-pantip-monitor", "status": "ok", "summary": "found 1 primary + 1 backup thread, drafts ready in chat + saved copy", "metrics": {}}
 {"ts": "2026-08-14T08:30:41+07:00", "routine": "ngernduangold-delivery-heartbeat", "status": "ok", "summary": "13 ส.ค.: ออกจริง 1/3 auto (YouTube token unknown, FB-comment NONE ซ้ำหลายวัน, Threads miss); IG/Pinterest paused, FB video/TikTok manual-retired ตามแผน", "metrics": {}}
+{"ts": "2026-08-14T21:17:51+07:00", "routine": "ngernduangold-delivery-verify", "status": "ok", "summary": "post_guard exit2: TikTok+Threads NOT-POSTED today, FB-comment task silent - action needed", "metrics": {}}
