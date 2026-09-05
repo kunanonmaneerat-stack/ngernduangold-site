@@ -10,13 +10,72 @@
     "blackout, just in a different file. One fact, one place.",
     "kind = which pipeline a channel belongs to. Added 31 Jul after a dry-run of the daily card rule (state != paused AND auto == false) pulled PANTIP into the VIDEO card - pantip is a forum-comment flow with its own approval path, not a clip upload. Selection rules must filter on kind, never on state alone."
   ],
-  "updated": "2026-08-01",
+  "updated": "2026-08-16",
+  "publication_control": {
+    "default_publication_authorized": false,
+    "automation_capable_definition": "Technical capability only. automation_capable never grants permission to publish, schedule, promote, or resume a channel.",
+    "authority_rule": "Publishing requires publication_authorized=true plus every applicable dated gate and per-piece owner approval. A missing or false value must fail closed.",
+    "false_capability_note": "automation_capable=false means no currently verified automation route is recorded here; it is not a permanent claim about the channel."
+  },
+  "public_identity": {
+    "canonical_name": "เงินเดือนสมองทอง",
+    "entity_type": "Organization",
+    "page_only": true,
+    "scope": [
+      "website pages and metadata",
+      "social posts and captions",
+      "public comments and replies",
+      "calls to action",
+      "drafts intended for public copy"
+    ],
+    "public_speaker_rule": "Every public-facing message is authored and spoken only as the page. Personal identities and automation agents are internal operators, never the public speaker or byline.",
+    "forbidden_public_speakers": [
+      "codex",
+      "claude",
+      "cowork",
+      "chatgpt",
+      "gemini"
+    ],
+    "forbidden_personal_claim_patterns": [
+      "(?<![ก-๙])(?:ผม|ฉัน|ดิฉัน)(?![ก-๙])",
+      "ผู้จัดทำที่เป็น.+เอง",
+      "เคยผ่านการสมัคร.+ขอสินเชื่อ",
+      "เขียนจากมุมคนใช้งานจริง"
+    ],
+    "allowed_ai_disclosures": [
+      "ผลิตด้วย AI",
+      "ใช้ AI ช่วยค้นและเรียบเรียง"
+    ],
+    "required_prompt_marker": "PUBLIC_IDENTITY_PAGE_ONLY",
+    "outward_copy_tasks": [
+      "ngernduangold-comment-loop",
+      "ngernduangold-fb-evening-safetynet",
+      "ngernduangold-fb-page-comment-link",
+      "ngernduangold-fbgroup-listen",
+      "ngernduangold-knowledge-library-refill",
+      "ngernduangold-knowledge-post-noon",
+      "ngernduangold-page2-loan-post",
+      "ngernduangold-pantip-monitor"
+    ]
+  },
+  "continuous_improvement": {
+    "contract": ".system_control/improvement_policy.json",
+    "operator": "codex",
+    "operator_role": "internal_page_operator",
+    "public_identity": "เงินเดือนสมองทอง",
+    "local_safe_mode_authorized": true,
+    "unattended_external_mutation": false,
+    "rule": "The loop may observe, diagnose, prioritize, prepare scoped local improvements, validate and report. Publishing, source acknowledgement, commit, push, deploy and financial action remain separate owner-gated capabilities."
+  },
   "channels": {
     "youtube": {
       "state": "active",
       "auto": true,
+      "automation_capable": true,
+      "publication_authorized": false,
       "note": "uploader tools/yt_upload_batch2.py --live --dates YYYY-MM-DD",
       "kind": "video",
+      "channel_id": "UCVuqb7l5rJ4Q7PUKSIgsL4w",
       "studio_url": "https://studio.youtube.com/channel/UCVuqb7l5rJ4Q7PUKSIgsL4w/videos/short",
       "baseline_views": null,
       "_baseline_note": "channel-heartbeat used to hard-code 'normal is 20-35 views/clip in 24-48h, under 10 after 48h = watch'. That was a July figure nobody ever refreshed, so the guard was judging against a number that had quietly stopped being true. Left null on purpose: the heartbeat now reports raw view counts instead of scoring them, and will only score again once someone sets a figure here with a date."
@@ -24,6 +83,8 @@
     "facebook": {
       "state": "manual",
       "auto": false,
+      "automation_capable": true,
+      "publication_authorized": false,
       "note": "Business Suite by hand; Meta token revoked 18 Jul 2026 - never ask for tokens",
       "kind": "video",
       "auto_legs": [
@@ -33,10 +94,11 @@
       "auto_note": "auto=false refers to the VIDEO slot only (owner posts Reels by hand). text+comment legs are automated - see auto_legs.",
       "video_path": {
         "automated": false,
-        "owner": "Cowork (browser)",
+        "owner": "owner-only",
         "_evidence": "post-ledger has exactly 3 rows with channel=facebook type=video in its entire history: one 'cc-dispatcher-backfill' on 23 Jul with no clip_id, and two 'cowork-manual-recovery' on 31 Jul. Everything else automated on Facebook is text (knowledge-post-noon), comment (fb-comment-daily) or image (quote-card). Nothing posts a Reel on a schedule.",
-        "_why_it_matters": "This was never written down, so the 6 Aug gate and the first version of the 7 Aug CC order both planned around a Facebook video capability that does not exist. Meta token was revoked permanently on 18 Jul, so any Reel has to go through the browser on the owner's machine - which is Cowork's side, not CC's. Assigning it to CC would have produced a silent no-op.",
-        "current_task": "ngernduangold-fb-reel-backfill (Cowork, 1/day 15:00, 9-13 Aug 2026, then retire)",
+        "_why_it_matters": "This was never written down, so the 6 Aug gate and the first version of the 7 Aug CC order both planned around a Facebook video capability that does not exist. Meta token was revoked permanently on 18 Jul, so any Reel has to go through the browser on the owner's machine. Automation capability does not grant Cowork or CC publication authority.",
+        "current_task": "retired",
+        "retired_task": "ngernduangold-fb-reel-backfill (Cowork, 1/day 15:00, 9-13 Aug 2026, then retire)",
         "open_question": "CC to confirm what cc-dispatcher-backfill (23 Jul) was, and whether it still works."
       },
       "page_id": "583765282304956",
@@ -46,25 +108,75 @@
     "threads": {
       "state": "active",
       "auto": true,
+      "automation_capable": true,
+      "publication_authorized": false,
       "note": "video attach WORKING again via native OS dialog (1 Aug 2026); see OPERATING-NOTES §OS-dialog",
       "kind": "video",
       "video_auto": true,
       "video_note": "DISPROVEN AND REVERSED 1 Aug 2026 05:12 by threads-video-idle-window. The native OS file-dialog route WORKS and posted b3-01 successfully (first Threads video since 25 Jul). The 02:xx entry that closed this route was an INFERENCE from the Chrome-extension route (extension tabs run visibilityState='hidden'/hasFocus=false, so they cannot own a native dialog) - but this task never uses the extension. It drives a real VISIBLE FOCUSED Chrome window with OS-level mouse clicks (Windows-MCP Snapshot/Click). Clicking แนบสื่อ that way DID open dialog class #32770, and the composer rendered the preview (ลบออก button appeared, layout shifted 145px). STILL TRUE: file_upload into input[type=file] is dead on Threads (proven twice) - do not retry it. PRECONDITION: machine genuinely idle; verify GetForegroundWindow title before any keystroke. GOTCHA: keyboard layout is Thai - SendKeys/WM_SETTEXT both fail; type with SendInput KEYEVENTF_UNICODE."
     },
     "tiktok": {
-      "state": "retired",
+      "state": "testing_blocked",
       "auto": false,
-      "until": "2026-08-06",
-      "reason": "Not restricted, just not working. 37 posts bought no audience and no measurable traffic. Retired rather than paused because 'paused pending evidence' is what it has been since 20 Jul and the evidence is now in.",
-      "decided_by": "Cowork (owner delegated)",
+      "automation_capable": false,
+      "publication_authorized": false,
       "kind": "video",
-      "decided_on": "2026-08-07",
+      "account_handle": "@ngernduangold",
+      "profile_url": "https://www.tiktok.com/@ngernduangold",
+      "target_verified_on": "2026-08-16",
+      "target_verification": "Authenticated read-only TikTok profile and TikTok Studio check; public handle matched @ngernduangold and Studio showed 37 posts / 0 drafts.",
+      "reason": "Owner requested TikTok be included again on 16 Aug 2026. The channel is now a local planning-only 14-day reactivation test; publication remains blocked until every listed gate is resolved per item.",
+      "decided_by": "owner request; Codex recorded the fail-closed local plan",
+      "decided_on": "2026-08-16",
       "evidence": "Read TikTok Studio in the browser on 7 Aug - it does NOT need the owner's phone, which is why this sat open for 8 days. 37 posts live, 0 drafts, EVERY post privacy = public, no warning banner anywhere in Studio. So the account is NOT restricted and NOT shadowbanned - the theory that held this decision open was simply wrong. What is true: 12 followers, 1-2 views per post, 9 video views in the last 7 days, 0 profile views, 0 comments, 0 shares, and 0 sessions to the site ever. Last post 26 Jul; batch3 sent it nothing at all (0/7). The clips it did get were 10s, unlike the 20-21s used elsewhere.",
-      "reversible": "Set state back to 'testing' and give it a real run: same clips as the other channels, not 10s cut-downs, for 14 consecutive days. Anything less repeats a test that was never run."
+      "reversible": "Return state to retired to cancel the test without touching any remote account or media.",
+      "reactivation_test": {
+        "status": "PLANNED_BLOCKED",
+        "plan_source": "automation-log/TIKTOK-REACTIVATION-PLAN_20260817-30.md",
+        "start_not_before": "2026-08-17",
+        "end_not_after": "2026-08-30",
+        "duration_days": 14,
+        "cadence": "one full-length vertical clip per day only after per-piece gates pass",
+        "source_side_candidate_ids": [
+          "b4-p01",
+          "b3-05",
+          "b3-06",
+          "b3-01",
+          "b3-02",
+          "b3-03",
+          "b3-04"
+        ],
+        "new_brief_ids": [
+          "tt-r14-08",
+          "tt-r14-09",
+          "tt-r14-10",
+          "tt-r14-11",
+          "tt-r14-12",
+          "tt-r14-13",
+          "tt-r14-14"
+        ],
+        "excluded_content": {
+          "b3-07": "Do not use: semantic overlay does not match the intended message."
+        },
+        "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY",
+        "blockers": [
+          "publication_authority",
+          "channel_review",
+          "per_piece_owner_confirmation",
+          "official_source_review",
+          "live_tiktok_history_dedup",
+          "live_landing_parity",
+          "bio_route_parity",
+          "per_piece_hash_bound_media_receipt",
+          "seven_new_assets_not_yet_produced"
+        ]
+      }
     },
     "instagram": {
       "state": "paused",
       "auto": false,
+      "automation_capable": false,
+      "publication_authorized": false,
       "until": "2026-08-25",
       "reason": "GA4 28d: 1 session / 0 conv",
       "decided_by": "owner review",
@@ -73,6 +185,8 @@
     "pinterest": {
       "state": "paused",
       "auto": false,
+      "automation_capable": false,
+      "publication_authorized": false,
       "until": "2026-08-25",
       "reason": "GA4 28d: 0 sessions from 9 pins",
       "decided_by": "owner review",
@@ -81,16 +195,44 @@
     "pantip": {
       "state": "limited",
       "auto": false,
-      "weekly_quota": 3,
-      "reason": "FINAL WARNING on the brand account - one more violation = permanent ban",
+      "automation_capable": false,
+      "publication_authorized": false,
+      "weekly_quota": 1,
+      "reason": "One owner-confirmed manual reply was published 2026-08-16 and its one-time authorization is consumed. The pilot is observing for 48 hours with channel-level publication locked; FINAL WARNING remains.",
       "account": "9373300",
       "kind": "forum",
-      "phase": "1-extended",
-      "phase_until": "2026-08-14",
+      "phase": "manual-reply-pilot-2026-08-16",
+      "phase_until": "2026-08-23",
       "owner": "CC",
       "owner_task": "ngernduangold-pantip-monitor",
-      "owner_decided_on": "2026-08-01",
-      "owner_note": "เจ้าของตัดสิน 1 ส.ค. 2026: Pantip มีเจ้าของเดียวคือ CC. Cowork/pantip-daily-opportunity ถูกปิดพร้อมกัน. เหตุผล: ช่องนี้อยู่สถานะ FINAL WARNING (ผิดซ้ำ = แบนถาวร) และโควตา <=3/สัปดาห์ ถ้ามีสองเจ้าของ ต่างฝ่ายต่างนับของตัวเอง ไม่มีใครเห็นยอดรวม -- ความเสียหายของการโพสต์เกินโควตาที่นี่คือถาวร ไม่ใช่แค่เสียโอกาส. ห้ามงานฝั่ง Cowork โพสต์/ร่าง Pantip อีก. ถ้าจะเปลี่ยนเจ้าของต้องแก้ที่นี่ก่อน."
+      "owner_decided_on": "2026-08-16",
+      "owner_note": "เจ้าของยืนยันข้อความและปลายทางรายชิ้นก่อนโพสต์ 16 ส.ค. 2026. เปิดเฉพาะ manual pilot แบบตอบกระทู้เดิม โดย CC ยังเป็น owner เดียวของช่อง; การโพสต์ครั้งถัดไปต้องผ่าน review 48 ชั่วโมงและการยืนยันรายชิ้น ณ เวลาลงมืออีกครั้ง.",
+      "manual_pilot": {
+        "status": "OBSERVING_48H",
+        "started_at": "2026-08-16T15:54:44+07:00",
+        "review_due_at": "2026-08-18T15:54:44+07:00",
+        "next_publication_not_before": "2026-08-18T15:54:44+07:00",
+        "authorization_state": "ONE_TIME_APPROVAL_CONSUMED",
+        "review_must_pass_before_reauthorization": true,
+        "scope": "reply_existing_topic_only",
+        "weekly_quota": 1,
+        "week_definition": "Monday-Sunday Asia/Bangkok",
+        "per_piece_owner_confirmation_required": true,
+        "allowed": [
+          "helpful factual reply to an existing topic"
+        ],
+        "forbidden": [
+          "new_topic",
+          "body_link",
+          "brand_mention",
+          "price_or_offer",
+          "affiliate_cta",
+          "automated_publication"
+        ],
+        "first_content_id": "pantip-reply-44197340-v1",
+        "first_placement_id": "pantip-reply-44197340-v1__pantip_main",
+        "first_post_status": "published_confirmed"
+      }
     }
   },
   "gates": [
@@ -225,32 +367,33 @@
     {
       "date": "2026-09-05",
       "task": "ngernduangold-sales-experiment-gate",
-      "status": "OPEN",
+      "status": "BLOCKED",
       "decides": [
-        "whether the 199 THB offer has real demand",
-        "whether Pantip should become the primary channel"
+        "whether a verified, deliverable 199 THB offer has real demand"
       ],
-      "count_from": "2026-08-08",
+      "count_from": null,
+      "measurement_start": null,
+      "measurement_window_days": 28,
       "why": "Until today nobody could answer 'why no sales' because the experiment had never been run. 28 days produced 14 sales-page views; at a 2% conversion that predicts 0.28 sales, so 0 was the expected result, not a signal. Worse, the sales page carries zero Gumroad links - the only checkout offered is 'add a stranger on LINE', and LINE friends = 1. This gate exists so the next reading is taken against a threshold set BEFORE the data arrives.",
       "preconditions": [
         "A0 (BLOCKING, owner): the 10-page PDF must exist and be uploaded as its own Gumroad product. Until it does, the page is taking orders it cannot fill.",
-        "A1 (CC, ~20 min, only after A0): wire that listing into site/debt-letter-kit.html and the 13 debt articles",
-        "B (Cowork/owner): resume Pantip inside its 3/week quota - but pointed at articles and affiliate, NOT at the 199 THB CTA, until A0 is done"
+        "A1 (CC, ~20 min, only after A0): wire that listing into site/debt-letter-kit.html and the debt articles",
+        "A2 (blocking): checkout, delivery, refund/contact copy and analytics must pass QA before a fresh measurement_start is written"
       ],
       "pass_if": {
         "sales_page_views_28d": 50,
         "real_sessions_28d": 90,
-        "pantip_pieces_28d": 10,
         "sales": "1 - but only counts if A0 was done before the window opened"
       },
       "how_to_read": "sales_page_views >= 50 and still 0 sales -> demand can finally be discussed, the test was real. sales_page_views < 50 -> the bottleneck is still traffic; do NOT touch the offer, the price or the sales page copy, and do not read 0 sales as a demand signal. Preconditions not done -> the gate cannot decide anything; say so plainly rather than producing an automatic 'no', which is exactly what happened to batch3 on 6 Aug.",
       "source": "automation-log/SALES-DIAGNOSIS_20260808.md",
-      "_revised_20260809": "Original preconditions assumed the product existed and that l/debt-toolkit could be linked to the sales page. Both were wrong. A2 (reconcile price) is cancelled - there was never a conflict. If A0 is not done, this gate CANNOT decide anything about demand: driving traffic to an unfulfillable offer is not an experiment, it is an exposure."
+      "_revised_20260809": "Original preconditions assumed the product existed and that l/debt-toolkit could be linked to the sales page. Both were wrong. If A0 is not done, this gate CANNOT decide anything about demand: driving traffic to an unfulfillable offer is not an experiment, it is an exposure.",
+      "_revised_20260816": "Blocked and reset. Start a new 28-day window only after A0-A2 are complete. Pantip remains a separate channel decision and is not a sales-test precondition."
     },
     {
       "date": "2026-08-10",
       "task": "ngernduangold-batch3-gate-final",
-      "status": "OPEN",
+      "status": "DECIDED",
       "decides": [
         "does batch3 pass the >=100 views/7d bar",
         "how many clips batch4 gets, if any",
@@ -259,18 +402,99 @@
       "count_from": "2026-08-03",
       "why": "The 6 Aug gate decided 'cannot decide yet, defer to 10 Aug'. Nobody registered the 10 Aug date anywhere - no gates[] entry, and the task that made the decision fires once and auto-disables. Found on 9 Aug: the decision day was about to pass in silence while the park expired underneath it. A deferral nobody registers is an accidental cancellation.",
       "blocked_by": "secrets/yt_token.json needs the youtube.readonly scope or view counts cannot be read at all; owner-only. Without it the honest output is 'cannot decide', never 'fail'.",
-      "how_to_read": "A test that was never run is not a test that failed. If views cannot be read, defer again WITH a registered date and extend planned_park to match."
+      "how_to_read": "A test that was never run is not a test that failed. If views cannot be read, defer again WITH a registered date and extend planned_park to match.",
+      "decided_on": "2026-08-10",
+      "decided_by": "Cowork (owner delegated)",
+      "decision": [
+        "batch3: CANNOT DECIDE - view counts unreadable. Not a fail.",
+        "batch4: do NOT produce yet; BATCH4-PRODUCTION-KIT has no sunk cost",
+        "tiktok: already retired 7 Aug - nothing to decide, not reopened",
+        "defer to 2026-08-13 10:00 and extend planned_park to match"
+      ],
+      "rationale": "Tested live today, not assumed: refreshed the token successfully, then called videos?part=statistics and got HTTP 403 ACCESS_TOKEN_SCOPE_INSUFFICIENT. scopes is still ['youtube.upload'] only - the file was touched 9 Aug 08:12 but that was an automatic refresh, NOT a re-auth, which is exactly why it looks healthy and is not. The measurement window is no longer the constraint: b3-01/05/02/06 all passed 7x24h days ago. Only the read permission is. A test that was never run is not a test that failed, so this is 'cannot decide', never 'fail'.",
+      "unblock_paths": {
+        "A_owner": "re-auth secrets/yt_token.json with scope youtube.readonly (~5 min, permanent fix)",
+        "B_no_owner": "read view counts off channels.youtube.studio_url in a real browser. This is the path nobody considered for 4 days. Precedent is in this same file: channels.tiktok.evidence says reading TikTok Studio in the browser 'does NOT need the owner's phone, which is why this sat open for 8 days'. Same wrong assumption, different channel.",
+        "_note": "The 6 Aug gate offered only path A and predicted it would defer forever if A was skipped. A was skipped. It did."
+      },
+      "output": "automation-log/GATE-batch3-FINAL_20260810.md"
     },
     {
       "date": "2026-08-15",
       "task": "ngernduangold-knowledge-library-refill",
-      "status": "OPEN",
+      "status": "DECIDED",
+      "decided_on": "2026-08-16",
+      "decision": "KNOWLEDGE-POSTS-C_20260816-0831.md created and passed the 16-row fail-closed validator; daily noon content now has coverage through 31 Aug.",
       "decides": [
         "whether the daily noon post has anything left to publish from 16 Aug"
       ],
       "why": "KNOWLEDGE-POSTS-B ends 15 Aug with 7 entries left. The noon post fires every day and reads from that library. No task was watching this cliff. Refill task now fires 13 Aug, two days of slack so a failed round can still be fixed before the library runs dry.",
       "content_gate": true,
       "note": "Registered as a gate so check_content_cliff can see it. The 27-30 Jul blackout happened because content ran out and only the posting routines knew."
+    },
+    {
+      "date": "2026-08-13",
+      "task": "ngernduangold-batch3-gate-final-2",
+      "status": "DECIDED",
+      "decides": [
+        "does batch3 pass the >=100 views/7d bar - LAST attempt at this question",
+        "how many clips batch4 gets, if any",
+        "what happens to content_supply.planned_park, which expires the same day"
+      ],
+      "count_from": "2026-08-03",
+      "why": "Deferred here from 10 Aug because YouTube view counts could not be read (live 403 confirmed). 13 Aug is chosen by the measurement, not by convenience: b3-03 completes 7x24h at 08:13 that morning, so n goes from 4 to 5 = every batch3 clip that reached YouTube. Shorter than 14 Aug on purpose - every extra day of park is another day YouTube stays silent.",
+      "blocked_by": "yt_token.json still lacks youtube.readonly. TWO unblock paths now, see gates[2026-08-10].unblock_paths - this is no longer owner-only.",
+      "no_further_deferral": true,
+      "how_to_read": "Deferred twice already (3->6 Aug, 6->10 Aug); this is the third. If views STILL cannot be read on 13 Aug, do NOT defer a fourth time. Retire the >=100-views criterion, recording it as UNMEASURABLE rather than failed, and size batch4 from evidence that can actually be read: GA4 session/piece and per-channel delivery rate. A criterion unreadable three rounds running is not a criterion, it is a roadblock - and holding it stops the whole system while deciding nothing.",
+      "source": "automation-log/GATE-batch3-FINAL_20260810.md",
+      "decided_on": "2026-08-16",
+      "decided_by": "Codex after owner-authorized live audit",
+      "decision": [
+        "batch3 view gate: PASS - b3-05 reached 304 views around 26 hours after public release, inside the 7-day window",
+        "batch4 volume: one pilot only, b4-p01; do not render the remaining prepared batch yet",
+        "publishing remains a separate control; this gate does not schedule or post",
+        "do not reopen retired or paused channels as a side effect"
+      ],
+      "rationale": "YouTube Studio was read successfully on 16 Aug and showed the same salary/credit-limit Short at 369 views. The older direct platform snapshot already pinned 304 views inside about 26 hours, so the >=100-within-7-days condition is measurable and passed. Only one clip clearly crossed the bar and GA4/revenue evidence is still weak, therefore a one-clip pilot is the maximum evidence supports.",
+      "output": "automation-log/GATE-batch3-FINAL_20260816.md"
+    },
+    {
+      "date": "2026-08-14",
+      "task": "owner decision - pantip phase 2",
+      "status": "DECIDED",
+      "decided_on": "2026-08-16",
+      "decision": "Pause Pantip after the expired reply-only phase; do not draft, post or link until a new explicitly approved phase exists.",
+      "decides": [
+        "pantip phase 2: open it, extend phase 1 again, or leave as is"
+      ],
+      "why": "REGISTERED (not decided) by the 10 Aug gate run. channels.pantip.phase_until is 2026-08-14 and the 30 Jul gate ordered 'extend phase 1 to 14 Aug' - but NO gates[] entry for 14 Aug existed. That is the identical bug that created ngernduangold-batch3-gate-final: the 6 Aug gate deferred to 10 Aug and nobody registered 10 Aug either. A deferral nobody registers is an accidental cancellation.",
+      "owner": "CC (channels.pantip.owner) - Cowork must not post or draft Pantip",
+      "note": "Decided fail-closed on 16 Aug after the deadline passed. Reopening requires a new dated phase and per-piece owner approval; an old OPEN gate or historical traffic is not permission.",
+      "rationale": "The apparent upside is based on only 4 recorded affiliate clicks while the account-level downside is a permanent ban. Pausing is reversible; a violation is not.",
+      "superseded_by": "pantip manual reply pilot approved 2026-08-16"
+    },
+    {
+      "date": "2026-08-18",
+      "task": "pantip manual pilot 48h review",
+      "status": "OPEN",
+      "review_due_at": "2026-08-18T15:54:44+07:00",
+      "decides": [
+        "whether comment 6 remains visible without a moderator warning or deletion",
+        "whether the reply-only one-per-week pilot may continue through 2026-08-23"
+      ],
+      "evidence": {
+        "content_id": "pantip-reply-44197340-v1",
+        "placement_id": "pantip-reply-44197340-v1__pantip_main",
+        "permalink": "https://pantip.com/topic/44197340/comment6"
+      },
+      "pass_if": [
+        "comment remains visible",
+        "no moderator warning, deletion, or account restriction",
+        "no link, brand, price, offer, or duplicate was introduced"
+      ],
+      "fail_action": "Set channels.pantip back to paused, publication_authorized=false, weekly_quota=0, and do not post again.",
+      "pass_action": "A PASS only makes one future reply eligible for fresh source/dedup/compliance review and action-time owner confirmation; it does not publish or grant standing authority.",
+      "note": "The owner confirmed this exact comment and destination at action time. That confirmation does not authorize any different future comment; the browser confirmation and all content gates still apply per piece."
     }
   ],
   "specs": {
@@ -297,7 +521,7 @@
       "video",
       "image"
     ],
-    "_conflict": "STANDING-RULE_autopost.md says 1/day/channel; this file holds 2 because that is what the live guards enforce. See gates[] 2026-07-31 - unresolved."
+    "_conflict": "Historical conflict resolved by the dated gate on 2026-07-31: STANDING-RULE_autopost.md originally said 1/day/channel while POSTING-POLICY rule 2 said <=2/day/channel. DECIDED: 2/day/channel remains the cap and min_gap_hours >=3 is the anti-blast guard. The historical 1/day text remains in STANDING-RULE with its dated resolution."
   },
   "funnel_endpoint": {
     "_why": "Verified live by Cowork on the owner-authenticated session, 1 Aug 2026 ~19:5x. FUNNEL-HEALTH_20260731 had to skip every LINE check because the session had expired, so for two days nobody could tell whether the only checkout path for the 199 THB product was even open. It is. Recorded here so the 8 Aug buy-intent gate can be read without that ambiguity.",
@@ -353,30 +577,28 @@
       "Affiliate Sub ID": "sub_id"
     },
     "internal_traffic": {
-      "_why": "GA4 can only mark internal traffic by IP. On 1 Aug 2026 the rule and the Data Filter both existed and looked healthy, but the pinned IP (184.22.17.215) had been rotated by the ISP to 27.130.5.93, so the rule matched nothing and every page our own automation opened was counted as a real reader (~79% of sessions). A guard configured once and never measured again looks exactly like a working guard. tools/uptime_check.py now records the real egress IP daily and preflight/check_ga4_internal_ip compares it against the list below.",
+      "_why": "GA4 internal-traffic matching requires private network values. The public policy stores only this fail-closed contract; live egress state and configured CIDRs stay in ignored local runtime files.",
       "rule_name": "Internal Traffic - My IP",
       "traffic_type": "internal",
       "filter_name": "Internal Traffic",
-      "filter_state": "Active",
-      "filter_operation": "Exclude",
-      "ips": [
-        "184.22.17.215/32",
-        "27.130.5.93/32",
-        "27.130.8.134/32"
-      ],
-      "verified_at": "2026-08-07",
-      "verified_how": "Opened GA4 Admin > Data streams > ngernduangold web > Configure tag settings > Define internal traffic, added 27.130.5.93/32 and re-opened the rule to confirm it persisted; Admin > Data filters shows Internal Traffic / Exclude / Active.",
-      "on_mismatch": "preflight WARNs within a day. Add the new CIDR in GA4 Define internal traffic AND here. Do NOT widen to /16 to 'stop the churn': 27.130.0.0/16 is a Thai consumer ISP range that certainly contains real readers, and excluding them is a worse error than a 30-second edit every few days. The rotation is cheap now precisely BECAUSE the guard catches it - before 1 Aug it went unnoticed for weeks.",
+      "private_config_contract": {
+        "schema_version": 1,
+        "environment": "NGERNDUANGOLD_GA4_PRIVATE_POLICY",
+        "default": ".local-private/runtime/ga4-policy-private.json",
+        "required_shape": "ga4.internal_traffic with active exclude state and non-empty CIDRs",
+        "missing_behavior": "UNTRUSTED"
+      },
+      "verified_at": "stored in private runtime state",
+      "verified_how": "Verify the private CIDRs in GA4 Admin and keep public logs free of network addresses.",
+      "on_mismatch": "Treat every GA4 decision as UNTRUSTED until the private egress state is covered by the private CIDR list. Never widen a consumer network range to hide address rotation.",
       "rotation_history": [
         {
           "seen": "2026-08-01",
-          "ip": "27.130.5.93",
-          "note": "replaced 184.22.17.215 which had been dead for weeks"
+          "event": "network address rotated; private filter state required an update"
         },
         {
           "seen": "2026-08-07",
-          "ip": "27.130.8.134",
-          "note": "6 days later, and into a DIFFERENT /24 - the ISP does not keep this box inside one block"
+          "event": "another rotation confirmed that broad consumer ranges must not be excluded"
         }
       ]
     },
@@ -400,21 +622,37 @@
       "cost": "batch4-gate fired 6 Aug on a 7-day window with 3 blank days -> verdict 'cannot be measured'. A week of production bought no answer.",
       "detected_by": "nobody at the time; found 7 Aug by auditing Slack silence",
       "now_guarded_by": "tools/agent_gap_check.py on the cron layer"
+    },
+    {
+      "from": "2026-09-05",
+      "until": null,
+      "kind": "deliberate agent-layer pause",
+      "scope": "ALL Cowork scheduled tasks. The cron layer (pipeline/run_daily.cmd via Windows Task Scheduler) is NOT paused - it costs no tokens and keeps preflight, uptime_check, runway_guard and the ledger guards alive.",
+      "reason": "Owner is moving token budget to another project. This is a decision, not a failure.",
+      "declared_by": "owner, 5 Sep 2026",
+      "_read_this_before_diagnosing": "Silence from 9 Aug onward is EXPECTED. Do not open an incident, do not 'repair' anything, and do not read the empty ledger as a broken pipe - that is exactly the mistake made after the 3-5 Aug blackout, where a real pause got measured as a failed test. Any gate whose window overlaps this range must return 'cannot decide', never 'fail'.",
+      "resume_checklist": "automation-log/RESUME-CHECKLIST_20260905.md",
+      "_date_correction": "First written as 9 Aug because the sandbox clock reported that date. The scheduled-task registry proved otherwise - tasks show lastRunAt through 5 Sep. Corrected before commit. Never trust the sandbox clock for anything dated."
     }
   ],
   "task_roots": {
-    "_swept": "2026-08-07",
+    "_swept": "2026-08-16 read-only stable registry snapshot",
     "cowork_root": "C:\\Users\\nL_ku\\Claude\\Scheduled",
     "cc_root": "C:\\Users\\nL_ku\\.claude\\scheduled-tasks",
     "counts": {
-      "cowork_folders": 100,
-      "registry_entries": 90,
+      "cowork_folders": 103,
+      "cowork_registry_entries": 92,
+      "cowork_enabled": 26,
       "cc_folders": 12,
-      "orphans": 10,
-      "ghosts": 0
+      "cc_registry_entries": 11,
+      "cc_enabled": 7,
+      "cowork_orphans": 11,
+      "cc_orphans": 1,
+      "ghosts": 0,
+      "shared_prompt_ids": 12
     },
-    "_finding": "A folder in the Cowork root is NOT proof of a live task. Ten folders there have no entry in list_scheduled_tasks, so nothing will ever fire them. Nine are copies of CC-side tasks - the CC root holds the live one and the Cowork copy is a decoy that editing does nothing to. The tenth, tiktok-vmok-window-watcher, exists in neither registry nor the CC root: nothing anywhere runs it.",
-    "decoy_copies_cc_is_live": [
+    "_finding": "Folder presence is not execution authority. The current guard reads stable snapshots of both Claude Desktop scheduled-tasks registries and binds each record to its exact prompt root. Cowork has 11 orphan folders and CCD has 1; enabled state comes only from the registries.",
+    "cowork_orphans_with_cc_counterpart": [
       "ngernduangold-buy-intent-gate",
       "ngernduangold-clicktest",
       "ngernduangold-comment-loop",
@@ -425,17 +663,18 @@
       "ngernduangold-link-health",
       "ngernduangold-queue-keeper"
     ],
-    "dead_everywhere": [
+    "explicitly_retired_or_absent_everywhere": [
+      "ngernduangold-gsc-weekly",
       "tiktok-vmok-window-watcher"
     ],
-    "dual_owned_check_before_editing": [
+    "shared_ids_require_registry_ownership_check": [
       "daily-pantip-threads-engine",
       "ngernduangold-pantip-monitor",
       "ngernduangold-weekly-review"
     ],
-    "_why_it_matters": "preflight/check_task_mirror compares the two roots by FILE CONTENT, so a decoy whose bytes match the live copy reads as PASS. The guard proves the files agree; it cannot prove either side is actually scheduled. This is notes 29/30 in a new shape - not drift between copies, but a file that looks mirrored and healthy while being unreachable. On 1 Aug the weekly-review tombstone came from exactly this confusion about which root owns what.",
-    "rule": "Before editing any task prompt: confirm the id appears in list_scheduled_tasks. If it does not, the Cowork file is a decoy and the change must be made in the CC root instead. Never delete files from the other agent's root.",
-    "guarded_by": "cowork-task-watchdog step 2.6 (added 7 Aug). It is the only routine that can do this: the registry is not a file in either root - it lives in the app store and is reachable only through the MCP tool, which preflight cannot call because it runs offline. A preflight check would have to fake it."
+    "_why_it_matters": "A byte-identical mirror can be unreachable, while an enabled registry may point to a retired no-op prompt. Content equality therefore cannot prove execution ownership. Registry state, prompt retirement state, role capabilities and executable side effects must be checked together.",
+    "rule": "Before editing a task prompt, read the stable scheduler ownership export from tools/automation_policy_guard.py --registry-json. Never infer ownership from a folder and never edit scheduler registry JSON by hand.",
+    "guarded_by": "tools/automation_policy_guard.py plus preflight automation ownership gate; cowork-task-watchdog is read-only evidence review and is not authority to mutate a scheduler."
   },
   "audits": {
     "prompt_sweep_20260807": {
@@ -502,13 +741,13 @@
       },
       "actions_ranked": [
         "A: BLOCKED 9 Aug - no Gumroad product exists for the letter kit; the one on file sells something else. Owner must create it (~15 min) and supply the PDF before any linking work is real.",
-        "B: resume Pantip inside its allowed quota (+64 sessions/mo, 2.5x real traffic)",
+        "B: SUPERSEDED / BLOCKED - do not resume Pantip; current weekly_quota=0 and phase is paused. Reopening requires a new dated phase and per-piece owner approval.",
         "C: stop producing Threads-only content",
         "D: write for AI citation - chatgpt already compounds unaided"
       ],
       "do_not": [
         "do not change price or rewrite the offer - n=14 cannot tell you what is wrong",
-        "do not add new channels while Pantip sits at 0/3",
+        "do not treat historical Pantip traffic as permission to resume; current weekly_quota is 0 and the phase is paused",
         "do not read 0 sales as a demand signal until the sales page gets >=50 views/month WITH a working checkout"
       ],
       "gate_date": "2026-09-05",
@@ -523,13 +762,14 @@
     }
   },
   "content_supply": {
-    "checked_at": "2026-08-08",
-    "checked_by": "cowork content-supply audit",
+    "checked_at": "2026-08-16",
+    "checked_by": "Codex full policy/content audit",
     "video": {
-      "queued_days_from_today": 2,
+      "queued_days_from_today": 0,
       "last_queued_day": "2026-08-08",
       "unposted_rendered_clips_1080x1920": [
-        "b3-04"
+        "b3-04",
+        "b4-p01 (rendered and QA-passed 2026-08-16; not scheduled)"
       ],
       "clips_720p_unusable": [
         "2026-07-11_kp04",
@@ -541,29 +781,44 @@
       ],
       "note_720p": "rendered but below the 1080x1920 clip spec - they FAIL check_queued_clip_spec. Do not queue them; they are not spare runway.",
       "channel_runway": {
-        "youtube": "1 day (b3-04 on 8 Aug) then empty - this is the real gap",
-        "threads": "3 nights (b3-03, b3-07, b3-04 still unposted there)",
-        "facebook": "5 days via the 9-13 Aug backfill, which reuses already-published clips"
+        "youtube": "0 scheduled days; b4-p01 is ready for review but not authorized for publishing",
+        "threads": "no new schedule created by the 16 Aug production run",
+        "facebook": "manual video path; no new schedule created by the 16 Aug production run"
       }
     },
     "text": {
-      "knowledge_posts_until": "2026-08-15",
+      "knowledge_posts_until": "2026-08-31",
       "quote_cards_until": "2026-08-22",
       "page2_posts_until": "2026-09-11",
       "verdict": "sufficient - text is not the constraint"
     },
-    "planned_park": {
+    "last_video_park": {
       "scope": "video queue only",
       "from": "2026-08-09",
-      "until": "2026-08-10",
-      "reason": "batch3 gate deferred to 10 Aug; rendering batch4 before that risks producing clips that the gate then tells us not to post",
-      "decided_by": "automation-log/GATE-batch3_20260806.md section 4",
-      "resume_by": "2026-08-11",
-      "script_bottleneck_precleared": "automation-log/BATCH4-PRODUCTION-KIT.md"
+      "until": "2026-08-13",
+      "reason": "Waiting on PERMISSION TO READ YouTube view counts (scope youtube.readonly, or a browser read of YouTube Studio) - NOT waiting on clips to age. b3-01/05/02/06 passed 7x24h days ago; b3-03 does so 13 Aug 08:13. Producing batch4 before the gate still risks rendering clips the gate then says not to post.",
+      "decided_by": "automation-log/GATE-batch3-FINAL_20260810.md section 4.4",
+      "resume_by": "2026-08-14",
+      "will_not_be_extended_again": true,
+      "accepted_cost": "YouTube gets NO new clip 9-13 Aug. Runway is 0 and no spare 1080x1920 clip exists (the 6 in reels/ are 720p and fail spec). Facebook is covered by the 10-14 Aug backfill and Threads self-heals. Stated out loud rather than hidden: we are pausing production to measure YouTube, and the pause is what makes YouTube silent - which is the strongest argument for 13 Aug being the last deferral.",
+      "script_bottleneck_precleared": "automation-log/BATCH4-PRODUCTION-KIT.md",
+      "closed_on": "2026-08-16",
+      "closed_by": "automation-log/GATE-batch3-FINAL_20260816.md",
+      "close_reason": "Live Studio evidence closed the measurement gate; one pilot was produced and no further deferral was allowed."
+    },
+    "planned_park": {
+      "scope": "video queue only",
+      "from": "2026-09-05",
+      "until": "2026-10-15",
+      "reason": "Owner paused the entire agent layer on 5 Sep 2026 to move token budget to another project. Not a content decision - a resourcing one.",
+      "decided_by": "owner pause, 5 Sep 2026",
+      "resume_by": "set a real date when the agent layer is switched back on - this one is a placeholder chosen only to stop PARK_OVERRUN firing at nobody, and it still expires on purpose",
+      "_honesty_note": "A park is meant to be short and reviewed. A 7-week park is not 'fine', it is a paused business. It expires 30 Sep so the guard speaks up if the pause is forgotten rather than letting it become permanent silently."
     }
   },
   "products": {
     "_why": "Added 9 Aug 2026. site/debt-letter-kit.html promises 'ส่งสลิปในแชทเดิม แล้วรับไฟล์ PDF 10 หน้ากลับทางแชท' three times over. The PDF does not exist anywhere on this machine. Nobody noticed because every check in this repo watched whether the OFFER was reachable - never whether the THING could be handed over. A page that can take money for a file we cannot send is worse than a page nobody visits.",
+    "_status_note": "DELIVERABLE_READY means only that the recorded deliverable exists or is hosted. It does not authorize promotion, linking, publishing, scheduling, or accepting payment; promotion_authorized remains a separate fail-closed field.",
     "items": [
       {
         "id": "letter-kit-199",
@@ -572,6 +827,7 @@
         "promises": "จดหมาย 5 ฉบับ + สคริปต์โทรแบงก์ (PDF 10 หน้า)",
         "deliverable": null,
         "status": "PROMISED-BUT-MISSING",
+        "promotion_authorized": false,
         "note": "Blocks the whole 199 THB funnel. Owner must produce the PDF; it cannot be generated from anything in the repo. Same shape as the 24 Jul ebook case."
       },
       {
@@ -580,7 +836,8 @@
         "sold_on": "site/links.html",
         "promises": "ebook แผนปลดหนี้",
         "deliverable": "automation-log/_ebook_debt-payoff_v1.2.pdf",
-        "status": "READY"
+        "status": "DELIVERABLE_READY",
+        "promotion_authorized": false
       },
       {
         "id": "debt-toolkit-gumroad",
@@ -588,9 +845,27 @@
         "sold_on": "site/links.html",
         "promises": "ชุดเครื่องมือปลดหนี้ (Excel)",
         "deliverable": "gumroad:l/debt-toolkit",
-        "status": "READY",
+        "status": "DELIVERABLE_READY",
+        "promotion_authorized": false,
         "note": "Hosted by Gumroad, verified purchasable 7 Aug. This is a DIFFERENT product from letter-kit-199 despite sharing the 199 THB price - linking the two would have shipped a spreadsheet to someone who paid for letters."
       }
     ]
+  },
+  "release_attestation": {
+    "schema_version": 1,
+    "live_domain_observation": {
+      "schema_version": 1,
+      "max_age_hours": 6,
+      "max_capture_duration_seconds": 120,
+      "future_skew_seconds": 300,
+      "exclusive_expiry": true
+    },
+    "predeploy_acceptance": {
+      "schema_version": 1,
+      "max_age_hours": 2,
+      "max_funnel_report_age_hours": 2,
+      "future_skew_seconds": 300,
+      "exclusive_expiry": true
+    }
   }
 }
