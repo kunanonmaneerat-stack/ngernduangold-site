@@ -1,0 +1,248 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-08-23T20:45:00+07:00",
+  "audit_kind": "BOUNDED_LEGACY_PERMANENT_DEDUP_REMEDIATION",
+  "status": "COMPLETED_BLOCKED",
+  "meaning": "Deterministic local source evidence repaired 33 legacy identities without changing the append-only post ledger or inferring external delivery. Remaining unknowns and the historical duplicate stay blocking.",
+  "scope": {
+    "starting_incomplete_rows": 68,
+    "new_bindings_appended": 33,
+    "bound_target_lines": [
+      25,
+      26,
+      28,
+      29,
+      51,
+      52,
+      58,
+      59,
+      60,
+      64,
+      65,
+      72,
+      74,
+      75,
+      76,
+      83,
+      84,
+      90,
+      91,
+      96,
+      97,
+      101,
+      106,
+      117,
+      118,
+      126,
+      127,
+      132,
+      133,
+      142,
+      151,
+      161,
+      166
+    ],
+    "posted_delivery_status_fields_changed": false,
+    "post_ledger_bytes_changed": false,
+    "r5_pack_bound_or_published": false,
+    "external_action_performed": false
+  },
+  "coverage": {
+    "before": {
+      "complete_rows": 57,
+      "incomplete_rows": 68,
+      "identity_rows": 125,
+      "coverage_percent": 45.6
+    },
+    "after": {
+      "complete_rows": 90,
+      "incomplete_rows": 35,
+      "identity_rows": 125,
+      "coverage_percent": 72.0,
+      "identity_binding_state": "PASS",
+      "applied_identity_bindings_total": 46
+    }
+  },
+  "deterministic_binding_classes": {
+    "knowledge_markdown_exact_or_whitespace_equivalent_prefix": 24,
+    "page2_markdown_exact_prefix": 2,
+    "local_draft_exact_line_range": 3,
+    "content_manifest_caption_or_slug_join": 4
+  },
+  "remaining_unknown_groups": [
+    {
+      "type": "broadcast-scheduled",
+      "channel": "line",
+      "reason": "full text hash/normal form missing; prefix-only identity",
+      "lines": [
+        33
+      ],
+      "count": 1,
+      "remediation_rule": "Do not bind until exact full public copy is found in a hashable one-to-one local source."
+    },
+    {
+      "type": "comment",
+      "channel": "facebook",
+      "reason": "full text hash/normal form missing; prefix-only identity",
+      "lines": [
+        27,
+        32,
+        49,
+        56,
+        71,
+        88,
+        95,
+        109,
+        114,
+        121,
+        175
+      ],
+      "count": 11,
+      "remediation_rule": "Do not bind until exact full public copy is found in a hashable one-to-one local source."
+    },
+    {
+      "type": "comment",
+      "channel": "fb-group",
+      "reason": "full text hash/normal form missing; prefix-only identity",
+      "lines": [
+        45
+      ],
+      "count": 1,
+      "remediation_rule": "Do not bind until exact full public copy is found in a hashable one-to-one local source."
+    },
+    {
+      "type": "comment",
+      "channel": "instagram",
+      "reason": "full text hash/normal form missing; prefix-only identity",
+      "lines": [
+        30,
+        63,
+        79,
+        89
+      ],
+      "count": 4,
+      "remediation_rule": "Do not bind until exact full public copy is found in a hashable one-to-one local source."
+    },
+    {
+      "type": "comment",
+      "channel": "pantip",
+      "reason": "full text hash/normal form missing; prefix-only identity",
+      "lines": [
+        53
+      ],
+      "count": 1,
+      "remediation_rule": "Do not bind until exact full public copy is found in a hashable one-to-one local source."
+    },
+    {
+      "type": "comment",
+      "channel": "youtube",
+      "reason": "full text hash/normal form missing; prefix-only identity",
+      "lines": [
+        31,
+        47,
+        55,
+        62,
+        70,
+        78,
+        87,
+        94,
+        103,
+        113,
+        120,
+        129,
+        137,
+        155
+      ],
+      "count": 14,
+      "remediation_rule": "Do not bind until exact full public copy is found in a hashable one-to-one local source."
+    },
+    {
+      "type": "story",
+      "channel": "facebook",
+      "reason": "full text hash/normal form missing; prefix-only identity",
+      "lines": [
+        39
+      ],
+      "count": 1,
+      "remediation_rule": "Do not bind until exact full public copy is found in a hashable one-to-one local source."
+    },
+    {
+      "type": "text",
+      "channel": "facebook",
+      "reason": "full text hash/normal form missing; prefix-only identity",
+      "lines": [
+        48
+      ],
+      "count": 1,
+      "remediation_rule": "Do not bind until exact full public copy is found in a hashable one-to-one local source."
+    },
+    {
+      "type": "text",
+      "channel": "threads",
+      "reason": "full text hash/normal form missing; prefix-only identity",
+      "lines": [
+        41
+      ],
+      "count": 1,
+      "remediation_rule": "Do not bind until exact full public copy is found in a hashable one-to-one local source."
+    }
+  ],
+  "historical_collision": {
+    "channel": "tiktok",
+    "identity": "titleloan",
+    "occurrence_lines": [
+      1,
+      19
+    ],
+    "external_delivery_resolution": "UNKNOWN_NO_INFERENCE",
+    "tombstone_state": "PASS",
+    "reuse_policy": "HISTORICAL_CANONICAL_COLLISION_NON_REUSABLE",
+    "duplicate_history_still_visible": true
+  },
+  "novelty_guard": {
+    "verdict": "BLOCKED_SYSTEM_HISTORY_NO_R5_COLLISION_DETECTED",
+    "r5_collision_total": 0,
+    "system_blockers": [
+      "LEDGER_IDENTITY_COVERAGE_INCOMPLETE",
+      "PERMANENT_DEDUP_DUPLICATE_TIKTOK_TITLELOAN"
+    ],
+    "pack_sha256": "0ACD60E0D44F689841C8AAF2C7AF1ADAADA6A5E03CCCAF87C3B626BE84A21A28",
+    "receipt_sha256": "95D3A46375BCEFDF99D53B92853D2E00863FB6370DE01C24666A918A13F2F3E9"
+  },
+  "artifacts": {
+    "post_ledger": {
+      "path": "automation-log/post-ledger.jsonl",
+      "sha256": "416C768E3F6740C531C0F45F98AE1745B88C23C93D35E404F92708E43BC6909E"
+    },
+    "identity_bindings": {
+      "path": "automation-log/post-ledger-identity-bindings.jsonl",
+      "sha256": "D299DEB830983FCCC0A276DF3B4269BF8E6968E8C2331E6C43309BB42E26406B"
+    },
+    "source_evidence_v2": {
+      "path": "automation-log/dedup-evidence/post-ledger-identity-sources-v2.json",
+      "sha256": "7F1FDD4FD9BA93BEA109A40C1559A5696A9AA1235C2A2A78677874C0DFA5D265"
+    },
+    "collision_tombstone": {
+      "path": "automation-log/post-ledger-collision-tombstones.json",
+      "sha256": "1451E046F40E130CC70A1A5F7231A2F4FA3ED58349DD0FB418AC2BD7141947A1"
+    },
+    "novelty_receipt": {
+      "path": "automation-log/dedup-evidence/WEEK-CONTENT-R5-NOVELTY-RECEIPT_20260823.json",
+      "sha256": "95D3A46375BCEFDF99D53B92853D2E00863FB6370DE01C24666A918A13F2F3E9"
+    }
+  },
+  "verification": {
+    "tests_total": 51,
+    "tests_passed": 51,
+    "tests_failed": 0,
+    "suites": [
+      "pipeline.test_post_ledger_identity_bindings (18)",
+      "pipeline.test_post_ledger_collision_tombstone (6)",
+      "pipeline/test_post_ledger_permanent_dedup.py (10)",
+      "tools/test_post_ledger_completeness.py (9)",
+      "tools.test_week_content_r5_novelty_guard (8)"
+    ],
+    "full_perceptual_novelty_guard_run": true
+  },
+  "self_sha256": "AE9A58E0D28E340C2012E6AD8928808125C97B99D8CB747252838B8A3DB1DDA9"
+}

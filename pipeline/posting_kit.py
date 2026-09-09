@@ -1,9 +1,15 @@
 """posting_kit.py — สร้าง posting-kit.html: ชุดโพสต์กดง่ายสุดสำหรับเจ้าของ
-อ่าน post-plan.json -> การ์ดรายคลิป (เรียงตามลำดับโพสต์) พร้อมปุ่ม คัดลอก path ไฟล์ + คัดลอกแคปชัน + เวลา
+อ่าน legacy post-plan.json -> การ์ดรายคลิป พร้อมปุ่มคัดลอก path/แคปชัน/เวลา
 เจ้าของ: กดเพิ่มวิดีโอ -> วาง path -> Enter -> กดคัดลอกแคปชัน -> วาง -> ตั้งเวลา -> Schedule
-ปลอดภัย: สร้างไฟล์ HTML เท่านั้น · ใช้: py pipeline/posting_kit.py
+ปลอดภัย: สร้างไฟล์ HTML เท่านั้น; runner ข้ามได้เมื่อ legacy producer ถูกปิดและไม่มี input
 """
-import os, sys, json, html, datetime
+import argparse
+import datetime
+import html
+import json
+import os
+import sys
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 AL = os.path.join(ROOT, "automation-log")
 PLAN = os.path.join(AL, "post-plan.json")
@@ -11,6 +17,10 @@ OUT = os.path.join(AL, "posting-kit.html")
 WIN_ROOT = r"C:\Users\nL_ku\ngernduangold-site"
 SBX_ROOT = ROOT
 DAYS_TH = {0: "อา", 1: "จ", 2: "อ", 3: "พ", 4: "พฤ", 5: "ศ", 6: "ส"}
+EXIT_OK = 0
+EXIT_REVIEW_REQUIRED = 1
+EXIT_RUNNER_FAILED = 2
+MISSING_INPUT_WITH_EXISTING_OUTPUT = "MISSING_INPUT_WITH_EXISTING_OUTPUT"
 
 
 def winpath(p):
@@ -27,8 +37,49 @@ def _d(iso):
         return iso
 
 
-def build():
-    plan = json.load(open(PLAN, encoding="utf-8")).get("plan", [])
+def _load_plan(plan_path):
+    with open(plan_path, encoding="utf-8") as handle:
+        document = json.load(handle)
+    if not isinstance(document, dict):
+        raise ValueError("post-plan root must be a JSON object")
+    plan = document.get("plan")
+    if not isinstance(plan, list):
+        raise ValueError("post-plan.plan must be a list")
+    for index, row in enumerate(plan, 1):
+        if not isinstance(row, dict):
+            raise ValueError("post-plan.plan[%d] must be an object" % (index - 1))
+        for field in ("day", "topic", "label", "file", "caption", "hashtags"):
+            if not isinstance(row.get(field, ""), str):
+                raise ValueError("post-plan.plan[%d].%s must be text" % (index - 1, field))
+        for field, default in (("tiktok", 19), ("ig", 20), ("yt", 18)):
+            value = row.get(field, default)
+            if (
+                not isinstance(value, int)
+                or isinstance(value, bool)
+                or not 0 <= value <= 23
+            ):
+                raise ValueError("post-plan.plan[%d].%s must be an integer hour from 0 to 23" % (index - 1, field))
+    return plan
+
+
+def build(plan_path=PLAN, out_path=OUT, *, allow_missing_legacy_plan=False):
+    if not os.path.exists(plan_path):
+        if allow_missing_legacy_plan:
+            if os.path.exists(out_path):
+                print(
+                    "[posting_kit] REVIEW_REQUIRED: legacy post-plan.json is absent; "
+                    "existing posting-kit output was preserved and may be stale",
+                    file=sys.stderr,
+                )
+                return MISSING_INPUT_WITH_EXISTING_OUTPUT
+            print(
+                "[posting_kit] SKIP: legacy post-plan.json is absent; "
+                "retired producer remains disabled and there is no output to invalidate"
+            )
+            return None
+        raise FileNotFoundError("legacy post-plan input is missing: %s" % plan_path)
+
+    plan = _load_plan(plan_path)
     cards = ""
     for i, p in enumerate(plan, 1):
         wp = winpath(p.get("file", ""))
@@ -74,7 +125,7 @@ h1{font-size:18px;margin:0 0 4px}.sub{color:#8b98a5;font-size:12.5px;line-height
 .ft{color:#5b6673;font-size:11px;text-align:center;margin-top:14px}
 </style></head><body><div class="wrap">
 <h1>📋 ชุดโพสต์กดง่าย — เงินเดือนสมองทอง</h1>
-<div class="sub">36 คลิป เรียงตามลำดับโพสต์ · เปิดไฟล์นี้บนเครื่องที่จะโพสต์</div>
+<div class="sub">%CLIP_COUNT% คลิป เรียงตามลำดับโพสต์ · เปิดไฟล์นี้บนเครื่องที่จะโพสต์</div>
 <div class="how">
 <b>วิธีโพสต์ 1 คลิป (~30 วิ):</b><br>
 1) ใน Business Suite กด <b>สร้างคลิป Reels</b> → <b>เพิ่มวิดีโอ</b><br>
@@ -98,9 +149,41 @@ setTimeout(function(){btn.textContent=o;btn.classList.remove('done');},1400);});
 function flt(w,btn){document.querySelectorAll('.filter button').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');
 document.querySelectorAll('.card').forEach(function(c){c.style.display=(w==0||c.dataset.wk==w)?'':'none';});}
 </script></body></html>"""
-    open(OUT, "w", encoding="utf-8").write(doc.replace("%CARDS%", cards))
-    print("[posting_kit] -> %s (%d คลิป)" % (OUT, len(plan)))
-    return OUT
+    rendered = doc.replace("%CARDS%", cards).replace("%CLIP_COUNT%", str(len(plan)))
+    with open(out_path, "w", encoding="utf-8") as handle:
+        handle.write(rendered)
+    print("[posting_kit] -> %s (%d คลิป)" % (out_path, len(plan)))
+    return out_path
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description="build the optional legacy local posting kit")
+    parser.add_argument("--plan", default=PLAN, help="legacy post-plan JSON input")
+    parser.add_argument("--output", default=OUT, help="local HTML output")
+    parser.add_argument(
+        "--allow-missing-legacy-plan",
+        action="store_true",
+        help="exit successfully without rewriting output when the retired producer has no input",
+    )
+    args = parser.parse_args(argv)
+    try:
+        build_result = build(
+            args.plan,
+            args.output,
+            allow_missing_legacy_plan=args.allow_missing_legacy_plan,
+        )
+    except (json.JSONDecodeError, ValueError) as exc:
+        print("[posting_kit] REVIEW_REQUIRED: %s" % exc, file=sys.stderr)
+        return EXIT_REVIEW_REQUIRED
+    except OSError as exc:
+        print("[posting_kit] RUNNER_FAILED: %s" % exc, file=sys.stderr)
+        return EXIT_RUNNER_FAILED
+    except Exception as exc:
+        print("[posting_kit] RUNNER_FAILED: %s: %s" % (type(exc).__name__, exc), file=sys.stderr)
+        return EXIT_RUNNER_FAILED
+    if build_result == MISSING_INPUT_WITH_EXISTING_OUTPUT:
+        return EXIT_REVIEW_REQUIRED
+    return EXIT_OK
 
 
 if __name__ == "__main__":
@@ -108,4 +191,4 @@ if __name__ == "__main__":
         sys.stdout.reconfigure(encoding="utf-8")
     except Exception:
         pass
-    build()
+    raise SystemExit(main())

@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "asset": "media/quotes/week-20260824-30-r5/qt-12_pinterest_2x3.jpg",
+  "sha256": "337F6A1F0D708DD119F36854B22094888EFB7566555BE520CC85164320F22B49",
+  "media_type": "image",
+  "reviewed_at": "2026-08-23T19:00:49+07:00",
+  "media_origin": {
+    "generator_origin": "LOCAL_HTML_CSS_BROWSER_RENDER",
+    "contains_flow_pixels": false,
+    "contains_flow_audio": false,
+    "synthid_expected": false
+  },
+  "source_binding": {
+    "weekly_pack": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+    "weekly_pack_id": "week-content-20260824-30-r5",
+    "candidate_id": "qt-12",
+    "variant": "2x3",
+    "dimensions": [
+      1000,
+      1500
+    ],
+    "exact_overlay_text": "อย่าเอาสถานะการเงินของเราไปเทียบกับภาพชีวิตของคนอื่น เพราะเราไม่เห็นภาพการเงินทั้งหมดของเขา",
+    "source_markup_sha256": "43B1931B42112544A5CECFCE77417E09F2C9F52B09CD6AB80D5CC406AFF28A28"
+  },
+  "technical_qa": {
+    "status": "PASS",
+    "dimensions": [
+      1000,
+      1500
+    ],
+    "mode": "RGB",
+    "deterministic_browser_text_render": "PASS",
+    "safe_crop_review": "PASS_FULL_FRAME_VISUAL_REVIEW"
+  },
+  "novelty_review": {
+    "status": "PASS",
+    "content_id": "qt-12-2x3-r5",
+    "reviewer": "Codex deterministic hash and full-frame visual comparison",
+    "corpus_fingerprint": "AC1AB9B513986D3D4E5F702171CAFF31E449DB1C01FA6C7323DF41239B6646E4",
+    "compared_assets": 27,
+    "scope": "Copy-edited r5 quote-card revision; exact SHA-256 is unique within the four-file r5 set and differs from superseded evidence"
+  },
+  "watermark": {
+    "visual_review": {
+      "status": "PASS",
+      "reviewer": "Codex r5 full native-resolution quote-card review",
+      "scope": "Full native-resolution image reviewed; no provider/platform watermark, page logo, account handle, URL, tracking mark, affiliate CTA, clipped copy, or unsafe crop",
+      "evidence": [
+        "media/quotes/week-20260824-30-r5/qt-12_pinterest_2x3.jpg"
+      ]
+    }
+  }
+}

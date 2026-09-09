@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "asset": "reels/week-20260824-30/2026-08-24_wk36-sf01.mp4",
+  "sha256": "061E47AE8C9F535E79656C8DA2254DC13AD29E28BB35A5CFF23FB6D92ABE7A91",
+  "media_type": "video",
+  "reviewed_at": "2026-08-23T18:03:55+07:00",
+  "source_binding": {
+    "weekly_pack": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+    "candidate_id": "wk36-sf01",
+    "content_payload_sha256": "85D17A5DF5182887C7BC8F935ADE02B12BC4627936F87691113C48F33AB880B9",
+    "exact_visible_copy": [
+      "เริ่มจัดการเงินจากสมุดหนึ่งหน้า",
+      "เงินเข้า",
+      "จำเป็น",
+      "เลือกได้",
+      "เริ่มทีละช่อง",
+      "ข้อมูลเพื่อการศึกษา · ผลิตด้วย AI"
+    ],
+    "visual_mode": "deterministic local HTML/SVG plus centered kinetic zoom",
+    "narration": {
+      "engine": "Windows.Media.SpeechSynthesis local runtime",
+      "voice": "Microsoft Pattara",
+      "language": "th-TH",
+      "speaking_rate": 0.95,
+      "source_text_sha256": "9360625027FE2246DCA59B1751FCB6D52875C6197166139CC0039B58579B2F92",
+      "source_text_exact_match": "PASS",
+      "audio_duration_seconds": 9.951,
+      "human_listening_status": "NOT_PERFORMED"
+    }
+  },
+  "technical_qa": {
+    "file": "reels/week-20260824-30/2026-08-24_wk36-sf01.mp4",
+    "sha256": "061E47AE8C9F535E79656C8DA2254DC13AD29E28BB35A5CFF23FB6D92ABE7A91",
+    "qa_scope": "automated_media_only",
+    "manual_checks_required": [
+      "semantic_frame_review",
+      "landing_page_qa"
+    ],
+    "duration_seconds": 18.0,
+    "size_bytes": 3734056,
+    "video": {
+      "codec": "h264",
+      "width": 1080,
+      "height": 1920,
+      "fps": "24/1",
+      "pixel_format": "yuv420p"
+    },
+    "audio": {
+      "codec": "aac",
+      "sample_rate": "48000",
+      "channels": 1
+    },
+    "full_decode": "PASS",
+    "faststart": {
+      "status": "PASS",
+      "moov_offset": 32,
+      "mdat_offset": 13926
+    },
+    "loudness": {
+      "status": "PASS",
+      "non_silent": "PASS",
+      "integrated_lufs": -16.24,
+      "true_peak_dbfs": -1.37,
+      "loudness_range_lu": 2.2,
+      "guard": {
+        "integrated_lufs_min": -18.0,
+        "integrated_lufs_max": -14.0,
+        "true_peak_dbfs_max": -1.0
+      }
+    },
+    "watermark": {
+      "verdict": "PASS",
+      "frames": 54,
+      "track_frames": 0,
+      "track_frac": 0.0,
+      "fps": 3.0
+    }
+  },
+  "manual_check_resolution": {
+    "semantic_frame_review": "PASS_FULL_RESOLUTION_SOURCE_AND_ENCODED_SAMPLES",
+    "landing_page_qa": "NOT_APPLICABLE_NO_OUTBOUND_URL_OR_LINK_CTA",
+    "audio_listening": "NOT_PERFORMED_RECORDED_AS_LIMITATION"
+  },
+  "novelty_review": {
+    "status": "PASS",
+    "content_id": "wk36-sf01",
+    "reviewer": "Codex deterministic hash and source-bound creative comparison",
+    "corpus_fingerprint": "AC1AB9B513986D3D4E5F702171CAFF31E449DB1C01FA6C7323DF41239B6646E4",
+    "compared_assets": 27,
+    "scope": "Current manifest and published-media corpus; exact SHA-256 is unique; candidate uses an original local vector composition and exact weekly-pack copy"
+  },
+  "watermark": {
+    "visual_review": {
+      "status": "PASS",
+      "reviewer": "Codex full-resolution source frames plus encoded MP4 sample-frame review",
+      "scope": "All full-resolution scene frames and contact sheet reviewed; no provider/platform watermark, page logo, account handle, URL, tracking mark, affiliate CTA, or hidden footer identity",
+      "evidence": [
+        "automation-log/media-qa/evidence/week-20260824-30/wk36-sf01/contact-sheet.png",
+        "automation-log/media-qa/evidence/week-20260824-30/wk36-sf01/encoded-contact-sheet.jpg",
+        "automation-log/media-qa/evidence/week-20260824-30/wk36-sf01/scene-01.png",
+        "automation-log/media-qa/evidence/week-20260824-30/wk36-sf01/scene-02.png",
+        "automation-log/media-qa/evidence/week-20260824-30/wk36-sf01/scene-03.png",
+        "automation-log/media-qa/evidence/week-20260824-30/wk36-sf01/scene-04.png",
+        "automation-log/media-qa/evidence/week-20260824-30/wk36-sf01/scene-05.png",
+        "automation-log/media-qa/evidence/week-20260824-30/wk36-sf01/scene-06.png"
+      ]
+    },
+    "automated_scan": {
+      "status": "PASS",
+      "detector": "tiktok-pipeline/src/qa_watermark.py",
+      "fps": 3.0,
+      "frames": 54,
+      "track_frames": 0,
+      "track_frac": 0.0
+    }
+  }
+}

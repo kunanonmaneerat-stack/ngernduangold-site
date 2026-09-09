@@ -1,14 +1,18 @@
 # Operating notes / gotchas (lessons learned) — ngernduangold ops
 
+> ⚠️ **AUTHORITY NOTICE 2026-08-16:** บทเรียนยังมีประโยชน์ แต่ข้อความเก่าเรื่อง CC/Cowork commit, push, deploy, social publish, channel state และเส้นทางอัตโนมัติไม่ใช่ authority ปัจจุบัน ให้ยึด `.system_control/role_capabilities.json` + `.system_control/policy.json`; ความขัดแย้งต้อง fail closed และส่งให้เจ้าของตัดสิน
+
+
 Read this before doing local execution or video work in this repo. These are real failure
 modes hit in production; each line is a mistake already paid for once.
 
 ---
 ## ⭐ READ-FIRST — กฎที่ห้ามลืม/ห้ามให้เจ้าของอธิบายซ้ำ (อ่านบล็อกนี้ก่อนทุกครั้ง)
 
-### 1) เส้นทางโพสต์ปัจจุบัน (18 ก.ค. 2026)
+### 1) เส้นทางโพสต์ปัจจุบัน (ตรวจใหม่ 16 ส.ค. 2026)
 - Postiz เลิกใช้ตั้งแต่ 19 มิ.ย. ห้ามนำกลับมาใช้
-- YT/FB/IG ตั้งเวลาผ่าน UI ทางการ (FB/IG ใช้ Business Suite) · Threads = scheduled task 19:00 แบบ file_upload · TikTok = เจ้าของโพสต์ผ่านมือถือ
+- ทุกช่องมี `publication_authorized=false`; calendar เป็น `PLANNED_BLOCKED` และ prompt โพสต์เก่าที่ registry ยังเปิดต้องคง NO-OP จนเจ้าของปิดผ่าน scheduler manager
+- เส้นทาง publisher ทางเทคนิคไม่ใช่อำนาจ: schema-v2 private one-time receipt ต้อง bind target/content/placement/caption/asset/slot และ SHA-256 ของ policy, role matrix, content calendar, exact content+validation evidence และ media-QA evidence; execution ต้องอยู่ใน Asia/Bangkok slot window (ช่องโพสต์ทันที: slot ถึง +10 นาที; YouTube scheduler: 24 ชั่วโมงถึงมากกว่า 15 นาทีก่อน slot) และ evidence drift/missing hash ต้องหยุดโดยไม่ consume
 - Meta token ยกเลิกถาวร 18 ก.ค.; ห้ามแนะนำให้ทำ token ใหม่ ใช้ UI + guard/ledger
 
 ### 2) ห้ามรายงาน "ทางตัน" — หาทางออกก่อนเสมอ
@@ -76,10 +80,13 @@ modes hit in production; each line is a mistake already paid for once.
   has a STEP 0 health check; the uptime-monitor task pings every 6h.
 
 ## Video pipeline (Reels / TikTok)
-- media/clips/*-2026.mp4 = Google Flow (Veo) footage: 720x1280, ~10s, HAS aac stereo audio,
-  and a MOVING sparkle watermark in the bottom-right (drifts, so static delogo won't remove it).
-  -> Cover it with an opaque bottom scrim (~bottom 30-38%) which doubles as the caption band.
-  -> Keep the footage audio (don't pass ffmpeg -an); map 0:a:0?. Veo audio = free sound.
+- **16 Aug 2026 hard stop:** the former `media/clips/` and `media/clips-web/`
+  pools are quarantined under `media/quarantine/watermarked/`; 14/14 source files
+  failed the fresh frame scan. They are evidence/test fixtures only and must never
+  be embedded, uploaded, cropped, covered, or treated as post-ready.
+- A publishable asset must live under an approved canonical media root and pass
+  `tools/media_publish_guard.py`: current SHA-256 must match its QA receipt, visual
+  review must PASS, and videos must also PASS a fresh full-duration frame scan.
 - tiktok-pipeline/src/07_render.py = clean kinetic-text on navy gradient (NO footage, NO watermark).
 - tiktok-pipeline/drafts/scripts_clean.json: use topic_th for the full on-screen HOOK
   (the onscreen fields are TRUNCATED mid-word). Use the last scene onscreen for the CTA, and the
@@ -180,12 +187,12 @@ TO SHIP (owner): git add build_site.py site/ && git commit -m "home: feature Kep
   ⚠️ BUG พบ: ปุ่ม DM ยังลิงก์ ngernduangold.netlify.app/quiz (โดเมนเก่า) -> แก้เป็น ngernduangold.com/quiz
 
 
-## ⭐ กฎ Google Flow footage (เจ้าของย้ำ 9 ก.ค. 2026 — เคยบอกแล้ว ห้ามลืมอีก)
-คลิป Google Flow (Veo) = media/clips/*-2026.mp4 **ใช้ได้ ไม่ต้องทิ้ง/ลบถาวร**. วิธีที่อนุญาต:
-1. ลบลายน้ำ ✦ — crop ออกนอกเฟรม หรือ cover โซนที่มันดริฟต์ (ทั้งเส้นทาง ไม่ใช่แถบเล็กคงที่)
-2. เพิ่มอักษร/ข้อความ overlay ให้เหมาะกับแต่ละแพลตฟอร์ม (IG / TikTok / YouTube)
-3. โพสต์เป็นวิดีโอสะอาด
-=> 5 หัวข้อที่ลบ (title-loan/emergency-fund/compound-interest/save-small/auto-save) ให้เอา Flow clip เดิมมา "ล้างลายน้ำ + ใส่ข้อความ" แล้วโพสต์ใหม่ (วิดีโอ). รูปนิ่ง = stopgap วันเดียวเท่านั้น ไม่ใช่ตัวจริง. ห้ามเหมาว่า footage Veo = ใช้ไม่ได้.
+## ⭐ กฎ Google Flow footage — SUPERSEDED 16 Aug 2026
+ข้อกำหนด 9 ก.ค. ที่อนุญาตให้ crop/cover คลิปเดิมถูกยกเลิกหลัง re-audit พบ
+ลายน้ำดริฟต์ใน raw 7/7 และ web variants 7/7. เก็บไฟล์ไว้ใน quarantine เพื่อ
+ทดสอบ detector เท่านั้น. หากต้องการหัวข้อเดิม ให้สร้าง visual ใหม่ที่ไม่มี provider
+mark แล้วผ่าน hash-bound visual review + fresh automated scan; ห้ามแก้ไฟล์ quarantine
+แล้วอ้างว่าเป็นไฟล์สะอาด.
 
 ## 5. VERIFY บน LIVE หลัง deploy — อย่าใช้ `?cb=` (แก้ 25 ก.ค. 2026 · CC พิสูจน์ด้วยหลักฐาน)
 **กฎเดิมที่เขียนไว้เมื่อ 25 ก.ค. 01:0x ว่า "ให้เติม `?cb=<timestamp>`" — ผิด ยกเลิกแล้ว**
@@ -278,7 +285,7 @@ exit 0 = ผ่านหมด · 1 = มี WARN · 2 = มี FAIL
 
 | ด่าน | จับอะไร |
 |---|---|
-| content queue | เรียก `runway_guard` (คิวเหลือกี่วัน + 3 ไฟล์ตรงกันไหม) |
+| video queue | เรียก `runway_guard` (คิววิดีโอเหลือกี่วัน + 3 ไฟล์ตรงกันไหม; text runway รายงานแยกใน detail) |
 | **delivery gap** | **ledger เงียบกี่วัน** — ≥2 วัน WARN · ≥3 วัน FAIL · ด่านนี้คือด่านที่ควรมีตั้งแต่ 28 ก.ค. |
 | captions | `\n` ตัวหนังสือ · คำต้องห้าม · % · URL ในช่องที่ห้ามมี |
 | posted records | manifest ตรงกับ yt_upload_log ไหม |

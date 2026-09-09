@@ -5,13 +5,13 @@
   - cc-inbox : ออเดอร์ค้าง (CC ยังไม่ทำ)
   - cc-outbox: ผลที่ CC ทำเสร็จ รอ review/consume
   - cc-archive: ออเดอร์ที่ทำไปแล้ว
-ดึง 'ธงต้องขออนุมัติ' จากผลล่าสุด -> เขียน cowork-inbox/cc-status-<ts>.md + ping Cowork.
+ดึง 'ธงต้องขออนุมัติ' จากผลล่าสุด -> เขียน cowork-inbox/cc-status-<ts>.md แบบ local-only.
 
 ต่างจาก cc_review/report_to_cowork (ที่ collect() = ย้ายผลเข้า archive แล้วรีวิวลึก):
 ตัวนี้ = 'จอมอนิเตอร์' บอกว่าตอนนี้วงจรอยู่ตรงไหน ค้างไหม มีอะไรรอ Cowork ตัดสิน.
 ใช้:  py pipeline/cc_monitor.py
 """
-import os, sys, glob, re, datetime
+import argparse, os, sys, glob, re, datetime
 try:  # cp874-safe UTF-8 stdout/stderr (idempotent)
     import sys as _sys; _sys.stdout.reconfigure(encoding="utf-8", errors="replace"); _sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 except Exception:
@@ -91,7 +91,8 @@ def main():
     if results:
         lines.append('## ผลที่ CC ทำเสร็จ (รอ Cowork)')
         for f in results:
-            txt = open(f, encoding='utf-8', errors='ignore').read()
+            with open(f, encoding='utf-8', errors='ignore') as handle:
+                txt = handle.read()
             fl = _flags(txt)
             flagged += fl
             lines.append('- ' + os.path.basename(f) + (' · 🚩 ธงรออนุมัติ ' + str(len(fl)) if fl else ''))
@@ -107,17 +108,16 @@ def main():
         else 'รัน report_to_cowork.py / cc_review.py เพื่อรีวิวลึกแล้วสั่งรอบใหม่' if results
         else 'พร้อมรับงานใหม่ (art_to_stitch / cc_bridge.send)'))
 
-    open(p, 'w', encoding='utf-8').write('\n'.join(lines) + '\n')
+    with open(p, 'w', encoding='utf-8') as handle:
+        handle.write('\n'.join(lines) + '\n')
 
-    try:
-        import cc_bridge
-        cc_bridge.ping('CC monitor: ' + state + ' -> cowork-inbox/cc-status-' + ts + '.md' +
-                       (' · 🚩 ธงรออนุมัติ ' + str(len(flagged)) if flagged else ''))
-    except Exception as e:
-        print('ping skip:', str(e)[:60])
     print('CC STATUS ->', p, '|', state)
     return p
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--local-only', action='store_true',
+                        help='explicitly document the scheduled local-only posture')
+    parser.parse_args()
     main()

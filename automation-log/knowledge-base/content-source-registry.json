@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "library": "KNOWLEDGE-POSTS-C_20260816-0831.md",
+  "last_human_review": "2026-08-16",
+  "freshness_hours": 24,
+  "items": {
+    "kn-29": {
+      "claim_scope": "credit-card income bands and preparation",
+      "source_ids": ["bot-credit-card-guidance"],
+      "official_urls": ["https://www.bot.or.th/th/satang-story/digital-fin-lit/creditcard.html"]
+    },
+    "kn-30": {
+      "claim_scope": "BOT mobile app and official-source checking",
+      "source_ids": ["bot-mobile-app", "bot-mobile-app-launch"],
+      "official_urls": [
+        "https://www.bot.or.th/th/bot-mobile-app.html",
+        "https://www.bot.or.th/th/research-and-publications/articles-and-publications/articles/article-20260804.html"
+      ]
+    },
+    "kn-31": {
+      "claim_scope": "youth-account transfer controls and rollout dates",
+      "source_ids": ["bot-youth-transfer-controls"],
+      "official_urls": ["https://www.bot.or.th/th/news-and-media/news/news-20260731-2.html"]
+    },
+    "kn-32": {
+      "claim_scope": "Q2 2026 credit conditions as market-level evidence",
+      "source_ids": ["bot-loan-survey-q2-2026"],
+      "official_urls": ["https://www.bot.or.th/content/dam/bot/documents/th/thai-economy/econ-publication/credit-conditions-report/LoanSurvey-TH-2569-Q2.pdf"]
+    },
+    "kn-33": {
+      "claim_scope": "Q2 2026 macro conditions and household planning",
+      "source_ids": ["bot-economy-q2-2026"],
+      "official_urls": ["https://www.bot.or.th/th/news-and-media/news/news-20260731.html"]
+    },
+    "kn-34": {
+      "claim_scope": "temporary 8 percent credit-card minimum payment in 2026 and how effective-rate payments split between interest and principal",
+      "source_ids": ["bot-card-minimum-2026", "bot-happy-debtor"],
+      "official_urls": [
+        "https://www.bot.or.th/content/dam/bot/fipcs/documents/FPG/2568/ThaiPDF/25680245.pdf",
+        "https://www.bot.or.th/th/research-and-publications/articles-and-publications/bot-magazine-issues/Phrasiam-67-2/256702-FinWis-HappyDebtor.html"
+      ]
+    },
+    "kn-35": {
+      "claim_scope": "consumer-loan restructuring workflow",
+      "source_ids": ["bot-consumer-loan-restructuring"],
+      "official_urls": ["https://www.bot.or.th/th/satang-story/managing-debt/consumer-loan-restructuring.html"]
+    },
+    "kn-36": {
+      "claim_scope": "Close Debt Fast program eligibility and current status",
+      "source_ids": ["bot-clear-debt-news", "bot-clear-debt"],
+      "official_urls": [
+        "https://www.bot.or.th/th/news-and-media/news/news-20260105.html",
+        "https://www.bot.or.th/th/cleardebt.html"
+      ]
+    },
+    "kn-37": {
+      "claim_scope": "checking licensed loan providers and recognizing upfront-payment impersonation risk",
+      "source_ids": ["bot-license-loan", "bot-license-check"],
+      "official_urls": [
+        "https://www.bot.or.th/th/license-loan.html",
+        "https://app.bot.or.th/BOTLicenseCheck"
+      ]
+    },
+    "kn-38": {
+      "claim_scope": "temporary LTV scope from 1 July 2026 to 30 June 2027 and borrower assessment factors",
+      "source_ids": ["bot-ltv-2026-extension", "bot-before-loan"],
+      "official_urls": [
+        "https://www.bot.or.th/th/news-and-media/news/news-20260514.html",
+        "https://www.bot.or.th/th/satang-story/managing-debt/before-loan.html"
+      ]
+    },
+    "kn-39": {
+      "claim_scope": "current utility-document flow versus later Your Data exchange",
+      "source_ids": ["bot-utility-data", "bot-your-data-criteria", "bot-your-data-rules"],
+      "official_urls": [
+        "https://www.bot.or.th/th/financial-innovation/digital-finance/open-data/Your_Data_Project/utility-data.html",
+        "https://www.bot.or.th/content/dam/bot/documents/th/news-and-media/news/2025/news-20251110.pdf",
+        "https://www.bot.or.th/content/dam/bot/fipcs/documents/FPG/2568/ThaiPDF/25680226.pdf"
+      ]
+    },
+    "kn-40": {
+      "claim_scope": "checking investment professionals and providers",
+      "source_ids": ["sec-license-check", "sec-investor-safety-guide"],
+      "official_urls": [
+        "https://market.sec.or.th/LicenseCheck/Search?language=th",
+        "https://www.sec.or.th/TH/Documents/SEC-E-Book-01.pdf"
+      ]
+    },
+    "kn-41": {
+      "claim_scope": "official PDPC purpose limitation and data minimization practice",
+      "source_ids": ["pdpc-privacy-minimization"],
+      "official_urls": ["https://gppc.pdpc.or.th/privacy-policy/"]
+    },
+    "kn-42": {
+      "claim_scope": "responsible lending disclosure and decision support",
+      "source_ids": ["bot-responsible-lending-pdf"],
+      "official_urls": ["https://www.bot.or.th/content/dam/bot/fipcs/documents/FPG/2568/ThaiPDF/25680030.pdf"]
+    },
+    "kn-43": {
+      "claim_scope": "helpful, people-first and transparent financial content",
+      "source_ids": ["google-helpful-content"],
+      "official_urls": ["https://developers.google.com/search/docs/fundamentals/creating-helpful-content"]
+    },
+    "kn-44": {
+      "claim_scope": "hire-purchase ownership, refinance, cleared-title vehicle lending, contract terms, debt burden and provider checks",
+      "source_ids": [
+        "bot-debt-management-basics",
+        "bot-license-loan",
+        "bot-auto-loan-restructuring",
+        "bot-secured-loan",
+        "bot-hire-purchase-leasing"
+      ],
+      "official_urls": [
+        "https://www.bot.or.th/th/satang-story/managing-debt/indebtedness.html",
+        "https://www.bot.or.th/th/license-loan.html",
+        "https://www.bot.or.th/th/satang-story/managing-debt/auto-loan-restructuring.html",
+        "https://www.bot.or.th/th/satang-story/managing-debt/secured-loan.html",
+        "https://www.bot.or.th/th/research-and-publications/articles-and-publications/bot-magazine-issues/phrasiam-68-3/hire-purchase-leasing.html"
+      ],
+      "manual_evidence_required": "the borrower's current hire-purchase contract and payoff statement"
+    }
+  }
+}

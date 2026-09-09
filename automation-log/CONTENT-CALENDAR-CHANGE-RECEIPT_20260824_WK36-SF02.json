@@ -1,0 +1,602 @@
+{
+  "schema_version": 1,
+  "receipt_id": "content-calendar-change-20260824-weekly-evergreen-r2",
+  "created_at": "2026-08-24T19:33:16+07:00",
+  "updated_at": "2026-08-30T21:56:24+07:00",
+  "change_kind": "OWNER_AUTHORIZED_LOCAL_PLAN_REPLACEMENT",
+  "scope": "LOCAL_EDITORIAL_PLAN_ONLY",
+  "reason": "Extend the exact evergreen page-only replacement runway through 2026-08-30, bind independently validated r5 quote media, bind qt-12/qt-13 channel captions to the same exact weekly-pack copy as their media receipts, and refresh the calendar binding after qt-14 local media completion without changing any publication boundary.",
+  "calendar": {
+    "path": ".system_control/content_calendar.json",
+    "before_file_sha256": "47D4E354AA5F28BE00DEA8C1EE29FED6EC4E6353F581856F2F13F8F42FE59E17",
+    "after_file_sha256": "978B5C91453D548E1285193A80428F7936CCCE052BE7ED2D6B9739969A762D23",
+    "after_canonical_sha256": "A7DC57B51EA25472DC61CF73F93B0E96ED8325203BE934EC08DD89C22ED26161",
+    "change_components": [
+      "WEEKLY_REPLACEMENTS_WK36_SF03_SF04_SF05",
+      "QUOTE_MEDIA_BINDINGS_QT12_QT13",
+      "QUOTE_EXACT_CHANNEL_CAPTION_BINDINGS_QT12_QT13",
+      "QT14_LOCAL_MEDIA_BINDING_NO_AUTHORITY_CHANGE"
+    ]
+  },
+  "evidence": {
+    "pack": {
+      "path": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+      "sha256": "0ACD60E0D44F689841C8AAF2C7AF1ADAADA6A5E03CCCAF87C3B626BE84A21A28",
+      "candidate_ids": [
+        "wk36-sf02",
+        "wk36-sf03",
+        "wk36-sf04",
+        "wk36-sf05"
+      ],
+      "candidate_canonical_sha256": {
+        "wk36-sf02": "B0183143602681A894DCE60BC8E3F751EC5043BED4A945251C17C7FF02351DAA",
+        "wk36-sf03": "FD936EF42A44A628A470A2EC4B2873119EDE6880DBB1FFC2BE45215DFBB6155F",
+        "wk36-sf04": "273643F7BB76F8F0D32EB82FE8322402C5B160E38979B64E37B244194CE502CE",
+        "wk36-sf05": "7DA4CE7288F51C991C03E7E0067EBE6F7F5BB2AE1D9BA92C2BE0840A3B5FFDE4"
+      },
+      "quote_caption_candidate_ids": [
+        "qt-12",
+        "qt-13"
+      ],
+      "quote_candidate_canonical_sha256": {
+        "qt-12": "7C2BBB28ED02EF28505CD0F08B35213C327B77CFB5C6046A962E5DB7938D5C53",
+        "qt-13": "8F73C39C61E103297172EA69879E4BD8B00A261E396A373B24A44A00F736C7DC"
+      }
+    },
+    "freshness_receipt": {
+      "path": "automation-log/WEEK-CONTENT-FRESHNESS_20260823.json",
+      "sha256": "258D82CD9A6FB7E69F85F899DE83FAB9D33956FE8350447A4F5E0BB87F4E7ED2",
+      "candidate_public_copy_sha256": {
+        "wk36-sf02": "4DE2C3E5E588FE05F17876A9E881F4B5D98780AC8F52260B40F7AEF6204612F7",
+        "wk36-sf03": "543247F1D2946B48CBDD9AE77CE910D7815EDFB375E50CAAA7761B02CCBD52EC",
+        "wk36-sf04": "4072B13C72F6B8C4B8C85A3B4420A42E130574FBB59D1F67E1A0B19111685EE7",
+        "wk36-sf05": "D2EDCDC8DE03E4ABCB39C01B7AA5ED7F973147B158DFDFDFFE57BFB2B274B42D"
+      },
+      "candidate_status": {
+        "wk36-sf02": "PASS_EVERGREEN_EXACT_COPY",
+        "wk36-sf03": "PASS_EVERGREEN_EXACT_COPY",
+        "wk36-sf04": "PASS_EVERGREEN_EXACT_COPY",
+        "wk36-sf05": "PASS_EVERGREEN_EXACT_COPY"
+      }
+    },
+    "novelty_receipt": {
+      "path": "automation-log/dedup-evidence/WEEK-CONTENT-R5-NOVELTY-RECEIPT_20260823.json",
+      "sha256": "F648CBBAD16409D7A2A1FDB73939B2ADE225FE064C4BDC5C9A7929AC516B4053",
+      "candidate_status": {
+        "wk36-sf02": "PASS_NO_R5_TEXT_OR_MEDIA_COLLISION_DETECTED",
+        "wk36-sf03": "PASS_NO_R5_TEXT_OR_MEDIA_COLLISION_DETECTED",
+        "wk36-sf04": "PASS_NO_R5_TEXT_OR_MEDIA_COLLISION_DETECTED",
+        "wk36-sf05": "PASS_NO_R5_TEXT_OR_MEDIA_COLLISION_DETECTED"
+      },
+      "global_history_status": "BLOCKED_IDENTITY_COVERAGE_INCOMPLETE"
+    }
+  },
+  "selection": {
+    "included_candidate_ids": [
+      "wk36-sf02",
+      "wk36-sf03",
+      "wk36-sf04",
+      "wk36-sf05"
+    ],
+    "quote_caption_adaptations": {
+      "qt-12": "Exact facebook_text for Facebook and exact threads_text for Instagram/Pinterest; source_review remains NOT_REQUIRED and the held slot remains blocked.",
+      "qt-13": "Exact facebook_text for Facebook and exact threads_text for Instagram/Pinterest; source_review remains NOT_REQUIRED and the held slot remains blocked."
+    }
+  },
+  "caption_bindings": {
+    "wk36-sf02__threads_main": {
+      "source_field": "threads_text",
+      "caption_sha256": "862AADCB1BB95F42E9360FADA5AAC67B2C933394D008E6CA9D85F2EFAC3B36C3",
+      "placement_canonical_sha256": "7E564AEDE0B22A0A9028EBACFF163CEF591F9FBB992FE4023A687507505AF8A5"
+    },
+    "wk36-sf02__facebook_main": {
+      "source_field": "facebook_text",
+      "caption_sha256": "43D203D906B68A36DD1D8048C398FE88AD77DE78ADBE2FCCDA4E7C3A1607C5A9",
+      "placement_canonical_sha256": "FBB2A953D41B0BCA9DA865744A5E65082CEDEDAB83409460F064BAE48D8D2E11"
+    },
+    "wk36-sf03__threads_main": {
+      "source_field": "threads_text",
+      "caption_sha256": "E4B5E05AEB9DB8C9A1AA346CADB7141A7C3F0491338FD31B71955895E6215D19",
+      "placement_canonical_sha256": "BF6C6329314E9371FA9D537AC0ED94F6E6A7F55D11D8B12B8B5998AC6150C243"
+    },
+    "wk36-sf03__facebook_main": {
+      "source_field": "facebook_text",
+      "caption_sha256": "D5DFA557B9E78C1BB80B49F4810F928946C5BC439F332493EEA3AFC9B9FE0B3D",
+      "placement_canonical_sha256": "17DE76DA9B452FFBA62C9D783CAC0590519D80AFC23D03FDD97C09DE0C1A7354"
+    },
+    "wk36-sf04__threads_main": {
+      "source_field": "threads_text",
+      "caption_sha256": "9B0539BB1FA6683FC7989CD3F7245256C4B28BFFCC63F764F6BA0F4DC5EED38C",
+      "placement_canonical_sha256": "ABA744A71EDFAA67D66BBDBF3DE90B0D79C9475C84B190035551FD99C59B1EF9"
+    },
+    "wk36-sf04__facebook_main": {
+      "source_field": "facebook_text",
+      "caption_sha256": "1119BBC8597D14191E38DAECFC8E5FCCC5757DD8CE89B6BABA54A8688BDF67E6",
+      "placement_canonical_sha256": "5C0F087C70D9DD9058D22AAAC85609C13A7D3C3B19F16E135E4A066BECB78152"
+    },
+    "wk36-sf05__threads_main": {
+      "source_field": "threads_text",
+      "caption_sha256": "42EA245D50015A04AB77188EE99BDA7C81277EECB8E3B5BD295157CF2978A63D",
+      "placement_canonical_sha256": "1E54BA1D66659F030334722C1C716A6FF264DBBB05C1F73E65377A6CC19D07D4"
+    },
+    "wk36-sf05__facebook_main": {
+      "source_field": "facebook_text",
+      "caption_sha256": "8981026686747694B651908C14D018A61BD23AC5B8AA4702A360F985489C1D63",
+      "placement_canonical_sha256": "53ADA8D8B51AA1C7044800D6A906DBB147981EF591EAA81E315D1D3FE327ACD6"
+    }
+  },
+  "superseded_placements": [
+    {
+      "placement_id": "kn-38__threads_main",
+      "content_id": "kn-38",
+      "topic": "LTV ผ่อนคลายไม่ได้แปลว่ากู้บ้านได้เต็ม",
+      "date": "2026-08-25",
+      "time": "12:40",
+      "account": "threads_main",
+      "source": {
+        "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+        "row_id": "kn-38",
+        "field": "threads_text"
+      },
+      "adaptation": "short_text_no_body_url_reply_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "home-refi",
+      "source_ids": [
+        "bot-before-loan",
+        "bot-ltv-2026-extension"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "kn-38__facebook_main",
+      "content_id": "kn-38",
+      "topic": "LTV ผ่อนคลายไม่ได้แปลว่ากู้บ้านได้เต็ม",
+      "date": "2026-08-25",
+      "time": "12:50",
+      "account": "facebook_main",
+      "source": {
+        "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+        "row_id": "kn-38",
+        "field": "fb_text"
+      },
+      "adaptation": "long_text_first_comment_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "home-refi",
+      "source_ids": [
+        "bot-before-loan",
+        "bot-ltv-2026-extension"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "kn-40__threads_main",
+      "content_id": "kn-40",
+      "topic": "แยกผู้เชี่ยวชาญการลงทุนออกจากมิจฉาชีพ",
+      "date": "2026-08-27",
+      "time": "12:40",
+      "account": "threads_main",
+      "source": {
+        "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+        "row_id": "kn-40",
+        "field": "threads_text"
+      },
+      "adaptation": "short_text_no_body_url_reply_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "sec-check",
+      "source_ids": [
+        "sec-investor-safety-guide",
+        "sec-license-check"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "kn-40__facebook_main",
+      "content_id": "kn-40",
+      "topic": "แยกผู้เชี่ยวชาญการลงทุนออกจากมิจฉาชีพ",
+      "date": "2026-08-27",
+      "time": "12:50",
+      "account": "facebook_main",
+      "source": {
+        "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+        "row_id": "kn-40",
+        "field": "fb_text"
+      },
+      "adaptation": "long_text_first_comment_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "sec-check",
+      "source_ids": [
+        "sec-investor-safety-guide",
+        "sec-license-check"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "kn-41__threads_main",
+      "content_id": "kn-41",
+      "topic": "ส่งสลิปและบัตรประชาชนอย่างไรให้ข้อมูลไม่เกินจำเป็น",
+      "date": "2026-08-28",
+      "time": "12:40",
+      "account": "threads_main",
+      "source": {
+        "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+        "row_id": "kn-41",
+        "field": "threads_text"
+      },
+      "adaptation": "short_text_no_body_url_reply_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "card-docs",
+      "source_ids": [
+        "pdpc-privacy-minimization"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "kn-41__facebook_main",
+      "content_id": "kn-41",
+      "topic": "ส่งสลิปและบัตรประชาชนอย่างไรให้ข้อมูลไม่เกินจำเป็น",
+      "date": "2026-08-28",
+      "time": "12:50",
+      "account": "facebook_main",
+      "source": {
+        "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+        "row_id": "kn-41",
+        "field": "fb_text"
+      },
+      "adaptation": "long_text_first_comment_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "card-docs",
+      "source_ids": [
+        "pdpc-privacy-minimization"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "kn-43__threads_main",
+      "content_id": "kn-43",
+      "topic": "เช็กบทความการเงินว่าเขียนเพื่อช่วยหรือเพื่อให้คลิก",
+      "date": "2026-08-30",
+      "time": "12:40",
+      "account": "threads_main",
+      "source": {
+        "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+        "row_id": "kn-43",
+        "field": "threads_text"
+      },
+      "adaptation": "short_text_no_body_url_reply_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "about",
+      "source_ids": [
+        "google-helpful-content"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "kn-43__facebook_main",
+      "content_id": "kn-43",
+      "topic": "เช็กบทความการเงินว่าเขียนเพื่อช่วยหรือเพื่อให้คลิก",
+      "date": "2026-08-30",
+      "time": "12:50",
+      "account": "facebook_main",
+      "source": {
+        "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+        "row_id": "kn-43",
+        "field": "fb_text"
+      },
+      "adaptation": "long_text_first_comment_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "about",
+      "source_ids": [
+        "google-helpful-content"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    }
+  ],
+  "superseded_bindings": {
+    "kn-38__threads_main": {
+      "candidate_id": "wk36-sf02",
+      "placement_canonical_sha256": "870797710D2424EB4FB8897A7E3D22370252D08D6819D73F47CE67ED0A8B5E9C"
+    },
+    "kn-38__facebook_main": {
+      "candidate_id": "wk36-sf02",
+      "placement_canonical_sha256": "CA46D69E7E640A1120D2BFE9AF17A73AC3509040855104159570AF336EC92B55"
+    },
+    "kn-40__threads_main": {
+      "candidate_id": "wk36-sf03",
+      "placement_canonical_sha256": "5D19F3A417E195959CB0916337437D695DFC6FE0C718C8C9C4D86A516ABA197E"
+    },
+    "kn-40__facebook_main": {
+      "candidate_id": "wk36-sf03",
+      "placement_canonical_sha256": "C0678F805775BCEA6FD0BD8EED1FE62C5088F445F7D7527301465FE35F5F741C"
+    },
+    "kn-41__threads_main": {
+      "candidate_id": "wk36-sf04",
+      "placement_canonical_sha256": "7F29CB9FD01B81A9115C00836CAFE8B6947969D48DA417959FC0C9DF8158AE7A"
+    },
+    "kn-41__facebook_main": {
+      "candidate_id": "wk36-sf04",
+      "placement_canonical_sha256": "FCADA0F8D2DED8F8204AD12E63681061385348833DCCF446A3D727CFD9861214"
+    },
+    "kn-43__threads_main": {
+      "candidate_id": "wk36-sf05",
+      "placement_canonical_sha256": "93373D748EFD748DD89464FA95EB831220C4EF4CFB8386B6A2E03F0BBA51CDBA"
+    },
+    "kn-43__facebook_main": {
+      "candidate_id": "wk36-sf05",
+      "placement_canonical_sha256": "8A4D33DF15CBC0BF2CBD51D2DBC37CA4C2D0C1297CC4F2A50D1F507FAFF8630D"
+    }
+  },
+  "quote_caption_bindings": {
+    "qt-12__facebook_main": {
+      "source_field": "facebook_text",
+      "caption_sha256": "E0769E398C961933E69223B672C074EFB38A467E477CBA1931050BDAADEB4EF4",
+      "placement_canonical_sha256": "B8E0D5E340912709488FA6C57CDDFB8B847BDB1C4097EDD22FD11D015912A743",
+      "remaining_blockers": [
+        "publication_authority"
+      ]
+    },
+    "qt-12__instagram_main": {
+      "source_field": "threads_text",
+      "caption_sha256": "34C41FE6464BC468F2691F1A9BEE5B3DCF860DFABDD5FED6494CE3FAA093B1EB",
+      "placement_canonical_sha256": "6DBF3E4C084C94B907F48C217F138CD23A196D53F72536720D806C6F76538310",
+      "remaining_blockers": [
+        "publication_authority",
+        "channel_review"
+      ]
+    },
+    "qt-12__pinterest_main": {
+      "source_field": "threads_text",
+      "caption_sha256": "34C41FE6464BC468F2691F1A9BEE5B3DCF860DFABDD5FED6494CE3FAA093B1EB",
+      "placement_canonical_sha256": "6DEB07792385E715EC185DCF4D7DE24E8CAB5103F685B63F4A4AEBFA95B873E0",
+      "remaining_blockers": [
+        "publication_authority",
+        "channel_review"
+      ]
+    },
+    "qt-13__facebook_main": {
+      "source_field": "facebook_text",
+      "caption_sha256": "A8ABF712851F12FF8275925524A89F673D1F7FEA03810A3F44B4766F7F58EAD2",
+      "placement_canonical_sha256": "B72960F3BAFE42036FD5447CC2780A4CCAF466068EF282108D2EF832BC8E766D",
+      "remaining_blockers": [
+        "publication_authority"
+      ]
+    },
+    "qt-13__instagram_main": {
+      "source_field": "threads_text",
+      "caption_sha256": "86FF3385C34BD7BB3B9D1ABD073AB94DA5008456E8FE542CA00F2EEE0B5945D6",
+      "placement_canonical_sha256": "BB441151581328BF6DEB752D91C59E05DF56FF6B5692FB6AC2642954D89F10F5",
+      "remaining_blockers": [
+        "publication_authority",
+        "channel_review"
+      ]
+    },
+    "qt-13__pinterest_main": {
+      "source_field": "threads_text",
+      "caption_sha256": "86FF3385C34BD7BB3B9D1ABD073AB94DA5008456E8FE542CA00F2EEE0B5945D6",
+      "placement_canonical_sha256": "6990186374F149EDB4957EA671DA03A0206BBC8B24F1D030601BAB4F0EC65B0B",
+      "remaining_blockers": [
+        "publication_authority",
+        "channel_review"
+      ]
+    }
+  },
+  "quote_media_bindings": {
+    "qt-12__facebook_main": {
+      "asset": "media/quotes/week-20260824-30-r5/qt-12_fb-ig_4x5.jpg",
+      "asset_sha256": "01A3FA967DAEF32206C0E11EBC3D6D0A681977F6E13106CCE60A70AB0744E6B0",
+      "media_receipt": "automation-log/media-qa/qt-12-fb-ig-image-r5.json",
+      "media_receipt_sha256": "D8F5CE374E07A1BA874C56499E1FFA28ED0ADC961531979768E22E2CAD182D8D",
+      "media_content_id": "qt-12-4x5-r5",
+      "receipt_candidate_id": "qt-12",
+      "media_gate": "PASS",
+      "remaining_blockers": [
+        "publication_authority"
+      ]
+    },
+    "qt-12__instagram_main": {
+      "asset": "media/quotes/week-20260824-30-r5/qt-12_fb-ig_4x5.jpg",
+      "asset_sha256": "01A3FA967DAEF32206C0E11EBC3D6D0A681977F6E13106CCE60A70AB0744E6B0",
+      "media_receipt": "automation-log/media-qa/qt-12-fb-ig-image-r5.json",
+      "media_receipt_sha256": "D8F5CE374E07A1BA874C56499E1FFA28ED0ADC961531979768E22E2CAD182D8D",
+      "media_content_id": "qt-12-4x5-r5",
+      "receipt_candidate_id": "qt-12",
+      "media_gate": "PASS",
+      "remaining_blockers": [
+        "publication_authority",
+        "channel_review"
+      ]
+    },
+    "qt-12__pinterest_main": {
+      "asset": "media/quotes/week-20260824-30-r5/qt-12_pinterest_2x3.jpg",
+      "asset_sha256": "337F6A1F0D708DD119F36854B22094888EFB7566555BE520CC85164320F22B49",
+      "media_receipt": "automation-log/media-qa/qt-12-pinterest-image-r5.json",
+      "media_receipt_sha256": "A9367B31FAE16604FB8C13B935636BA961242A34F96295BF4655E30B16213A2B",
+      "media_content_id": "qt-12-2x3-r5",
+      "receipt_candidate_id": "qt-12",
+      "media_gate": "PASS",
+      "remaining_blockers": [
+        "publication_authority",
+        "channel_review"
+      ]
+    },
+    "qt-13__facebook_main": {
+      "asset": "media/quotes/week-20260824-30-r5/qt-13_fb-ig_4x5.jpg",
+      "asset_sha256": "F0E64962659977273CC8398638348091A7BF1208CE1A578DAAD92DADB63929AE",
+      "media_receipt": "automation-log/media-qa/qt-13-fb-ig-image-r5.json",
+      "media_receipt_sha256": "4E7060CCC4431542B7C35E6F2BF11A3F68B242CCA7AAC5CE1CCB6C669A0557A1",
+      "media_content_id": "qt-13-4x5-r5",
+      "receipt_candidate_id": "qt-13",
+      "media_gate": "PASS",
+      "remaining_blockers": [
+        "publication_authority"
+      ]
+    },
+    "qt-13__instagram_main": {
+      "asset": "media/quotes/week-20260824-30-r5/qt-13_fb-ig_4x5.jpg",
+      "asset_sha256": "F0E64962659977273CC8398638348091A7BF1208CE1A578DAAD92DADB63929AE",
+      "media_receipt": "automation-log/media-qa/qt-13-fb-ig-image-r5.json",
+      "media_receipt_sha256": "4E7060CCC4431542B7C35E6F2BF11A3F68B242CCA7AAC5CE1CCB6C669A0557A1",
+      "media_content_id": "qt-13-4x5-r5",
+      "receipt_candidate_id": "qt-13",
+      "media_gate": "PASS",
+      "remaining_blockers": [
+        "publication_authority",
+        "channel_review"
+      ]
+    },
+    "qt-13__pinterest_main": {
+      "asset": "media/quotes/week-20260824-30-r5/qt-13_pinterest_2x3.jpg",
+      "asset_sha256": "9B773CAEF625CA022CEED1B5DDFFABA8C8DD59E9E937DAAC82E08832671BDA1A",
+      "media_receipt": "automation-log/media-qa/qt-13-pinterest-image-r5.json",
+      "media_receipt_sha256": "EE7885D9984FDEB24479FE29656E9359FE61D19FDA9CC2B2AB1737B6C47CFC05",
+      "media_content_id": "qt-13-2x3-r5",
+      "receipt_candidate_id": "qt-13",
+      "media_gate": "PASS",
+      "remaining_blockers": [
+        "publication_authority",
+        "channel_review"
+      ]
+    }
+  },
+  "closed_local_gates": [
+    "EXACT_COPY_BOUND",
+    "EVERGREEN_SOURCE_NOT_REQUIRED_ONLY_WHILE_EXACT_HASH_MATCHES",
+    "MEDIA_NOT_REQUIRED_TEXT_ONLY",
+    "PAGE_IDENTITY_PASS",
+    "PER_ITEM_R5_NOVELTY_NO_COLLISION_DETECTED",
+    "SLOT_AND_QUOTA_PRESERVED",
+    "AFFILIATE_PROFILE_ROUTE_WITHOUT_BODY_URL",
+    "QUOTE_MEDIA_EXACT_HASH_AND_RECEIPT_BOUND",
+    "QUOTE_MEDIA_PUBLISH_GUARD_PASS",
+    "QUOTE_CHANNEL_CAPTION_EXACT_PACK_BOUND"
+  ],
+  "remaining_blockers": [
+    "PUBLICATION_AUTHORITY_FALSE",
+    "PRIVATE_ONE_TIME_OWNER_RECEIPT_MISSING",
+    "GLOBAL_PERMANENT_DEDUP_IDENTITY_COVERAGE_INCOMPLETE"
+  ],
+  "external_actions": {
+    "posted": false,
+    "scheduled": false,
+    "commented": false,
+    "deployed": false,
+    "tracker_opened": false
+  },
+  "authority_changes": {
+    "policy_mutated": false,
+    "role_capabilities_mutated": false,
+    "publication_authority_mutated": false,
+    "owner_receipt_minted": false
+  }
+}

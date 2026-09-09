@@ -1,30 +1,16 @@
-"""hermes_digest.py — Watcher agent (ตาม Opus+Gemini): รวมสถานะรายวัน -> ส่ง Telegram ผ่าน Hermes
-อ่าน traffic_monitor (Meta reach) + GA4 (conversion จริง) + traffic_analyst (verdict)
-+ นับ content package วันนี้ + เช็ก baseline · ส่ง digest สั้นเข้า Telegram (owner) + เขียน cowork-inbox
-ไม่โพสต์/ไม่ deploy (แค่เฝ้า+รายงาน) · ใช้: py pipeline/hermes_digest.py
+"""hermes_digest.py — local-only daily watcher digest.
+อ่าน traffic_monitor (Meta reach) + GA4 (observed intent) + traffic_analyst (verdict)
++ นับ content package วันนี้ + เช็ก baseline · เขียน cowork-inbox + summary image
+ไม่ส่ง Telegram/Slack/email/browser · ใช้: py pipeline/hermes_digest.py --local-only
 """
-import os, sys, glob, subprocess, datetime
+import argparse, os, sys, glob, datetime
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import traffic_monitor, traffic_analyst, credit_tracker
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 INBOX = os.path.join(ROOT, "automation-log", "cowork-inbox")
 PKG = os.path.join(ROOT, "automation-log", "content-packages")
-HERMES_HOME = r"C:\Users\nL_ku\AppData\Local\hermes"
-HERMES_PY = os.path.join(HERMES_HOME, "hermes-agent", "venv", "Scripts", "python.exe")
 BASELINE = 500
-
-
-def hermes_send(msg):
-    try:
-        env = os.environ.copy()
-        env.setdefault("TELEGRAM_HOME_CHANNEL", "8431211539")
-        subprocess.run([HERMES_PY, "-m", "hermes_cli.main", "send", "--to", "telegram", msg],
-                       cwd=os.path.join(HERMES_HOME, "hermes-agent"), timeout=90, env=env)
-        return True
-    except Exception as e:
-        print("[hermes_digest] Telegram send failed (รันบนเครื่อง owner เท่านั้น):", str(e)[:80])
-        return False
 
 
 def build():
@@ -46,19 +32,21 @@ def build():
     today = datetime.date.today().strftime("%Y%m%d")
     pkgs = len(glob.glob(os.path.join(PKG, today + "*")))
 
-    # ช่อง converted ดีสุด จาก GA4
+    # Observed click distribution only; never call this a revenue winner.
     top = sorted(ga4["by_channel"].items(),
-                 key=lambda kv: (kv[1]["conversion"], kv[1]["sessions"]), reverse=True)
-    top_str = ", ".join("%s(%d)" % (k, v["conversion"]) for k, v in top if v["conversion"] > 0)
+                 key=lambda kv: (kv[1]["affiliate_click"], kv[1]["sessions"]), reverse=True)
+    top_str = ", ".join("%s(%d)" % (k, v["affiliate_click"])
+                        for k, v in top if v["affiliate_click"] > 0)
 
     lines = ["ngernduangold — สรุปรายวัน " + datetime.date.today().isoformat()]
     if ga4["connected"]:
         lines.append("traffic: Meta reach %d views · GA4 %d sessions" % (tot["views"], ga4["sessions"]))
-        lines.append("conversion (GA4 จริง): quiz_start=%d · affiliate_click=%d" % (ga4["quiz_start"], ga4["conversion"]))
+        lines.append("GA4 observed intent: quiz_start=%d · affiliate_click=%d · trust=%s" %
+                     (ga4["quiz_start"], ga4["affiliate_click"], ga4["trust_label"]))
         if top_str:
-            lines.append("ช่อง converted ดีสุด: " + top_str)
+            lines.append("affiliate_click distribution (ไม่ใช่ผู้ชนะ/รายได้): " + top_str)
     else:
-        lines.append("reach รวม(ช่องที่วัดได้): %d views | conversion: quiz=%d สมัคร=%d (ยังไม่เชื่อม GA4)" %
+        lines.append("reach รวม(ช่องที่วัดได้): %d views | manual legacy intent: quiz=%d intent=%d (ยังไม่เชื่อม GA4)" %
                      (tot["views"], tot["quiz_start"], tot["conversion"]))
     lines.append("คอนเทนต์ผลิตวันนี้: %d แพ็กเกจ (ดราฟต์ รอรีวิว+โพสต์)" % pkgs)
     try:
@@ -79,18 +67,17 @@ def run():
     msg = build()
     os.makedirs(INBOX, exist_ok=True)
     ts = datetime.datetime.now().strftime("%Y%m%d-%H%M")
-    open(os.path.join(INBOX, "digest-" + ts + ".md"), "w", encoding="utf-8").write("# Daily Digest (Hermes)\n\n" + msg)
-    sent = hermes_send(msg)
+    with open(os.path.join(INBOX, "digest-" + ts + ".md"), "w", encoding="utf-8") as handle:
+        handle.write("# Daily Digest (Hermes)\n\n" + msg)
     try:
         import summary_card
         png = summary_card.build()
-        hermes_send("MEDIA:" + png)
-        print("[hermes_digest] ส่งภาพสรุปเข้า Telegram แล้ว")
+        print("[hermes_digest] local summary image -> " + png)
     except Exception as e:
         print("[hermes_digest] ภาพ skip:", str(e)[:90])
     print("[hermes_digest] digest:\n" + msg)
-    print("[hermes_digest] Telegram:", "ส่งแล้ว" if sent else "ไม่ส่ง (เขียน cowork-inbox แทน)")
-    return msg, sent
+    print("[hermes_digest] notification: local-only (no Telegram/Slack/email/browser mutation)")
+    return msg, False
 
 
 if __name__ == "__main__":
@@ -98,4 +85,8 @@ if __name__ == "__main__":
         sys.stdout.reconfigure(encoding="utf-8")
     except Exception:
         pass
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--local-only", action="store_true",
+                        help="explicitly document the scheduled local-only posture")
+    parser.parse_args()
     run()

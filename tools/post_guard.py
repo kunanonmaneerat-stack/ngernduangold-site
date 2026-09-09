@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Nightly, read-mostly verification for the ngernduangold posting plan.
+"""Nightly verification for the ngernduangold posting plan.
 
 The guard deliberately uses local evidence when a channel has no safe read API.
-It never sends a social post.  The only permitted write-side channel action is
-the narrowly scoped YouTube batch-2 recovery for 2026-07-26 and later.
+Its default mode never sends a social post.  YouTube repair is a separate,
+explicit operation that requires ``--repair-youtube``, ``--date``, and ``--actor``.
 """
 
 from __future__ import annotations
@@ -12,6 +12,7 @@ import argparse
 import gzip
 import html
 import json
+import math
 import os
 import re
 import shutil
@@ -19,16 +20,27 @@ import subprocess
 import sys
 import urllib.error
 import urllib.request
-from datetime import date, datetime, time, timedelta
+from datetime import date, datetime, time, timedelta, timezone
 from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
+
+import content_source_gate
+import manifest_contract
 
 
 ROOT = Path(__file__).resolve().parent.parent
 AUTOMATION_LOG = ROOT / "automation-log"
 MANIFEST_PATH = ROOT / ".system_control" / "content_manifest.json"
 YT_UPLOAD_LOG_PATH = ROOT / ".system_control" / "yt_upload_log.json"
+POLICY_PATH = ROOT / ".system_control" / "policy.json"
+ROLE_CAPABILITIES_PATH = ROOT / ".system_control" / "role_capabilities.json"
+PRIVACY_GUARD_PATH = ROOT / "tools" / "privacy_guard.py"
+OFFICIAL_SOURCE_SNAPSHOT_PATH = (
+    AUTOMATION_LOG / "knowledge-base" / "official-news-snapshot.json"
+)
+REELS_DIR = ROOT / "reels"
+REEL_SCHEDULE_PATH = REELS_DIR / "schedule.json"
 POST_GUARD_DIR = AUTOMATION_LOG / "post-guard"
 HISTORY_PATH = POST_GUARD_DIR / "history.jsonl"
 POST_LEDGER_PATH = AUTOMATION_LOG / "post-ledger.jsonl"
@@ -39,37 +51,8 @@ AUTO_YT_FROM = date(2026, 7, 26)
 UI_SCHEDULED_IG_DATES = {
     date(2026, 7, day) for day in range(13, 20)
 }
-# Channel paused by decision 25 Jul 2026 (see automation-log/CHANNEL-DECISION_20260725.md).
-# TikTok is on hold until the batch-3 gate decides its fate (31 Jul 2026).
-# WHY THIS MATTERS FOR THE GUARD: the daily nudge task was permanently closed on
-# 31 Jul ("TikTok removed from the tested channels") because uploads depend on the
-# owner's phone, so the input cannot be controlled and it is not a fair channel test.
-# Without this window the guard would report TIKTOK=NOT-POSTED -> has_fail -> exit 2
-# EVERY single day for a channel we deliberately are not feeding. A guard that fails
-# every day teaches people to ignore it, which is worse than having no guard.
-def _policy_pause(channel: str, default_until: str) -> date:
-    """Read the pause window from .system_control/policy.json, not from a constant here.
-
-    ABLATION 31 Jul 2026 (after the 'Delete Your CLAUDE.md' talk): the same fact -- which
-    channel is paused and until when -- was duplicated across two python files and four
-    task prompts. When TikTok was dropped on 31 Jul, post_guard and the daily card kept
-    asking for it, because nobody could update five copies at once. That is the same
-    one-truth-many-places drift that caused the 27-30 Jul blackout. One fact, one file.
-    """
-    try:
-        import json as _json
-        with open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-                               ".system_control", "policy.json"), encoding="utf-8") as fh:
-            until = (_json.load(fh)["channels"].get(channel) or {}).get("until") or default_until
-    except Exception:
-        until = default_until      # fail safe: behave exactly as before if policy is unreadable
-    return date.fromisoformat(until)
-
-
-TIKTOK_PAUSED_FROM = date(2026, 7, 31)
-TIKTOK_PAUSED_UNTIL = _policy_pause("tiktok", "2026-08-06")
-IG_PAUSED_FROM = date(2026, 7, 26)
-IG_PAUSED_UNTIL = _policy_pause("instagram", "2026-08-25")
+# Paused/retired channel state is evaluated from policy at run time. A review
+# date is not an automatic reactivation date; only an explicit policy change is.
 FB_MANUAL_DATE = date(2026, 7, 20)
 # Facebook publishing is manual via Business Suite from 21 Jul 2026 ONWARDS -- this is a
 # standing decision (Meta token revoked 18 Jul 2026), not a temporary window.  It was
@@ -92,6 +75,16 @@ class YouTubeUnavailable(RuntimeError):
     """The read-only YouTube API check could not be run safely."""
 
 
+class YouTubeRepairError(RuntimeError):
+    """An explicitly requested YouTube repair could not be completed safely."""
+
+
+KNOWN_CHANNEL_STATES = {"active", "manual", "paused", "retired", "testing", "testing_blocked"}
+PUBLICATION_BLOCKED_ACTION = (
+    "Report the delivery gap only; do not schedule, repost, or publish."
+)
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Verify the daily ngernduangold posting plan (Asia/Bangkok)."
@@ -103,7 +96,36 @@ def parse_args() -> argparse.Namespace:
         help="Add a local readiness preview for the day after the target date.",
     )
     parser.add_argument("--json", action="store_true", help="Emit only machine-readable JSON on stdout.")
+    parser.add_argument(
+        "--repair-youtube",
+        action="store_true",
+        help=(
+            "Explicitly run the live YouTube repair for exactly --date. "
+            "Without this flag the guard is read-only."
+        ),
+    )
+    parser.add_argument(
+        "--actor",
+        help="Actor key from role_capabilities.json; required for explicit YouTube repair.",
+    )
+    parser.add_argument(
+        "--receipt-nonce",
+        help=(
+            "Private one-time publication receipt nonce for the exact YouTube repair; "
+            "required with --repair-youtube and never printed."
+        ),
+    )
     args = parser.parse_args()
+    if args.repair_youtube and not args.date:
+        parser.error("--repair-youtube requires an explicit --date YYYY-MM-DD")
+    if args.repair_youtube and (not isinstance(args.actor, str) or not args.actor.strip()):
+        parser.error("--repair-youtube requires an explicit --actor")
+    if args.repair_youtube and (
+        not isinstance(args.receipt_nonce, str) or not args.receipt_nonce.strip()
+    ):
+        parser.error("--repair-youtube requires an explicit --receipt-nonce")
+    if not args.repair_youtube and args.receipt_nonce:
+        parser.error("--receipt-nonce is accepted only with --repair-youtube")
     if args.date:
         try:
             args.target_date = date.fromisoformat(args.date)
@@ -122,21 +144,83 @@ def iso_timestamp(value: datetime) -> str:
     return value.isoformat(timespec="seconds")
 
 
+def _reject_json_constant(value: str) -> None:
+    raise ValueError(f"non-finite JSON number: {value}")
+
+
+def _reject_json_duplicates(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    value: dict[str, Any] = {}
+    for key, item in pairs:
+        if key in value:
+            raise ValueError(f"duplicate JSON key: {key}")
+        value[key] = item
+    return value
+
+
+def _require_finite_json(item: Any) -> Any:
+    if isinstance(item, float) and not math.isfinite(item):
+        raise ValueError("non-finite JSON number")
+    if isinstance(item, dict):
+        for nested in item.values():
+            _require_finite_json(nested)
+    elif isinstance(item, list):
+        for nested in item:
+            _require_finite_json(nested)
+    return item
+
+
+def _strict_json_loads(value: str) -> Any:
+    return _require_finite_json(json.loads(
+        value,
+        parse_constant=_reject_json_constant,
+        object_pairs_hook=_reject_json_duplicates,
+    ))
+
+
+def _stable_bytes(path: Path) -> bytes:
+    before = path.stat()
+    raw = path.read_bytes()
+    after = path.stat()
+    if ((before.st_size, before.st_mtime_ns) !=
+            (after.st_size, after.st_mtime_ns) or len(raw) != after.st_size):
+        raise ValueError("file changed while being read")
+    return raw
+
+
+def _read_strict_jsonl(path: Path) -> list[dict[str, Any]]:
+    raw = _stable_bytes(path)
+    if raw and not raw.endswith(b"\n"):
+        raise ValueError("final JSONL row lacks newline commit boundary")
+    rows: list[dict[str, Any]] = []
+    for line_number, source in enumerate(raw.decode("utf-8-sig").splitlines(), 1):
+        if not source.strip():
+            raise ValueError(f"blank JSONL row at line {line_number}")
+        row = _strict_json_loads(source)
+        if not isinstance(row, dict):
+            raise ValueError(f"JSONL row {line_number} is not an object")
+        rows.append(row)
+    return rows
+
+
 def read_json(path: Path, label: str) -> Any:
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
+        return _strict_json_loads(_stable_bytes(path).decode("utf-8-sig"))
     except FileNotFoundError as exc:
         raise GuardSetupError(f"{label} not found: {path.relative_to(ROOT)}") from exc
-    except json.JSONDecodeError as exc:
-        raise GuardSetupError(f"{label} is not valid JSON: {path.relative_to(ROOT)} ({exc.msg})") from exc
+    except (OSError, UnicodeError, ValueError, json.JSONDecodeError) as exc:
+        detail = getattr(exc, "msg", str(exc))
+        raise GuardSetupError(
+            f"{label} is not valid stable strict JSON: {path.relative_to(ROOT)} ({detail})"
+        ) from exc
 
 
 def load_manifest() -> list[dict[str, Any]]:
     document = read_json(MANIFEST_PATH, "Content manifest")
-    items = document.get("items") if isinstance(document, dict) else document
-    if not isinstance(items, list):
-        raise GuardSetupError("Content manifest must be a list or contain an 'items' list.")
-    return [item for item in items if isinstance(item, dict)]
+    errors = manifest_contract.validate_document(document, now_bangkok().date())
+    if errors:
+        detail = "; ".join(errors[:3])
+        raise GuardSetupError(f"Content manifest contract failed: {detail}")
+    return document["items"]
 
 
 def load_upload_log() -> dict[str, str]:
@@ -150,6 +234,150 @@ def load_upload_log() -> dict[str, str]:
         for key, value in document.items()
         if isinstance(key, str) and isinstance(value, str) and value.strip()
     }
+
+
+def load_channel_policy(channel: str) -> dict[str, Any]:
+    """Load one channel policy and reject missing or unknown state.
+
+    A policy failure is an unsafe state, not permission to fall back to a stale
+    hard-coded default.  Callers must stop before any external check or action.
+    """
+    document = read_json(POLICY_PATH, "Policy")
+    if not isinstance(document, dict):
+        raise GuardSetupError("Policy must be a JSON object.")
+    channels = document.get("channels")
+    if not isinstance(channels, dict):
+        raise GuardSetupError("Policy must contain a 'channels' object.")
+    policy = channels.get(channel)
+    if not isinstance(policy, dict):
+        raise GuardSetupError(f"Policy channel is missing or invalid: {channel}")
+    state = policy.get("state")
+    if not isinstance(state, str) or state.strip().casefold() not in KNOWN_CHANNEL_STATES:
+        shown = state if isinstance(state, str) and state.strip() else "missing"
+        raise GuardSetupError(f"Policy channel {channel} has unknown state: {shown}")
+    normalized = dict(policy)
+    normalized["state"] = state.strip().casefold()
+    return normalized
+
+
+def load_reel_schedule() -> dict[str, dict[str, Any]]:
+    document = read_json(REEL_SCHEDULE_PATH, "Reel schedule")
+    if not isinstance(document, dict):
+        raise GuardSetupError("Reel schedule must be an object keyed by YYYY-MM-DD.")
+    invalid = [key for key, value in document.items() if not isinstance(key, str) or not isinstance(value, dict)]
+    if invalid:
+        raise GuardSetupError("Reel schedule contains a non-object entry.")
+    return document
+
+
+def evaluate_publication_authority(
+    checked_at: datetime,
+    actor: str = "cowork",
+    *,
+    channel: str,
+    content_id: str | None = None,
+    channel_policy: dict[str, Any] | None = None,
+    role_path: Path = ROLE_CAPABILITIES_PATH,
+    source_path: Path = OFFICIAL_SOURCE_SNAPSHOT_PATH,
+    privacy_check: Any = None,
+    content_source_check: Any = None,
+) -> tuple[bool, str]:
+    """Return whether an actor may recommend a social mutation right now.
+
+    Delivery verification and publication authority are separate concerns. This
+    gate is deliberately fail-closed: an unreadable role matrix, privacy scanner,
+    or exact content-source decision can never turn a missing post into a
+    recommendation to schedule/repost/publish.  The global official-news queue is
+    diagnostic only; an unrelated source may not block or authorize this piece.
+    """
+    if not isinstance(checked_at, datetime) or checked_at.tzinfo is None:
+        return False, "publication decision time must include a timezone"
+    try:
+        roles = json.loads(role_path.read_text(encoding="utf-8"))
+        capabilities = (roles.get("actors") or {}).get(actor)
+    except Exception:
+        return False, "role capability matrix is missing or unreadable"
+    if not isinstance(capabilities, dict) or capabilities.get("social_publish") is not True:
+        return False, f"actor {actor} has no current social_publish authority"
+
+    if not isinstance(channel, str) or not channel.strip():
+        return False, "publication channel is missing or invalid"
+    normalized_channel = channel.strip().casefold()
+    if channel_policy is None:
+        try:
+            channel_policy = load_channel_policy(normalized_channel)
+        except GuardSetupError:
+            return False, f"policy channel {normalized_channel} is missing or unreadable"
+    if not isinstance(channel_policy, dict):
+        return False, f"policy channel {normalized_channel} is missing or invalid"
+    state = channel_policy.get("state")
+    normalized_state = state.strip().casefold() if isinstance(state, str) else ""
+    if normalized_state not in KNOWN_CHANNEL_STATES:
+        return False, f"policy channel {normalized_channel} has unknown state"
+    if normalized_state in {"paused", "retired", "testing_blocked"}:
+        return False, f"policy channel {normalized_channel} is {normalized_state}"
+    if channel_policy.get("publication_authorized") is not True:
+        return False, (
+            f"policy channel {normalized_channel} publication_authorized is not explicitly true"
+        )
+
+    if privacy_check is None:
+        def privacy_check() -> int:
+            try:
+                return subprocess.run(
+                    [sys.executable, str(PRIVACY_GUARD_PATH)],
+                    cwd=ROOT,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    timeout=45,
+                    check=False,
+                ).returncode
+            except Exception:
+                return 2
+    try:
+        privacy_rc = int(privacy_check())
+    except Exception:
+        privacy_rc = 2
+    if privacy_rc != 0:
+        return False, f"privacy gate is blocked (exit {privacy_rc})"
+
+    normalized_content_id = content_id.strip() if isinstance(content_id, str) else ""
+    if not normalized_content_id:
+        return False, "exact content_id is missing from the publication decision"
+    try:
+        canonical = content_source_gate.evaluate_repo_content_source_gate(
+            normalized_content_id,
+            ROOT,
+            now=checked_at.astimezone(timezone.utc),
+            snapshot_path=OFFICIAL_SOURCE_SNAPSHOT_PATH,
+        )
+    except Exception:
+        return False, "canonical content-scoped official-source gate is unavailable"
+    if canonical.allowed is not True:
+        detail = "; ".join(str(value) for value in canonical.failures[:3])
+        return False, detail or "canonical content-scoped official-source gate is blocked"
+    if content_source_check is None:
+        return True, (
+            "channel, actor, privacy, and canonical content-scoped source gates passed"
+        )
+    try:
+        source_allowed, source_reason = content_source_check(
+            normalized_content_id, OFFICIAL_SOURCE_SNAPSHOT_PATH, checked_at
+        )
+    except Exception:
+        return False, "additional content-scoped official-source check is unavailable"
+    if source_allowed is not True:
+        return False, str(source_reason or "additional content-scoped source check is blocked")
+    return True, "channel, actor, privacy, and canonical content-scoped source gates passed"
+
+
+def publication_blocked(channel: str, evidence: str, reason: str) -> dict[str, str]:
+    return result(
+        channel,
+        "PUBLICATION-BLOCKED",
+        f"{evidence} · publication authority blocked: {reason}",
+        PUBLICATION_BLOCKED_ACTION,
+    )
 
 
 def item_for(items: list[dict[str, Any]], target: date) -> dict[str, Any] | None:
@@ -193,7 +421,7 @@ def clean_text(value: str) -> str:
 # SKIPPED is deliberately absent: "the task ran and correctly did nothing" is a healthy
 # day and must not page anyone. FAILED is present: the ledger saying an attempt failed is
 # exactly the case that needs a person.
-ACTION_REQUIRED = {"FAIL", "FAILED", "NOT-POSTED"}
+ACTION_REQUIRED = {"FAIL", "FAILED", "NOT-POSTED", "EVIDENCE-ERROR"}
 
 
 def result(channel: str, status: str, evidence: str, action: str = "-") -> dict[str, str]:
@@ -212,14 +440,14 @@ def manifest_posted_status(
     value = posted.get(manifest_key)
     if not isinstance(value, str) or not value.strip():
         return None
-    normalized = value.casefold()
-    if "scheduled" in normalized:
+    kind = manifest_contract.evidence_kind(value)
+    if kind == "scheduled":
         return result(channel, "SCHEDULED-UI", f"(จาก manifest: {value})")
     # "published" is what yt_upload_batch2 writes when the slot had already passed and
     # the video went out immediately. It is a STRONGER claim than "posted", but this
     # function used to understand only "posted"/"scheduled", so a genuinely published
     # item returned None and read as no-signal-at-all. Found 31 Jul 2026.
-    if "posted" in normalized or "published" in normalized:
+    if kind == "posted":
         return result(channel, "POSTED", "(จาก manifest)")
     return None
 
@@ -227,10 +455,42 @@ def manifest_posted_status(
 LEDGER_POST_TYPES = ("video", "image")  # rows that assert a real post happened
 
 
-def ledger_evidence(channel: str, target: date) -> tuple[str, dict[str, Any] | None]:
+LEDGER_DATE_FIELDS = ("publish_at", "scheduled_for", "schedule_date", "slot", "ts")
+
+
+def _ledger_dates(entry: dict[str, Any]) -> set[str]:
+    dates: set[str] = set()
+    for key in LEDGER_DATE_FIELDS:
+        value = entry.get(key)
+        if not isinstance(value, str):
+            continue
+        match = re.match(r"^(\d{4}-\d{2}-\d{2})(?:$|T|\s)", value.strip())
+        if match:
+            try:
+                dates.add(date.fromisoformat(match.group(1)).isoformat())
+            except ValueError:
+                continue
+    return dates
+
+
+def _ledger_content_id(entry: dict[str, Any]) -> str | None:
+    for key in ("content_id", "clip_id"):
+        value = entry.get(key)
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+    return None
+
+
+def ledger_evidence(
+    channel: str,
+    target: date,
+    expected_content_id: str | None = None,
+    *,
+    require_content_id: bool = False,
+) -> tuple[str, dict[str, Any] | None]:
     """Read post-ledger.jsonl once and say what it knows about `channel` on `target`.
 
-    Returns ("posted"|"failed"|"none", entry).  Precedence: a real post row wins over a
+    Returns ("posted"|"failed"|"none"|"evidence_error", entry).  Precedence: a real post row wins over a
     failure row for the same day (a retry that finally succeeded must not read as failed).
 
     Rows of type "text" are ignored on purpose: the noon knowledge-post writes to the same
@@ -243,24 +503,41 @@ def ledger_evidence(channel: str, target: date) -> tuple[str, dict[str, Any] | N
         return "none", None
     wanted = target.isoformat()
     failure: dict[str, Any] | None = None
+    evidence_error: dict[str, Any] | None = None
     try:
-        for raw_line in ledger.read_text(encoding="utf-8", errors="replace").splitlines():
-            try:
-                entry = json.loads(raw_line)
-            except json.JSONDecodeError:
-                continue
+        rows = _read_strict_jsonl(ledger)
+    except (OSError, UnicodeError, ValueError, json.JSONDecodeError) as exc:
+        return "evidence_error", {
+            "note": f"post ledger is not stable strict evidence: {type(exc).__name__}"
+        }
+    try:
+        for entry in rows:
             if str(entry.get("channel", "")).casefold() != channel.casefold():
                 continue
-            if wanted not in json.dumps(entry, ensure_ascii=False):
+            if wanted not in _ledger_dates(entry):
                 continue
             kind = str(entry.get("type", "")).casefold()
             if kind in LEDGER_POST_TYPES:
+                row_content_id = _ledger_content_id(entry)
+                if expected_content_id and row_content_id != expected_content_id:
+                    if require_content_id:
+                        evidence_error = {
+                            "note": (
+                                "post row content identity is missing or mismatched: "
+                                f"expected {expected_content_id}, got {row_content_id or 'missing'}"
+                            )
+                        }
+                    continue
                 return "posted", entry
             if kind == "failure" and failure is None:
                 failure = entry
-    except OSError:
-        return "none", None
-    return ("failed", failure) if failure is not None else ("none", None)
+    except (TypeError, ValueError, OverflowError) as exc:
+        return "evidence_error", {"note": f"post ledger row invalid: {type(exc).__name__}"}
+    if failure is not None:
+        return "failed", failure
+    if evidence_error is not None:
+        return "evidence_error", evidence_error
+    return "none", None
 
 
 def ledger_note(entry: dict[str, Any] | None) -> str:
@@ -288,17 +565,33 @@ def source_side_or_not_posted(
       NOT-POSTED  = no evidence anywhere -> it did not go out; post it.
     (order 30 Jul: "UNKNOWN ทำให้คนมองข้าม NOT-POSTED ทำให้คนแก้")
     """
-    kind, entry = ledger_evidence(manifest_key, target)
+    expected_content_id = item.get("id") if isinstance(item, dict) else None
+    kind, entry = ledger_evidence(
+        manifest_key,
+        target,
+        expected_content_id if isinstance(expected_content_id, str) else None,
+        require_content_id=target >= now_bangkok().date(),
+    )
     if kind == "posted":
         return result(channel, "SOURCE-SIDE", f"{evidence} · ledger บันทึกว่าโพสต์แล้ว", "ยืนยันปลายทางด้วยตาเมื่อสะดวก")
     manifest_status = manifest_posted_status(item, channel, manifest_key)
+    if kind == "evidence_error":
+        note = ledger_note(entry)
+        return result(
+            channel,
+            "EVIDENCE-ERROR",
+            f"{evidence} · หลักฐาน ledger ใช้ยืนยันไม่ได้: {note}",
+            "ซ่อมหลักฐานและตรวจ content_id ก่อนตัดสินใจเผยแพร่",
+        )
+    if kind == "failed" and not (
+        manifest_status is not None and manifest_status.get("status") == "POSTED"
+    ):
+        note = ledger_note(entry)
+        return result(channel, "FAILED", f"{evidence} · ledger บันทึกความล้มเหลว: {note}", "ซ่อม pipeline แล้วโพสต์ซ้ำ")
     if manifest_status is not None:
         detail = manifest_status["evidence"]
         return result(channel, "SOURCE-SIDE", f"{evidence} · ต้นทางตั้งค่าไว้แล้ว {detail}",
                       "ยืนยันปลายทางด้วยตาเมื่อสะดวก")
-    if kind == "failed":
-        note = ledger_note(entry)
-        return result(channel, "FAILED", f"{evidence} · ledger บันทึกความล้มเหลว: {note}", "ซ่อม pipeline แล้วโพสต์ซ้ำ")
     return result(channel, "NOT-POSTED", f"{evidence} · ไม่มีหลักฐานทั้งใน ledger และ manifest", "โพสต์ให้เรียบร้อย")
 
 
@@ -323,7 +616,7 @@ def http_error_detail(error: Exception) -> str:
     try:
         if isinstance(content, bytes):
             content = content.decode("utf-8", errors="replace")
-        payload = json.loads(content)
+        payload = _strict_json_loads(content)
         errors = payload.get("error", {}).get("errors", [])
         if errors and isinstance(errors[0], dict):
             reason = str(errors[0].get("reason", reason))
@@ -448,14 +741,10 @@ def quota_likely_available(checked_at: datetime) -> bool:
         return True
     today = checked_at.date().isoformat()
     try:
-        lines = HISTORY_PATH.read_text(encoding="utf-8").splitlines()[-100:]
-    except OSError:
-        return True
-    for line in lines:
-        try:
-            entry = json.loads(line)
-        except json.JSONDecodeError:
-            continue
+        rows = _read_strict_jsonl(HISTORY_PATH)[-100:]
+    except (OSError, UnicodeError, ValueError, json.JSONDecodeError):
+        return False
+    for entry in rows:
         if not str(entry.get("checked_at", "")).startswith(today):
             continue
         if "quotaexceeded" in json.dumps(entry, ensure_ascii=False).casefold():
@@ -476,13 +765,187 @@ def upload_token_is_safe_to_use() -> bool:
         return False
 
 
-def run_youtube_recovery(target: date, checked_at: datetime) -> str:
+def _safe_reel_asset(base: Path, raw_path: Any, label: str) -> Path:
+    if not isinstance(raw_path, str) or not raw_path.strip():
+        raise YouTubeRepairError(f"{label} is missing")
+    relative = Path(raw_path)
+    if relative.is_absolute():
+        raise YouTubeRepairError(f"{label} must be a repository-relative reel path")
+    candidate = (base / relative).resolve()
+    reels_root = REELS_DIR.resolve()
+    if candidate != reels_root and reels_root not in candidate.parents:
+        raise YouTubeRepairError(f"{label} escapes the reels directory")
+    if not candidate.is_file():
+        raise YouTubeRepairError(f"{label} does not exist: {raw_path}")
+    try:
+        if candidate.stat().st_size <= 0:
+            raise YouTubeRepairError(f"{label} is empty: {raw_path}")
+    except OSError as exc:
+        raise YouTubeRepairError(f"{label} cannot be read: {raw_path}") from exc
+    return candidate
+
+
+def validate_youtube_repair_authorization(
+    target: date,
+    checked_at: datetime,
+    item: dict[str, Any] | None,
+    youtube_policy: dict[str, Any],
+    schedule: dict[str, dict[str, Any]],
+) -> None:
+    """Require an exact, approved current/future publication record.
+
+    Canonical approval schema lives on the exact ``reels/schedule.json`` row::
+
+        "approval": {
+          "qa": "PASS", "publication": "APPROVED",
+          "privacy_gate": "PASS", "publication_gate": "PASS",
+          "approved_by": "...", "approved_at": "ISO-8601"
+        }
+
+    Existing prose QA is evidence, but it is not publication authorization.
+    """
+    if not isinstance(youtube_policy, dict):
+        raise YouTubeRepairError("YouTube policy is missing or invalid")
+    if not isinstance(schedule, dict):
+        raise YouTubeRepairError("reel schedule is missing or invalid")
+    state = str(youtube_policy.get("state", "")).strip().casefold()
+    if state != "active":
+        raise YouTubeRepairError(
+            f"policy channels.youtube.state must be active; found {state or 'missing'}"
+        )
+    if youtube_policy.get("publication_authorized") is not True:
+        raise YouTubeRepairError(
+            "policy channels.youtube.publication_authorized must be explicitly true"
+        )
+    if target < checked_at.astimezone(BANGKOK).date():
+        raise YouTubeRepairError(
+            f"repair target {target.isoformat()} is historical; only current/future schedules are allowed"
+        )
+    if not isinstance(item, dict) or item.get("date") != target.isoformat():
+        raise YouTubeRepairError(
+            f"content manifest has no exact item for {target.isoformat()}"
+        )
+    manifest_content_id = item.get("id")
+    if not isinstance(manifest_content_id, str) or not manifest_content_id.strip():
+        raise YouTubeRepairError("exact manifest item is missing id/content_id")
+
+    scheduled = schedule.get(target.isoformat())
+    if not isinstance(scheduled, dict):
+        raise YouTubeRepairError(
+            f"reels/schedule.json has no exact current/future row for {target.isoformat()}"
+        )
+    scheduled_content_id = scheduled.get("content_id")
+    if not isinstance(scheduled_content_id, str) or not scheduled_content_id.strip():
+        raise YouTubeRepairError(
+            f"reels/schedule.json[{target.isoformat()}] is missing explicit content_id"
+        )
+    if scheduled_content_id.strip() != manifest_content_id.strip():
+        raise YouTubeRepairError(
+            "schedule content_id does not match the exact manifest item: "
+            f"{scheduled_content_id!r} != {manifest_content_id!r}"
+        )
+
+    manifest_asset = _safe_reel_asset(ROOT, item.get("reel"), "manifest reel asset")
+    scheduled_asset = _safe_reel_asset(REELS_DIR, scheduled.get("file"), "scheduled reel asset")
+    if manifest_asset != scheduled_asset:
+        raise YouTubeRepairError(
+            "scheduled reel asset does not exactly match the manifest reel asset"
+        )
+
+    approval = scheduled.get("approval")
+    if not isinstance(approval, dict):
+        raise YouTubeRepairError(
+            "no structured publication approval record; add approval with qa=PASS, "
+            "publication=APPROVED, privacy_gate=PASS, publication_gate=PASS, "
+            "approved_by and approved_at to the exact reels/schedule.json row"
+        )
+    required_statuses = {
+        "qa": {"pass", "approved"},
+        "publication": {"approved"},
+        "privacy_gate": {"pass", "approved"},
+        "publication_gate": {"pass", "approved"},
+    }
+    for field, accepted in required_statuses.items():
+        value = approval.get(field)
+        normalized = value.strip().casefold() if isinstance(value, str) else ""
+        if normalized not in accepted:
+            wanted = " or ".join(sorted(status.upper() for status in accepted))
+            raise YouTubeRepairError(
+                f"publication approval field {field} must explicitly be {wanted}; "
+                f"found {value if value is not None else 'missing'}"
+            )
+    approved_by = approval.get("approved_by")
+    if not isinstance(approved_by, str) or not approved_by.strip():
+        raise YouTubeRepairError("publication approval is missing approved_by")
+    approved_at_value = approval.get("approved_at")
+    if not isinstance(approved_at_value, str) or not approved_at_value.strip():
+        raise YouTubeRepairError("publication approval is missing approved_at")
+    try:
+        approved_at = datetime.fromisoformat(approved_at_value.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise YouTubeRepairError("publication approval approved_at must be ISO-8601") from exc
+    if approved_at.tzinfo is None:
+        approved_at = approved_at.replace(tzinfo=BANGKOK)
+    if approved_at > checked_at.astimezone(approved_at.tzinfo):
+        raise YouTubeRepairError("publication approval approved_at cannot be in the future")
+
+
+def run_youtube_recovery(
+    target: date,
+    checked_at: datetime,
+    *,
+    item: dict[str, Any] | None,
+    youtube_policy: dict[str, Any],
+    schedule: dict[str, dict[str, Any]],
+    actor: str,
+    receipt_nonce: str,
+) -> str:
+    """Run the explicit live repair for one exact manifest date or fail closed."""
+    validate_youtube_repair_authorization(
+        target, checked_at, item, youtube_policy, schedule
+    )
+    if not isinstance(actor, str) or not actor.strip():
+        raise YouTubeRepairError("repair requires an explicit actor")
+    if not isinstance(receipt_nonce, str) or not receipt_nonce.strip():
+        raise YouTubeRepairError("repair requires an explicit private receipt nonce")
+    target_channel_id = youtube_policy.get("channel_id")
+    if not isinstance(target_channel_id, str) or not target_channel_id.strip():
+        raise YouTubeRepairError("YouTube policy is missing the exact target channel id")
+    allowed, authority_reason = evaluate_publication_authority(
+        checked_at,
+        actor.strip(),
+        channel="youtube",
+        content_id=item.get("id") if isinstance(item, dict) else None,
+        channel_policy=youtube_policy,
+    )
+    if not allowed:
+        raise YouTubeRepairError(f"publication authority blocked: {authority_reason}")
+    if target < AUTO_YT_FROM:
+        raise YouTubeRepairError(
+            f"repair target {target.isoformat()} is before the supported window {AUTO_YT_FROM.isoformat()}"
+        )
     if not quota_likely_available(checked_at):
-        return "Not attempted: a quotaExceeded result is already recorded for today."
+        raise YouTubeRepairError("a quotaExceeded result is already recorded for today")
     if not upload_token_is_safe_to_use():
-        return "Not attempted: the cached YouTube token is unavailable/expired; guard will not rewrite secrets."
+        raise YouTubeRepairError(
+            "the cached YouTube token is unavailable/expired; repair will not rewrite secrets"
+        )
     launcher = shutil.which("py") or sys.executable
-    command = [launcher, str(ROOT / "tools" / "yt_upload_batch2.py"), "--live", "--limit", "1"]
+    command = [
+        launcher,
+        str(ROOT / "tools" / "yt_upload_batch2.py"),
+        "--live",
+        "--limit",
+        "1",
+        "--dates",
+        target.isoformat(),
+        "--actor",
+        actor.strip(),
+        "--target-channel-id",
+        target_channel_id.strip(),
+        "--receipt-nonce",
+        f"{target.isoformat()}={receipt_nonce.strip()}",
+    ]
     try:
         completed = subprocess.run(
             command,
@@ -495,15 +958,17 @@ def run_youtube_recovery(target: date, checked_at: datetime) -> str:
             timeout=20 * 60,
         )
     except (OSError, subprocess.TimeoutExpired) as exc:
-        return f"Recovery command could not complete: {type(exc).__name__}."
+        raise YouTubeRepairError(
+            f"repair command could not complete: {type(exc).__name__}"
+        ) from exc
     # Do not copy subprocess output into a report: it is unnecessary for the
     # guard result and may expose future helper diagnostics.
     output = (completed.stdout + "\n" + completed.stderr).casefold()
     if "quotaexceeded" in output:
-        return "YouTube recovery stopped on quotaExceeded; re-verified afterward."
-    if completed.returncode == 0:
-        return f"Ran YouTube recovery for {target.isoformat()} (exit 0); re-verified afterward."
-    return f"YouTube recovery ran (exit {completed.returncode}); re-verified afterward."
+        raise YouTubeRepairError("repair stopped on quotaExceeded")
+    if completed.returncode != 0:
+        raise YouTubeRepairError(f"repair command exited {completed.returncode}")
+    return f"Ran explicit YouTube repair for exactly {target.isoformat()} (exit 0); re-verified afterward."
 
 
 def check_youtube(
@@ -540,19 +1005,68 @@ def ig_workflow_configured() -> bool:
     return bool(os.environ.get("IG_ACCESS_TOKEN") and os.environ.get("IG_USER_ID"))
 
 
-def check_instagram(target: date, item: dict[str, Any] | None) -> dict[str, str]:
-    # IG paused on purpose 26 Jul - 25 Aug 2026.  Evidence (GA4, 28d): ig = 1 session,
-    # 0 conversions from 5 posts, vs pantip 29 sessions from 2 items.  See
-    # automation-log/CHANNEL-DECISION_20260725.md.  A silent IG channel in this window is
-    # the plan working, not a failure -- reporting BLOCKED here produced a daily false alarm
-    # that also asked the owner to supply Meta credentials, which they permanently revoked
-    # on 18 Jul 2026.  Never surface a token prompt for IG again.
-    if IG_PAUSED_FROM <= target <= IG_PAUSED_UNTIL:
+def check_instagram(
+    target: date,
+    item: dict[str, Any] | None,
+    channel_policy: dict[str, Any] | None = None,
+) -> dict[str, str]:
+    """Check Instagram only when its authoritative policy explicitly permits it."""
+    if channel_policy is None:
+        try:
+            channel_policy = load_channel_policy("instagram")
+        except GuardSetupError as exc:
+            return result(
+                "INSTAGRAM",
+                "FAIL",
+                f"Instagram policy unavailable: {exc}",
+                "Repair .system_control/policy.json before any Instagram check or action.",
+            )
+    state_value = channel_policy.get("state")
+    state = state_value.strip().casefold() if isinstance(state_value, str) else ""
+    if state not in KNOWN_CHANNEL_STATES:
+        return result(
+            "INSTAGRAM",
+            "FAIL",
+            f"Instagram policy has unknown state: {state_value or 'missing'}",
+            "Set a known Instagram state before any check or action.",
+        )
+    if state == "retired":
+        return result(
+            "INSTAGRAM",
+            "RETIRED",
+            "Instagram is retired by policy.",
+            "-",
+        )
+    if state == "paused":
+        until_value = channel_policy.get("until")
+        try:
+            review_date = date.fromisoformat(until_value) if isinstance(until_value, str) else None
+        except ValueError:
+            review_date = None
+        if review_date is None:
+            return result(
+                "INSTAGRAM",
+                "FAIL",
+                "Instagram policy state is paused but review date 'until' is missing or invalid.",
+                "Repair the Instagram policy; do not publish while state is unresolved.",
+            )
+        review_due = target > review_date
+        evidence = (
+            f"Instagram remains paused after its {review_date.isoformat()} review date; "
+            "a review date never reactivates a channel."
+            if review_due
+            else f"Instagram is paused by policy; review date is {review_date.isoformat()}."
+        )
+        action = (
+            "Review the evidence and record an explicit policy state; no publishing until then."
+            if review_due
+            else "No action until the recorded review date."
+        )
         return result(
             "INSTAGRAM",
             "PAUSED",
-            f"IG paused by decision until {IG_PAUSED_UNTIL.isoformat()} (GA4: 1 session / 0 conv).",
-            "No action -- revisit on 25 Aug 2026.",
+            evidence,
+            action,
         )
     matches = ig_artifact_matches(target)
     if matches:
@@ -595,7 +1109,11 @@ def fb_log_candidates() -> list[Path]:
     return paths
 
 
-def check_facebook(target: date, item: dict[str, Any] | None) -> dict[str, str]:
+def check_facebook(
+    target: date,
+    item: dict[str, Any] | None,
+    publication_gate: tuple[bool, str] | None = None,
+) -> dict[str, str]:
     wanted = target.isoformat()
     candidates = fb_log_candidates()
     matching: list[Path] = []
@@ -611,6 +1129,13 @@ def check_facebook(target: date, item: dict[str, Any] | None) -> dict[str, str]:
     note = "no FB/feed run logs found" if not candidates else f"scanned {len(candidates)} FB/feed-named log(s); none mention {wanted}"
     if target == FB_MANUAL_DATE:
         return result("FACEBOOK", "OK", f"Manual-scheduled date (20 Jul); {note}")
+    allowed, authority_reason = publication_gate or evaluate_publication_authority(
+        now_bangkok(),
+        channel="facebook",
+        content_id=item.get("id") if isinstance(item, dict) else None,
+    )
+    if not allowed:
+        return publication_blocked("FACEBOOK", note, authority_reason)
     # The owner permanently revoked the Meta token on 18 Jul 2026; FB publishing is manual via
     # Business Suite by design.  This branch used to report BLOCKED and ask for FB_PAGE_ID /
     # FB_PAGE_TOKEN every single day, which contradicts a settled decision and trains the
@@ -655,13 +1180,8 @@ def check_facebook_comment(target: date) -> dict[str, str]:
     found: dict[str, dict[str, str]] = {}
     if POST_LEDGER_PATH.is_file():
         try:
-            for raw_line in POST_LEDGER_PATH.read_text(encoding="utf-8", errors="replace").splitlines():
-                try:
-                    entry = json.loads(raw_line)
-                except json.JSONDecodeError:
-                    continue
-                if not isinstance(entry, dict):
-                    continue
+            rows = _read_strict_jsonl(POST_LEDGER_PATH)
+            for entry in rows:
                 if entry.get("channel") != "facebook":
                     continue
                 kind = str(entry.get("type", "")).casefold()
@@ -683,8 +1203,12 @@ def check_facebook_comment(target: date) -> dict[str, str]:
                 if kind != "comment" and "comment" not in str(entry.get("source", "")).casefold():
                     continue
                 found.setdefault(kind, {"ts": timestamp, "note": str(entry.get("note", ""))})
-        except OSError:
-            pass
+        except (OSError, UnicodeError, ValueError, json.JSONDecodeError) as exc:
+            return result(
+                "FACEBOOK-COMMENT", "FAILED",
+                "post-ledger evidence is invalid: %s" % type(exc).__name__,
+                "repair/reconcile the local ledger before trusting comment state",
+            )
 
     if "comment" in found:
         return result("FACEBOOK-COMMENT", "OK",
@@ -736,8 +1260,8 @@ def tiktok_embedded_json(page: str) -> Any | None:
         attrs = script.group("attrs")
         if re.search(r"\bid\s*=\s*(['\"])__UNIVERSAL_DATA_FOR_REHYDRATION__\1", attrs, re.IGNORECASE):
             try:
-                return json.loads(script.group("body").strip())
-            except json.JSONDecodeError:
+                return _strict_json_loads(script.group("body").strip())
+            except (json.JSONDecodeError, ValueError):
                 return None
     match = re.search(r"window\s*\[\s*['\"]SIGI_STATE['\"]\s*\]\s*=", page)
     if not match:
@@ -746,7 +1270,11 @@ def tiktok_embedded_json(page: str) -> Any | None:
     while start < len(page) and page[start].isspace():
         start += 1
     try:
-        return json.JSONDecoder().raw_decode(page[start:])[0]
+        decoder = json.JSONDecoder(
+            parse_constant=_reject_json_constant,
+            object_pairs_hook=_reject_json_duplicates,
+        )
+        return _require_finite_json(decoder.raw_decode(page[start:])[0])
     except (json.JSONDecodeError, ValueError):
         return None
 
@@ -778,14 +1306,75 @@ def tiktok_created_on(value: Any, target: date) -> bool:
         return False
 
 
-def check_tiktok(target: date, item: dict[str, Any] | None, checked_at: datetime) -> dict[str, str]:
-    if TIKTOK_PAUSED_FROM <= target <= TIKTOK_PAUSED_UNTIL:
+def check_tiktok(
+    target: date,
+    item: dict[str, Any] | None,
+    checked_at: datetime,
+    channel_policy: dict[str, Any] | None = None,
+) -> dict[str, str]:
+    """Check TikTok only when the authoritative policy permits it.
+
+    Retired and testing_blocked return before the public-profile request. Missing,
+    malformed, expired-paused, or unknown policy also stops before the network.
+    """
+    if channel_policy is None:
+        try:
+            channel_policy = load_channel_policy("tiktok")
+        except GuardSetupError as exc:
+            return result(
+                "TIKTOK",
+                "FAIL",
+                f"TikTok policy unavailable: {exc}",
+                "Repair .system_control/policy.json before any TikTok check or action.",
+            )
+    state_value = channel_policy.get("state")
+    state = state_value.strip().casefold() if isinstance(state_value, str) else ""
+    if state not in KNOWN_CHANNEL_STATES:
+        return result(
+            "TIKTOK",
+            "FAIL",
+            f"TikTok policy has unknown state: {state_value or 'missing'}",
+            "Set a known TikTok state in .system_control/policy.json before any check or action.",
+        )
+    if state == "retired":
+        return result(
+            "TIKTOK",
+            "RETIRED",
+            "TikTok is retired by policy; an old 'until' date cannot reactivate it.",
+            "-",
+        )
+    if state == "testing_blocked":
+        return result(
+            "TIKTOK",
+            "TESTING-BLOCKED",
+            "TikTok has a local reactivation plan, but every placement remains blocked by policy.",
+            "Resolve the per-piece source, dedup, media, landing, identity, and owner-confirmation gates; do not schedule or publish.",
+        )
+    if state == "paused":
+        until_value = channel_policy.get("until")
+        try:
+            paused_until = date.fromisoformat(until_value) if isinstance(until_value, str) else None
+        except ValueError:
+            paused_until = None
+        if paused_until is None:
+            return result(
+                "TIKTOK",
+                "FAIL",
+                "TikTok policy state is paused but 'until' is missing or invalid.",
+                "Repair the TikTok policy before any check or action.",
+            )
+        if target > paused_until:
+            return result(
+                "TIKTOK",
+                "FAIL",
+                f"TikTok pause expired on {paused_until.isoformat()} but policy still says paused.",
+                "Record an explicit active, testing, or retired decision before any check or action.",
+            )
         return result(
             "TIKTOK",
             "PAUSED",
-            f"TikTok on hold until the batch-3 gate on {TIKTOK_PAUSED_UNTIL.isoformat()} "
-            "(28 days = 1 real post, 0 sessions; upload depends on the owner's phone).",
-            "No action -- the gate decides. Do not treat as a missed delivery.",
+            f"TikTok is paused by policy until {paused_until.isoformat()}.",
+            "No action until the recorded review date.",
         )
     # Logged-out profile scraping stopped working (interest modal / no rehydration JSON).
     # When downstream verification is impossible we report from the source side instead of
@@ -833,7 +1422,11 @@ def check_tiktok(target: date, item: dict[str, Any] | None, checked_at: datetime
     )
 
 
-def check_threads(target: date, item: dict[str, Any] | None) -> dict[str, str]:
+def check_threads(
+    target: date,
+    item: dict[str, Any] | None,
+    publication_gate: tuple[bool, str] | None = None,
+) -> dict[str, str]:
     """Threads is a channel WE post to ourselves, so the ledger is the source of truth.
 
     No ledger row does not mean "unknown" -- it means nobody posted (order 30 Jul, task 2.2).
@@ -841,9 +1434,37 @@ def check_threads(target: date, item: dict[str, Any] | None) -> dict[str, str]:
     HTML almost never contains the caption, and a miss there must not downgrade the verdict.
     """
     wanted = target.isoformat()
-    kind, entry = ledger_evidence("threads", target)
+    expected_content_id = item.get("id") if isinstance(item, dict) else None
+    kind, entry = ledger_evidence(
+        "threads",
+        target,
+        expected_content_id if isinstance(expected_content_id, str) else None,
+        require_content_id=target >= now_bangkok().date(),
+    )
     if kind == "posted":
         return result("THREADS", "OK", f"Threads clip entry dated {wanted} found in post-ledger.jsonl.")
+
+    if kind == "evidence_error":
+        note = ledger_note(entry)
+        return result(
+            "THREADS",
+            "EVIDENCE-ERROR",
+            f"หลักฐาน ledger ของ {wanted} ใช้ยืนยันไม่ได้: {note}",
+            "ซ่อม ledger และยืนยัน content_id ก่อนตัดสินใจเผยแพร่",
+        )
+
+    allowed, authority_reason = publication_gate or evaluate_publication_authority(
+        now_bangkok(),
+        channel="threads",
+        content_id=item.get("id") if isinstance(item, dict) else None,
+    )
+    if not allowed:
+        evidence = (
+            f"ledger records a failed Threads attempt for {wanted}"
+            if kind == "failed"
+            else f"no Threads video ledger row exists for {wanted}"
+        )
+        return publication_blocked("THREADS", evidence, authority_reason)
 
     prefix = clean_text(channel_caption(item, "threads"))[:30]
     if prefix:
@@ -861,7 +1482,13 @@ def check_threads(target: date, item: dict[str, Any] | None) -> dict[str, str]:
                   "โพสต์คลิปวันนี้ลง Threads แล้วบันทึก ledger")
 
 
-def readiness_preview(target: date, items: list[dict[str, Any]], upload_log: dict[str, str], checked_at: datetime) -> dict[str, Any]:
+def readiness_preview(
+    target: date,
+    items: list[dict[str, Any]],
+    upload_log: dict[str, str],
+    checked_at: datetime,
+    tiktok_policy: dict[str, Any],
+) -> dict[str, Any]:
     tomorrow = target + timedelta(days=1)
     item = item_for(items, tomorrow)
     checks: list[dict[str, str]] = []
@@ -913,7 +1540,19 @@ def readiness_preview(target: date, items: list[dict[str, Any]], upload_log: dic
             continue
     planned_days = sorted({d for d in planned_all if checked_at.date() <= d <= horizon_end})
     last_planned = max(planned_all, default=None)
-    if planned_days:
+    if tiktok_policy["state"] == "retired":
+        tiktok_note = "TikTok is RETIRED by policy -- no scheduling or verification action."
+    elif tiktok_policy["state"] == "testing_blocked":
+        tiktok_note = (
+            "TikTok is TESTING_BLOCKED -- the 14-day runway is a local reservation only; "
+            "do not upload, schedule, or publish."
+        )
+    elif tiktok_policy["state"] == "paused":
+        tiktok_note = (
+            f"TikTok is PAUSED by policy until {tiktok_policy.get('until', 'invalid')} -- "
+            "no scheduling action."
+        )
+    elif planned_days:
         tiktok_note = (
             "TikTok manual scheduling window is open for: "
             + ", ".join(day.isoformat() for day in planned_days)
@@ -994,6 +1633,8 @@ def main() -> int:
     checked_at = now_bangkok()
     target = args.target_date
     try:
+        tiktok_policy = load_channel_policy("tiktok")
+        instagram_policy = load_channel_policy("instagram")
         items = load_manifest()
         upload_log = load_upload_log()
     except GuardSetupError as exc:
@@ -1001,18 +1642,57 @@ def main() -> int:
         return 2
 
     item = item_for(items, target)
+    content_id = item.get("id") if isinstance(item, dict) else None
+    facebook_publication_gate = evaluate_publication_authority(
+        checked_at, channel="facebook", content_id=content_id
+    )
+    threads_publication_gate = evaluate_publication_authority(
+        checked_at, channel="threads", content_id=content_id
+    )
     youtube_action = "-"
-    if target >= AUTO_YT_FROM and target.isoformat() not in upload_log:
-        youtube_action = run_youtube_recovery(target, checked_at)
-        upload_log = load_upload_log()
+    if args.repair_youtube:
+        if item is None:
+            print(
+                f"REPAIR ERROR: manifest has no item for exact target {target.isoformat()}",
+                file=sys.stderr,
+            )
+            return 2
+        if target.isoformat() in upload_log:
+            youtube_action = (
+                f"No repair needed: yt_upload_log already contains exact target {target.isoformat()}."
+            )
+        else:
+            try:
+                youtube_policy = load_channel_policy("youtube")
+                schedule = load_reel_schedule()
+                youtube_action = run_youtube_recovery(
+                    target,
+                    checked_at,
+                    item=item,
+                    youtube_policy=youtube_policy,
+                    schedule=schedule,
+                    actor=args.actor,
+                    receipt_nonce=args.receipt_nonce,
+                )
+                upload_log = load_upload_log()
+            except (GuardSetupError, YouTubeRepairError) as exc:
+                print(f"REPAIR ERROR: {exc}", file=sys.stderr)
+                return 2
+            if target.isoformat() not in upload_log:
+                print(
+                    "REPAIR ERROR: live helper exited successfully but the exact target "
+                    f"{target.isoformat()} is still absent from yt_upload_log",
+                    file=sys.stderr,
+                )
+                return 2
 
     channels = [
         check_youtube(target, item, upload_log, checked_at),
-        check_instagram(target, item),
-        check_facebook(target, item),
+        check_instagram(target, item, instagram_policy),
+        check_facebook(target, item, facebook_publication_gate),
         check_facebook_comment(target),
-        check_tiktok(target, item, checked_at),
-        check_threads(target, item),
+        check_tiktok(target, item, checked_at, tiktok_policy),
+        check_threads(target, item, threads_publication_gate),
     ]
     if youtube_action != "-":
         channels[0]["action"] = youtube_action
@@ -1032,7 +1712,9 @@ def main() -> int:
         "exit_code": 2 if has_fail else 0,
     }
     if args.check_tomorrow:
-        payload["tomorrow"] = readiness_preview(target, items, upload_log, checked_at)
+        payload["tomorrow"] = readiness_preview(
+            target, items, upload_log, checked_at, tiktok_policy
+        )
     status_path = write_outputs(payload)
     payload["status_report"] = status_path.relative_to(ROOT).as_posix()
     if args.json:

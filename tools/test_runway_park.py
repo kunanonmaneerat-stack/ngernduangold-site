@@ -7,7 +7,7 @@ demonstrate BOTH that it fires when it should and that it stays quiet when it
 should. The park feature is the highest-risk kind of code in this repo - it is
 an excuse generator - so it gets tested from both directions.
 """
-import os, sys, io, json, datetime, tempfile
+import os, sys, io, json, datetime, tempfile, unittest
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import runway_guard as RG
 
@@ -86,4 +86,14 @@ if note and note.startswith("EXPIRED:"):
 print("test_runway_park: %d check(s) failed" % len(FAIL))
 for f in FAIL:
     print("  FAIL " + f)
-sys.exit(1 if FAIL else 0)
+
+
+class RunwayParkDiscoveryTests(unittest.TestCase):
+    """Expose the legacy reverse checks to unittest discovery without import exit."""
+
+    def test_reverse_contract(self):
+        self.assertEqual(FAIL, [])
+
+
+if __name__ == "__main__":
+    raise SystemExit(1 if FAIL else 0)

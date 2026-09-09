@@ -8,7 +8,7 @@ SUMMARY: 0 file(s), 0 FAIL finding(s).
 [2026-06-27T16:31:12] OK -> ga4-pages.csv | pages=54
 [2026-06-27T16:31:12] auth = OAuth token (secrets/ga4-token.json)
 [2026-06-27T16:31:14] OK -> ga4-funnel.csv | quiz_start=4 -> quiz_complete=3 -> recommendation_view=1 -> affiliate_click=65
-Sent to telegram home channel (chat_id: 8431211539)
+Sent to telegram home channel (chat_id: [redacted-operational-id])
 [2026-06-27T16:31:14] auth = ga4-token.json
 [2026-06-27T16:31:15] GSC property = https://ngernduangold.com/
 [2026-06-27T16:31:15] OK -> gsc-queries.csv | queries=0
@@ -42,7 +42,7 @@ SUMMARY: 0 file(s), 0 FAIL finding(s).
 [2026-07-20T21:34:23] OK -> ga4-pages.csv | pages=62
 [2026-07-20T21:34:23] auth = OAuth token (secrets/ga4-token.json)
 [2026-07-20T21:34:25] OK -> ga4-funnel.csv | quiz_start=2 -> quiz_complete=2 -> recommendation_view=2 -> affiliate_click=33
-Sent to telegram home channel (chat_id: 8431211539)
+Sent to telegram home channel (chat_id: [redacted-operational-id])
 [2026-07-20T21:34:28] auth = ga4-token.json
 [2026-07-20T21:34:29] GSC property = https://ngernduangold.com/
 [2026-07-20T21:34:29] OK -> gsc-queries.csv | queries=11
@@ -60,7 +60,7 @@ SUMMARY: 0 file(s), 0 FAIL finding(s).
 [2026-07-27T09:16:17] OK -> ga4-pages.csv | pages=35
 [2026-07-27T09:16:17] auth = OAuth token (secrets/ga4-token.json)
 [2026-07-27T09:16:17] OK -> ga4-funnel.csv | quiz_start=2 -> quiz_complete=2 -> recommendation_view=2 -> affiliate_click=9
-Sent to telegram home channel (chat_id: 8431211539)
+Sent to telegram home channel (chat_id: [redacted-operational-id])
 [2026-07-27T09:16:18] auth = ga4-token.json
 [2026-07-27T09:16:18] GSC property = https://ngernduangold.com/
 [2026-07-27T09:16:19] OK -> gsc-queries.csv | queries=14
@@ -77,7 +77,7 @@ SUMMARY: 0 file(s), 0 FAIL finding(s).
 [2026-07-31T02:12:09] OK -> ga4-pages.csv | pages=34
 [2026-07-31T02:12:09] auth = OAuth token (secrets/ga4-token.json)
 [2026-07-31T02:12:10] OK -> ga4-funnel.csv | quiz_start=2 -> quiz_complete=2 -> recommendation_view=2 -> affiliate_click=8
-Sent to telegram home channel (chat_id: 8431211539)
+Sent to telegram home channel (chat_id: [redacted-operational-id])
 [2026-07-31T02:12:11] auth = ga4-token.json
 [2026-07-31T02:12:12] GSC property = https://ngernduangold.com/
 [2026-07-31T02:12:12] OK -> gsc-queries.csv | queries=16
@@ -94,7 +94,7 @@ SUMMARY: 0 file(s), 0 FAIL finding(s).
 [2026-08-10T09:09:08] OK -> ga4-pages.csv | pages=26
 [2026-08-10T09:09:08] auth = OAuth token (secrets/ga4-token.json)
 [2026-08-10T09:09:10] OK -> ga4-funnel.csv | quiz_start=0 -> quiz_complete=0 -> recommendation_view=0 -> affiliate_click=6
-Sent to telegram home channel (chat_id: 8431211539)
+Sent to telegram home channel (chat_id: [redacted-operational-id])
 [2026-08-10T09:09:11] auth = ga4-token.json
 [2026-08-10T09:09:11] GSC property = https://ngernduangold.com/
 [2026-08-10T09:09:11] OK -> gsc-queries.csv | queries=16

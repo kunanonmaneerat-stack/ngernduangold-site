@@ -1,0 +1,172 @@
+{
+  "schema_version": 2,
+  "receipt_type": "LEGACY_DRAFT_FULFILMENT_STRICT_REVALIDATION",
+  "producer": "ngernduangold.local-deterministic-content-pack-audit",
+  "revalidation_state": "STRICT_REVALIDATED_BLOCKED",
+  "semantic_universality_claimed": false,
+  "publication_authority": "NONE",
+  "release_state": "DRAFT_ONLY_BLOCKED_SOURCE_REVIEW",
+  "created_at": "2026-08-25T00:00:00+07:00",
+  "ledger": {
+    "path": ".local-private/runtime/content-novelty/topic-lifecycle-ledger.jsonl",
+    "prefix_sequence": 21,
+    "prefix_head": "9ED077BDE6BBA7FE66E550EAD89D476E74654C914216BA5BC7553F5DCA6E0A4D",
+    "ledger_prefix_sha256": "71DA76225908A9FC924D503E2464FC0A4BE38790D385D1AFE9EDF69DF415B6E0"
+  },
+  "legacy_fulfilment": {
+    "path": "automation-log/dedup-evidence/LOCAL-CONTENT-PACK_20260825_V2-DRAFT-FULFILMENT.json",
+    "sha256": "40BA011556AFE9B67310709037427840C33C54F2835DC4EA7324F5CF9968E9CD"
+  },
+  "pack": {
+    "path": "automation-log/cc-outbox/LOCAL-CONTENT-PACK_20260825_V2.md",
+    "sha256": "B871E8BA08BD5BD5A5CB64F0E3ABBD95D888AF86BE1B78E0E944AFC58951DE85",
+    "status": "DRAFT_ONLY_BLOCKED_SOURCE_REVIEW",
+    "request_id": "dispatcher:2026-08-25",
+    "platform_variants": 21
+  },
+  "strict_corpus_review": {
+    "path": "automation-log/dedup-evidence/LOCAL-CONTENT-PACK_20260825_V2-CORPUS-REVIEW-V2.json",
+    "sha256": "2425EE93400773E0B1FA7D61A06D80D28DA45167DF9D6D4FBBFD85F6CD095A0A"
+  },
+  "evidence_snapshot": {
+    "path": ".local-private/runtime/content-novelty/evidence/40BA011556AFE9B67310709037427840C33C54F2835DC4EA7324F5CF9968E9CD/manifest.json",
+    "sha256": "2D31EE316B0FD440B7BC6909806133401F0CBABE7257620802EF327F329B5D90",
+    "bundle_sha256": "455E598216C7B5DB4C754E0E3C95284902BC1FE185A13A3269342E0DEFCE8D12"
+  },
+  "audit_engine": {
+    "path": "pipeline/content_pack_audit.py",
+    "sha256": "1BF3036D108F25769C25DD2BBF1BF674DC6973FCB19287980C6CBD5A9BAAB6DE"
+  },
+  "families": [
+    {
+      "family_id": "payroll-net-pay-reconciliation",
+      "topic": "สลิปเงินเดือนกับเงินเข้าบัญชีไม่ตรงกัน: กระทบยอดรายได้ รายการหัก และยอดสุทธิก่อนวางงบ",
+      "topic_sha256": "865867D3D7859B4FEF513F93B613DD4FE6F5F6E2E30EAB0F655D07E52C3618AE",
+      "consumed_record_hash": "860F6E34B5F23317119C86798AF3A46BE83960B25C1D301259556A020BBD05AF"
+    },
+    {
+      "family_id": "annual-expense-sinking-funds",
+      "topic": "ค่าใช้จ่ายรายปีไม่ใช่เหตุฉุกเฉิน: แปลงประกัน ภาษี ซ่อม และสมาชิกภาพเป็นกองเงินรายเดือน",
+      "topic_sha256": "17458A6BA38B886150540A7B280F89E869AD5FCB2B2FDF4EBEF6E19FCAC64582",
+      "consumed_record_hash": "971E3950DC9FEF9D404E32C7E1DE62F8FF87758146869698126C6438DD5B615C"
+    },
+    {
+      "family_id": "recurring-charge-renewal-audit",
+      "topic": "รายการตัดบัตรอัตโนมัติ: ทำทะเบียนวันต่ออายุ หลักฐานยกเลิก และตรวจยอดตัดซ้ำ",
+      "topic_sha256": "9CB485922AE62893566E05B4BC21B444143339C8E6BD10629152F003D3028AF1",
+      "consumed_record_hash": "07CC0109437900C6CE36FA28E0D1B73839879D97A8495293F1CEA357562E9BC7"
+    },
+    {
+      "family_id": "household-bill-ownership-map",
+      "topic": "ค่าใช้จ่ายร่วมในบ้าน: ระบุเจ้าภาพ วันครบกำหนด ส่วนแบ่ง และหลักฐานจ่ายให้ตรวจย้อนหลังได้",
+      "topic_sha256": "B7601E2838681072A892B7256C1E182A8A9566E059182AB133954AE101CDDC53",
+      "consumed_record_hash": "8A1D345C1B61FA881E6EE3D7C416C1D8CEF2636F80891BB1E1E0B382CCD4AC76"
+    },
+    {
+      "family_id": "refund-dispute-evidence-timeline",
+      "topic": "รอเงินคืนหรือโต้แย้งรายการ: แยกเงินที่ยังไม่กลับเข้าบัญชีและทำลำดับหลักฐานกับเลขรับเรื่อง",
+      "topic_sha256": "2646165DF4A302D2654202270EEDA4CC36351C3A550C39B24C149991369D56CB",
+      "consumed_record_hash": "0A74596EF60B5702215C1761174EA79606C03B92553214A9ED661656CD992DD1"
+    },
+    {
+      "family_id": "beneficiary-emergency-access-review",
+      "topic": "ทบทวนผู้รับผลประโยชน์และผู้ติดต่อฉุกเฉินโดยไม่แชร์รหัสผ่านหรือสิทธิ์เข้าบัญชี",
+      "topic_sha256": "78A762143FA924E502213CBD61957DDAE2609A70CC2FF6417FD599102CCEE31B",
+      "consumed_record_hash": "8A238793AE576EF524C0B6A63C8DA3AD94DB4A77D360FBE7A2AAC7A6D0E57461"
+    },
+    {
+      "family_id": "employee-benefit-inventory",
+      "topic": "สำรวจสวัสดิการนายจ้างก่อนซื้อเพิ่ม: ประกันกลุ่ม กองทุน วันลา และสิทธิช่วยเหลือที่มีอยู่จริง",
+      "topic_sha256": "173AFF17B91F4C0A715CB5ADFAA9CECF8FB290E4F83D51C4DEFDF57A86136DAC",
+      "consumed_record_hash": "9ED077BDE6BBA7FE66E550EAD89D476E74654C914216BA5BC7553F5DCA6E0A4D"
+    }
+  ],
+  "recomputed": {
+    "corpus_audit": {
+      "topic_candidates": 7,
+      "topic_baseline_records": 209,
+      "historical_exact_collisions": 0,
+      "historical_near_collisions": 0,
+      "cross_family_exact_collisions": 0,
+      "cross_family_near_collisions": 0
+    },
+    "safety_audit": {
+      "first_person_hits": 0,
+      "url_hits": 0,
+      "commercial_or_tracking_hits": 0,
+      "guarantee_hits": 0,
+      "live_link_dependency_hits": 0,
+      "comply_gate_failures": 0
+    },
+    "copy_corpus_audit": {
+      "candidate_variants": 21,
+      "historical_records": 3927,
+      "unique_historical_normal_forms": 3927,
+      "historical_exact_collisions": 0,
+      "historical_near_collisions": 0,
+      "cross_family_exact_collisions": 0,
+      "cross_family_near_collisions": 0
+    },
+    "relevance_audit": {
+      "method": "normalized-topic-character-trigram-containment-v1",
+      "mechanical_relevance_only": true,
+      "minimum_platform_coverage_required": 0.12,
+      "minimum_combined_coverage_required": 0.3,
+      "family_count": 7,
+      "candidate_variants": 21,
+      "families_below_threshold": 0,
+      "families": [
+        {
+          "family_id": "payroll-net-pay-reconciliation",
+          "topic_sha256": "865867D3D7859B4FEF513F93B613DD4FE6F5F6E2E30EAB0F655D07E52C3618AE",
+          "minimum_platform_coverage": 0.648649,
+          "combined_coverage": 0.824324,
+          "passed": true
+        },
+        {
+          "family_id": "annual-expense-sinking-funds",
+          "topic_sha256": "17458A6BA38B886150540A7B280F89E869AD5FCB2B2FDF4EBEF6E19FCAC64582",
+          "minimum_platform_coverage": 0.333333,
+          "combined_coverage": 0.75641,
+          "passed": true
+        },
+        {
+          "family_id": "recurring-charge-renewal-audit",
+          "topic_sha256": "9CB485922AE62893566E05B4BC21B444143339C8E6BD10629152F003D3028AF1",
+          "minimum_platform_coverage": 0.521739,
+          "combined_coverage": 0.797101,
+          "passed": true
+        },
+        {
+          "family_id": "household-bill-ownership-map",
+          "topic_sha256": "B7601E2838681072A892B7256C1E182A8A9566E059182AB133954AE101CDDC53",
+          "minimum_platform_coverage": 0.615385,
+          "combined_coverage": 0.846154,
+          "passed": true
+        },
+        {
+          "family_id": "refund-dispute-evidence-timeline",
+          "topic_sha256": "2646165DF4A302D2654202270EEDA4CC36351C3A550C39B24C149991369D56CB",
+          "minimum_platform_coverage": 0.409639,
+          "combined_coverage": 0.759036,
+          "passed": true
+        },
+        {
+          "family_id": "beneficiary-emergency-access-review",
+          "topic_sha256": "78A762143FA924E502213CBD61957DDAE2609A70CC2FF6417FD599102CCEE31B",
+          "minimum_platform_coverage": 0.554054,
+          "combined_coverage": 0.878378,
+          "passed": true
+        },
+        {
+          "family_id": "employee-benefit-inventory",
+          "topic_sha256": "173AFF17B91F4C0A715CB5ADFAA9CECF8FB290E4F83D51C4DEFDF57A86136DAC",
+          "minimum_platform_coverage": 0.694118,
+          "combined_coverage": 0.929412,
+          "passed": true
+        }
+      ]
+    }
+  },
+  "explicit_non_authority": "Strict local revalidation of legacy consumed draft evidence only; no source, claim, media, schedule, release, or publication authority."
+}

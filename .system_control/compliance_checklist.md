@@ -1,10 +1,11 @@
 # COMPLIANCE CHECKLIST — ผ่านครบทุกข้อก่อนปล่อยคอนเทนต์ (แบรนด์การเงิน)
 
 ## ทุกโพสต์/ทุกช่อง
+- [ ] `channels.<channel>.publication_authorized=true` ณ เวลาลงมือ + actor capability + calendar placement `publication_authorized=true` + schema-v2 private one-time receipt ที่ bind target/content/placement/caption/asset/slot และ SHA-256 ของ policy/roles/calendar/content+validation/media-QA; ค่า missing/false/hash drift/นอก Asia/Bangkok slot window = หยุดโดยไม่ consume
 - [ ] ไม่มีตัวเลขดอกเบี้ย % ตายตัว — ถ้าจำเป็นใช้ "ตามเพดาน ธปท." / "เช็กกับผู้ให้บริการ"
 - [ ] มี "ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำทางการเงิน"
 - [ ] คลิปที่เจนด้วย AI → มี "ผลิตด้วย AI" (+ เปิด AI-label toggle ในแพลตฟอร์มที่มี)
-- [ ] ความถี่: **1 โพสต์/ช่อง/วัน** — ห้ามเพิ่มเองโดยไม่ผ่าน Cowork (บทเรียน shadowban)
+- [ ] ความถี่: อ่าน `.system_control/policy.json → limits` และ per-channel override ณ เวลาลงมือ ห้ามจำตัวเลขจากเอกสารนี้
 - [ ] เช็ก dedup ก่อนโพสต์ (post_ledger ±16 วัน · publisher มี dedup ในตัว)
 
 ## เฉพาะโพสต์ affiliate (affiliate:true ใน manifest)
@@ -15,8 +16,9 @@
 ## เฉพาะช่อง
 - [ ] TikTok/IG/Threads: **ไม่มี URL ในตัวโพสต์** → "ลิงก์ในไบโอ" เท่านั้น (reach)
 - [ ] FB: ลิงก์อยู่**คอมเมนต์แรก**เท่านั้น ไม่อยู่ในบอดี้
-- [ ] Pantip: **value-only** ห้ามลิงก์/แบรนด์/ราคา ห้ามแพทเทิร์นซ้ำ (ปลด freeze 17 ก.ค. โดยเจ้าของ — owner โพสต์มือเท่านั้น ห้าม auto-post · เฟส 1 ถึง 30 ก.ค.: ตอบกระทู้คนอื่น ≤3/สัปดาห์)
+- [ ] Pantip: manual pilot อยู่ช่วง `OBSERVING_48H`; one-time approval เดิมถูกใช้แล้ว ห้ามโพสต์ครั้งถัดไปก่อน review due + fresh owner confirmation
+- [ ] IG/Pinterest: paused; TikTok: `testing_blocked` เป็นแผน 14 วันเท่านั้นและ publishable=0 จนทุก blocker ผ่าน
 
-## เว็บไซต์ (ก่อน push)
-- [ ] comply_gate ผ่าน · check_affiliate_links 17/17 · smoke ทุกหน้า · link_check 0 broken
+## เว็บไซต์ (ก่อน owner-controlled release)
+- [ ] privacy guard ผ่านก่อน push/deploy · comply_gate ผ่าน · static affiliate check ผ่านโดยยิง redirect 0 ครั้ง · smoke ทุกหน้า · live/local parity ผ่าน; ผล local PASS ไม่ใช่อำนาจ deploy
 - [ ] ไทย byte-safe: python I/O + UFFFD=0 + git blob verify · ห้าม PII/token/รายได้จริงลง repo

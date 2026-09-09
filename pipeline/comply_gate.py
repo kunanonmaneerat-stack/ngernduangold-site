@@ -16,12 +16,31 @@ TRIGGERS = ["ฟรีไม่มี", "ฟรี 100", "ผ่านแน่�
             "รวยเร็ว", "รวยไว", "ได้เงินชัวร์", "ปิดหนี้ได้ 100", "ไร้ความเสี่ยง",
             "คลิกเลย", "กู้ผ่านทุก", "ผ่านทุกราย", "ดอกถูกที่สุด", "ดีที่สุดในไทย"]
 CAVEAT_HINTS = ["เช็ก", "เช็ค", "สอบถาม", "ขึ้นกับ", "แล้วแต่", "อีกที", "ตรวจสอบ", "ประมาณ", "ราว"]
+RESPONSIBLE_LINE = "\u0e01\u0e39\u0e49\u0e40\u0e17\u0e48\u0e32\u0e17\u0e35\u0e48\u0e08\u0e33\u0e40\u0e1b\u0e47\u0e19\u0e41\u0e25\u0e30\u0e0a\u0e33\u0e23\u0e30\u0e04\u0e37\u0e19\u0e44\u0e2b\u0e27"
+LEGACY_RESPONSIBLE_LINE = "\u0e01\u0e39\u0e49\u0e40\u0e17\u0e48\u0e32\u0e17\u0e35\u0e48\u0e08\u0e33\u0e40\u0e1b\u0e47\u0e19\u0e41\u0e25\u0e30\u0e0a\u0e33\u0e23\u0e30\u0e04\u0e37\u0e19\u0e15\u0e32\u0e21\u0e01\u0e33\u0e2b\u0e19\u0e14"
+LENDING_TERMS = [
+    "\u0e01\u0e39\u0e49", "\u0e2a\u0e34\u0e19\u0e40\u0e0a\u0e37\u0e48\u0e2d", "\u0e1a\u0e31\u0e15\u0e23\u0e40\u0e04\u0e23\u0e14\u0e34\u0e15",
+]
+BANNED_LENDING_PATTERNS = [
+    r"\u0e43\u0e04\u0e23\s*[\u0e46]?\s*\u0e01\u0e47?\u0e01\u0e39\u0e49\u0e44\u0e14\u0e49",
+    r"\u0e44\u0e21\u0e48\u0e14\u0e39\s*\u0e40\u0e04\u0e23\u0e14\u0e34\u0e15",
+    r"\u0e44\u0e21\u0e48\u0e40\u0e0a[\u0e47\u0e47]\u0e04\s*(?:\u0e40\u0e04\u0e23\u0e14\u0e34\u0e15\s*)?\u0e1a\u0e39\u0e42\u0e23",
+    r"\u0e44\u0e21\u0e48\u0e40\u0e0a[\u0e47\u0e47]\u0e04.{0,20}(?:\u0e01\u0e39\u0e49|\u0e2a\u0e34\u0e19\u0e40\u0e0a\u0e37\u0e48\u0e2d)",
+    r"\u0e15\u0e34\u0e14\u0e1a\u0e39\u0e42\u0e23\s*\u0e01\u0e47?\s*\u0e01\u0e39\u0e49\u0e44\u0e14\u0e49",
+    r"\u0e01\u0e39\u0e49\s*(?:\u0e40\u0e07\u0e34\u0e19)?\s*(?:\u0e40\u0e23\u0e37\u0e48\u0e2d\u0e07)?\s*\u0e07\u0e48\u0e32\u0e22",
+    r"\u0e2d\u0e19\u0e38\u0e21\u0e31\u0e15\u0e34\s*\u0e07\u0e48\u0e32\u0e22",
+    r"\u0e41\u0e04\u0e48\s*(?:\u0e21\u0e35\u0e23\u0e16|\u0e16\u0e37\u0e2d\u0e40\u0e25\u0e48\u0e21\u0e17\u0e30\u0e40\u0e1a\u0e35\u0e22\u0e19).{0,40}\u0e01\u0e39\u0e49\u0e44\u0e14\u0e49",
+    r"\u0e23\u0e31\u0e1a\u0e40\u0e07\u0e34\u0e19\u0e2a\u0e14\u0e44\u0e14\u0e49\u0e17\u0e31\u0e19\u0e17\u0e35",
+    r"\u0e02\u0e2d\u0e07\u0e21\u0e31\u0e19\u0e15\u0e49\u0e2d\u0e07\u0e21\u0e35",
+    r"\u0e2d\u0e22\u0e32\u0e01\u0e44\u0e14\u0e49\u0e15\u0e49\u0e2d\u0e07\u0e44\u0e14\u0e49",
+    r"\u0e44\u0e2e\u0e42\u0e0b\u0e01\u0e48\u0e2d\u0e19.{0,20}\u0e04\u0e48\u0e2d\u0e22\u0e1c\u0e48\u0e2d\u0e19\u0e17\u0e35\u0e2b\u0e25\u0e31\u0e07",
+]
 
 # กฎฉีดเข้าพรอมป์ตทุก agent ที่ผลิตคอนเทนต์ (กันแต่ต้นทาง ดีกว่าแก้ทีหลัง)
 RULE = ("เขียนสุภาพ เป็นกลาง ไม่โอ้อวด ไม่รับประกัน/ไม่ฟันธงผลลัพธ์ ไม่ใช้คำเร่งเร้าหรือคำขายของ; "
         "ตัวเลขดอกเบี้ย/ค่าธรรมเนียม/เปอร์เซ็นต์ ให้เป็นช่วงกว้างๆ พร้อมกำกับ 'เช็กกับธนาคารอีกที' เสมอ; "
         "วางตัวเป็นการ 'รวบรวม/เปรียบเทียบข้อมูล' ไม่ใช่ที่ปรึกษาการเงินที่มีใบอนุญาต; "
-        "ถ้าพูดเรื่องกู้/สินเชื่อ แนบแนวคิด 'กู้เท่าที่จำเป็นและชำระคืนตามกำหนด' (Responsible Lending ธปท.); "
+        "ถ้าพูดเรื่องกู้/สินเชื่อ แนบคำเตือน '" + RESPONSIBLE_LINE + "' (Responsible Lending ธปท.); "
         "ลิงก์อยู่ DM/bio เท่านั้น; คืนเฉพาะคอนเทนต์ที่พร้อมใช้ ไม่ต้องมีคำนำหรือหมายเหตุการแก้")
 
 
@@ -40,6 +59,7 @@ def _negated(text, pos):
 
 def check(text):
     issues = []
+    warns = []
     for w in TRIGGERS:
         if w not in text:
             continue
@@ -55,12 +75,19 @@ def check(text):
             if not hit:
                 continue
         issues.append("คำ trigger ต้องห้าม: '" + w + "'")
+    for pattern in BANNED_LENDING_PATTERNS:
+        if re.search(pattern, text, flags=re.IGNORECASE):
+            issues.append("official Responsible Lending prohibited phrase")
+            break
     if re.search(r"\d+\s*%", text) and not any(h in text for h in CAVEAT_HINTS):
         issues.append("มีตัวเลข % แต่ไม่มีคำกำกับให้เช็ก/ประมาณ")
     if re.search(r"\b0\s*%", text):
         issues.append("เคลม 0% ตรงๆ เสี่ยงการันตี -> ใส่เงื่อนไข/ช่วงเวลา + 'เช็กกับธนาคาร'")
+    if any(term in text for term in LENDING_TERMS) and RESPONSIBLE_LINE not in text:
+        issues.append("missing Responsible Lending warning")
+    if LEGACY_RESPONSIBLE_LINE in text and RESPONSIBLE_LINE not in text:
+        warns.append("WARN legacy Responsible Lending wording; use current standard warning")
     # STALE-FACTS warn (ไม่ block — FACTS_current.md 2026-07-02): ตัวเลข/มาตรการที่ตกยุคแล้ว
-    warns = []
     if re.search(r"ขั้นต่ำ\s*5\s*(-\s*10\s*)?%", text):
         warns.append("WARN stale-fact: 'จ่ายขั้นต่ำ 5%' ตกยุค — ปัจจุบัน 8% ถึง 31 ธ.ค. 69 (ดู knowledge-base/FACTS_current.md)")
     if re.search(r"คุณสู้.{0,3}เราช่วย", text) and re.search(r"ลงทะเบียน|สมัครได้|รีบสมัคร|สมัครเลย", text):
@@ -82,8 +109,9 @@ def check_post(text, channel=None):
             if dup:
                 ok = False
                 issues.append("GATE_FAIL duplicate-text (" + post_ledger.norm_channel(channel) + "): " + reason)
-        except Exception as e:  # infra พัง = เตือนดังๆ (การตัดสิน dup ทำไม่ได้ อย่าเงียบ)
-            issues.append("WARN text-dedup check unavailable (" + str(e)[:80] + ") - ตรวจ post_ledger ก่อนโพสต์เอง")
+        except Exception as e:  # dedup cannot be proven -> publication must stop
+            ok = False
+            issues.append("GATE_FAIL text-dedup unavailable (" + str(e)[:80] + ")")
     return ok, issues
 
 

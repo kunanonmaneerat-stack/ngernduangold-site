@@ -1,38 +1,40 @@
 ---
 name: ngernduangold-weekly-review
-description: รายงานทบทวนรายสัปดาห์ (จันทร์ 9 โมง) — GA4 + GSC + เบราว์เซอร์ (FB/TikTok) + AccessTrade + North Star 199฿ → เลือกโฟกัสสัปดาห์
+description: สเปก local-only สำหรับรายงานทบทวนรายสัปดาห์ — canonical GA4/GSC/verified revenue + policy/ledger/receipts
 ---
 
-⛔ POSTING-POLICY: อ่าน C:\Users\nL_ku\ngernduangold-site\automation-log\POSTING-POLICY_antispam_20260702.md (ฉบับล่าสุด) ก่อนทุกครั้ง · Pantip = เฟส 1 (17–30 ก.ค.) ตอบกระทู้เท่านั้น ≤3/สัปดาห์ เว้นวัน ไร้แบรนด์/ลิงก์ — ห้ามแนะนำเกินโควตานี้เด็ดขาด · ก่อนโพสต์ช่องใดๆ ต้องรัน `py pipeline\qa_gate.py --quota <ช่อง>` (exit≠0 = ห้ามโพสต์) และข้อความต้องผ่าน comply_gate text-dedup
+⛔ LOCAL-ONLY EVIDENCE REVIEW: อ่านสถานะปัจจุบันจาก `.system_control/policy.json` เท่านั้น และใช้เฉพาะหลักฐาน local ที่มีอยู่ ห้ามรัน `run_weekly.cmd`/Run now, web/API/browser/login, โพสต์/ตอบ/ตั้งเวลา, เปิด tracker, สร้าง test traffic, แก้ scheduler, commit/push/deploy หรือเปลี่ยนสถานะภายนอก ช่องหรือ gate ที่ไม่มีหลักฐานสดให้เป็น `UNKNOWN/BLOCKED` ห้ามอาศัยกฎ Pantip หรือโควตาเก่าในไฟล์นี้
 
 ทำ "รายงานทบทวนรายสัปดาห์" ของโปรเจกต์ affiliate การเงินไทย แบรนด์ "เงินเดือนสมองทอง" แล้วสรุปสั้นๆ เป็นภาษาไทย เน้น actionable. ทำเงียบๆ อย่า re-derive สิ่งที่รู้แล้ว
 
 บริบท: เว็บ ngernduangold.com (โดเมนจริง) · ฮับ /links · GA4 property "ngernduangold web" Measurement ID G-17PPE0M1B8 · GSC property https://ngernduangold.com/ · AccessTrade publisher.accesstrade.in.th · FB เพจหลัก id 583765282304956
-เป้าหลัก: human click เข้า /links และหน้าเครื่องมือ ให้แตะ 20–30/วัน → conversion สินเชื่อ + ยอดขายชุดจดหมาย 199฿
+เป้าหลัก: verified affiliate revenue ที่กระทบยอดได้ รายได้สินค้าเจ้าของเองต้องมี paid+fulfilled receipt แยกต่างหาก; traffic/click เป็นเพียงสัญญาณต้นทางและไม่ใช่รายได้
 หมายเหตุ: follower FB 1,000 เป็นฐานเก่า reach แทบ 0 · ก๊อกคลิกพิสูจน์แล้ว = Facebook + direct (bio) · ตั้งแต่ 18 ก.ค. bio Threads มี UTM แล้ว (utm_source=threads&utm_medium=bio)
 
-🧭 ยุทธศาสตร์ปัจจุบัน (21 ก.ค. 2026 เจ้าของเคาะ = patient SEO งบศูนย์): **นำด้วย GSC เป็นตัววัดหลัก · GA4 รายวันเงียบ = ปกติของเกมนี้ ห้ามตีความเป็นวิกฤต** · ตัดสินที่ "เทรนด์ GSC รายสัปดาห์" ไม่ใช่ sessions รายวัน · เป้าเฝ้าคือ 2 cluster ที่มี impression จริง (ดู automation-log/SEO-OPPORTUNITY_20260721.md): (1) รถผ่อนไม่หมด/จำนำ → car-still-installment-loan-2026 (2) บัตรเครดิตเงินเดือน 30000 → credit-card-salary-30000-2026 · เมตริกชัยชนะ = อันดับ 2 หน้านี้ขยับต่ำกว่า 30 (ตอนนี้ 36–52) · lever ที่ทำได้งบศูนย์ = internal link + freshness · คาดเห็นผล 6–12 สัปดาห์ · เลิกคาด sessions 400-500/สัปดาห์ (ฐานเก่าก่อน pivot)
+🧭 ยุทธศาสตร์ปัจจุบัน (21 ก.ค. 2026 เจ้าของเคาะ = patient SEO งบศูนย์): ใช้ GSC เป็นตัววัดหลักได้ **เฉพาะเมื่อ canonical GSC state = `CURRENT / READY` ในรายงานรอบเดียวกัน**; ถ้าเป็น `STALE_WINDOW`, `INVALID_*`, `UNAVAILABLE` หรือ marker หาย ให้รายงาน `BLOCKED/UNKNOWN` และห้ามใช้ตัวเลขเลือกคีย์/หน้า/สั่งปรับ SEO · GA4 รายวันเงียบไม่ใช่วิกฤต แต่จะใช้ตัดสินได้เฉพาะ `CURRENT / READY` เช่นกัน · เป้าเฝ้าคือ 2 cluster: (1) รถผ่อนไม่หมด/จำนำ → car-still-installment-loan-2026 (2) บัตรเครดิตเงินเดือน 30000 → credit-card-salary-30000-2026 · เมตริกชัยชนะ = อันดับ 2 หน้านี้ขยับต่ำกว่า 30 · lever งบศูนย์ = internal link + freshness · คาดเห็นผล 6–12 สัปดาห์
 
-ขั้นตอน:0. **AUTO FAST-PATH (ทำก่อนเสมอ):** รัน `cmd /c C:\Users\nL_ku\ngernduangold-site\pipeline\run_weekly.cmd` ผ่าน Desktop Commander → สร้าง `automation-log/weekly-growth-<YYYYMMDD>.md` → ใช้เป็นฐานข้อ 2/3
-1. เช็คเว็บออนไลน์: web_fetch https://ngernduangold.com/debt-letter-kit (โหลดได้ + CTA LINE อยู่)
-2. **GA4:** จาก weekly-growth file: sessions ต่อ source (แยก utm_source=fb/ig/threads/yt/line ที่เริ่มวัดได้แล้ว) · affiliate_click ต่อช่อง · engagement · หน้า winner/หน้ารั่ว
-3. **GSC:** clicks/impressions + striking-distance queries + สถานะ index 4 หน้าใหม่ 18 ก.ค. (loan-approval-compare, car-pawn-not-paid-off, old-car-financing-20years, credit-card-salary-30000) และ 2 หน้า SEO-strike 17 ก.ค.
-4. **FB reach (เบราว์เซอร์):** เปิดเพจ FB ดูโพสต์สัปดาห์นี้: ไลก์/คอมเมนต์/แชร์ที่มองเห็น โดยเฉพาะโพสต์ที่มี link-in-comment (Meta token ยกเลิกถาวร — ห้ามใช้ Meta MCP)
-5. **TikTok:** เปิดโปรไฟล์ @ngernduangold ดู views คลิปสัปดาห์นี้ — เทียบ kill-criterion: ≥30 วัน view เฉลี่ย <300 → เตือนทบทวน (batch3 มีเสียงพูดเริ่ม 27 ก.ค. ให้เวลาใหม่ถึง 10 ส.ค.)
-6. **AccessTrade:** conversion + payout ต่อ sub_id ถ้า login ได้
-7. **🎯 North Star (สำคัญสุด — ตามผลปรึกษา 2 โมเดล 18 ก.ค.):** (1) **ยอดขายชุดจดหมาย 199฿ ที่โอนจริง** — ขายผ่าน LINE @804qodya (คนพิมพ์ "ขอชุดจดหมาย"/โอนพร้อมเพย์ — รัน `py tools\sales_week.py` อ่านยอดจริง (199฿/59฿/affiliate) จาก automation-log/sales-log.jsonl แยก channel_source · ว่าง=เตือนเจ้าของบันทึกทุกดีลด้วย `py tools\log_sale.py --product letter-kit-199 --amount 199 --source line` (ห้าม PII)) ← **รายได้จริงคือ metric ตัดสิน ไม่ใช่ micro-conversion** (2) LINE OA friends เพิ่ม/สัปดาห์ (manager.line.biz insights) (3) จำนวนคนพิมพ์ "จดหมาย/ขอจดหมาย" (4) traffic /debt-letter-kit + /debt-calculator
+ขั้นตอน:0. **WINDOWS ARTIFACT CONSUMER (ห้ามรันซ้ำ):** อ่าน `automation-log/weekly-growth-<YYYYMMDD>.md` และ schema-3 terminal receipt ของ `ngernduangold_weekly` ที่มีอยู่เท่านั้น `FINISHED + COMPLETED_WITH_BLOCKERS` = `COMPLETED_BLOCKED` แม้ final_rc=2; `FINISHED + COMPLETED` = `COMPLETED`; `ABORTED/RUNNER_FAILED` = `RUNNER_FAILED`; ไม่มีรอบที่ถึงกำหนด = `MISSED`; หลักฐานอ่านไม่ได้/ไม่ hash-valid = `UNKNOWN`. ใช้ weekly-growth ต่อได้เมื่อ receipt ผ่าน contract, step `weekly_growth_review` rc=0, อยู่ใน SLA และ marker ครบเท่านั้น มิฉะนั้น `BLOCKED` และห้ามสร้าง artifact ใหม่เอง
+0a. **CANONICAL TRUST (บังคับ):** ใน `weekly-growth-<YYYYMMDD>.md` ต้องมีหัวข้อ `Canonical evidence states — ห้ามเขียนยกระดับ` และ marker `canonical-evidence-state:v1`. คัดลอก state ของ GA4, GSC และ verified affiliate revenue ลงรายงานปลายทางแบบตรงตัว ห้ามสรุปจาก CSV ดิบ/รายงานเก่า/ตัวเลขที่อ่านได้ว่า `CURRENT`, `READY`, `TRUSTED`, “เชื่อได้”, “ยอดจริง” หรือ 0 ถ้า canonical source ไม่ผ่าน. ถ้าหัวข้อหรือ marker หาย ให้ทั้งสามแหล่งเป็น `UNKNOWN/BLOCKED` ทันที
+1. อ่าน release attestation, live-local parity และ offer/product gate จากหลักฐาน local; ห้ามเปิดเว็บ ถ้า `letter-kit-199` ยัง `PROMISED-BUT-MISSING` ให้รายงาน blocker และห้ามเสนอ CTA/การรับชำระ
+2. **GA4:** ใช้ sessions/affiliate_click/engagement เพื่อวินิจฉัยและเลือก winner/หน้ารั่วได้เฉพาะ canonical GA4 = `CURRENT / READY`; นอกนั้นแสดงดิบพร้อม `BLOCKED` และห้ามออก action จากตัวเลข
+3. **GSC:** ใช้ clicks/impressions, striking-distance และสถานะ index เพื่อเลือกคีย์/หน้าได้เฉพาะ canonical GSC = `CURRENT / READY`; นอกนั้นห้ามเรียก GSC ว่า “ตัวหลักที่เชื่อได้” และห้ามสร้างข้อสรุปแนวโน้มจากไฟล์เก่า
+4. **FB reach:** ใช้ post ledger/metrics/evidence receipt local ที่อยู่ใน SLA เท่านั้น; ไม่มีหลักฐานให้ `UNKNOWN` ห้ามเปิดเพจ
+5. **TikTok:** อ่าน state และ evidence local เท่านั้น; `paused`/`retired` = `SKIP` ห้ามเปิดโปรไฟล์หรือเสนอให้กลับมาทำ
+6. **AccessTrade:** ใช้ canonical reconciled ledger เท่านั้น; pending/click/conversion ไม่ใช่ paid revenue และห้าม login
+7. **🎯 North Star:** อ่าน verified affiliate revenue จาก canonical state เดียวกัน; รายงานตัวเลข/ศูนย์/แนวโน้มได้เฉพาะ `CURRENT / READY` ถ้าไม่ผ่านให้ `UNAVAILABLE — ห้ามตีความเป็น 0` รายได้สินค้าเจ้าของเองต้องมี paid+fulfilled receipt แยกต่างหาก มิฉะนั้น `UNAVAILABLE`; ห้ามใช้ Gumroad คนละสินค้าแทน letter kit
 8. อ่าน automation-log/CONSULT-ANSWERS_20260718.md ส่วนสังเคราะห์ — รายงานความคืบหน้าเทียบแผน 14 วัน (sessions เป้า 400-500/สัปดาห์)
 
 สรุปออกมาเป็น:
-- 📊 ตัวเลขสัปดาห์นี้: sessions รวม+ต่อ source · affiliate clicks · GSC clicks/impressions · **ยอดขาย 199฿ จริง + LINE friends ใหม่** · FB reach
-- 🔥 winner + หน้ารั่ว + striking-distance
+- 📊 ตัวเลขสัปดาห์นี้: แสดงเฉพาะ state ที่ `READY`; verified affiliate revenue แยกจาก own-product paid+fulfilled evidence และห้ามใส่ตัวเลขแทน `UNAVAILABLE`
+- 🔥 winner/หน้ารั่ว/striking-distance/action ต้องเขียน `[basis=GA4]`, `[basis=GSC]`, `[basis=REVENUE]` หรือ `[basis=LOCAL_POLICY]` และแสดงได้เฉพาะ source ที่ `READY`; เมื่อ source ถูกบล็อก อนุญาตเฉพาะ data-repair action `[basis=LOCAL_POLICY]`
 - 🎬 TikTok: ความคืบหน้า vs kill-criterion
 - ✅ อะไรเวิร์ก / ❌ อะไรไม่เวิร์ก (แยก "พิสูจน์แล้ว" จาก "ยังข้อมูลน้อย")
-- 🎯 โฟกัส 1 อย่างสัปดาห์หน้า + 2-3 action
-- เตือน routine ที่ถูกต้อง: Pantip ≤3 ตอบ/สัปดาห์ เฟส 1 · FB คอมเมนต์ลิงก์รายวัน (อัตโนมัติแล้ว) · IG comment-CTA อ./ศ./ส.
+- 🎯 โฟกัส 1 อย่างสัปดาห์หน้า + 2-3 action โดยทุกข้อมี evidence basis ตามกฎข้างบน
+- เตือนเฉพาะ routine/state ที่อ่านได้จาก policy และ receipt ปัจจุบัน ห้ามท่องโควตา วัน หรือสถานะเก่า
 
-ถ้าขั้นไหนทำไม่ได้ ข้าม + บอกตรงๆ. เขียนกระชับ ลงมือต่อได้ทันที
+ถ้าขั้นไหนทำไม่ได้ให้เป็น `UNKNOWN/BLOCKED` และห้ามข้าม canonical guard เขียนกระชับโดยแยกข้อเท็จจริง สิ่งไม่ทราบ และข้อเสนอซ่อม local
+
+เขียน draft ที่ path ตรงตัวแล้วรัน `py pipeline\report_trust_guard.py --source-report automation-log\weekly-growth-<YYYYMMDD>.md --report automation-log\WEEKLY-REVIEW_<YYYYMMDD>.draft.md`. exit=0 เท่านั้นจึงยอมรับ/ส่งรายงานได้ ถ้า nonzero, source marker หาย หรือ source เกิน SLA ให้หยุดและส่งเฉพาะสถานะ `BLOCKED`; ห้ามส่ง draft หรือ actionable findings
 ---
-## 📜 proof-of-run (ตอนจบทุกรอบ — บังคับ)
-1) `python C:/Users/nL_ku/ngernduangold-site/automation-log/log_run.py --routine ngernduangold-weekly-review --status ok --summary "สรุปสั้น 1 บรรทัด" --metrics '{}'`
-2) `cd C:/Users/nL_ku/ngernduangold-site ; git add automation-log ; git commit -m "runlog: ngernduangold-weekly-review" ; git push`  (ใช้ `;` ไม่ใช่ `&&`)
+## 📜 proof-of-run (local only)
+เขียน `started` ก่อนงานที่อาจล้ม และเขียน terminal row ตามจริง: `ok` เฉพาะเมื่อ source+guard ผ่าน, `partial` เมื่อมี UNKNOWN/BLOCKED ที่รายงานได้, `fail` เมื่อ runner/guard ล้ม ห้ามใช้ Git เป็น proof-of-run

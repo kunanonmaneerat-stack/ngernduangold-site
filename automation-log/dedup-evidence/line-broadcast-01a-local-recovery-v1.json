@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-08-24T21:54:12+07:00",
+  "purpose": "Hash-bound local recovery of the exact permanent-dedup identity for legacy LINE broadcast #1 version A. This evidence does not claim delivery, reach, or VOOM publication.",
+  "records": [
+    {
+      "evidence_id": "line-broadcast-01a-local-recovery",
+      "source_path": "automation-log/LINE-BROADCAST-01_draft.md",
+      "source_sha256": "21CAB4F1577A22651E6CA7B792EE505A0A233D2A3FF5BA4590E3DB2BB1B1AA47",
+      "source_field": "section[version=A].body",
+      "value": {
+        "id": "line-broadcast-01-a",
+        "channel": "line",
+        "draft_queue_date": "2026-07-20",
+        "scheduled_for": "2026-07-19T11:30:00+07:00",
+        "text_sha256": "FFB5159F9D3201560A3E5AF6CC2611CD38B53F992F7666CE5809CA83F003EEE1",
+        "join_mode": "line_broadcast_version_descriptor"
+      }
+    }
+  ]
+}

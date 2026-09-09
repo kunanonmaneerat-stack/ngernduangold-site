@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-08-24T21:07:25.625+07:00",
+  "purpose": "Immutable privacy-safe read-only public Facebook Page comment and normalized merchant-link observation for one legacy permanent-dedup identity; the redirect was decoded but not followed, and this grants no publication authority.",
+  "observation_contract": "read-only-public-facebook-comment-and-link-observation-v1",
+  "observations": [
+    {
+      "observation_id": "facebook-page-1824608881851102-comment-1028158030069586",
+      "platform": "facebook",
+      "resolved_parent_url": "https://www.facebook.com/100029060247015/posts/1824608881851102/",
+      "page_actor": "เงินเดือนสมองทอง",
+      "page_id": "100029060247015",
+      "post_id": "1824608881851102",
+      "comment_id": "1028158030069586",
+      "displayed_time": "3 สัปดาห์",
+      "rendered_text_length": 137,
+      "rendered_text_sha256": "1716C3BDC6EDB6C29A54254E09DD9F6DCE4C6573B75318BBB2F62301D7EB77BF",
+      "rendered_text": "ถ้าอยากรู้ว่ารอบนี้จ่ายไหวเท่าไรก่อนโทรคุยกับเจ้าหนี้ ลองกดตัวเลขดูก่อนได้ครับ https://ngernduangold.com/debt-calculator?utm_source=fb...",
+      "normalized_merchant_link": "https://ngernduangold.com/debt-calculator?utm_source=fb&utm_medium=comment",
+      "link_resolution_mode": "decoded_redirect_parameter_without_navigation",
+      "ledger_line": 109,
+      "ledger_row_sha256": "04860712923DBDABF22E4B658BE0A64FDE7C70979781E579DD16559DD09CBB6A",
+      "observation_mode": "read_only_public_dom",
+      "privacy_status": "PUBLIC_WEB_ONLY_NO_SESSION_ID_PRIVATE_PATH_COOKIE_OR_TRANSIENT_FBCLID"
+    }
+  ]
+}

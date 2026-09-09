@@ -1,5 +1,5 @@
-stage,count,step_conv_pct
-quiz_start,0,
-quiz_complete,0,
-recommendation_view,0,
-affiliate_click,6,
+stage,count,step_conv_pct,measurement_scope
+quiz_start,0,,independent_event_total_not_sequence
+quiz_complete,0,,independent_event_total_not_sequence
+recommendation_view,0,,independent_event_total_not_sequence
+affiliate_click,6,,independent_event_total_not_sequence

@@ -1,0 +1,196 @@
+{
+  "schema_version": 1,
+  "report_id": "system-audit-20260823-r2",
+  "page_identity": "เงินเดือนสมองทอง",
+  "checked_at": "2026-08-23T14:55:31+07:00",
+  "mode": "local-safe",
+  "external_mutation": false,
+  "overall": {
+    "status": "COMPLETED_WITH_BLOCKERS",
+    "control_state": "VALID_WITH_BLOCKERS",
+    "validation_passed": true,
+    "maturity_score": 40,
+    "maturity_maximum": 100,
+    "maturity_stage": "instrumented",
+    "learning_ready": false,
+    "open_incidents": 5,
+    "regressions": 0,
+    "resolved_this_run": 1
+  },
+  "state_counts": {
+    "ready_for_owner_approval": 0,
+    "blocked_next_48h": 7,
+    "completed_blocked_historical_slots": 22,
+    "runner_failed_proven": 0,
+    "missed_eligible_slots": 0,
+    "skip_conditions": 2
+  },
+  "calendar": {
+    "placements": 65,
+    "content_ids": 40,
+    "planned_blocked": 65,
+    "publishable": 0,
+    "stale_slots": 22,
+    "structural_findings": 0,
+    "publication_blocking_findings": 1,
+    "source_content_evaluated": 37,
+    "source_content_allowed": 0,
+    "source_content_blocked": 37,
+    "source_failure_reasons": 285,
+    "next_48h_placements": [
+      "b3-04__tiktok_main",
+      "kn-37__threads_main",
+      "kn-37__facebook_main",
+      "tt-r14-08__tiktok_main",
+      "kn-38__threads_main",
+      "kn-38__facebook_main",
+      "p2-11__facebook_page2"
+    ]
+  },
+  "dedup": {
+    "total_identities": 125,
+    "complete": 44,
+    "incomplete": 81,
+    "coverage_percent": 35.2,
+    "duplicate_canonical_identity_groups": 1
+  },
+  "guards": {
+    "automation_policy": true,
+    "daily_media": true,
+    "local_site": true,
+    "manifest": true,
+    "merchant_offer": true,
+    "posting_plan": true,
+    "privacy": true,
+    "public_identity": true
+  },
+  "media": {
+    "canonical_video_files": 24,
+    "canonical_video_scans": 24,
+    "canonical_image_files": 1,
+    "canonical_image_guards": 1,
+    "watermark_findings": 0,
+    "verdict": "PASS"
+  },
+  "privacy_identity": {
+    "privacy_candidates_scanned": 51,
+    "public_pages": 76,
+    "caption_fields": 161,
+    "knowledge_rows": 44,
+    "outward_prompts": 10,
+    "verdict": "PASS"
+  },
+  "merchant_local_release": {
+    "products": 16,
+    "promotions": 2,
+    "placements": 140,
+    "documents": 97,
+    "local_pages_passed": 70,
+    "local_pages_total": 70,
+    "local_affiliate_buttons": 140
+  },
+  "local_release_candidate": {
+    "content_addressed": true,
+    "member_count": 118,
+    "verification_passed": true,
+    "predeploy_acceptance_passed": 11,
+    "predeploy_acceptance_total": 11,
+    "deployment_authority": false
+  },
+  "live_release": {
+    "pages_passed": 0,
+    "pages_total": 72,
+    "affiliate_buttons": 185,
+    "parity": "FAIL",
+    "primary_reasons": [
+      "production HTML differs from audited local build",
+      "event taxonomy is missing",
+      "affiliate buttons are missing data-content-id"
+    ]
+  },
+  "decision_inputs": {
+    "ga4": {
+      "trust": "UNTRUSTED",
+      "bundle": "INVALID_METADATA",
+      "decisionable": false
+    },
+    "gsc": {
+      "bundle": "STALE_WINDOW",
+      "decisionable": false
+    },
+    "revenue": {
+      "quality_state": "STALE_COVERAGE",
+      "reconciled": false,
+      "paid_revenue_thb": null,
+      "verified_revenue_thb": null,
+      "interpretation": "UNAVAILABLE_NOT_ZERO",
+      "coverage_start": "2026-07-19",
+      "coverage_end": "2026-08-17"
+    },
+    "official_sources": {
+      "state": "INVALID",
+      "changed": 20,
+      "errors": 0,
+      "pending_owner_reviews": 30,
+      "clear_for_publication": false
+    }
+  },
+  "windows_tasks": [
+    {
+      "name": "ngernduangold_daily",
+      "state": "Ready",
+      "last_run": "2026-08-23T07:00:01+07:00",
+      "last_result": 2,
+      "next_run": "2026-08-24T07:00:00+07:00",
+      "missed_runs": 0
+    },
+    {
+      "name": "ngernduangold_weekly",
+      "state": "Ready",
+      "last_run": "2026-08-23T08:30:00+07:00",
+      "last_result": 2,
+      "next_run": "2026-08-30T08:30:00+07:00",
+      "missed_runs": 0
+    }
+  ],
+  "task_receipts": {
+    "coverage_state": "NO_RECEIPTS",
+    "origin": "RUNNER_INVOCATION_UNVERIFIED",
+    "scheduler_launch_proven": false,
+    "instrumentation_started_at": "2026-08-23T12:59:22+07:00"
+  },
+  "tests": {
+    "tools_unittest": {"passed": 172, "failed": 0},
+    "pipeline_unittest": {"passed": 177, "failed": 0},
+    "preflight_assertions": {"passed": 260, "failed": 0},
+    "publication_authority": {"passed": 40, "failed": 0},
+    "youtube_live_gate": {"passed": 21, "failed": 0},
+    "content_source_gate": {"passed": 18, "failed": 0},
+    "post_guard": {"passed": 18, "failed": 0},
+    "release_candidate_verify": "PASS",
+    "predeploy_acceptance": {"passed": 11, "failed": 0},
+    "adversarial_review": "ACCEPTED_FAIL_CLOSED"
+  },
+  "final_preflight": {
+    "verdict": "FAIL_WITH_EXPECTED_BLOCKERS",
+    "passed": 20,
+    "warned": 7,
+    "failed": 4,
+    "failed_checks": [
+      "delivery gap",
+      "ga4 internal ip",
+      "publish readiness",
+      "live release"
+    ],
+    "dashboard_reader_drift_repaired": true
+  },
+  "required_next_actions": [
+    "verify GA4 private egress ownership and repull a trusted 28-day bundle",
+    "repull current page-grain GSC evidence",
+    "reconcile AccessTrade revenue through a schema-5 owner-provided export",
+    "implement owner-controlled official-source acknowledgement verification",
+    "complete permanent dedup identities and reconcile the duplicate group",
+    "close live/local release parity only after separate deploy authority"
+  ],
+  "evidence_bundle": ".local-private/runtime/improvement-runs/comprehensive-audit-20260823-r6"
+}

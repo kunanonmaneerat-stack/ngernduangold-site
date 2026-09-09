@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-08-24T23:34:55+07:00",
+  "audit_kind": "LOCAL_ONLY_PERMANENT_TEXT_COLLISION_TOMBSTONE_REMEDIATION",
+  "status": "COMPLETED_BLOCKED",
+  "meaning": "Both exact text-hash collision groups are now bound to their complete current occurrence sets and permanently non-reusable. No external delivery result is inferred. Global permanent-dedup remains blocked only because Facebook Story ledger line 39 has no one-to-one identity evidence.",
+  "scope": {
+    "post_ledger_bytes_changed": false,
+    "identity_binding_bytes_changed": false,
+    "content_calendar_changed": false,
+    "policy_or_authority_changed": false,
+    "publication_or_delivery_claim_changed": false,
+    "external_action_performed": false,
+    "browser_or_network_used": false
+  },
+  "inputs": {
+    "ledger_path": "automation-log/post-ledger.jsonl",
+    "ledger_sha256": "416C768E3F6740C531C0F45F98AE1745B88C23C93D35E404F92708E43BC6909E",
+    "identity_bindings_path": "automation-log/post-ledger-identity-bindings.jsonl",
+    "identity_bindings_sha256": "0DD4BE27E36210B0339F1F54CEAA3453BCC4149A42C9E621ED1E461EE3C23918",
+    "private_commitments_path": "automation-log/dedup-evidence/private-session-tool-input-commitments-v1.json",
+    "private_commitments_sha256": "6F38211598C82EA52BA0F2BB6BE1B2D2F2D89F024E1E51B04352956929F5BB3D",
+    "private_identity_evidence_path": "automation-log/dedup-evidence/post-ledger-identity-sources-private-session-v1.json",
+    "private_identity_evidence_sha256": "F1ADDB30B58662E17EC90586C65A264C69A41FAA5A52287F90F73AB247B886BC"
+  },
+  "remediation": {
+    "registry_path": "automation-log/post-ledger-collision-tombstones.json",
+    "registry_sha256": "1D9FCFFF1617187545281FEC71CD51CA74EAEB2D4F3AFBC12E2D1AE68CD71B2E",
+    "registry_self_sha256": "C223D3EF36AA5ED0671ADFD11B5D5AD4120F861F28ED363F9EFADF37D09E5205",
+    "validator_path": "automation-log/post_ledger_collision.py",
+    "validator_sha256": "DD2190349DCCBB5262D84173C21F02AD211475B8E6C860A9B4AB571D71809375",
+    "consumer_path": "automation-log/post_ledger.py",
+    "consumer_sha256": "F09E764DA4EE169FC3D2C7D214FD962AB29F0B5F6406F79A32D3E2F18742B439",
+    "reuse_policy": "HISTORICAL_CANONICAL_COLLISION_NON_REUSABLE",
+    "external_delivery_resolution": "UNKNOWN_NO_INFERENCE",
+    "complete_occurrence_set_required": true,
+    "groups": [
+      {
+        "identity_type": "text_hash",
+        "channel": "ig",
+        "identity": "aed0406157eb7257c3bf86c7906a6822f8b86e79",
+        "occurrence_lines": [63, 89]
+      },
+      {
+        "identity_type": "text_hash",
+        "channel": "yt",
+        "identity": "90e43a4ddc4d3da3f72e17d10fd38f153e0741bc",
+        "occurrence_lines": [31, 47, 55, 62, 70, 78, 87, 94, 103, 113, 120, 129, 137, 155]
+      }
+    ]
+  },
+  "before": {
+    "state": "BLOCKED",
+    "identity_rows": 125,
+    "complete_rows": 124,
+    "incomplete_rows": 1,
+    "historical_duplicate_identity_groups": 3,
+    "unresolved_duplicate_identity_groups": 2,
+    "tombstoned_duplicate_identity_groups": 1
+  },
+  "after": {
+    "state": "BLOCKED",
+    "identity_rows": 125,
+    "complete_rows": 124,
+    "incomplete_rows": 1,
+    "coverage_percent": 99.2,
+    "historical_duplicate_identity_groups": 3,
+    "unresolved_duplicate_identity_groups": 0,
+    "tombstoned_duplicate_identity_groups": 3,
+    "collision_tombstone_state": "PASS",
+    "youtube_channel_permanent_dedup": "PASS",
+    "instagram_channel_permanent_dedup": "PASS",
+    "facebook_channel_permanent_dedup": "BLOCKED_LINE39_UNKNOWN_IDENTITY"
+  },
+  "remaining_blocker": {
+    "ledger_line": 39,
+    "type": "story",
+    "channel": "facebook",
+    "state": "UNKNOWN_IDENTITY",
+    "independent_one_to_one_matches": 0,
+    "reason": "No existing repository or private-local hash-valid evidence binds a stable Story object id or permalink, displayed Story timestamp, and exact source-post id or Story-media hash to this ledger row.",
+    "blocker_receipt_path": "automation-log/dedup-evidence/FACEBOOK-STORY-LINE39-RECOVERY-BLOCKER_20260824.json",
+    "must_not_infer_from": [
+      "caption or topic similarity",
+      "a Reel id or local media hash without a Story-object relation",
+      "the ledger descriptor or timestamp by itself"
+    ]
+  },
+  "verification": {
+    "focused_unittest": "56/56 PASS",
+    "post_ledger_completeness": "14/14 PASS",
+    "post_ledger_permanent_dedup": "10/10 PASS",
+    "post_ledger_channel_scope": "3/3 PASS",
+    "post_ledger_integrity": "PASS"
+  },
+  "self_sha256": "532F6D753A7AF3ADEB913B069986021EE477E5D8CF90B37AED3FA65B07C256C5"
+}

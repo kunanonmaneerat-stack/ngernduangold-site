@@ -38,8 +38,7 @@ def fold(rows):
     agg = {}
 
     def slot(c):
-        return agg.setdefault(c, {"sessions": 0, "quiz_start": 0,
-                                  "affiliate_click": 0, "buy_intent_click": 0})
+        return agg.setdefault(c, {"sessions": 0, **{field: 0 for field in G.EVENT_FIELDS.values()}})
 
     G.fold_event_rows(rows, slot)
     return agg
@@ -83,6 +82,20 @@ def main():
     print("NORMALISATION")
     agg = fold([("m.facebook", "buy_intent_click", 1)])
     check("m.facebook folds into fb", agg.get("fb", {}).get("buy_intent_click", 0), 1)
+
+    print("QUIZ EVENT (real start, not a page view)")
+    agg = fold([("threads", "quiz_start", 2), ("threads", "page_view", 20)])
+    check("quiz_start event is counted", agg.get("threads", {}).get("quiz_start", 0), 2)
+
+    print("VALUE AND ROUTING EVENTS")
+    agg = fold([("google", "answer_seen", 3),
+                ("facebook", "line_lead_click", 1),
+                ("threads", "internal_cta_click", 2),
+                ("youtube", "video_start", 4)])
+    check("answer_seen is attributed", agg.get("google", {}).get("answer_seen", 0), 3)
+    check("line lead is attributed", agg.get("fb", {}).get("line_lead_click", 0), 1)
+    check("internal CTA is attributed", agg.get("threads", {}).get("internal_cta_click", 0), 2)
+    check("video start is attributed", agg.get("yt", {}).get("video_start", 0), 4)
 
     print("")
     print("%d checks, %d failed" % (len(CHECKS), len(FAILS)))

@@ -1,4 +1,9 @@
-# ⭐ STANDING RULE — Cowork posts EVERYTHING itself (owner said repeatedly, 10 ก.ค.)
+# HISTORICAL STANDING RULE — superseded execution instructions from July 2026
+
+> ⚠️ **PARTIALLY SUPERSEDED 2026-08-16:** เอกสารนี้เป็นหลักฐานประวัติ ไม่ใช่สิทธิ์ให้เผยแพร่หรือเปลี่ยนสถานะรีโมตโดยอัตโนมัติ เรื่องบทบาท/commit/push/deploy/social publish ให้ยึด `.system_control/role_capabilities.json`, `.system_control/policy.json` และ pre-publish gate ปัจจุบัน หากขัดกันให้ไฟล์ปัจจุบันชนะ
+
+> **สถานะบังคับใช้ปัจจุบัน:** ทุกช่องมี `publication_authorized=false`; Cowork/Claude Code/Codex/GitHub Actions ไม่มี `social_publish`, `external_notify`, `external_storage_write`, `package_install` หรือ `scheduler_mutation` ห้ามปฏิบัติตามคำสั่งโพสต์อัตโนมัติด้านล่างจนกว่า owner จะอนุมัติรายชิ้นผ่านกลไกปัจจุบัน
+
 เจ้าของสั่งชัด: "อะไรที่ช่วยผมโพสแล้วทำได้ ให้คุณทำแทนผมทั้งหมดทุกช่องเลย" — ห้ามถามซ้ำ ห้ามให้เจ้าของกดโพสต์เอง ห้ามยื่นตัวเลือกให้เลือก. Cowork ขับเบราว์เซอร์โพสต์ให้ครบทุกช่องที่ทำได้ด้วยตัวเอง.
 
 ยกเว้น (guardrail คงเดิม ห้ามฝ่าฝืน):

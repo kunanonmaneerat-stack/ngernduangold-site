@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "asset": "reels/2026-08-16_b4-p01.mp4",
+  "sha256": "D0A07323742B42FCCF147A067A4654A1438418C7404CD8E4C56F3F76F88A8DAC",
+  "media_type": "video",
+  "reviewed_at": "2026-08-16T05:21:40+07:00",
+  "media_origin": {
+    "generator_origin": "LOCAL_PIL_NUMPY_FFMPEG_LOCAL_WAV",
+    "contains_flow_pixels": false,
+    "contains_flow_audio": false,
+    "synthid_expected": false,
+    "evidence": [
+      "automation-log/video-production/b4-p01_spec.json",
+      "automation-log/video-production/b4-p01_qa.json",
+      "automation-log/video-production/b4-p01_manual_qa.md"
+    ]
+  },
+  "novelty_review": {
+    "status": "PASS",
+    "content_id": "b4-p01",
+    "reviewer": "Codex duplicate audit plus deterministic hash and audio comparison",
+    "corpus_fingerprint": "AC1AB9B513986D3D4E5F702171CAFF31E449DB1C01FA6C7323DF41239B6646E4",
+    "compared_assets": 23,
+    "scope": "canonical manifest reels; SHA-256 and decoded audio are unique; topic is a sequel angle, not a repost"
+  },
+  "watermark": {
+    "visual_review": {
+      "status": "PASS",
+      "reviewer": "Codex visual review",
+      "scope": "contact sheet plus full-size hook and end frames; no third-party or provider watermark; intentional channel brand text is not treated as a provider watermark",
+      "evidence": [
+        "_vidout/staging-b4/b4-p01_contact-sheet.png",
+        "_vidout/staging-b4/b4-p01_hook.png",
+        "_vidout/staging-b4/b4-p01_end.png",
+        "automation-log/video-production/b4-p01_manual_qa.md"
+      ],
+      "evidence_sha256": {
+        "_vidout/staging-b4/b4-p01_contact-sheet.png": "6F62E742D1A888A145E82D8E539F06D5F6AE1E37F214D8C9CEF2108189DC0545",
+        "_vidout/staging-b4/b4-p01_hook.png": "81B1E95087164260D2B49E10C5C46443A7F51918E8EB0F8249A61E5188C2C57B",
+        "_vidout/staging-b4/b4-p01_end.png": "529CD6720A4E03863580FF4A3FBFD79A9077A76CA19ED980211B3771DCB8E476",
+        "automation-log/video-production/b4-p01_manual_qa.md": "C4BDA863232E18CECB9F16FA22BE90700AF946D178E2A5E91D820146D924C6DF"
+      }
+    },
+    "automated_scan": {
+      "status": "PASS",
+      "detector": "tiktok-pipeline/src/qa_watermark.py",
+      "fps": 3.0,
+      "frames": 65,
+      "track_frames": 0,
+      "track_frac": 0.0
+    }
+  }
+}

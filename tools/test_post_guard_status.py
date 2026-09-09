@@ -31,6 +31,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import post_guard as PG  # noqa: E402
 
 TARGET = date(2026, 7, 30)
+ACTIVE_TIKTOK_POLICY = {"state": "testing"}
+OPEN_PUBLICATION_GATE = (True, "unit-test publication gate")
 FAILS: list[str] = []
 
 
@@ -75,34 +77,34 @@ def main() -> int:
     try:
         print("THREADS (ledger is the source of truth — we post it ourselves)")
         write_ledger([row("video", "threads")])
-        check("posted: video row on the day", PG.check_threads(TARGET, ITEM_WITH_CAPTIONS)["status"], "OK")
+        check("posted: video row on the day", PG.check_threads(TARGET, ITEM_WITH_CAPTIONS, OPEN_PUBLICATION_GATE)["status"], "OK")
 
         write_ledger([row("failure", "threads", "NOT POSTED - extension unreachable")])
-        check("failed: failure row must NOT read green", PG.check_threads(TARGET, ITEM_WITH_CAPTIONS)["status"], "FAILED")
+        check("failed: failure row must NOT read green", PG.check_threads(TARGET, ITEM_WITH_CAPTIONS, OPEN_PUBLICATION_GATE)["status"], "FAILED")
 
         write_ledger([])
-        check("missing: no row at all", PG.check_threads(TARGET, ITEM_WITH_CAPTIONS)["status"], "NOT-POSTED")
+        check("missing: no row at all", PG.check_threads(TARGET, ITEM_WITH_CAPTIONS, OPEN_PUBLICATION_GATE)["status"], "NOT-POSTED")
 
         write_ledger([row("text", "threads", "knowledge-post เที่ยง", "2026-07-30T12:42:00+07:00")])
-        check("noon text post is not the daily clip", PG.check_threads(TARGET, ITEM_WITH_CAPTIONS)["status"], "NOT-POSTED")
+        check("noon text post is not the daily clip", PG.check_threads(TARGET, ITEM_WITH_CAPTIONS, OPEN_PUBLICATION_GATE)["status"], "NOT-POSTED")
 
         write_ledger([row("failure", "threads", "attempt 1 failed", "2026-07-30T19:11:00+07:00"),
                       row("video", "threads", "retry worked", "2026-07-30T19:40:00+07:00")])
-        check("retry after failure wins", PG.check_threads(TARGET, ITEM_WITH_CAPTIONS)["status"], "OK")
+        check("retry after failure wins", PG.check_threads(TARGET, ITEM_WITH_CAPTIONS, OPEN_PUBLICATION_GATE)["status"], "OK")
 
         print("TIKTOK (downstream unverifiable — report from the source side)")
         checked = PG.now_bangkok().replace(year=2026, month=7, day=30, hour=21, minute=30)
         write_ledger([row("video", "tiktok")])
-        check("posted: ledger video row", PG.check_tiktok(TARGET, ITEM_WITH_CAPTIONS, checked)["status"], "SOURCE-SIDE")
+        check("posted: ledger video row", PG.check_tiktok(TARGET, ITEM_WITH_CAPTIONS, checked, ACTIVE_TIKTOK_POLICY)["status"], "SOURCE-SIDE")
 
         write_ledger([])
-        check("manifest scheduled, no ledger", PG.check_tiktok(TARGET, ITEM_MANIFEST_SCHEDULED, checked)["status"], "SOURCE-SIDE")
+        check("manifest scheduled, no ledger", PG.check_tiktok(TARGET, ITEM_MANIFEST_SCHEDULED, checked, ACTIVE_TIKTOK_POLICY)["status"], "SOURCE-SIDE")
 
         write_ledger([row("failure", "tiktok", "upload rejected")])
-        check("failed: failure row", PG.check_tiktok(TARGET, ITEM_WITH_CAPTIONS, checked)["status"], "FAILED")
+        check("failed: failure row", PG.check_tiktok(TARGET, ITEM_WITH_CAPTIONS, checked, ACTIVE_TIKTOK_POLICY)["status"], "FAILED")
 
         write_ledger([])
-        check("missing: nothing anywhere", PG.check_tiktok(TARGET, ITEM_WITH_CAPTIONS, checked)["status"], "NOT-POSTED")
+        check("missing: nothing anywhere", PG.check_tiktok(TARGET, ITEM_WITH_CAPTIONS, checked, ACTIVE_TIKTOK_POLICY)["status"], "NOT-POSTED")
 
         print("FACEBOOK-COMMENT  (three days that used to look identical)")
         # check_facebook_comment reads POST_LEDGER_PATH, not AUTOMATION_LOG, so point it
@@ -160,13 +162,13 @@ def main() -> int:
         print("ATTEMPT ROWS  (evidence of trying is not evidence of success)")
         write_ledger([row("attempt", "threads")])
         check("threads: attempt alone must NOT read as posted",
-              PG.check_threads(TARGET, ITEM_WITH_CAPTIONS)["status"], "NOT-POSTED")
+              PG.check_threads(TARGET, ITEM_WITH_CAPTIONS, OPEN_PUBLICATION_GATE)["status"], "NOT-POSTED")
         write_ledger([row("attempt", "threads"), row("video", "threads")])
         check("threads: attempt followed by the real video row",
-              PG.check_threads(TARGET, ITEM_WITH_CAPTIONS)["status"], "OK")
+              PG.check_threads(TARGET, ITEM_WITH_CAPTIONS, OPEN_PUBLICATION_GATE)["status"], "OK")
         write_ledger([row("attempt", "threads"), row("failure", "threads")])
         check("threads: attempt then failure is still a failure",
-              PG.check_threads(TARGET, ITEM_WITH_CAPTIONS)["status"], "FAILED")
+              PG.check_threads(TARGET, ITEM_WITH_CAPTIONS, OPEN_PUBLICATION_GATE)["status"], "FAILED")
         # check_facebook_comment reads POST_LEDGER_PATH, which is a DIFFERENT constant
         # from AUTOMATION_LOG and was already restored by the block above. Without
         # re-pointing it this case would read the real production ledger and pass for
@@ -182,8 +184,8 @@ def main() -> int:
 
         print("\nINVARIANT")
         write_ledger([])
-        for name, verdict in (("threads", PG.check_threads(TARGET, ITEM_WITH_CAPTIONS)),
-                              ("tiktok", PG.check_tiktok(TARGET, ITEM_WITH_CAPTIONS, checked))):
+        for name, verdict in (("threads", PG.check_threads(TARGET, ITEM_WITH_CAPTIONS, OPEN_PUBLICATION_GATE)),
+                              ("tiktok", PG.check_tiktok(TARGET, ITEM_WITH_CAPTIONS, checked, ACTIVE_TIKTOK_POLICY))):
             check("%s never returns UNKNOWN" % name, "UNKNOWN" if verdict["status"] == "UNKNOWN" else "actionable", "actionable")
             check("%s carries an action" % name, "yes" if verdict.get("action", "-") != "-" else "no", "yes")
     finally:

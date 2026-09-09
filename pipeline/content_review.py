@@ -21,6 +21,10 @@ BRANDS = ["KTC", "กสิกร", "kbank", "SCB", "ไทยพาณิชย
 
 def review_text(txt):
     flags = []
+    if not isinstance(txt, str) or not txt.strip():
+        return [("เนื้อหาว่าง/ไม่มีเนื้อหา", "หยุดคิวโพสต์และสร้างดราฟต์ใหม่ก่อนตรวจข้อเท็จจริง")]
+    if re.search(r"(?mi)^\s*\((?:ว่าง(?:\s*[—-]\s*ลองรันใหม่)?|empty)\)\s*$", txt):
+        return [("เนื้อหาว่าง/ไม่มีเนื้อหา", "หยุดคิวโพสต์และสร้างดราฟต์ใหม่ก่อนตรวจข้อเท็จจริง")]
     # 1) แบรนด์/ผู้ให้บริการที่อ้างเฉพาะเจาะจง
     low = txt.lower()
     found = sorted({b for b in BRANDS if b.lower() in low})

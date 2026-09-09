@@ -1,6 +1,6 @@
 # 🖱️ runtime click-test ล่าสุด
 
-_2026-08-09T10:16:09+07:00 · https://ngernduangold.com · 11/11 หน้า runtime ผ่าน_
+_2026-08-30T10:16:42+07:00 · https://ngernduangold.com · 11/11 หน้า runtime ผ่าน_
 
 - ✅ **/links?utm_source=test** — sub_id=`test_links_kept` channel=`test` provider=`kept`
 - ✅ **/title-loan-2026** — sub_id=`website_title-loan-2026.html_srisawad` channel=`website` provider=`srisawad`

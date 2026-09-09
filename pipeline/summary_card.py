@@ -45,6 +45,7 @@ def wrap(d, text, fnt, maxw):
 
 def build():
     rows, tot = D._ga4()
+    trust = D._ga4_trust()
     verdict, decision = D._verdict()
     proven = "PROVEN" in verdict
     W, H = 920, 560
@@ -53,7 +54,7 @@ def build():
     d.text((40, 28), "ngernduangold — สรุปรายวัน", font=F(30, True), fill=WHITE)
     d.text((40, 72), datetime.datetime.now().strftime("%d/%m/%Y %H:%M") +
            " · GA4 ปิดวง · ยิงเองทุกเช้า 07:00", font=F(15), fill=GRAY)
-    kp = [("GA4 sessions", tot["sessions"]), ("conversion (คลิก affiliate)", tot["conv"]), ("quiz_start", tot["quiz"])]
+    kp = [("GA4 sessions observed", tot["sessions"]), ("affiliate_click (intent)", tot["conv"]), ("quiz_start", tot["quiz"])]
     bw = (W - 80 - 32) // 3
     for i, (lb, v) in enumerate(kp):
         x = 40 + i * (bw + 16)
@@ -61,7 +62,7 @@ def build():
         d.text((x + 18, 122), str(v), font=F(40, True), fill=WHITE)
         d.text((x + 18, 182), lb, font=F(12), fill=GRAY)
     rr(d, [40, 218, W - 40, 392], 14, CARD)
-    d.text((58, 232), "conversion รายช่อง (GA4 จริง)", font=F(15, True), fill=LB)
+    d.text((58, 232), "affiliate_click รายช่อง · intent only · " + trust.label, font=F(15, True), fill=LB)
     top = [r for r in rows if r["conv"] > 0][:5]
     mx = max([r["conv"] for r in top] + [1])
     y = 266
@@ -69,7 +70,7 @@ def build():
         d.text((58, y - 2), r["src"], font=F(14, True), fill=WHITE)
         barw = int((W - 40 - 320) * r["conv"] / mx)
         rr(d, [150, y + 1, 150 + max(barw, 4), y + 16], 6, GREEN)
-        txt = "%d conv · %d sess" % (r["conv"], r["sessions"])
+        txt = "%d click intent · %d sess" % (r["conv"], r["sessions"])
         d.text((W - 60 - d.textlength(txt, font=F(12)), y), txt, font=F(12), fill=GRAY)
         y += 24
     rr(d, [40, 410, W - 40, 520], 14, CARD)

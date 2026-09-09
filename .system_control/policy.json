@@ -110,6 +110,8 @@
       "auto": true,
       "automation_capable": true,
       "publication_authorized": false,
+      "account_handle": "@ngernduangold",
+      "profile_url": "https://www.threads.com/@ngernduangold",
       "note": "video attach WORKING again via native OS dialog (1 Aug 2026); see OPERATING-NOTES §OS-dialog",
       "kind": "video",
       "video_auto": true,
@@ -630,7 +632,7 @@
       "scope": "ALL Cowork scheduled tasks. The cron layer (pipeline/run_daily.cmd via Windows Task Scheduler) is NOT paused - it costs no tokens and keeps preflight, uptime_check, runway_guard and the ledger guards alive.",
       "reason": "Owner is moving token budget to another project. This is a decision, not a failure.",
       "declared_by": "owner, 5 Sep 2026",
-      "_read_this_before_diagnosing": "Silence from 9 Aug onward is EXPECTED. Do not open an incident, do not 'repair' anything, and do not read the empty ledger as a broken pipe - that is exactly the mistake made after the 3-5 Aug blackout, where a real pause got measured as a failed test. Any gate whose window overlaps this range must return 'cannot decide', never 'fail'.",
+      "_read_this_before_diagnosing": "Silence from the from date is expected only for Cowork tasks actually disabled in the scheduler registry. Preserve failures from before the pause. Enabled Claude Code tasks and the Windows cron layer remain accountable to their own schedules. A business experiment whose measurement window overlaps this pause cannot establish an outcome from absent activity.",
       "resume_checklist": "automation-log/RESUME-CHECKLIST_20260905.md",
       "_date_correction": "First written as 9 Aug because the sandbox clock reported that date. The scheduled-task registry proved otherwise - tasks show lastRunAt through 5 Sep. Corrected before commit. Never trust the sandbox clock for anything dated."
     }
@@ -813,7 +815,7 @@
       "reason": "Owner paused the entire agent layer on 5 Sep 2026 to move token budget to another project. Not a content decision - a resourcing one.",
       "decided_by": "owner pause, 5 Sep 2026",
       "resume_by": "set a real date when the agent layer is switched back on - this one is a placeholder chosen only to stop PARK_OVERRUN firing at nobody, and it still expires on purpose",
-      "_honesty_note": "A park is meant to be short and reviewed. A 7-week park is not 'fine', it is a paused business. It expires 30 Sep so the guard speaks up if the pause is forgotten rather than letting it become permanent silently."
+      "_honesty_note": "This is a paused video queue. The authoritative expiry is the until field above; evaluate it on every control run so the pause cannot silently become permanent. This park does not exempt other content channels or enabled schedulers from their own checks."
     }
   },
   "products": {

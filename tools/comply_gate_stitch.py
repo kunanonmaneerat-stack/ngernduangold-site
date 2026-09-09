@@ -42,13 +42,18 @@ def scan(text):
     return fails,warns
 
 def main():
-    if len(sys.argv)<2: print('usage: comply_gate_stitch.py <file_or_dir>'); sys.exit(2)
+    if len(sys.argv)<2:
+        print('usage: comply_gate_stitch.py <file_or_dir>')
+        return 3
     t=sys.argv[1]
     if os.path.isdir(t):
         exts=('*.html','*.htm','*.jsx','*.tsx','*.vue')
         files=[f for e in exts for f in glob.glob(os.path.join(t,'**',e),recursive=True)]
     else:
         files=[t]
+    if not files:
+        print('\nSKIP: 0 eligible Stitch/AI-export files; no compliance PASS claimed.')
+        return 0
     tot=0
     for f in files:
         text=open(f,encoding='utf-8',errors='replace').read()
@@ -58,6 +63,11 @@ def main():
         for i,lab,s in warns: print('  warn L%s: %s :: %s' % (i,lab,s))
         tot+=len(fails)
     print('\nSUMMARY: %d file(s), %d FAIL finding(s).' % (len(files),tot))
-    sys.exit(1 if tot else 0)
+    return 1 if tot else 0
 
-if __name__=='__main__': main()
+if __name__=='__main__':
+    try:
+        sys.exit(main())
+    except Exception as exc:
+        print('RUNNER_FAILED: %s' % str(exc)[:240], file=sys.stderr)
+        sys.exit(3)

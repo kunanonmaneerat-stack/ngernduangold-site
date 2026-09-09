@@ -1,0 +1,221 @@
+{
+  "schema_version": 1,
+  "asset": "reels/week-20260824-30-r5/2026-08-27_wk36-sf03.mp4",
+  "sha256": "E8B87B3D1A97A0517068F90FD12237439F97E31EC08AA12E279E52312F3723D0",
+  "media_type": "video",
+  "reviewed_at": "2026-08-23T19:00:50+07:00",
+  "media_origin": {
+    "generator_origin": "LOCAL_HTML_SVG_FFMPEG_WINDOWS_TTS",
+    "contains_flow_pixels": false,
+    "contains_flow_audio": false,
+    "synthid_expected": false
+  },
+  "source_binding": {
+    "weekly_pack": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+    "weekly_pack_id": "week-content-20260824-30-r5",
+    "render_source_pack_id": "week-content-20260824-30-r4",
+    "candidate_id": "wk36-sf03",
+    "content_payload_sha256": "12E906F09820978BD8A75B7042742F134C6A52C5CE2E8817371BE564BEE663D8",
+    "exact_visible_copy": [
+      "คำถามเดียวก่อนจบเดือน",
+      "อะไรให้คุณค่ามากที่สุด?",
+      "เก็บไว้เป็นเข็มทิศ",
+      "ข้อมูลเพื่อการศึกษา · ผลิตด้วย AI"
+    ],
+    "scene_frame_counts": [
+      47,
+      47,
+      46,
+      58
+    ],
+    "scene_evidence_sha256": {
+      "automation-log/media-qa/evidence/week-20260824-30-r5/wk36-sf03/contact-sheet.png": "DC889D90B84092DB02E826EC9938D3578B2EDA4F6D75B43ED19577A485CFDC66",
+      "automation-log/media-qa/evidence/week-20260824-30-r5/wk36-sf03/encoded-contact-sheet.jpg": "F1EF15F4C641235F76B004D5304F7BF835FC4D167AEC12A258ABB267ACA27152",
+      "automation-log/media-qa/evidence/week-20260824-30-r5/wk36-sf03/scene-01.png": "31683774CC3C0AE7B1BE1F84ADD4729F73F3BFC0180504FC6473FF580C3D33C7",
+      "automation-log/media-qa/evidence/week-20260824-30-r5/wk36-sf03/scene-02.png": "DF0F4B86AD1C0255BC2AD47D1A60D5D88CA0A0189B730DB37493ED8709EB50D4",
+      "automation-log/media-qa/evidence/week-20260824-30-r5/wk36-sf03/scene-03.png": "E7FE73FD9BC15590AEDC2C98EC1BEF0B8315C79D8253F6FA118097C0FB1C69B6",
+      "automation-log/media-qa/evidence/week-20260824-30-r5/wk36-sf03/scene-04.png": "79A273C8875BF2BB73519A63F6A020C587DF28951BA4604786E5F8A9881591EF"
+    },
+    "visual_mode": "deterministic local HTML/SVG plus centered kinetic zoom",
+    "narration": {
+      "engine": "Windows.Media.SpeechSynthesis local runtime",
+      "voice": "Microsoft Pattara",
+      "language": "th-TH",
+      "speaking_rate": 0.78,
+      "source_text_sha256": "34A1AD6CED25742B2F215B1F7D30942FA7B7A46FD5C918D4CF5EE084865E279E",
+      "source_text_exact_match": "PASS",
+      "source_audio_path": ".local-private/runtime/week-tiktok-render-r5/wk36-sf03/wk36-sf03_voice.wav",
+      "source_audio_sha256": "EF0653EA5E1A2ED85F326B028C9587F05A80B7F5F0F14E266EBA6DC4A62120E8",
+      "audio_duration_seconds": 8.437,
+      "activity_threshold_dbfs": -50.0,
+      "first_active_sample_seconds": 0.138833,
+      "last_active_sample_seconds": 7.467833,
+      "human_listening_status": "NOT_PERFORMED"
+    },
+    "audio_lineage": {
+      "status": "PASS_SINGLE_LOCAL_TTS_SOURCE_NO_MIX",
+      "audio_input_count": 1,
+      "source_kind": "LOCAL_WINDOWS_TTS_EXACT_TEXT",
+      "source_audio": ".local-private/runtime/week-tiktok-render-r5/wk36-sf03/wk36-sf03_voice.wav",
+      "source_audio_sha256": "EF0653EA5E1A2ED85F326B028C9587F05A80B7F5F0F14E266EBA6DC4A62120E8",
+      "source_text_sha256": "34A1AD6CED25742B2F215B1F7D30942FA7B7A46FD5C918D4CF5EE084865E279E",
+      "ambient_or_music_sources": [],
+      "foreign_audio_sources": [],
+      "filter_chain": "aresample=48000,pan=mono|c0=c0,atrim=end=7.647833,apad,atrim=duration=8.250000,loudnorm=I=-14.5:TP=-1.5:LRA=11,atrim=duration=8.250000",
+      "voice_track": ".local-private/runtime/week-tiktok-render-r5/wk36-sf03/wk36-sf03_voice-only.m4a",
+      "voice_track_sha256": "5EE12ED9459AA859432908DE454725F8F20C42DE97CE16BC5244F8D1235EA40D",
+      "voice_track_audio_packet_sha256": "0EDE4BFFEBC3CD62DAF494A0C373D048E324491683996E184F5AA4F1CB625958",
+      "human_listening_status": "NOT_PERFORMED",
+      "final_audio_packet_sha256": "0EDE4BFFEBC3CD62DAF494A0C373D048E324491683996E184F5AA4F1CB625958",
+      "packet_binding": "PASS_EXACT_PACKET_COPY"
+    }
+  },
+  "technical_qa": {
+    "file": "reels/week-20260824-30-r5/2026-08-27_wk36-sf03.mp4",
+    "sha256": "E8B87B3D1A97A0517068F90FD12237439F97E31EC08AA12E279E52312F3723D0",
+    "qa_scope": "automated_media_only",
+    "manual_checks_required": [
+      "semantic_frame_review",
+      "landing_page_qa"
+    ],
+    "duration_seconds": 8.25,
+    "size_bytes": 1636065,
+    "video": {
+      "codec": "h264",
+      "width": 1080,
+      "height": 1920,
+      "fps": "24/1",
+      "pixel_format": "yuv420p"
+    },
+    "audio": {
+      "codec": "aac",
+      "sample_rate": "48000",
+      "channels": 1
+    },
+    "full_decode": "PASS",
+    "faststart": {
+      "status": "PASS",
+      "moov_offset": 32,
+      "mdat_offset": 7182
+    },
+    "loudness": {
+      "status": "PASS",
+      "non_silent": "PASS",
+      "integrated_lufs": -17.79,
+      "true_peak_dbfs": -1.45,
+      "loudness_range_lu": 1.9,
+      "guard": {
+        "integrated_lufs_min": -18.0,
+        "integrated_lufs_max": -14.0,
+        "true_peak_dbfs_max": -1.0
+      }
+    },
+    "watermark": {
+      "verdict": "PASS",
+      "frames": 25,
+      "track_frames": 0,
+      "track_frac": 0.0,
+      "fps": 3.0
+    },
+    "audio_lineage": {
+      "status": "PASS_SINGLE_LOCAL_TTS_SOURCE_NO_MIX",
+      "audio_input_count": 1,
+      "source_kind": "LOCAL_WINDOWS_TTS_EXACT_TEXT",
+      "source_audio": ".local-private/runtime/week-tiktok-render-r5/wk36-sf03/wk36-sf03_voice.wav",
+      "source_audio_sha256": "EF0653EA5E1A2ED85F326B028C9587F05A80B7F5F0F14E266EBA6DC4A62120E8",
+      "source_text_sha256": "34A1AD6CED25742B2F215B1F7D30942FA7B7A46FD5C918D4CF5EE084865E279E",
+      "ambient_or_music_sources": [],
+      "foreign_audio_sources": [],
+      "filter_chain": "aresample=48000,pan=mono|c0=c0,atrim=end=7.647833,apad,atrim=duration=8.250000,loudnorm=I=-14.5:TP=-1.5:LRA=11,atrim=duration=8.250000",
+      "voice_track": ".local-private/runtime/week-tiktok-render-r5/wk36-sf03/wk36-sf03_voice-only.m4a",
+      "voice_track_sha256": "5EE12ED9459AA859432908DE454725F8F20C42DE97CE16BC5244F8D1235EA40D",
+      "voice_track_audio_packet_sha256": "0EDE4BFFEBC3CD62DAF494A0C373D048E324491683996E184F5AA4F1CB625958",
+      "human_listening_status": "NOT_PERFORMED",
+      "final_audio_packet_sha256": "0EDE4BFFEBC3CD62DAF494A0C373D048E324491683996E184F5AA4F1CB625958",
+      "packet_binding": "PASS_EXACT_PACKET_COPY"
+    },
+    "continuous_silence_audit": {
+      "status": "PASS",
+      "sample_rate": 48000,
+      "decoded_samples": 394240,
+      "longest_exact_zero_run_seconds": 0.694167,
+      "maximum_allowed_continuous_silence_seconds": 1.5,
+      "nonzero_sample_fraction": 0.899734,
+      "threshold_dbfs": -50.0,
+      "threshold_silence_events_at_or_above_limit": 0,
+      "final_audio_duration_seconds": 8.213333,
+      "last_active_sample_seconds": 7.470083,
+      "post_narration_tail": {
+        "status": "PASS_INTENTIONAL_SILENCE_NO_AMBIENT_OR_MUSIC",
+        "duration_seconds": 0.74325,
+        "maximum_allowed_seconds": 1.0,
+        "maximum_100ms_rms_dbfs_after_100ms_release": -120.0
+      }
+    },
+    "timing": {
+      "status": "PASS",
+      "policy": "VOICE_BOUND_NO_AMBIENT_R5",
+      "fps": 24,
+      "total_frames": 198,
+      "duration_seconds": 8.25,
+      "scene_frame_counts": [
+        47,
+        47,
+        46,
+        58
+      ],
+      "scene_dwell_seconds": [
+        1.958333,
+        1.958333,
+        1.916667,
+        2.416667
+      ],
+      "minimum_scene_dwell_seconds": 1.5,
+      "end_card_start_seconds": 5.833333,
+      "end_card_dwell_seconds": 2.416667,
+      "minimum_end_card_dwell_seconds": 2.0,
+      "narration_last_active_seconds": 7.467833,
+      "planned_tail_after_narration_seconds": 0.782167,
+      "maximum_tail_after_narration_seconds": 1.0,
+      "voice_source_trim_end_seconds": 7.647833,
+      "actual_decoded_frame_count": 198
+    }
+  },
+  "manual_check_resolution": {
+    "semantic_frame_review": "PASS_FULL_RESOLUTION_SOURCE_AND_ENCODED_SAMPLES",
+    "landing_page_qa": "NOT_APPLICABLE_NO_OUTBOUND_URL_OR_LINK_CTA",
+    "audio_listening": "NOT_PERFORMED_RECORDED_AS_LIMITATION",
+    "audio_mix": "PASS_SINGLE_LOCAL_TTS_SOURCE_NO_AMBIENT_OR_MUSIC"
+  },
+  "novelty_review": {
+    "status": "PASS",
+    "content_id": "wk36-sf03",
+    "reviewer": "Codex deterministic hash and source-bound creative comparison",
+    "corpus_fingerprint": "AC1AB9B513986D3D4E5F702171CAFF31E449DB1C01FA6C7323DF41239B6646E4",
+    "compared_assets": 27,
+    "scope": "Current manifest and published-media corpus; exact SHA-256 is unique; candidate is an r5 timing/copy revision using an original local vector composition and exact projected weekly-pack copy"
+  },
+  "watermark": {
+    "visual_review": {
+      "status": "PASS",
+      "reviewer": "Codex r5 full-resolution source frames plus encoded MP4 sample-frame review",
+      "scope": "All full-resolution scene frames and contact sheet reviewed; no provider/platform watermark, page logo, account handle, URL, tracking mark, affiliate CTA, or hidden footer identity",
+      "evidence": [
+        "automation-log/media-qa/evidence/week-20260824-30-r5/wk36-sf03/contact-sheet.png",
+        "automation-log/media-qa/evidence/week-20260824-30-r5/wk36-sf03/encoded-contact-sheet.jpg",
+        "automation-log/media-qa/evidence/week-20260824-30-r5/wk36-sf03/scene-01.png",
+        "automation-log/media-qa/evidence/week-20260824-30-r5/wk36-sf03/scene-02.png",
+        "automation-log/media-qa/evidence/week-20260824-30-r5/wk36-sf03/scene-03.png",
+        "automation-log/media-qa/evidence/week-20260824-30-r5/wk36-sf03/scene-04.png"
+      ]
+    },
+    "automated_scan": {
+      "status": "PASS",
+      "detector": "tiktok-pipeline/src/qa_watermark.py",
+      "fps": 3.0,
+      "frames": 25,
+      "track_frames": 0,
+      "track_frac": 0.0
+    }
+  }
+}

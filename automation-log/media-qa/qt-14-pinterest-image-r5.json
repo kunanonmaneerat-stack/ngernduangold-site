@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "asset": "media/quotes/week-20260824-30-r5/qt-14_pinterest_2x3.jpg",
+  "sha256": "BCC340F0951EB44307FF4DA9B843A61FBEC51870B2BC161CAA374BFF4775021F",
+  "media_type": "image",
+  "reviewed_at": "2026-08-30T22:02:39+07:00",
+  "media_origin": {
+    "generator_origin": "LOCAL_HTML_CSS_BROWSER_RENDER",
+    "contains_flow_pixels": false,
+    "contains_flow_audio": false,
+    "synthid_expected": false
+  },
+  "source_binding": {
+    "source_file": "automation-log/QUOTE-CARDS_20260723-0822.md",
+    "source_file_sha256": "6D97BF105E8A00A298A25DA963C0C7AE5906048DD58270F193967166DE06AB6A",
+    "weekly_pack": null,
+    "weekly_pack_id": null,
+    "candidate_id": "qt-14",
+    "source_row_id": "qt-14",
+    "source_field": "caption",
+    "source_value_sha256": "340997C54CDC7CCBB83B9E4618C693C11883DB1239C8C1B6D44417FC19B502C3",
+    "variant": "2x3",
+    "dimensions": [
+      1000,
+      1500
+    ],
+    "exact_overlay_text": "อิสรภาพทางการเงินไม่ใช่การมีเงินไม่จำกัด แต่คือการไม่ต้องกังวลทุกครั้งที่สิ้นเดือนมาถึง",
+    "source_markup_sha256": "8961FF9210828067E0928BA3635E501DAF190BC27CBBD6F27F7B023EED0FE6EE"
+  },
+  "technical_qa": {
+    "status": "PASS",
+    "dimensions": [
+      1000,
+      1500
+    ],
+    "mode": "RGB",
+    "deterministic_browser_text_render": "PASS",
+    "safe_crop_review": "PASS_FULL_FRAME_VISUAL_REVIEW"
+  },
+  "novelty_review": {
+    "status": "PASS",
+    "content_id": "qt-14-2x3-r5",
+    "reviewer": "Codex deterministic hash and full-frame visual comparison",
+    "corpus_fingerprint": "AC1AB9B513986D3D4E5F702171CAFF31E449DB1C01FA6C7323DF41239B6646E4",
+    "compared_assets": 27,
+    "scope": "Copy-edited r5 quote-card revision; exact SHA-256 is unique within the selected r5 quote-card set and differs from superseded evidence"
+  },
+  "watermark": {
+    "visual_review": {
+      "status": "PASS",
+      "reviewer": "Codex full-frame original-resolution visual review 2026-08-30",
+      "scope": "Full native-resolution image reviewed; no provider/platform watermark, page logo, account handle, URL, tracking mark, affiliate CTA, clipped copy, or unsafe crop",
+      "evidence": [
+        "media/quotes/week-20260824-30-r5/qt-14_pinterest_2x3.jpg"
+      ]
+    }
+  }
+}

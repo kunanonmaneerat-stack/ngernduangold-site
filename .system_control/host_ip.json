@@ -1,7 +1,9 @@
 {
-  "ip": "27.130.8.134",
-  "checked_at": "2026-08-09T00:05:39",
-  "source": "api.ipify.org",
-  "host": "NANON",
-  "_why": "preflight/check_ga4_internal_ip compares this against the CIDRs pinned in policy.json ga4.internal_traffic.ips. If they diverge, the GA4 internal-traffic rule has stopped matching and the traffic numbers include our own automation."
+  "_meta": "Public contract only. Live egress state is stored in ignored local runtime state.",
+  "schema_version": 1,
+  "private_state_contract": {
+    "environment": "NGERNDUANGOLD_HOST_STATE",
+    "default": ".local-private/runtime/host-state.json",
+    "missing_behavior": "UNTRUSTED"
+  }
 }

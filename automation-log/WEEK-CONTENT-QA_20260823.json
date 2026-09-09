@@ -1,0 +1,224 @@
+{
+  "schema_version": 3,
+  "receipt_id": "week-content-qa-20260823-r8",
+  "checked_at": "2026-08-23T22:04:15+07:00",
+  "verdict": "VALID_WITH_BLOCKERS",
+  "publication_ready": false,
+  "reply_ready": false,
+  "summary": {
+    "week_copy_days": 7,
+    "public_text_variants": 14,
+    "tiktok_videos": 7,
+    "quote_images": 4,
+    "reply_required": 0,
+    "platform_schedules_created": 0,
+    "ready_for_owner_approval": 0,
+    "publishable_calendar_placements": 0,
+    "upcoming_48h_placements": 7,
+    "upcoming_48h_blocked": 7
+  },
+  "state_classification": {
+    "READY_FOR_OWNER_APPROVAL": {
+      "count": 0,
+      "reason": "No item passes all source, permanent-dedup, calendar, authority, live-local release and exact per-piece approval gates."
+    },
+    "BLOCKED": {
+      "calendar_placements": 65,
+      "planned_blocked": 65,
+      "upcoming_48h": 7,
+      "publication_blocking_findings": 6,
+      "reason": "Permanent dedup remains incomplete; the B4 video is blocked pending exact hash-bound human listening; all upcoming slots remain PLANNED_BLOCKED; the public site still carries five stale or unverified affiliate trackers."
+    },
+    "SKIP": {
+      "count": 4,
+      "items": [
+        "ngernduangold-daily-queue: LEGACY_DUPLICATE_DISABLED",
+        "Kept AccessTrade campaign 955: PAUSED_AFFILIATE_REMOVED_LOCAL",
+        "Tune Protect Health campaign 890: PAUSED_AFFILIATE_REMOVED_LOCAL",
+        "Google Flow final pixels/audio: IDEATION_STORYBOARD_ONLY"
+      ]
+    },
+    "COMPLETED_BLOCKED": {
+      "historical_blocked_slots": 23,
+      "eligible_slots_missed": 0,
+      "reason": "Past PLANNED_BLOCKED rows remain historical and must not be backfilled or promoted; the r5 pack passed bounded novelty and exact-copy freshness authoring checks but is not publication-ready."
+    },
+    "RUNNER_FAILED": {
+      "current_final_runs": 0,
+      "historical_7d": 1,
+      "historical_invalid_receipts": 1,
+      "reason": "The latest weekly and daily receipts finished normally with blockers; one pre-repair failure and one invalid receipt remain audit history."
+    },
+    "MISSED": {
+      "eligible_publication_slots": 0,
+      "scheduler_state": "CLAUDE_COWORK_MISSED_OR_STUCK",
+      "reason": "Enabled Claude/Cowork registries have no new run evidence since 18 August; enabled=true is not liveness proof."
+    }
+  },
+  "artifacts": {
+    "content_pack": {
+      "path": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+      "pack_id": "week-content-20260824-30-r5",
+      "sha256": "0ACD60E0D44F689841C8AAF2C7AF1ADAADA6A5E03CCCAF87C3B626BE84A21A28"
+    },
+    "freshness_receipt": {
+      "path": "automation-log/WEEK-CONTENT-FRESHNESS_20260823.json",
+      "sha256": "258D82CD9A6FB7E69F85F899DE83FAB9D33956FE8350447A4F5E0BB87F4E7ED2",
+      "verdict": "PASS_EVERGREEN_EXACT_COPY",
+      "process_state": "COMPLETED_BLOCKED"
+    },
+    "novelty_receipt": {
+      "path": "automation-log/dedup-evidence/WEEK-CONTENT-R5-NOVELTY-RECEIPT_20260823.json",
+      "sha256": "95D3A46375BCEFDF99D53B92853D2E00863FB6370DE01C24666A918A13F2F3E9",
+      "verdict": "BLOCKED_SYSTEM_HISTORY_NO_R5_COLLISION_DETECTED",
+      "evidence_state": "STALE_AFTER_TOMBSTONE_SEMANTICS_CHANGE",
+      "current_live_guard": "BLOCKED_SYSTEM_HISTORY_NO_R5_COLLISION_DETECTED_WITH_ZERO_UNRESOLVED_DUPLICATE_GROUPS"
+    },
+    "dedup_remediation_receipt": {
+      "path": "automation-log/dedup-evidence/POST-LEDGER-REMEDIATION-RECEIPT_20260823.json",
+      "sha256": "7D59D210D3A74D3962C62AD99380CACA6723E332FB69005A113D2A510EE6F56A"
+    },
+    "affiliate_currentness_receipt": {
+      "path": "automation-log/AFFILIATE-CURRENTNESS-RECEIPT_20260823.json",
+      "sha256": "52756F04DE370B24EE72922C120261684550C222864F75E656BB742C25F1A205",
+      "local_state": "PASS",
+      "public_production_state": "BLOCKED_STALE_RELEASE"
+    },
+    "google_flow_decision": {
+      "path": "automation-log/GOOGLE-FLOW-DECISION_20260823.md",
+      "sha256": "08C453D5CDD354AE1145954146D78A891F24E4AF634A5B3D5532D69FBE67668E",
+      "final_media_role": "IDEATION_STORYBOARD_ONLY"
+    },
+    "operations_plan": {
+      "path": "automation-log/WEEK-OPERATIONS_20260824-30.md",
+      "sha256": "EA345D4B0471A609D8B8B65A3218308D7FB9040D8A05DA87D089C32CFEFCCACD"
+    },
+    "media_qa_summary": {
+      "path": "automation-log/media-qa/WEEK-TIKTOK-QUOTE-CANDIDATES_QA_R5_20260823.md",
+      "sha256": "D67C96FC687958E98EA2DCDA3EF88FAE944045ACF4685443F17F3F55F5DC9408"
+    },
+    "media_manifest": {
+      "path": "automation-log/media-qa/WEEK-TIKTOK-QUOTE-CANDIDATES_MANIFEST_R5_20260823.json",
+      "sha256": "297E1E8AA222E1B55ECE947D3428E2BF1A2A9ED09DCA3BBEFBEFC5592988BE3D"
+    },
+    "weekly_task_receipt": {
+      "path": ".local-private/runtime/task-runs/ngernduangold_weekly/ngernduangold_weekly-20260823T121758701809Z-43832-a6d6d3.json",
+      "sha256": "0967CBED58B4A7478D41952771CF71E8F593B34C00913F3F4C429653EBA77ECE",
+      "status": "FINISHED",
+      "execution_state": "COMPLETED_WITH_BLOCKERS",
+      "final_rc": 2,
+      "step_count": 10
+    },
+    "daily_task_receipt": {
+      "path": ".local-private/runtime/task-runs/ngernduangold_daily/ngernduangold_daily-20260823T122237619868Z-44516-a2a325.json",
+      "sha256": "EE6D2E3D7033B738363CA82EF46E5EC8FA18382293B354E3B672FE20ECD835ED",
+      "status": "FINISHED",
+      "execution_state": "COMPLETED_WITH_BLOCKERS",
+      "final_rc": 2,
+      "step_count": 26
+    }
+  },
+  "checks": [
+    {
+      "name": "json_parse_and_pack_contract",
+      "status": "PASS",
+      "evidence": "7 consecutive dates, 7 unique candidate ids, 14 public text variants, 7 TikTok scripts, 0 body URLs and 21 AI disclosures."
+    },
+    {
+      "name": "r5_bounded_novelty",
+      "status": "PASS_LOCAL_SCOPE_COMPLETED_BLOCKED",
+      "evidence": "7 candidates and 23 public variants produced 0 exact or deterministic near text/media collisions against 4,542 historical text records and 67 historical media assets."
+    },
+    {
+      "name": "permanent_dedup",
+      "status": "BLOCKED_INCOMPLETE_HISTORY",
+      "evidence": "Coverage improved from 57/125 (45.6%) to 90/125 (72.0%); 35 prefix-only rows remain UNKNOWN. The historical TikTok titleloan collision is validly tombstoned, permanently non-reusable and report-only, so unresolved duplicate identity groups are now 0; external delivery remains UNKNOWN."
+    },
+    {
+      "name": "exact_copy_freshness",
+      "status": "PASS_LOCAL_SCOPE_COMPLETED_BLOCKED",
+      "evidence": "All 7 r5 candidates are evergreen behavioral exact-copy with no rate, percentage, product, merchant, promotion, tracking URL, current or latest claim. Any copy or pack hash change invalidates the receipt."
+    },
+    {
+      "name": "official_source_monitor",
+      "status": "BLOCKED",
+      "evidence": "The global official-news snapshot binding is stale: 31 configured, 30 successful, 13 changed, 1 current error and 31 pending owner reviews. Factual calendar content is not promoted automatically."
+    },
+    {
+      "name": "affiliate_currentness",
+      "status": "PASS_LOCAL_BLOCKED_PRODUCTION",
+      "evidence": "AccessTrade authenticated evidence binds 14 active approved campaigns and 2 paused campaigns. The local generated site passes 110 placements with zero paused/legacy tracker literals; public production still exposes five stale or unverified tracker codes pending governed release."
+    },
+    {
+      "name": "content_calendar_guard",
+      "status": "BLOCKED_EXPECTED",
+      "evidence": "65 placements remain PLANNED_BLOCKED; publishable=0; 23 historical stale blocked slots are not backfilled. Seven placements fall inside the next 48 hours and all seven remain blocked."
+    },
+    {
+      "name": "week_calendar_coverage",
+      "status": "BLOCKED",
+      "evidence": "29 existing placements from 24 through 30 August remain PLANNED_BLOCKED. The seven r5 candidates are replacement candidates and were not auto-bound over existing content."
+    },
+    {
+      "name": "media_hash_visual_watermark_and_audio",
+      "status": "PASS_TECHNICAL_BLOCKED_HUMAN_LISTENING",
+      "evidence": "The full local technical scan passed 45 canonical videos and 1 canonical image with zero watermark-track frames. The r5 pack has 11/11 exact asset and receipt bindings and technical QA PASS. Origin fields are allow-list declarations, not independent provenance proof. Final publication guard blocks all 7 videos until exact hash-bound human listening is recorded; 4 images pass."
+    },
+    {
+      "name": "media_manifest_recursive_binding",
+      "status": "PASS_INTEGRITY_BLOCKED_FINAL_MEDIA",
+      "evidence": "The resealed manifest matches the exact r5 pack, QA summary, 11 assets and 11 media receipts (23/23 hash bindings). Manifest integrity and technical QA pass, but final_media_guard_state is BLOCKED for the 7 videos; the guard grants no publication authority."
+    },
+    {
+      "name": "human_audio_listening",
+      "status": "BLOCKED_REQUIRED",
+      "evidence": "Technical audio lineage and continuity passed, but no subjective listening claim is made. Each of the 7 r5 videos requires a HUMAN/OWNER listening review bound to the exact asset SHA-256 before it can pass the final media gate."
+    },
+    {
+      "name": "privacy_guard",
+      "status": "PASS",
+      "evidence": "92 candidate files scanned with 0 findings. Exact AccessTrade tracker URLs are structurally masked; real phone numbers and malformed or modified tracker-like URLs remain fail-closed."
+    },
+    {
+      "name": "public_identity_guard",
+      "status": "PASS",
+      "evidence": "Page-only identity passed across 76 pages, 161 caption fields, 44 knowledge rows and 10 outward prompts."
+    },
+    {
+      "name": "analytics_and_verified_revenue",
+      "status": "BLOCKED",
+      "evidence": "GA4 trust and bundle remain UNTRUSTED/INVALID_METADATA; GSC bundle is CURRENT; verified affiliate revenue is UNAVAILABLE with STALE_COVERAGE and must not be reported as zero or used to scale."
+    },
+    {
+      "name": "live_local_release_attestation",
+      "status": "BLOCKED",
+      "evidence": "Local guardrails pass, but production parity, item-level publication authority and publishable calendar input remain false."
+    },
+    {
+      "name": "windows_runner_state",
+      "status": "COMPLETED_WITH_BLOCKERS",
+      "evidence": "Latest weekly 10-step and daily 26-step receipts are FINISHED, final_rc=2, normal_end, publication_state=BLOCKED_LOCAL_ONLY and contain no RUNNER_FAILED step."
+    }
+  ],
+  "required_before_any_post": [
+    "Do not backfill or rerun the 23 stale historical PLANNED_BLOCKED slots.",
+    "Resolve exact calendar slot ownership before binding an r5 replacement over any of the 29 existing weekly placements.",
+    "Complete or explicitly resolve the remaining 35 permanent-dedup UNKNOWN rows, then rerun collision checks.",
+    "Bind exact r5 media and receipt hashes to each governed placement.",
+    "Clear content-scoped source and live-local release gates; deploy the local affiliate repair only through the governed owner-approved release path.",
+    "Set the applicable channel publication authority and obtain one-time per-piece owner approval bound to content, caption, media, target account and slot immediately before action."
+  ],
+  "external_actions": {
+    "posts_sent": 0,
+    "replies_sent": 0,
+    "likes_or_reactions": 0,
+    "schedules_created_on_social_platforms": 0,
+    "tracker_or_test_traffic": 0,
+    "source_acknowledgements": 0,
+    "google_flow_generations": 0,
+    "google_flow_credits_consumed": 0,
+    "commits": 0,
+    "pushes": 0,
+    "deploys": 0
+  }
+}

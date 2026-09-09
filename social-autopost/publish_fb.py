@@ -14,7 +14,8 @@
 #   - comply fail-closed: body ต้องมี disclaimer · ห้ามมี URL ในบอดี้ · affiliate=true ต้องมี "มีลิงก์พันธมิตร" · ไม่มี bare %
 #   - dedup published-fb.json · โพสต์ขึ้นแล้วแต่คอมเมนต์พลาด -> บันทึก published (กันโพสต์ซ้ำ) + alert ให้เติมคอมเมนต์มือ
 # Exit: 0 = ok/skip · 2 = fail
-import io, os, sys, json, re, datetime, urllib.request, urllib.parse, urllib.error
+import io, os, sys, json, re, datetime, hashlib, time, urllib.request, urllib.parse, urllib.error
+from pathlib import Path
 
 try:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -22,6 +23,15 @@ except Exception:
     pass
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(ROOT, "tools"))
+sys.path.insert(0, os.path.join(ROOT, "automation-log"))
+import post_ledger
+from publication_authority import (
+    PublicationBlocked,
+    authorize_live_publication,
+    canonical_text_payload,
+    verify_execution_authorization,
+)
 HERE = os.path.dirname(os.path.abspath(__file__))
 CONTENT_MAP = os.path.join(HERE, "feed_content_map.json")
 LOG_DIR = os.path.join(ROOT, "automation-log", "fb-feed")
@@ -32,6 +42,10 @@ GRAPH = "https://graph.facebook.com/v22.0"
 DRY_RUN = os.environ.get("DRY_RUN", "1") != "0"
 PAGE_ID = os.environ.get("FB_PAGE_ID", "")
 TOKEN = os.environ.get("FB_PAGE_TOKEN", "")
+ACTOR = os.environ.get("PUBLICATION_ACTOR", "")
+RECEIPT_NONCE = os.environ.get("PUBLICATION_RECEIPT_NONCE", "")
+ATTEMPT_ROOT = Path(ROOT) / ".local-private" / "runtime" / "publication-attempts"
+REMOTE_ID_PATTERN = re.compile(r"[0-9]{5,40}(?:_[0-9]{5,40})*\Z")
 
 
 def now_th():
@@ -44,7 +58,8 @@ def log(msg):
 
 def write_note(name, body):
     os.makedirs(INBOX, exist_ok=True)
-    io.open(os.path.join(INBOX, name), "w", encoding="utf-8").write(body)
+    with io.open(os.path.join(INBOX, name), "w", encoding="utf-8") as handle:
+        handle.write(body)
 
 
 def fail(msg, date=""):
@@ -53,6 +68,104 @@ def fail(msg, date=""):
                "# FB PUBLISH FAIL — %s\n\n- date: %s\n- error: %s\n- ดู social-autopost/runbook.md §FB\n"
                % (now_th().strftime("%Y-%m-%d %H:%M"), date, msg))
     sys.exit(2)
+
+
+def _attempt_paths(placement_id):
+    value = str(placement_id or "").strip()
+    if not value:
+        raise PublicationBlocked("placement_id is required for durable attempt state")
+    key = hashlib.sha256(("facebook\0" + value).encode("utf-8")).hexdigest()
+    return (
+        ATTEMPT_ROOT / "pending" / "facebook" / (key + ".json"),
+        ATTEMPT_ROOT / "terminal" / "facebook" / (key + ".json"),
+    )
+
+
+def _write_exclusive_json(path, value):
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = json.dumps(value, ensure_ascii=False, sort_keys=True,
+                         separators=(",", ":")).encode("utf-8")
+    try:
+        descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    except FileExistsError as exc:
+        raise PublicationBlocked(
+            "durable publication state already exists; automatic retry is disabled; reconciliation-only"
+        ) from exc
+    try:
+        with os.fdopen(descriptor, "wb") as handle:
+            handle.write(payload)
+            handle.flush()
+            os.fsync(handle.fileno())
+    except Exception:
+        try:
+            path.unlink(missing_ok=True)
+        except OSError:
+            pass
+        raise
+
+
+def _assert_reconciliation_clear(placement_id):
+    pending, terminal = _attempt_paths(placement_id)
+    if pending.exists() or terminal.exists():
+        raise PublicationBlocked(
+            "a durable Facebook attempt/terminal receipt already exists; "
+            "automatic retry is disabled; reconciliation-only"
+        )
+
+
+def _begin_attempt(action):
+    pending, _terminal = _attempt_paths(action.get("placement_id"))
+    _write_exclusive_json(pending, {
+        "schema_version": 1,
+        "status": "PENDING_REMOTE",
+        "started_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "action": action,
+    })
+
+
+def _finish_attempt(action, status, *, remote_platform_id="", reason="", details=None):
+    normalized = str(remote_platform_id or "").strip()
+    detail_value = details if isinstance(details, dict) else {}
+    comment_id = str(detail_value.get("comment_id") or "").strip()
+    if status in {"POSTED", "PARTIAL_REMOTE"} and REMOTE_ID_PATTERN.fullmatch(normalized) is None:
+        raise PublicationBlocked("Facebook remote terminal state requires a valid post id")
+    if status == "POSTED" and REMOTE_ID_PATTERN.fullmatch(comment_id) is None:
+        raise PublicationBlocked("Facebook POSTED requires a valid first-comment id")
+    if normalized and REMOTE_ID_PATTERN.fullmatch(normalized) is None:
+        raise PublicationBlocked("Facebook remote post id has an invalid format")
+    _pending, terminal = _attempt_paths(action.get("placement_id"))
+    _write_exclusive_json(terminal, {
+        "schema_version": 1,
+        "status": status,
+        "finalized_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "action": action,
+        "remote_platform_id": normalized or None,
+        "permalink": None,
+        "reason": str(reason or "")[:500] or None,
+        "details": detail_value,
+    })
+
+
+def _atomic_json_write(path, value):
+    selected = Path(path)
+    selected.parent.mkdir(parents=True, exist_ok=True)
+    temporary = selected.with_name(
+        selected.name + ".tmp-%s-%s" % (os.getpid(), time.time_ns())
+    )
+    payload = json.dumps(value, ensure_ascii=False, indent=1).encode("utf-8")
+    descriptor = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    try:
+        with os.fdopen(descriptor, "wb") as handle:
+            handle.write(payload)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, selected)
+    finally:
+        try:
+            temporary.unlink(missing_ok=True)
+        except OSError:
+            pass
 
 
 def api(path, params):
@@ -71,13 +184,18 @@ def api(path, params):
 
 def main():
     date = os.environ.get("OVERRIDE_DATE") or now_th().strftime("%Y-%m-%d")
-    cmap = json.load(io.open(CONTENT_MAP, encoding="utf-8"))
+    with io.open(CONTENT_MAP, encoding="utf-8") as handle:
+        cmap = json.load(handle)
     entry = cmap.get(date)
     if not entry:
         log("no feed entry for %s — ต้องเติมคลังโพสต์ (last=%s) · Cowork ส่ง 14-day pack มาเติมได้" % (date, max(cmap)))
         return 0
     os.makedirs(LOG_DIR, exist_ok=True)
-    pub = json.load(io.open(PUBLISHED, encoding="utf-8")) if os.path.exists(PUBLISHED) else {}
+    if os.path.exists(PUBLISHED):
+        with io.open(PUBLISHED, encoding="utf-8") as handle:
+            pub = json.load(handle)
+    else:
+        pub = {}
     if date in pub:
         log("already posted %s (post_id=%s) — skip (dedup)" % (date, pub[date].get("post_id")))
         return 0
@@ -101,38 +219,146 @@ def main():
         return 0
     if not PAGE_ID or not TOKEN:
         write_note("FB-PUBLISH-SKIP.md",
-                   "# FB SKIPPED — token missing — %s\n\n- date: %s (โพสต์พร้อมแล้ว)\n"
-                   "- ใส่ secrets FB_PAGE_ID/FB_PAGE_TOKEN ตาม runbook §FB แล้วนัดถัดไป (15:00TH) โพสต์เอง\n"
+                   "# FB LIVE BLOCKED — credentials missing — %s\n\n- date: %s\n"
+                   "- No external publish was attempted.\n"
                    % (now_th().strftime("%Y-%m-%d %H:%M"), date))
-        log("SKIPPED: FB token missing — รอ secrets (alert -> cowork-inbox/FB-PUBLISH-SKIP.md)")
-        return 0
-
-    r = api("/%s/feed" % PAGE_ID, {"message": text})
-    post_id = r.get("id", "")
-    if not post_id:
-        fail("no post id: %s" % r, date)
-    log("posted: " + post_id)
-    pub[date] = {"post_id": post_id, "ts": now_th().strftime("%Y-%m-%d %H:%M:%S+07:00")}
-    io.open(PUBLISHED, "w", encoding="utf-8").write(json.dumps(pub, ensure_ascii=False, indent=1))
-
+        log("FAIL: explicit live run has no FB credentials; no network action attempted")
+        return 2
+    placement_id = entry.get("placement_id") or entry.get("placementId")
+    action = None
+    attempt_started = False
+    terminal_written = False
+    text_claim_key = ""
+    post_id = ""
+    comment_id = ""
     try:
-        c = api("/%s/comments" % post_id, {"message": comment})
-        pub[date]["comment_id"] = c.get("id", "")
-        io.open(PUBLISHED, "w", encoding="utf-8").write(json.dumps(pub, ensure_ascii=False, indent=1))
-        log("first comment: " + pub[date]["comment_id"])
-    except RuntimeError as e:
-        # โพสต์ขึ้นแล้ว — อย่าโพสต์ซ้ำ แต่ต้องแจ้งให้เติมคอมเมนต์ลิงก์มือ
-        write_note("FB-PUBLISH-FAIL.md",
-                   "# FB comment FAIL (โพสต์ขึ้นแล้ว) — %s\n\n- post_id: %s\n- error: %s\n"
-                   "- ให้เติมคอมเมนต์แรกด้วยมือ: %s\n" % (date, post_id, e, comment))
-        log("comment FAIL (post already up) — alert written")
-        sys.exit(2)
+        _assert_reconciliation_clear(placement_id)
+        action = authorize_live_publication(
+            repo=Path(ROOT), channel="facebook", actor=ACTOR,
+            target_identity=PAGE_ID,
+            approval=entry.get("approval"),
+            content_id=entry.get("content_id") or entry.get("contentId"),
+            placement_id=placement_id,
+            caption=canonical_text_payload({
+                "first_comment": comment,
+                "post_body": text,
+            }),
+            asset_sha256=None,
+            content_source_evidence={
+                "source_file": "social-autopost/feed_content_map.json",
+                "source_file_sha256": {
+                    "social-autopost/feed_content_map.json": hashlib.sha256(
+                        Path(CONTENT_MAP).read_bytes()
+                    ).hexdigest(),
+                },
+                "entry": entry,
+            },
+            media_qa_path=None,
+            scheduled_slot=(
+                entry.get("scheduled_slot")
+                or entry.get("scheduledSlot")
+                or entry.get("scheduled_at")
+            ),
+            receipt_nonce=RECEIPT_NONCE,
+        )
+        claimed, text_claim_key, claim_reason = post_ledger.claim_text_publication(
+            "facebook",
+            text,
+            action.get("scheduled_slot"),
+            content_id=action.get("content_id"),
+            placement_id=action.get("placement_id"),
+            source="publish_fb-live",
+            enforce_gap=True,
+        )
+        if not claimed:
+            raise PublicationBlocked(
+                "Facebook atomic publication claim blocked: %s" % claim_reason
+            )
+        _begin_attempt(action)
+        attempt_started = True
 
-    io.open(os.path.join(LOG_DIR, "log-%s.md" % date), "w", encoding="utf-8").write(
-        "# FB post %s\n\n- post_id: %s\n- comment_id: %s\n\n```\n%s\n```\n\nfirst comment:\n```\n%s\n```\n"
-        % (date, post_id, pub[date].get("comment_id", ""), text, comment))
-    log("DONE %s" % date)
-    return 0
+        verify_execution_authorization(
+            repo=Path(ROOT),
+            action=action,
+            caption=canonical_text_payload({
+                "first_comment": comment,
+                "post_body": text,
+            }),
+            asset_sha256=None,
+            media_qa_path=None,
+        )
+
+        result = api("/%s/feed" % PAGE_ID, {"message": text})
+        post_id = str(result.get("id") or "").strip() if isinstance(result, dict) else ""
+        if REMOTE_ID_PATTERN.fullmatch(post_id) is None:
+            raise RuntimeError("Facebook feed publish returned no valid remote post id")
+        log("posted: " + post_id)
+
+        # A first comment is a second irreversible public mutation. Revalidate
+        # the consumed action immediately before it so a policy, calendar,
+        # source, or authority revocation after the feed post stops here.
+        verify_execution_authorization(
+            repo=Path(ROOT),
+            action=action,
+            caption=canonical_text_payload({
+                "first_comment": comment,
+                "post_body": text,
+            }),
+            asset_sha256=None,
+            media_qa_path=None,
+        )
+        result = api("/%s/comments" % post_id, {"message": comment})
+        comment_id = str(result.get("id") or "").strip() if isinstance(result, dict) else ""
+        if REMOTE_ID_PATTERN.fullmatch(comment_id) is None:
+            raise RuntimeError("Facebook first comment returned no valid remote comment id")
+        log("first comment: " + comment_id)
+
+        _finish_attempt(
+            action, "POSTED", remote_platform_id=post_id,
+            details={"comment_id": comment_id},
+        )
+        terminal_written = True
+        post_ledger.confirm(text_claim_key, post_id=post_id, status="POSTED")
+        pub[date] = {
+            "post_id": post_id,
+            "comment_id": comment_id,
+            "status": "POSTED",
+            "ts": now_th().strftime("%Y-%m-%d %H:%M:%S+07:00"),
+        }
+        _atomic_json_write(PUBLISHED, pub)
+        with io.open(
+            os.path.join(LOG_DIR, "log-%s.md" % date), "w", encoding="utf-8"
+        ) as handle:
+            handle.write(
+                "# FB post %s\n\n- post_id: %s\n- comment_id: %s\n\n```\n%s\n```\n\nfirst comment:\n```\n%s\n```\n"
+                % (date, post_id, comment_id, text, comment)
+            )
+        log("DONE %s" % date)
+        return 0
+    except BaseException as exc:
+        if attempt_started and not terminal_written:
+            try:
+                partial = REMOTE_ID_PATTERN.fullmatch(post_id) is not None
+                _finish_attempt(
+                    action,
+                    "PARTIAL_REMOTE" if partial else "UNKNOWN",
+                    remote_platform_id=post_id if partial else "",
+                    reason=str(exc),
+                    details={"comment_id": comment_id or None},
+                )
+            except Exception:
+                pass
+        if isinstance(exc, (KeyboardInterrupt, SystemExit)):
+            raise
+        if terminal_written:
+            fail(
+                "remote publication is terminal POSTED, but local ledger/registry "
+                "reconciliation is incomplete; automatic retry disabled: %s"
+                % str(exc)[:300],
+                date,
+            )
+        fail("publication attempt is unresolved; automatic retry disabled; reconciliation-only: %s"
+             % str(exc)[:300], date)
 
 
 if __name__ == "__main__":

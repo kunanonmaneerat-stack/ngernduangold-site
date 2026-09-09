@@ -1,0 +1,173 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-08-23T18:20:00+07:00",
+  "purpose": "Immutable source excerpts for append-only permanent-dedup identity repair; no publication status is created or changed.",
+  "records": [
+    {
+      "evidence_id": "manifest-2026-07-20-debt-health-check",
+      "source_path": ".system_control/content_manifest.json",
+      "source_sha256": "0E33B5B0D42ECB7CD8422C531B985FF4F52DBC6ECDF719853E9C1AD449B3F912",
+      "source_field": "items[id=2026-07-20_debt-health-check]",
+      "value": {
+        "id": "2026-07-20_debt-health-check",
+        "date": "2026-07-20",
+        "reel": "reels/batch2/20_debt-health-check.mp4",
+        "posted": {
+          "tiktok": null,
+          "ig": "scheduled-ui 19:00 (cowork-reels-composer-20260717)",
+          "fb": "manual (owner Business Suite, scheduled 2026-07-20 19:00+07:00) — DO NOT re-schedule",
+          "youtube": "scheduled (yt-api Idt4Zby8JKU)",
+          "threads": "posted (ledger 2026-07-20T20:05, reconciled 2026-08-07)"
+        }
+      }
+    },
+    {
+      "evidence_id": "manifest-2026-07-23-credit-bureau",
+      "source_path": ".system_control/content_manifest.json",
+      "source_sha256": "0E33B5B0D42ECB7CD8422C531B985FF4F52DBC6ECDF719853E9C1AD449B3F912",
+      "source_field": "items[id=2026-07-23_credit-bureau]",
+      "value": {
+        "id": "2026-07-23_credit-bureau",
+        "date": "2026-07-23",
+        "reel": "reels/batch2/23_credit-bureau.mp4",
+        "posted": {
+          "tiktok": "scheduled 19:00 (cowork-zero-touch-20260716)",
+          "ig": "scheduled-ui 19:00 (cowork-reels-composer-20260717)",
+          "fb": "scheduled-ui 19:00 (cowork-reels-composer-20260717)",
+          "youtube": "scheduled (yt-api tG0OJ6-L4aM)",
+          "threads": "posted 19:30 (threads-daily-auto DbIqQJCknme)"
+        }
+      }
+    },
+    {
+      "evidence_id": "manifest-2026-07-25-card-fees",
+      "source_path": ".system_control/content_manifest.json",
+      "source_sha256": "0E33B5B0D42ECB7CD8422C531B985FF4F52DBC6ECDF719853E9C1AD449B3F912",
+      "source_field": "items[id=2026-07-25_card-fees]",
+      "value": {
+        "id": "2026-07-25_card-fees",
+        "date": "2026-07-25",
+        "reel": "reels/batch2/25_card-fees.mp4",
+        "posted": {
+          "tiktok": "scheduled 19:00 (cowork-zero-touch-20260716)",
+          "ig": "scheduled-ui 19:00 (cowork-reels-composer-20260717)",
+          "fb": "scheduled-ui 19:00 (cowork-reels-composer-20260717)",
+          "youtube": "scheduled (yt-api BDjzoCR-RsM)",
+          "threads": "posted 19:22 (threads-daily-auto DbNzBV-kva1)"
+        }
+      }
+    },
+    {
+      "evidence_id": "manifest-2026-07-21-freedom-clock",
+      "source_path": ".system_control/content_manifest.json",
+      "source_sha256": "0E33B5B0D42ECB7CD8422C531B985FF4F52DBC6ECDF719853E9C1AD449B3F912",
+      "source_field": "items[id=2026-07-21_freedom-clock]",
+      "value": {
+        "id": "2026-07-21_freedom-clock",
+        "date": "2026-07-21",
+        "reel": "reels/batch2/21_freedom-clock.mp4",
+        "posted": {
+          "tiktok": null,
+          "ig": "scheduled-ui 19:00 (cowork-reels-composer-20260717)",
+          "fb": "scheduled-ui 19:00 (cowork-reels-composer-20260717)",
+          "youtube": "scheduled (yt-api Hgx-RKGAekk)",
+          "threads": null
+        }
+      }
+    },
+    {
+      "evidence_id": "published-media-qt-01",
+      "source_path": "automation-log/media-qa/published-media.json",
+      "source_sha256": "1B4EFE446E2FD803CE97024919A547E4566C1E74EE38AC178B2B642A17B7D517",
+      "source_field": "items[content_id=qt-01]",
+      "value": {
+        "content_id": "qt-01",
+        "asset": "media/quotes/qt-01_post.jpg",
+        "sha256": "D16E296D436082F46ED0B305B71E076D2EE7BB9E684CE7F50ABA2D89816EEADE",
+        "status": "published",
+        "channels": [
+          "facebook",
+          "instagram"
+        ],
+        "published_date": "2026-07-23"
+      }
+    },
+    {
+      "evidence_id": "published-media-qt-02",
+      "source_path": "automation-log/media-qa/published-media.json",
+      "source_sha256": "1B4EFE446E2FD803CE97024919A547E4566C1E74EE38AC178B2B642A17B7D517",
+      "source_field": "items[content_id=qt-02]",
+      "value": {
+        "content_id": "qt-02",
+        "asset": "media/quarantine/watermarked/stills/qt-02_post.jpg",
+        "sha256": "2F3E200B6DDB53E1E97342BBEA450A712200F59906B03A0025EEE7D23772DDFB",
+        "status": "published_then_quarantined_watermarked",
+        "channels": [
+          "facebook",
+          "instagram"
+        ],
+        "published_date": "2026-07-25"
+      }
+    },
+    {
+      "evidence_id": "knowledge-kn-13-facebook",
+      "source_path": "automation-log/KNOWLEDGE-POSTS_20260720-0802.md",
+      "source_sha256": "DAFE4FB6CAFC267BC5AA6285290489BA23C1F342157F701D169E5AA5E5121FF3",
+      "source_field": "table[id=kn-13].fb_text",
+      "value": {
+        "id": "kn-13",
+        "date": "2026-07-31",
+        "channel": "facebook",
+        "exact_text": "การเงียบจนเลยกำหนดมักทำให้ทางเลือกแคบลง เมื่อเริ่มเห็นว่าเงินรอบนี้ไม่พอ ควรลงมือก่อนวันครบกำหนด\n\nเริ่มจากหยุดสร้างยอดใหม่ สรุปเงินสดที่มี ค่าใช้จ่ายจำเป็น และจำนวนที่จ่ายไหวจริง จากนั้นติดต่อเจ้าหนี้ผ่านช่องทางทางการ บอกสถานการณ์อย่างตรงไปตรงมา และถามว่ามีแนวทางใดให้พิจารณาบ้าง\n\nระหว่างคุย จดชื่อผู้รับเรื่อง วันเวลา เลขอ้างอิง รายการเอกสาร และวันที่ต้องติดตาม หากได้รับข้อเสนอใหม่ อย่ารีบตอบเพราะความกังวล ขอรายละเอียดเป็นลายลักษณ์อักษร แล้วอ่านยอดรวม ระยะเวลา วันชำระ และผลเมื่อทำไม่ได้ตามแผนให้ครบ\n\nอยากได้ตัวอย่างจดหมาย/เครื่องคำนวณ ทัก LINE พิมพ์ ขอจดหมาย\n\nคุณคิดว่าส่วนไหนของการโทรคุยยากที่สุด?\n\nข้อมูลเพื่อการศึกษา"
+      }
+    },
+    {
+      "evidence_id": "knowledge-kn-21-threads",
+      "source_path": "automation-log/KNOWLEDGE-POSTS-B_20260802-0815.md",
+      "source_sha256": "671D73D5588727AE9BDDC91D609EE9DDA22DEDE0CF983D76421F7F1F338AAADE",
+      "source_field": "table[id=kn-21].threads_text",
+      "value": {
+        "id": "kn-21",
+        "date": "2026-08-08",
+        "channel": "threads",
+        "exact_text": "ใช้บัตรมาหลายปีแต่ไม่เคยรู้ว่าจ่ายค่าอะไรไปบ้าง?\n\n· ไล่ดูรายการค่าธรรมเนียมในใบแจ้งยอด ไม่ใช่แค่ยอดใช้จ่าย\n· สังเกตค่าบริการรายปี ค่าใช้จ่ายเมื่อทำรายการสกุลเงินต่างประเทศ และบริการเสริมที่สมัครไว้\n· ตรวจรายการสมัครสมาชิกอัตโนมัติที่ยังถูกเรียกเก็บทั้งที่ไม่ได้ใช้\n· หากมีรายการไม่เข้าใจ ติดต่อผู้ให้บริการผ่านช่องทางทางการเพื่อสอบถาม\n\nมีเครื่องมือฟรีช่วยคำนวณอยู่ในโปรไฟล์\n\nคุณเคยเจอค่าธรรมเนียมที่ไม่รู้ตัวว่าต้องจ่ายไหม?\n\nข้อมูลเพื่อการศึกษา"
+      }
+    },
+    {
+      "evidence_id": "knowledge-kn-22-threads",
+      "source_path": "automation-log/KNOWLEDGE-POSTS-B_20260802-0815.md",
+      "source_sha256": "671D73D5588727AE9BDDC91D609EE9DDA22DEDE0CF983D76421F7F1F338AAADE",
+      "source_field": "table[id=kn-22].threads_text",
+      "value": {
+        "id": "kn-22",
+        "date": "2026-08-09",
+        "channel": "threads",
+        "exact_text": "เงินเดือนเข้าวันแรก คุณทำอะไรก่อนเป็นอย่างแรก?\n\n· กันเงินสำหรับค่าใช้จ่ายจำเป็นและยอดหนี้ที่ครบกำหนดก่อน\n· แบ่งเงินเก็บออกทันที ก่อนจะเผลอใช้กับรายจ่ายยืดหยุ่น\n· ตรวจบิลและรายการตัดอัตโนมัติที่จะเข้ามาในรอบนี้\n· เหลือเท่าไรค่อยเป็นเงินใช้จ่ายทั่วไป โดยรู้ตัวเลขจริง\n\nอยากได้ตัวอย่างจดหมาย/เครื่องคำนวณ ทัก LINE พิมพ์ ขอจดหมาย\n\nวันเงินเดือนออก คุณมีลำดับทำอะไรก่อนหลังไหม?\n\nข้อมูลเพื่อการศึกษา"
+      }
+    },
+    {
+      "evidence_id": "knowledge-kn-23-threads",
+      "source_path": "automation-log/KNOWLEDGE-POSTS-B_20260802-0815.md",
+      "source_sha256": "671D73D5588727AE9BDDC91D609EE9DDA22DEDE0CF983D76421F7F1F338AAADE",
+      "source_field": "table[id=kn-23].threads_text",
+      "value": {
+        "id": "kn-23",
+        "date": "2026-08-10",
+        "channel": "threads",
+        "exact_text": "ไม่มีหนี้ค้าง แปลว่าไม่ได้ใช้เกินตัวจริงไหม?\n\n· ดูว่าปลายเดือนต้องพึ่งบัตรหรือยืมเพื่อให้ถึงวันเงินออกไหม\n· เช็กว่ามีเงินเก็บงอกขึ้นจริง หรือแค่หมุนให้พอไปวัน ๆ\n· สังเกตว่ารายจ่ายคงที่กินสัดส่วนรายได้มากจนแทบไม่เหลือช่องว่าง\n· ลองตัดรายจ่ายไม่จำเป็นหนึ่งอย่าง ถ้ากระทบชีวิตมากอาจเป็นสัญญาณ\n\nมีเครื่องมือฟรีช่วยคำนวณอยู่ในโปรไฟล์\n\nปลายเดือนที่ผ่านมา คุณถึงวันเงินออกแบบสบายหรือฝืด?\n\nข้อมูลเพื่อการศึกษา"
+      }
+    },
+    {
+      "evidence_id": "knowledge-kn-26-threads",
+      "source_path": "automation-log/KNOWLEDGE-POSTS-B_20260802-0815.md",
+      "source_sha256": "671D73D5588727AE9BDDC91D609EE9DDA22DEDE0CF983D76421F7F1F338AAADE",
+      "source_field": "table[id=kn-26].threads_text",
+      "value": {
+        "id": "kn-26",
+        "date": "2026-08-13",
+        "channel": "threads",
+        "exact_text": "มนุษย์เงินเดือนต้องยื่นภาษีเองด้วยหรือ?\n\n· แม้ถูกหักภาษี ณ ที่จ่ายแล้ว โดยทั่วไปยังมีหน้าที่ยื่นแบบตามเกณฑ์\n· เข้าใจว่าเงินได้ ค่าใช้จ่าย และค่าลดหย่อน เป็นคนละส่วนกัน\n· รวบรวมเอกสารรายได้และหลักฐานสิทธิลดหย่อนไว้ตลอดปี ไม่รอโค้งสุดท้าย\n· ยึดข้อมูลจากแหล่งราชการที่เป็นทางการ ไม่เชื่อข่าวที่แชร์ต่อ ๆ กันมา\n\nอยากได้ตัวอย่างจดหมาย/เครื่องคำนวณ ทัก LINE พิมพ์ ขอจดหมาย\n\nเรื่องภาษีส่วนไหนที่คุณยังงงอยู่?\n\nข้อมูลเพื่อการศึกษา"
+      }
+    }
+  ]
+}

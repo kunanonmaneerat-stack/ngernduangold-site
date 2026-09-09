@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "receipt_id": "next48-media-revalidation-20260824-222619-ict",
+  "evaluated_at": "2026-08-24T22:26:19+07:00",
+  "timezone": "Asia/Bangkok",
+  "window": {
+    "start_inclusive": "2026-08-24T22:26:19+07:00",
+    "end_inclusive": "2026-08-26T22:26:19+07:00",
+    "hours": 48,
+    "calendar": ".system_control/content_calendar.json",
+    "calendar_sha256": "1DDAF076374C34469998BB4D15C373EC8D3617469775E1145C602D621AE8F203",
+    "selection_rule": "Only placements with a media asset and a scheduled timestamp inside the exact 48-hour window are included. Text-only placements are out of media scope."
+  },
+  "source_binding": {
+    "weekly_pack": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+    "weekly_pack_sha256": "0ACD60E0D44F689841C8AAF2C7AF1ADAADA6A5E03CCCAF87C3B626BE84A21A28"
+  },
+  "guard_implementation": {
+    "week_tiktok_r5_guard": {
+      "path": "tools/week_tiktok_r5_guard.py",
+      "sha256": "CD235572F729491C0AEF9E9653667C859502FEF09F3E70CD862B86440CD916F4"
+    },
+    "media_publish_guard": {
+      "path": "tools/media_publish_guard.py",
+      "sha256": "6D044817DD21A5B3C5D76CF5A9C4E98B52293C38768408D0C683BFE7FC9D824A"
+    },
+    "watermark_scanner": {
+      "path": "tiktok-pipeline/src/qa_watermark.py",
+      "sha256": "98153A1DD589AA9CC40CDFC4B9C66226995832E4D6F82AFC15501DFC46EA7201"
+    },
+    "video_finalizer": {
+      "path": "tiktok-pipeline/src/09_finalize_video.py",
+      "sha256": "5D934DDD02F375E6373FE347400B04522F2C72A451B5BEF2FE4C5781F331E40B"
+    }
+  },
+  "summary": {
+    "media_placements_in_window": 3,
+    "fresh_automated_media_pass": 3,
+    "media_publish_guard_pass": 1,
+    "media_publish_guard_blocked": 2,
+    "human_audio_reviews_outstanding": 2,
+    "publication_authority_granted": false,
+    "calendar_or_authority_mutated": false,
+    "verdict": "COMPLETED_WITH_HUMAN_LISTENING_BLOCKERS"
+  },
+  "placements": [
+    {
+      "placement_id": "wk36-sf02__tiktok_main",
+      "scheduled_at": "2026-08-25T19:00:00+07:00",
+      "asset": "reels/week-20260824-30-r5/2026-08-25_wk36-sf02.mp4",
+      "asset_sha256": "BF204A23D83820DABF941D62C4D4F93EA79753A42AB24A150D800BAC9790A61B",
+      "asset_size_bytes": 1698801,
+      "canonical_receipt": "automation-log/media-qa/wk36-sf02-tiktok-video-r5.json",
+      "canonical_receipt_sha256": "1FE8E70CF890292E41B2F798951518D6B1FFEA625D1D900426AD6D2E8A8F7F13",
+      "content_payload_sha256": "B1273EE9F795CAEEEA0E3928CEE79F68464735608D4D72C0B5C5FF031F8D58EB",
+      "fresh_automated_qa": {
+        "verdict": "PASS",
+        "full_decode": "PASS",
+        "dimensions": "1080x1920",
+        "fps": "24/1",
+        "duration_seconds": 8.125,
+        "loudness_lufs": -16.77,
+        "true_peak_dbfs": -1.48,
+        "watermark_scan": "PASS",
+        "watermark_sampled_frames": 24,
+        "watermark_track_frames": 0,
+        "longest_exact_zero_run_seconds": 0.693146,
+        "prohibited_silence_events": 0,
+        "audio_packet_binding": "PASS_EXACT_PACKET_COPY"
+      },
+      "media_publish_guard": {
+        "verdict": "FAIL",
+        "finding": "human audio review is missing",
+        "publication_authority_granted": false
+      },
+      "review_artifact": {
+        "path": "_vidout/next48-media-review/wk36-sf02-audio-review.m4a",
+        "sha256": "DCE5874D28E0136DA6EFEDA16C0CD1C9AC9DC38A00E52FD114229AA4EE765ECD",
+        "size_bytes": 127618,
+        "audio_packet_sha256": "D50ACACA96C72DFEA9F2C0AA1FA3A2A754FE8147F3C01C6472FE240D98DA1131",
+        "packet_match_to_final_video": "PASS"
+      },
+      "state": "AUTOMATED_MEDIA_PASS_HUMAN_LISTENING_BLOCKED"
+    },
+    {
+      "placement_id": "qt-12__facebook_main",
+      "scheduled_at": "2026-08-26T16:00:00+07:00",
+      "asset": "media/quotes/week-20260824-30-r5/qt-12_fb-ig_4x5.jpg",
+      "asset_sha256": "01A3FA967DAEF32206C0E11EBC3D6D0A681977F6E13106CCE60A70AB0744E6B0",
+      "asset_size_bytes": 90847,
+      "canonical_receipt": "automation-log/media-qa/qt-12-fb-ig-image-r5.json",
+      "canonical_receipt_sha256": "D8F5CE374E07A1BA874C56499E1FFA28ED0ADC961531979768E22E2CAD182D8D",
+      "source_markup_sha256": "7D5B06D018D3E2F1660AB3D1A3B460AAA70DE0CA9186A548992D7F94BF5E53FD",
+      "fresh_automated_qa": {
+        "verdict": "PASS",
+        "dimensions": "1080x1350",
+        "mode": "RGB",
+        "exact_copy_binding": "PASS",
+        "full_native_resolution_agent_visual_review": "PASS",
+        "provider_or_platform_watermark_found": false,
+        "page_logo_handle_url_or_tracking_mark_found": false,
+        "clipped_copy_or_unsafe_crop_found": false
+      },
+      "media_publish_guard": {
+        "verdict": "PASS",
+        "findings": [],
+        "publication_authority_granted": false
+      },
+      "state": "MEDIA_GATE_PASS_AUTHORITY_STILL_BLOCKED"
+    },
+    {
+      "placement_id": "qt-12__tiktok_main",
+      "scheduled_at": "2026-08-26T19:00:00+07:00",
+      "asset": "reels/week-20260824-30-r5/2026-08-26_qt-12.mp4",
+      "asset_sha256": "5302D53836218A0F1664F6058B58B73368382E2AF041F00EE98C38D1556DA1FA",
+      "asset_size_bytes": 2810040,
+      "canonical_receipt": "automation-log/media-qa/qt-12-tiktok-video-r5.json",
+      "canonical_receipt_sha256": "921884BDDD4F23BF6521AAB43FA88840894180782D37468295DA21DC4EE60ECC",
+      "content_payload_sha256": "11481BA1D4F193D198B3B1D4EDFB35F46B20486CDE30FFBD94ADEE93235F4E0F",
+      "fresh_automated_qa": {
+        "verdict": "PASS",
+        "full_decode": "PASS",
+        "dimensions": "1080x1920",
+        "fps": "24/1",
+        "duration_seconds": 12.417,
+        "loudness_lufs": -17.1,
+        "true_peak_dbfs": -1.39,
+        "watermark_scan": "PASS",
+        "watermark_sampled_frames": 37,
+        "watermark_track_frames": 0,
+        "longest_exact_zero_run_seconds": 0.670937,
+        "prohibited_silence_events": 0,
+        "audio_packet_binding": "PASS_EXACT_PACKET_COPY"
+      },
+      "media_publish_guard": {
+        "verdict": "FAIL",
+        "finding": "human audio review is missing",
+        "publication_authority_granted": false
+      },
+      "review_artifact": {
+        "path": "_vidout/next48-media-review/qt-12-audio-review.m4a",
+        "sha256": "15D3CC8BDEF46EBC3A96B6E8B93EE3699F53CB63E58F0C285807DAD6105261BA",
+        "size_bytes": 202416,
+        "audio_packet_sha256": "2C0E0DA7469753B0F8AC0630FDD01E3DF1989E83B3065B2531247C871004801F",
+        "packet_match_to_final_video": "PASS"
+      },
+      "state": "AUTOMATED_MEDIA_PASS_HUMAN_LISTENING_BLOCKED"
+    }
+  ],
+  "limitations": [
+    "Automated acoustic, decode, silence, loudness, audio-packet and watermark checks are not a substitute for human listening.",
+    "No receipt in this bundle grants publication authority or changes PLANNED_BLOCKED.",
+    "No platform post, schedule, reply, tracker, test traffic, deployment or external state change was performed."
+  ]
+}

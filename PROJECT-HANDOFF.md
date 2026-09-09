@@ -1,4 +1,6 @@
 # PROJECT HANDOFF — ngernduangold (เงินเดือนสมองทอง)
+> ⚠️ **AUTHORITY NOTICE 2026-08-16:** ไฟล์นี้เป็น continuity/history ไม่ใช่สถานะการโพสต์หรือสิทธิ์ปัจจุบัน ให้ยึด `.system_control/policy.json`, `.system_control/role_capabilities.json`, `.system_control/content_calendar.json` และ `reports/SYSTEM-CONSISTENCY-AUDIT_20260816.md`; ขณะนี้ทุกช่อง publication blocked และห้าม commit/push/deploy จาก agent
+
 > **สถานะปัจจุบัน 18 ก.ค. 2026:** ให้ยึด `automation-log/CURRENT-STATE_20260718.md`; อัปเดตลงวันที่ในไฟล์นี้เป็นบันทึกประวัติ ไม่ใช่คำสั่งปัจจุบัน
 _Continuity doc. If the main PC dies, clone the repo + read this + redo the machine-local setup below to continue on any machine._
 _Last updated by the Cowork agent on 2026-06-25._
@@ -27,7 +29,8 @@ Current bottleneck = quiz_start is tiny, so DISTRIBUTION is the lever (not funne
 - automation-log/ ........ run logs + gitignored drafts (_pantip_*, post-ready/, ga4-*.csv). NOT served.
 - tiktok-pipeline/ ....... video system: src/00..07 stages, drafts/scripts_clean.json (5 scripts tt-001..005),
                           captions/vid_*.txt (post captions, compliance-passed), fonts/, ready-for-cowork/
-- media/clips/*-2026.mp4 . 7 Google-Flow (Veo) footage clips, 720x1280 ~10s, WITH aac audio + a moving watermark
+- media/quarantine/watermarked/raw-veo/*-2026.mp4 . 7 Google-Flow (Veo)
+  watermark fixtures; evidence only, never publish or embed
 - OPERATING-NOTES.md ..... gotchas / lessons learned. READ IT before local work.
 - _hb_build.py, _hb_batch.py  LOCAL, may be untracked: the hybrid-Reel renderer (footage + text + scrim)
 - _vidout/ ............... LOCAL render output: reel_*.mp4 finished Reels + _posted.log (which clips were posted)
@@ -45,8 +48,10 @@ own DIFFERENT channels so they cannot double-post the same thing.
 Scheduled tasks run only while the Claude desktop app is open; if closed at fire time they run on next launch.
 
 ## 5. Video pipeline (how a Reel is made + posted)
-- Footage = media/clips/<topic>-2026.mp4 (Veo). KEEP its audio. The watermark is a MOVING sparkle bottom-right ->
-  cover it with an opaque bottom scrim (~bottom 30-38%) which doubles as the caption band. Do NOT try delogo.
+- The former Veo source pool is quarantined and prohibited. Do not crop, cover, or
+  reuse it. Generate a clean visual or use the local kinetic-text renderer, then
+  require a SHA-bound receipt plus visual PASS and a fresh automated video scan via
+  `tools/media_publish_guard.py` before any scheduling or upload.
 - On-screen text from tiktok-pipeline/drafts/scripts_clean.json: use topic_th for the HOOK (the onscreen fields are
   TRUNCATED mid-word), the last scene onscreen for the CTA, and disclosure. Only 5 scripts exist.
 - Render: python3 _hb_batch.py  (ASCII-only; reads Thai from JSON/txt; outputs to _vidout). Verify a frame, then post.
@@ -101,11 +106,16 @@ add a GSC property for ngernduangold.com (currently the netlify.app property; qu
   drafts in automation-log/_pantip_POST_NOW_*.md). Design = owner posts Pantip from own account.
 - BROWSER PERMS: Chrome-MCP navigating to a NEW domain (facebook.com, pantip.com) pops a per-domain Allow
   prompt the user can deny; IG was already approved. Don't hammer denied perms.
-- WEB CLIPS (done 06-26): watermark-free web versions in media/clips-web/ + build_site.py _mc -> "clips-web";
-  serves clean /clips/*.mp4 (commit 2741fd4, deployed, debt verified live). Originals stay in media/clips for Reels.
-- SUB_ID / AccessTrade (06-26): "sub_id not reaching AT" alarm is likely a MISDIAGNOSIS - utm_source + utm_medium
-  ARE AccessTrade's Sub ID (official docs) and the site sends both; empty Sub ID tab = 0 conversions, not a bug.
-  See automation-log/_finding_subid_20260626.md. Real lever = conversion rate.
+- WEB CLIPS (SUPERSEDED 16 Aug 2026): the former `media/clips-web/` set was re-audited
+  frame-by-frame and 7/7 files still contain the drifting Veo sparkle. Both that set
+  and the raw originals are quarantined under `media/quarantine/watermarked/` and
+  `build_site.py` must never copy them. Only a canonical file with a hash-bound
+  visual review plus a fresh automated scan may be embedded or published.
+- SUB_ID / AccessTrade (corrected 23 Aug 2026): do not infer conversion or
+  attribution health from an empty Sub ID tab.  Current evidence supports only
+  `MERCHANT_LEVEL_UNATTRIBUTED` until a verified AccessTrade transaction/revenue
+  export can be reconciled to the site's dimensions.  The 26 Jun note is retained
+  as historical evidence, not as a current performance conclusion.
 - COWORK TASKS NOW: kept = ngernduangold-uptime-monitor (6h) + ngernduangold-drive-backup (22:00).
   Paused 06-26 = ngernduangold-daily-cycle, ngernduangold-video-post, ngernduangold-ig-reels-post.
 ## 2026-07-02 state sync (Cowork audit -> CC)

@@ -9,7 +9,7 @@
   py pipeline/credit_tracker.py init 970     # ตั้งยอดคงเหลือปัจจุบัน
   py pipeline/credit_tracker.py plan
 """
-import os, sys, json, datetime
+import os, sys, json, datetime, re, tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 AL = os.path.join(ROOT, "automation-log")
@@ -19,6 +19,10 @@ STATE = os.path.join(AL, "flow-credits.json")
 QUOTA = 1000        # credits/เดือน (Google Flow PRO)
 COST_VIDEO = 15     # 10-วิ วิดีโอ/คลิป (Veo Omni Flash)
 COST_IMAGE = 4      # ภาพ (เผื่อใช้)
+
+
+class CreditStateError(RuntimeError):
+    """The existing local credit ledger cannot be trusted."""
 
 
 def _month():
@@ -31,27 +35,56 @@ def _blank():
 
 def _save(st):
     os.makedirs(AL, exist_ok=True)
-    json.dump(st, open(STATE, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+    descriptor, temporary = tempfile.mkstemp(prefix=".flow-credits-", suffix=".tmp", dir=AL)
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8", newline="\n") as handle:
+            json.dump(st, handle, ensure_ascii=False, indent=2)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, STATE)
+    except Exception:
+        try:
+            os.unlink(temporary)
+        except OSError:
+            pass
+        raise
+
+
+def _validate(st):
+    if not isinstance(st, dict):
+        raise CreditStateError("credit state must be a JSON object")
+    month = st.get("month")
+    quota = st.get("quota")
+    used = st.get("used")
+    history = st.get("log")
+    if not isinstance(month, str) or not re.fullmatch(r"\d{4}-(?:0[1-9]|1[0-2])", month):
+        raise CreditStateError("credit state month is invalid")
+    if isinstance(quota, bool) or not isinstance(quota, int) or quota <= 0:
+        raise CreditStateError("credit state quota must be a positive integer")
+    if isinstance(used, bool) or not isinstance(used, int) or used < 0:
+        raise CreditStateError("credit state used must be a non-negative integer")
+    if not isinstance(history, list) or any(not isinstance(entry, dict) for entry in history):
+        raise CreditStateError("credit state log must be a list of objects")
+    return st
 
 
 def _load():
-    st = _blank()
-    if os.path.exists(STATE):
-        try:
-            st = json.load(open(STATE, encoding="utf-8"))
-        except Exception:
-            st = _blank()
-    if st.get("month") != _month():     # ขึ้นเดือนใหม่ = รีเซ็ตโควต้า
+    if not os.path.exists(STATE):
+        return _blank()
+    try:
+        with open(STATE, encoding="utf-8") as handle:
+            st = json.load(handle)
+    except Exception as exc:
+        raise CreditStateError("existing credit state is unreadable") from exc
+    st = _validate(st)
+    if st["month"] != _month():     # ขึ้นเดือนใหม่ = รีเซ็ตโควต้า
         st = _blank()
         _save(st)
-    st.setdefault("quota", QUOTA)
-    st.setdefault("used", 0)
-    st.setdefault("log", [])
     return st
 
 
 def remaining(st=None):
-    st = st or _load()
+    st = _load() if st is None else _validate(st)
     return max(0, int(st["quota"]) - int(st["used"]))
 
 

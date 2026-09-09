@@ -22,7 +22,63 @@ SAMPLE = {"out": "clip001_credit.mp4", "w": 1080, "h": 1920, "fps": 20, "dur": 2
               {"t0": 14.7, "t1": 21.0, "k": "อยากเทียบตัวเลือกแบบไม่ขายฝัน?", "h": ["ลิงก์อยู่ใน", "[g]โปรไฟล์[/g]"], "s": None, "disc": True},
           ]}
 
+
+def validate_spec(spec):
+    """Fail closed before spending render time or emitting a misleading partial file."""
+    required = ("out", "w", "h", "fps", "dur", "disclosure", "scenes")
+    missing = [key for key in required if key not in spec]
+    if missing:
+        raise ValueError("render spec missing: " + ", ".join(missing))
+    if not isinstance(spec["out"], str) or not spec["out"].strip():
+        raise ValueError("render spec out must be a non-empty path")
+    if not isinstance(spec["disclosure"], str) or not spec["disclosure"].strip():
+        raise ValueError("production video requires a non-empty disclosure")
+
+    try:
+        width, height = int(spec["w"]), int(spec["h"])
+        fps, duration = int(spec["fps"]), float(spec["dur"])
+    except (TypeError, ValueError) as exc:
+        raise ValueError("w, h, fps, and dur must be numeric") from exc
+    if (width, height) != (1080, 1920):
+        raise ValueError("production video must be exactly 1080x1920")
+    if not 20 <= fps <= 60:
+        raise ValueError("fps must be between 20 and 60")
+    if not 5.0 <= duration <= 60.0:
+        raise ValueError("duration must be between 5 and 60 seconds")
+    if not isinstance(spec["scenes"], list) or not spec["scenes"]:
+        raise ValueError("scenes must be a non-empty list")
+
+    # Normalize values once so validation and rendering cannot disagree on types.
+    spec["w"], spec["h"], spec["fps"], spec["dur"] = width, height, fps, duration
+
+    previous_end = 0.0
+    for index, scene in enumerate(spec["scenes"], start=1):
+        for key in ("t0", "t1", "h"):
+            if key not in scene:
+                raise ValueError(f"scene {index} missing {key}")
+        try:
+            start, end = float(scene["t0"]), float(scene["t1"])
+        except (TypeError, ValueError) as exc:
+            raise ValueError(f"scene {index} t0/t1 must be numeric") from exc
+        if abs(start - previous_end) > 0.01 or end <= start or end > duration + 0.01:
+            raise ValueError(f"scene {index} has invalid time range {start}-{end}")
+        if (
+            not isinstance(scene["h"], list)
+            or not scene["h"]
+            or any(not isinstance(line, str) or not line.strip() for line in scene["h"])
+        ):
+            raise ValueError(f"scene {index} needs at least one headline line")
+        scene["t0"], scene["t1"] = start, end
+        previous_end = end
+    if abs(previous_end - duration) > 0.05:
+        raise ValueError("last scene must end at the video duration")
+    if spec["scenes"][-1].get("disc") is not True:
+        raise ValueError("last scene must set disc=true")
+    if any(scene.get("disc") for scene in spec["scenes"][:-1]):
+        raise ValueError("only the last scene may set disc=true")
+
 def render(spec):
+    validate_spec(spec)
     import numpy as np
     from PIL import Image, ImageDraw, ImageFont
     W, H, FPS, DUR = spec["w"], spec["h"], spec["fps"], float(spec["dur"])
@@ -71,7 +127,14 @@ def render(spec):
 
     def scene_layer(kicker, heads, sub):
         im = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im); maxw = W - 150
-        hs = fit(d, heads, 96, maxw); fk, fh, fs = fnt(FB, 40), fnt(FB, hs), fnt(FR, 50)
+        hs = fit(d, heads, 96, maxw)
+        kicker_size = 40
+        while kicker and kicker_size > 28 and d.textlength(kicker, font=fnt(FB, kicker_size)) > maxw:
+            kicker_size -= 2
+        sub_size = 50
+        while sub and sub_size > 30 and d.textlength(sub, font=fnt(FR, sub_size)) > maxw:
+            sub_size -= 2
+        fk, fh, fs = fnt(FB, kicker_size), fnt(FB, hs), fnt(FR, sub_size)
         lh_h = int(hs * 1.22); lh_s = 64
         blockh = (56 if kicker else 0) + len(heads) * lh_h + ((28 + lh_s) if sub else 0)
         y = (H - blockh) // 2
@@ -94,7 +157,8 @@ def render(spec):
             if d.textlength(t, font=f) <= maxw: cur = t
             else: lines.append(cur); cur = w
         if cur: lines.append(cur)
-        y = H - 70 - len(lines) * 32
+        # Keep disclosure above platform controls/captions and away from the progress bar.
+        y = H - 150 - len(lines) * 32
         for ln in lines:
             d.text(((W - d.textlength(ln, font=f)) / 2, y), ln, font=f, fill=MUT); y += 32
         a = np.asarray(im).astype(np.float32); return a[:, :, :3], a[:, :, 3] / 255.0
@@ -105,9 +169,13 @@ def render(spec):
     DRGB, DA = disc_layer(spec.get("disclosure", ""))
     ease = lambda x: x * x * (3 - 2 * x)
 
-    ff = subprocess.Popen(["ffmpeg", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS),
-                           "-i", "-", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-preset", "ultrafast", "-crf", "22", spec["out"]],
-                          stdin=subprocess.PIPE, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    out_path = pathlib.Path(spec["out"])
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    ff = subprocess.Popen(["ffmpeg", "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgb24",
+                           "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-", "-c:v", "libx264",
+                           "-pix_fmt", "yuv420p", "-preset", "ultrafast", "-crf", "22",
+                           "-movflags", "+faststart", str(out_path)],
+                          stdin=subprocess.PIPE, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
     for fr in range(NFR):
         t = fr / FPS; out = BG.copy()
         for sc in SC:
@@ -124,8 +192,14 @@ def render(spec):
                 da = DA[:, :, None] * ease(min(max((t - (sc["t1"] - 1.6)) / 1.0, 0), 1)); out = out * (1 - da) + DRGB * da
         pw = int(W * t / DUR); out[H - 10:H, :pw] = GOLD
         ff.stdin.write(np.clip(out, 0, 255).astype(np.uint8).tobytes())
-    ff.stdin.close(); ff.wait()
-    return spec["out"], NFR
+    ff.stdin.close()
+    stderr = ff.stderr.read().decode("utf-8", errors="replace")
+    return_code = ff.wait()
+    if return_code != 0:
+        raise RuntimeError("ffmpeg render failed: " + (stderr[-800:] or f"exit {return_code}"))
+    if not out_path.exists() or out_path.stat().st_size == 0:
+        raise RuntimeError("ffmpeg reported success but no video was produced")
+    return str(out_path), NFR
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument("--spec", default=None); ap.add_argument("--out", default=None); a = ap.parse_args()

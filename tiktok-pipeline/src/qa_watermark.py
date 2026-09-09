@@ -99,6 +99,12 @@ def _ncc_peaks(img, thr, topk=3):
 def scan(path, fps=2.0, evidence_dir=None):
     """Frame-scan one mp4. Returns dict verdict."""
     from PIL import Image, ImageDraw
+    try:
+        fps = float(fps)
+        if not math.isfinite(fps) or fps < 2.0 or fps > 5.0:
+            raise ValueError("fps outside 2-5")
+    except (TypeError, ValueError):
+        return {"file": path, "verdict": "ERROR", "error": "fps must be finite and between 2 and 5"}
     if not os.path.exists(path):
         return {"file": path, "verdict": "ERROR", "error": "not found"}
     try:
@@ -116,10 +122,17 @@ def scan(path, fps=2.0, evidence_dir=None):
         frames = sorted(f for f in os.listdir(tmp) if f.endswith(".png"))
         if r.returncode != 0 or not frames:
             return {"file": path, "verdict": "ERROR", "error": (r.stderr or "no frames")[-200:]}
+        if len(frames) < FAIL_MIN_FRAMES:
+            return {"file": path, "verdict": "ERROR", "frames": len(frames),
+                    "error": "insufficient sampled frames for watermark decision"}
         per = []
-        for fn in frames:
-            im = Image.open(os.path.join(tmp, fn))
-            per.append((fn, _ncc_peaks(im, NCC_THR)))
+        try:
+            for fn in frames:
+                with Image.open(os.path.join(tmp, fn)) as im:
+                    per.append((fn, _ncc_peaks(im, NCC_THR)))
+        except Exception as exc:
+            return {"file": path, "verdict": "ERROR",
+                    "error": "frame analysis unavailable: " + str(exc)[:160]}
         # spatial-recurrence clustering: the sparkle TWINKLES (fades in/out) so strict
         # frame-chains break; but its drift path stays compact. Cluster all candidates
         # by position and count DISTINCT frames hitting the densest cluster.
@@ -162,11 +175,12 @@ def scan(path, fps=2.0, evidence_dir=None):
             base = os.path.splitext(os.path.basename(path))[0]
             for i, c in best[:3] + best[-1:]:
                 fn, _ = per[i][0], per[i][1]
-                im = Image.open(os.path.join(tmp, per[i][0])).convert("RGB")
-                d = ImageDraw.Draw(im)
-                d.rectangle([c[2] - 6, c[3] - 6, c[4] + 6, c[5] + 6], outline=(255, 0, 0), width=3)
-                ev = os.path.join(evidence_dir, "%s_f%03d.png" % (base, i))
-                im.save(ev)
+                with Image.open(os.path.join(tmp, per[i][0])) as opened:
+                    with opened.convert("RGB") as im:
+                        d = ImageDraw.Draw(im)
+                        d.rectangle([c[2] - 6, c[3] - 6, c[4] + 6, c[5] + 6], outline=(255, 0, 0), width=3)
+                        ev = os.path.join(evidence_dir, "%s_f%03d.png" % (base, i))
+                        im.save(ev)
             res["evidence"] = evidence_dir
         return res
     finally:
@@ -187,6 +201,7 @@ def main():
         files.extend(m if m else [pat])
     results = [scan(f, a.fps, a.evidence_dir) for f in files]
     anyfail = False
+    anyerror = False
     for r in results:
         if a.json:
             print(json.dumps(r, ensure_ascii=False))
@@ -200,8 +215,8 @@ def main():
         if r["verdict"] == "FAIL":
             anyfail = True
         if r["verdict"] == "ERROR":
-            anyfail = True
-    sys.exit(2 if anyfail else 0)
+            anyerror = True
+    sys.exit(3 if anyerror else (2 if anyfail else 0))
 
 
 if __name__ == "__main__":

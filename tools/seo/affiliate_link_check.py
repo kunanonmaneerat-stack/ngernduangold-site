@@ -19,8 +19,10 @@ except Exception:
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SITE = os.path.join(ROOT, "site")
 OUT = os.path.join(ROOT, "automation-log", "AFFILIATE-HEALTH.md")
-WINNERS = {"kept-savings-2026.html", "debt-calculator.html", "links.html",
-           "title-loan-2026.html", "debt-consolidation-2026.html"}
+# Coverage targets are monitored surfaces, not evidence that a page or offer is a
+# revenue "winner".  Performance labels require trusted GA4 plus verified revenue.
+MONITORED_PAGES = {"kept-savings-2026.html", "debt-calculator.html", "links.html",
+                   "title-loan-2026.html", "debt-consolidation-2026.html"}
 
 A_TAG = re.compile(r"<a\s[^>]*>", re.I | re.S)
 HREF = re.compile(r'href="([^"]+)"', re.I)
@@ -47,8 +49,11 @@ def http_head(url, cache, ctx):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--http", action="store_true", help="HEAD-check unique links")
+    ap.add_argument("--http", action="store_true", help="refused: network checks create synthetic clicks")
     a = ap.parse_args()
+    if a.http:
+        print("REFUSED: network-checking affiliate redirects creates synthetic clicks")
+        return 2
     if not os.path.isdir(SITE):
         print("site/ not built — run build_site.py first")
         return 1
@@ -78,9 +83,9 @@ def main():
 
     covered = {fn for fn, *_ in rows}
     lines = ["# AFFILIATE HEALTH — %s" % datetime.date.today().isoformat(), "",
-             "สแกน built pages %d หน้า · เจอลิงก์ affiliate %d จุด (%d ลิงก์ unique) · winner ครอบคลุม: %s" % (
+             "สแกน built pages %d หน้า · เจอลิงก์ affiliate %d จุด (%d ลิงก์ unique) · monitored page ครอบคลุม: %s" % (
                  len(pages), len(rows), len({r[1] for r in rows}),
-                 ", ".join(sorted(w for w in WINNERS if w in covered)) or "-"), ""]
+                 ", ".join(sorted(w for w in MONITORED_PAGES if w in covered)) or "-"), ""]
     if a.http:
         lines.append("โหมด --http: เช็ก HEAD ลิงก์ unique แล้ว")
     lines += ["", "| หน้า | ลิงก์ | rel=sponsored | disclosure ในหน้า | HTTP |", "|---|---|---|---|---|"]
@@ -89,9 +94,9 @@ def main():
             fn, href[:58], "✅" if rel_ok else "❌", "✅" if disc else "❌", status or "-"))
     lines += ["", "## ปัญหา (%d)" % len(problems)]
     lines += ["- " + p for p in problems] or ["- ไม่มี — ทุกลิงก์มี rel=sponsored + disclosure ครบ"]
-    miss_w = sorted(WINNERS - covered - {"debt-calculator.html"})
+    miss_w = sorted(MONITORED_PAGES - covered - {"debt-calculator.html"})
     if miss_w:
-        lines += ["", "หมายเหตุ: winner ที่ไม่มีลิงก์ affiliate ตรง ๆ ในหน้า: %s (โดยดีไซน์ เช่น calculator ใช้หน้ากลาง)" % ", ".join(miss_w)]
+        lines += ["", "หมายเหตุ: monitored page ที่ไม่มีลิงก์ affiliate ตรง ๆ ในหน้า: %s (โดยดีไซน์ เช่น calculator ใช้หน้ากลาง)" % ", ".join(miss_w)]
     io.open(OUT, "w", encoding="utf-8").write(chr(10).join(lines) + chr(10))
     print("report -> %s | links %d | problems %d" % (OUT, len(rows), len(problems)))
     return 1 if problems else 0

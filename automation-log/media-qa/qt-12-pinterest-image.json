@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "asset": "media/quotes/qt-12_pinterest_2x3.jpg",
+  "sha256": "8E91CF3E0DF718C432DAD5F4CEF31283B82DAF563B5A8245A5C8903172A83679",
+  "media_type": "image",
+  "reviewed_at": "2026-08-23T17:41:03+07:00",
+  "novelty_review": {
+    "status": "PASS",
+    "content_id": "qt-12",
+    "reviewer": "Codex deterministic hash and full-frame visual comparison",
+    "corpus_fingerprint": "AC1AB9B513986D3D4E5F702171CAFF31E449DB1C01FA6C7323DF41239B6646E4",
+    "compared_assets": 27,
+    "scope": "Current manifest and published-media corpus; unique SHA-256 and distinct 2:3 city-vector composition"
+  },
+  "watermark": {
+    "visual_review": {
+      "status": "PASS",
+      "reviewer": "Codex full-frame native-resolution review",
+      "scope": "No provider/platform watermark, logo, account handle, URL, tracking mark, or hidden footer text visible",
+      "evidence": [
+        "media/quotes/qt-12_pinterest_2x3.jpg",
+        "automation-log/media-qa/QT-12-13_VISUAL_QA_20260823.md"
+      ]
+    }
+  }
+}

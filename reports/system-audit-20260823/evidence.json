@@ -1,0 +1,343 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-23T12:28:35+07:00",
+  "scope": "Local control system, content calendar, media QA, analytics trust, verified affiliate revenue, source governance, runner continuity, and release readiness",
+  "current_run": {
+    "run_id": "continuation-audit-fixed-20260823",
+    "status": "COMPLETED_WITH_BLOCKERS",
+    "control_state": "VALID_WITH_BLOCKERS",
+    "validation_passed": true,
+    "maturity_score": 30,
+    "maturity_stage": "instrumented",
+    "learning_ready": false,
+    "open_incidents": 5,
+    "recurring_incidents": 5,
+    "regressed_incidents": 0,
+    "resolved_this_run": [
+      "guard_failure"
+    ],
+    "guards_passed": 8,
+    "guards_total": 8
+  },
+  "maturity_criteria": [
+    {
+      "order": 1,
+      "criterion": "หลักฐานสดและผูก hash",
+      "criterion_id": "evidence_current_and_bound",
+      "awarded_points": 10,
+      "maximum_points": 10,
+      "passed": true,
+      "hard_blocker": true,
+      "state": "PASS",
+      "next_action": "รักษาการเก็บหลักฐานก่อน observation และตรวจ drift ตอน validation"
+    },
+    {
+      "order": 2,
+      "criterion": "Guardrails รอบเดียวกัน",
+      "criterion_id": "guardrails_current",
+      "awarded_points": 20,
+      "maximum_points": 20,
+      "passed": true,
+      "hard_blocker": true,
+      "state": "PASS",
+      "next_action": "รักษา 8/8 และ regression test ของ queue-only contract"
+    },
+    {
+      "order": 3,
+      "criterion": "Revenue ledger เชื่อถือได้",
+      "criterion_id": "revenue_ledger_trusted",
+      "awarded_points": 0,
+      "maximum_points": 15,
+      "passed": false,
+      "hard_blocker": true,
+      "state": "STALE_COVERAGE",
+      "next_action": "นำเข้าหลักฐาน merchant รอบใหม่และ reconcile ให้ปิดหน้าต่าง 28 วัน"
+    },
+    {
+      "order": 4,
+      "criterion": "Analytics ใช้ตัดสินใจได้",
+      "criterion_id": "analytics_decisionable",
+      "awarded_points": 0,
+      "maximum_points": 15,
+      "passed": false,
+      "hard_blocker": true,
+      "state": "GA4 INVALID_METADATA; GSC STALE_WINDOW",
+      "next_action": "ยืนยัน GA4 internal-network boundary แล้วดึง GA4/GSC bundle ใหม่"
+    },
+    {
+      "order": 5,
+      "criterion": "แหล่งทางการผ่าน review",
+      "criterion_id": "official_sources_clear",
+      "awarded_points": 0,
+      "maximum_points": 10,
+      "passed": false,
+      "hard_blocker": true,
+      "state": "30 REVIEW_REQUIRED; 20 CHANGED; 0 ERRORS",
+      "next_action": "human review exact claim packets; ห้าม acknowledge อัตโนมัติ"
+    },
+    {
+      "order": 6,
+      "criterion": "Publication inputs พร้อม",
+      "criterion_id": "publication_inputs_ready",
+      "awarded_points": 0,
+      "maximum_points": 20,
+      "passed": false,
+      "hard_blocker": true,
+      "state": "0 publishable; authority BLOCKED; live parity FAIL",
+      "next_action": "แก้ dedup/source/media/parity แล้วขอ owner approval รายชิ้น"
+    },
+    {
+      "order": 7,
+      "criterion": "มีรายได้ paid สำหรับเรียนรู้",
+      "criterion_id": "verified_revenue_learning",
+      "awarded_points": 0,
+      "maximum_points": 10,
+      "passed": false,
+      "hard_blocker": false,
+      "state": "UNAVAILABLE — not zero",
+      "next_action": "ห้ามใช้ pending, approved, click หรือ event แทน paid revenue"
+    }
+  ],
+  "verified_fixes": [
+    {
+      "order": 1,
+      "area": "Source governance",
+      "before": "14 content IDs ไม่มี direct registry binding",
+      "after": "14/14 content IDs และ 18/18 placements ผูก exact source IDs",
+      "control": "Provisional registry ผ่านเองไม่ได้; ต้อง HUMAN_REVIEWED + last_human_review",
+      "validation": "content source 16/16; social source 14/14 and 18/18",
+      "state": "FIXED_LOCAL"
+    },
+    {
+      "order": 2,
+      "area": "Analytics and revenue truth",
+      "before": "GSC headline อาจรวม query grain; GA4 metadata trust อ่อน; pending เคยเสี่ยงถูกอ่านเป็น revenue",
+      "after": "GSC ใช้ page grain exact; GA4 ต้อง Active + Exclude; revenue paid-only",
+      "control": "ข้อมูลเก่าถูกแสดง UNAVAILABLE แทนตัวเลขศูนย์ปลอม",
+      "validation": "analytics targeted 89/89; pipeline aggregate 156/156; preflight 257/257",
+      "state": "FIXED_LOCAL"
+    },
+    {
+      "order": 3,
+      "area": "Error-learning integrity",
+      "before": "FAILED run อาจรีเฟรช evidence age; persistent state ผูกเพียง self-hash; lifetime false-fatal ฟื้นตัวไม่ได้",
+      "after": "ต้องมี complete bundle; state ผูก exact last-run snapshot; false-fatal จำกัด 7 วัน",
+      "control": "Open incidents เกิน memory bound จะ fail closed",
+      "validation": "improvement-loop 41/41",
+      "state": "FIXED_LOCAL"
+    },
+    {
+      "order": 4,
+      "area": "Windows runner continuity",
+      "before": "งานล้มก่อน improvement_loop ไม่เข้าตัวหาร KPI และ rc=2 แยกสาเหตุไม่ได้",
+      "after": "Atomic hash-bound receipt เริ่มก่อน guard แรก; บันทึก raw rc, semantic state, end/abort และ runner hash",
+      "control": "KPI 7 วันเป็น NO_RECEIPTS/PARTIAL จน instrumentation ครบจริง; receipt ไม่อ้าง scheduler origin",
+      "validation": "task receipt 15/15; runner tests 32/32; no Windows task mutation",
+      "state": "FIXED_AWAITING_FIRST_SCHEDULED_RECEIPTS"
+    },
+    {
+      "order": 5,
+      "area": "False-positive prevention",
+      "before": "ชื่อ contract post-agent-v1 ทำ automation guard ตี queue-only เป็น publisher",
+      "after": "เปลี่ยนเป็น queue-agent-v1 และเพิ่ม regression test",
+      "control": "Actual automation policy guard กลับมา PASS",
+      "validation": "รอบแรก score 10; รอบแก้ score 30 และ guard_failure RESOLVED",
+      "state": "RESOLVED"
+    },
+    {
+      "order": 6,
+      "area": "Runtime provenance",
+      "before": "Runtime contract ผูกเพียง 7 ไฟล์และเก็บหลัง source collection",
+      "after": "ผูก 45 policy/code/registry inputs และเก็บก่อน observation",
+      "control": "Validation ตรวจ byte drift ก่อนยอมรับ bundle",
+      "validation": "Representative direct/transitive/registry/receipt tamper tests PASS",
+      "state": "FIXED_LOCAL"
+    }
+  ],
+  "current_blockers": [
+    {
+      "priority": 1,
+      "area": "Publication authority and calendar",
+      "state": "BLOCKED",
+      "evidence": "65 placements; 40 content IDs; 0 publishable; all remain PLANNED_BLOCKED",
+      "impact": "ห้ามโพสต์ ตั้งเวลา หรือ scale",
+      "required_next_step": "ปิด source/media/dedup/parity gates แล้วขอ owner approval รายชิ้น"
+    },
+    {
+      "priority": 2,
+      "area": "Permanent dedup",
+      "state": "INCOMPLETE",
+      "evidence": "44/125 identities complete = 35.2%; 81 incomplete",
+      "impact": "เสี่ยง repost ซ้ำโดยตรวจย้อนหลังไม่ได้",
+      "required_next_step": "เติม permanent claim/ledger identity โดยไม่สร้างผลโพสต์ปลอม"
+    },
+    {
+      "priority": 3,
+      "area": "Official-source review",
+      "state": "FRESH_REVIEW_REQUIRED",
+      "evidence": "30 reviews pending; 20 changed; 0 source errors",
+      "impact": "claims ยังไม่ได้ human acknowledgement",
+      "required_next_step": "owner review exact packets; internal operator ห้าม acknowledge"
+    },
+    {
+      "priority": 4,
+      "area": "Analytics",
+      "state": "BLOCKED",
+      "evidence": "GA4 INVALID_METADATA/UNTRUSTED; GSC STALE_WINDOW ending 14 Aug 2026",
+      "impact": "ห้ามเลือก winner, เวลา, cadence หรือ scale",
+      "required_next_step": "ยืนยัน GA4 private-network exclusion แล้ว repull GA4/GSC"
+    },
+    {
+      "priority": 5,
+      "area": "Affiliate revenue",
+      "state": "STALE_COVERAGE",
+      "evidence": "Coverage ends 17 Aug 2026; current paid revenue and transaction count are unavailable",
+      "impact": "ยังพิสูจน์รายได้ปัจจุบันไม่ได้ และห้ามเรียก unavailable ว่า zero",
+      "required_next_step": "refresh merchant evidence and reconcile the exact 28-day window"
+    },
+    {
+      "priority": 6,
+      "area": "Live/local release parity",
+      "state": "FAIL",
+      "evidence": "same-run parity guard exit 1",
+      "impact": "local fixes ยังใช้แทน live production state ไม่ได้",
+      "required_next_step": "ตรวจ diff/attestation แล้ว deploy เฉพาะเมื่อ owner อนุมัติ"
+    }
+  ],
+  "calendar_48h": {
+    "window_start": "2026-08-23T12:28:35+07:00",
+    "window_end": "2026-08-25T12:28:35+07:00",
+    "placement_count": 6,
+    "ready_for_owner_approval": 0,
+    "blocked": 6,
+    "placements": [
+      {
+        "placement_id": "kn-36__threads_main",
+        "scheduled_at": "2026-08-23T12:40:00+07:00",
+        "state": "PLANNED_BLOCKED",
+        "blockers": "publication_authority; official_source_review"
+      },
+      {
+        "placement_id": "kn-36__facebook_main",
+        "scheduled_at": "2026-08-23T12:50:00+07:00",
+        "state": "PLANNED_BLOCKED",
+        "blockers": "publication_authority; official_source_review"
+      },
+      {
+        "placement_id": "b3-04__tiktok_main",
+        "scheduled_at": "2026-08-23T19:00:00+07:00",
+        "state": "RESERVED_BLOCKED",
+        "blockers": "authority; channel review; per-piece approval; source review; live dedup; landing/bio parity; semantic claim; media receipt"
+      },
+      {
+        "placement_id": "kn-37__threads_main",
+        "scheduled_at": "2026-08-24T12:40:00+07:00",
+        "state": "PLANNED_BLOCKED",
+        "blockers": "publication_authority; official_source_review"
+      },
+      {
+        "placement_id": "kn-37__facebook_main",
+        "scheduled_at": "2026-08-24T12:50:00+07:00",
+        "state": "PLANNED_BLOCKED",
+        "blockers": "publication_authority; official_source_review"
+      },
+      {
+        "placement_id": "tt-r14-08__tiktok_main",
+        "scheduled_at": "2026-08-24T19:00:00+07:00",
+        "state": "RESERVED_BLOCKED",
+        "blockers": "authority; channel review; per-piece approval; source review; live dedup; landing/bio parity; missing creative/media receipt"
+      }
+    ]
+  },
+  "operational_checks": {
+    "content_calendar": {
+      "placements": 65,
+      "content_ids": 40,
+      "planned_blocked": 65,
+      "publishable": 0,
+      "stale_slots": 20,
+      "findings": 41,
+      "publication_blockers": 1,
+      "structural_findings": 0,
+      "report_only_findings": 40
+    },
+    "media": {
+      "watermark_verdict": "PASS",
+      "canonical_videos_scanned": 24,
+      "canonical_images_guarded": 1,
+      "quarantine_files_scanned": 0
+    },
+    "local_site": {
+      "pages_passed": 70,
+      "pages_checked": 70,
+      "affiliate_buttons": 140
+    },
+    "merchant_offers": {
+      "products": 16,
+      "promotions": 2,
+      "placements": 0,
+      "documents": 20,
+      "verdict": "PASS"
+    },
+    "control_health": {
+      "improvement_bundles_terminal": 15,
+      "improvement_bundles_started": 15,
+      "improvement_bundle_rate_diagnostic": 1.0,
+      "task_receipt_coverage_state": "NO_RECEIPTS",
+      "official_task_terminal_rate": null,
+      "historical_false_fatals_in_7d": 10,
+      "new_regressions": 0
+    }
+  },
+  "windows_tasks": [
+    {
+      "task": "ngernduangold_daily",
+      "enabled": true,
+      "state": "Ready",
+      "last_run": "2026-08-23T07:00:01+07:00",
+      "last_result": 2,
+      "next_run": "2026-08-24T07:00:00+07:00",
+      "missed_runs": 0,
+      "working_directory": "MISSING_IN_TASK_ACTION; runner now performs deterministic cd",
+      "new_receipt_verified": false
+    },
+    {
+      "task": "ngernduangold_weekly",
+      "enabled": true,
+      "state": "Ready",
+      "last_run": "2026-08-23T08:30:00+07:00",
+      "last_result": 2,
+      "next_run": "2026-08-30T08:30:00+07:00",
+      "missed_runs": 0,
+      "working_directory": "SET",
+      "new_receipt_verified": false
+    }
+  ],
+  "validation": {
+    "pipeline_unittests": "156/156 PASS",
+    "tools_unittests": "170/170 PASS",
+    "preflight_self_tests": "257/257 PASS",
+    "calendar_guard_tests": "47/47 PASS",
+    "content_source_tests": "16/16 PASS",
+    "social_source_contract": "14/14 IDs and 18/18 placements PASS",
+    "pantip_eligibility_tests": "13/13 PASS",
+    "quota_tests": "20/20 PASS",
+    "watermark_tests": "3/3 PASS",
+    "task_receipt_tests": "15/15 PASS",
+    "git_diff_check": "PASS"
+  },
+  "boundaries": {
+    "posted": false,
+    "scheduled_on_platform": false,
+    "commented_or_replied": false,
+    "source_acknowledged": false,
+    "tracker_opened": false,
+    "test_traffic_created": false,
+    "paid_api_used": false,
+    "committed": false,
+    "pushed": false,
+    "deployed": false,
+    "windows_task_mutated": false,
+    "pantip_live_check": "SKIP — temporary read-only window expired 18 Aug 2026 at 16:00 Asia/Bangkok"
+  }
+}

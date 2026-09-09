@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "fixture_kind": "IMMUTABLE_HISTORICAL_WINDOW_SELECTION",
+  "source_calendar_sha256": "1DDAF076374C34469998BB4D15C373EC8D3617469775E1145C602D621AE8F203",
+  "window": {
+    "start_inclusive": "2026-08-24T22:26:19+07:00",
+    "end_inclusive": "2026-08-26T22:26:19+07:00",
+    "hours": 48
+  },
+  "placements": [
+    {"placement_id": "wk36-sf02__threads_main", "date": "2026-08-25", "time": "12:40", "format": "text", "media": null, "media_receipt": null},
+    {"placement_id": "wk36-sf02__facebook_main", "date": "2026-08-25", "time": "12:50", "format": "text", "media": null, "media_receipt": null},
+    {"placement_id": "kn-39__threads_main", "date": "2026-08-26", "time": "12:40", "format": "text", "media": null, "media_receipt": null},
+    {"placement_id": "kn-39__facebook_main", "date": "2026-08-26", "time": "12:50", "format": "text", "media": null, "media_receipt": null},
+    {"placement_id": "p2-11__facebook_page2", "date": "2026-08-25", "time": "15:50", "format": "text", "media": null, "media_receipt": null},
+    {"placement_id": "qt-12__facebook_main", "date": "2026-08-26", "time": "16:00", "format": "image", "media": "media/quotes/week-20260824-30-r5/qt-12_fb-ig_4x5.jpg", "media_receipt": "automation-log/media-qa/qt-12-fb-ig-image-r5.json"},
+    {"placement_id": "wk36-sf02__tiktok_main", "date": "2026-08-25", "time": "19:00", "format": "video", "media": "reels/week-20260824-30-r5/2026-08-25_wk36-sf02.mp4", "media_receipt": "automation-log/media-qa/wk36-sf02-tiktok-video-r5.json"},
+    {"placement_id": "qt-12__tiktok_main", "date": "2026-08-26", "time": "19:00", "format": "video", "media": "reels/week-20260824-30-r5/2026-08-26_qt-12.mp4", "media_receipt": "automation-log/media-qa/qt-12-tiktok-video-r5.json"}
+  ],
+  "boundary": {
+    "derived_from_exact_source_calendar": true,
+    "publication_authority": "NONE",
+    "external_actions_performed": false
+  }
+}

@@ -1,54 +1,70 @@
-# RUNBOOK — social-autopost (TikTok + IG) · 11 ก.ค. 2026
+# RUNBOOK — social-autopost (TikTok + IG) · ปรับปรุง 16 ส.ค. 2026
 
-ภาพรวม: คลิปรายวัน 1 ตัว → **IG Reels 20:00** (Graph API, GitHub Action — เสถียร) + **TikTok 19:00** (Playwright ขับ TikTok Studio บนเครื่องเจ้าของ — **ทดลอง**, มี fallback)
+ภาพรวม: IG และ FB มีเส้นทางแยกของตนเอง ส่วน **TikTok อยู่สถานะ retired / local-only** ไม่มีงานอัตโนมัติที่อัปโหลดหรือเผยแพร่ วงจรตามตารางทำได้เพียงตรวจแผนในเครื่อง
 แหล่งข้อมูลเดียว: `social-autopost/content_map.json` (วันที่ → คลิป + แคปชัน IG/TikTok + affiliate flag) — สร้างจาก caption sheet ที่อนุมัติแล้ว · คลิปอยู่ `reels/` (host ที่ ngernduangold.com/reels/ สำหรับ IG อยู่แล้ว)
 
 ## ช่อง IG (เสถียร — ทำก่อน)
 → ดูรายละเอียดเต็มที่ `automation-log/cc-outbox/RUNBOOK_ig-reels-api_20260711.md`
 สรุป: owner ทำ Meta app + ใส่ secrets `IG_ACCESS_TOKEN`/`IG_USER_ID` (~30 นาที) → ทดสอบ 1 คลิปผ่าน Actions → auto รายวัน · token มี cron เช็ก/ต่ออายุ (`ig-token-check`)
 
-## ช่อง TikTok (ทดลอง — ทำหลัง IG ผ่าน)
-**ความจริงที่ต้องรู้:** ไม่มี API ทางการ → ใช้เบราว์เซอร์จริง (Playwright, ติดตั้งในเครื่องแล้ว: v1.60 + chromium)
-เสี่ยง anti-bot/ToS — สคริปต์**ไม่ใส่เทคนิคหลบ detection ใด ๆ** (นโยบาย) ถ้าโดนบล็อก = สลับ fallback ไม่ฝืน
+## ช่อง TikTok — retired / local-only
 
-### เจ้าของทำครั้งเดียว
-```
+### ข้อเท็จจริง API ปัจจุบัน
+
+TikTok มี [Content Posting API](https://developers.tiktok.com/products/content-posting-api) อย่างเป็นทางการแล้ว 2 รูปแบบ:
+
+- **Direct Post** ใช้ scope `video.publish`; ต้องมีแอปที่ลงทะเบียน เปิดผลิตภัณฑ์ Content Posting API ผ่านการอนุมัติ scope และได้รับสิทธิ์จากบัญชีเป้าหมาย ก่อนเริ่มโพสต์ต้องเรียก `creator_info/query` และใช้ตัวเลือกความเป็นส่วนตัว/ความยาวที่ API ส่งกลับจริง
+- **Upload draft** ใช้ scope `video.upload`; ส่งสื่อเข้ากล่องของผู้ใช้เพื่อให้ผู้ใช้เปิด TikTok ตรวจแก้และกดโพสต์เอง
+- Direct Post จาก client ที่ยังไม่ผ่าน audit ถูกจำกัดการมองเห็นเป็น private/`SELF_ONLY`; การเผยแพร่สาธารณะต้องผ่าน audit ตาม [Direct Post reference](https://developers.tiktok.com/doc/content-posting-api-reference-direct-post) และ [Content Sharing Guidelines](https://developers.tiktok.com/doc/content-sharing-guidelines)
+- `FILE_UPLOAD` รองรับวิดีโอในเครื่อง ส่วน `PULL_FROM_URL` ต้องยืนยันความเป็นเจ้าของโดเมน/URL prefix ก่อน
+- Guidelines ของ API ห้าม integration ซ้อนชื่อแบรนด์ โลโก้ watermark ลิงก์ หรือข้อความโปรโมตลงในสื่อ ดังนั้น receipt ที่ระบุเพียงว่า "ไม่ใช่ provider watermark" ยังไม่พอสำหรับเส้นทาง API; ต้องทบทวนภาพจริงตามเกณฑ์ TikTok อีกครั้งก่อนยื่น audit/ส่งสื่อ
+
+โปรเจกต์นี้ **ยังไม่มี TikTok developer app, scope/token, creator-info flow หรือ audit evidence ที่ลงทะเบียนไว้ใน SSOT** จึงยังห้ามใช้ API เพื่อส่งสื่อ และห้ามตีความว่ามี API แล้วเท่ากับพร้อมเปิด auto
+
+### คำสั่งตรวจแผนที่ปลอดภัย
+
+```powershell
 cd C:\Users\nL_ku\ngernduangold-site
-python social-autopost\publish_tiktok.py --login     ← เบราว์เซอร์เปิด, login บัญชีแบรนด์, ปิดหน้าต่าง
-python social-autopost\publish_tiktok.py --check     ← ต้องขึ้น "CHECK OK"
+python social-autopost\publish_tiktok.py --date 2026-08-16
+python social-autopost\publish_tiktok.py --plan --date 2026-08-16
 ```
-session เก็บใน `social-autopost/.tiktok-profile/` (**gitignored — ห้าม commit**)
 
-### ทดสอบ 1 คลิป (บังคับก่อนเปิด auto)
-```
-python social-autopost\publish_tiktok.py --date 2026-07-12            ← DRY RUN: ทำถึงพร้อมโพสต์ + screenshot, ไม่กด Post
-python social-autopost\publish_tiktok.py --date 2026-07-12 --live     ← โพสต์จริง 1 คลิป
-```
-เช็คบน TikTok: คลิปขึ้น · แคปชันครบ (disclaimer + ผลิตด้วย AI + #fyp) · **AI-label toggle** — สคริปต์พยายามเปิดให้ ถ้า UI หาไม่เจอจะบอกใน log (แคปชันมีคำ "ผลิตด้วย AI" เป็น disclosure หลักอยู่แล้ว)
+ทั้งสองคำสั่งอ่าน `content_map.json` และตรวจว่าคลิป/คำเปิดเผยมีอยู่เท่านั้น: **ไม่ import Playwright, ไม่เปิดเบราว์เซอร์, ไม่ login และไม่ส่งไฟล์** วันที่ไม่มีแผนหรือไฟล์หายต้องจบด้วย exit code 2. `--login` และ `--check` เดิมถูกปิดและคืน exit code 2 โดยไม่เปิดเบราว์เซอร์
 
-### เปิด auto รายวัน 19:00 (หลังเทสผ่าน)
-```
-schtasks /Create /TN "ngern-tiktok-daily" /SC DAILY /ST 19:00 /TR "cmd /c cd /d C:\Users\nL_ku\ngernduangold-site && python social-autopost\run_daily.py --live >> social-autopost\logs\daily.log 2>&1"
-```
-ปิดชั่วคราว: `schtasks /Change /TN "ngern-tiktok-daily" /DISABLE` (เปิดกลับ `/ENABLE`)
-หมายเหตุ: ต้องเป็นช่วงที่เครื่องเปิดอยู่ — ถ้าเครื่องปิด 19:00 งานจะข้ามวัน (Task Scheduler ตั้ง "Run task as soon as possible after a scheduled start is missed" ได้ใน UI)
+### เส้นทาง `--live` ที่เก็บไว้เป็น fallback
 
-### ถ้าพัง (ดู log + screenshot ที่ social-autopost/logs/ + alert ที่ automation-log/cowork-inbox/TIKTOK-PUBLISH-FAIL.md)
-- **session หลุด** → `--login` ใหม่
-- **selector เปลี่ยน** (TikTok ปรับ UI): แก้ dict `SEL` หัวไฟล์ `publish_tiktok.py` จุดเดียว — เปิด upload page ด้วยมือ, กด F12 หา element ใหม่ (หรือส่ง order ให้ CC แก้)
-- **โดนบล็อก/แคปช่า ซ้ำ ๆ** → หยุดใช้ (อย่าฝืน/อย่าหาทางหลบ) → **fallback semi-auto**: scheduled task `daily-reel-prep` (18:30) เตรียมคลิป+แคปชันไว้แล้ว และเจ้าของอัปโหลดผ่านมือถือ
+เส้นทางนี้ไม่ใช่ scheduler และไม่ใช่การอนุญาตให้เผยแพร่ ตัวโปรแกรมจะหยุดก่อน import/เปิด Playwright หากข้อใดข้อหนึ่งไม่ครบ:
+
+1. วันที่ต้องตรงกับวันปัจจุบันในไทยและมี entry เฉพาะชิ้นใน `content_map.json`
+2. policy ต้องเปิดช่อง TikTok, actor ต้องมี `social_publish`, บัญชีเป้าหมายต้องตรง และมี owner approval รายชิ้นครบ
+3. คลิปต้องมี `contentId`, `mediaReceipt` และ `approval.asset_sha256` ที่ตรงกับไฟล์จริง
+4. hash-bound visual/watermark/novelty QA ต้อง PASS และ content ID ใน receipt ต้องตรงกับแผน
+5. แคปชันและคลิปต้องผ่าน permanent dedup; โปรแกรมเขียน write-ahead claim ก่อนแตะเบราว์เซอร์เพื่อกันการยิงซ้ำพร้อมกัน
+
+แม้ผ่านทั้งหมดก็ยังเป็น owner-controlled fallback และผลหลังคลิกจะบันทึกเป็น `submitted_unverified` จนกว่าจะตรวจผลใน TikTok/Studio จริง ห้ามใส่ `--live` ใน `run_daily.py`, Task Scheduler, GitHub Actions หรือ loop อัตโนมัติ
+
+### Scheduled route
+
+`social-autopost/run_daily.py` เรียกได้เฉพาะ `publish_tiktok.py --plan` และไม่รับ `--live` งาน `ngern-tiktok-daily` ต้องคงสถานะ disabled; **ห้าม `/ENABLE`** จนกว่า policy/บัญชี/แผน 14 วัน/หลักฐาน dedup/landing page และเส้นทาง API ที่ผ่าน review จะครบแล้วได้รับอนุมัติรอบใหม่
+
+ทดสอบ safety contract:
+
+```powershell
+python tools\test_tiktok_publisher_safety.py
+python tools\test_external_notification_safety.py
+```
 
 ## Compliance (ทั้งสองช่อง)
 - แคปชันจาก sheet อนุมัติเป๊ะ — publisher ทั้งคู่มี **gate ปฏิเสธโพสต์** ถ้าไม่มี "ข้อมูลเพื่อการศึกษา"+"ผลิตด้วย AI"
 - ห้าม % ดอกเบี้ยตายตัวในแคปชัน (sheet ปัจจุบันไม่มี) · ความถี่ = 1 คลิป/ช่อง/วัน ห้ามเพิ่มเองโดยไม่ผ่าน Cowork
-- dedup: IG `published.json` (repo) · TikTok `logs/published-tiktok.json` (local) — กันโพสต์ซ้ำเมื่อ re-run
+- dedup: IG `published.json` (repo) · TikTok ใช้ทั้ง `logs/published-tiktok.json`, caption dedup และ write-ahead claim ใน `automation-log/post-ledger.jsonl`
 
 ## เติม batch (แคปชันหมด 19 ก.ค.)
 `SOCIAL-CAPTIONS_batch2_20-26jul` ยังอยู่ฝั่ง Cowork → วางเข้า cc-inbox แล้วสั่ง CC เติม: CC จะเพิ่มคลิปเข้า `reels/` + `reels/schedule.json` (IG) + `social-autopost/content_map.json` (TikTok) ชุดเดียวจบ
 
 ---
 ## GO-LIVE CHECKLIST (เรียงตามเวลา — เจ้าของกดตามนี้เป๊ะ ๆ)
-**สถานะตอนนี้ (11 ก.ค.):** scheduler เปิดแล้วทั้งคู่ — IG นัดถัดไป 12 ก.ค. 20:00TH (soft-skip จนกว่ามี token) · TikTok task `ngern-tiktok-daily` 19:00TH (โหมด dry จนกว่า login)
+**สถานะ TikTok ตอนนี้ (16 ส.ค.):** retired / local-only; ไม่มีคำสั่งอัปโหลดหรือโพสต์ใน scheduler และคำสั่งตรวจแผนไม่แตะเบราว์เซอร์
 
 ☐ **1. IG (~30 นาที — ทำก่อน 20:00 ของวันที่อยากให้โพสต์แรกขึ้น)**
    1.1 developers.facebook.com → Create App (Business) → Add product "Instagram Graph API"
@@ -59,12 +75,11 @@ schtasks /Create /TN "ngern-tiktok-daily" /SC DAILY /ST 19:00 /TR "cmd /c cd /d 
    1.6 (ทดสอบทันทีไม่รอ 20:00) Actions → ig-reels → Run workflow → date=วันนี้, dry_run=false → เช็ค Reel ขึ้นจริง
    → เสร็จข้อนี้ = IG hands-off ตลอด 16 วัน (และต่อ ๆ ไปเมื่อเติม batch)
 
-☐ **2. TikTok (~10 นาที)**
-   2.1 `cd C:\Users\nL_ku\ngernduangold-site && python social-autopost\publish_tiktok.py --login` → login ในเบราว์เซอร์ → ปิดหน้าต่าง
-   2.2 `python social-autopost\publish_tiktok.py --check` → ต้อง "CHECK OK"
-   2.3 `python social-autopost\publish_tiktok.py --date <วันนี้>` → DRY: ดู screenshot ใน social-autopost\logs\ ว่าหน้าพร้อมโพสต์+แคปชันถูก
-   2.4 `python social-autopost\publish_tiktok.py --date <วันนี้> --live` → โพสต์จริง 1 คลิป → เช็คบนแอป
-   2.5 สลับ task เป็น live: `schtasks /Change /TN "ngern-tiktok-daily" /TR "cmd /c cd /d C:\Users\nL_ku\ngernduangold-site && python social-autopost\run_daily.py --live >> social-autopost\logs\daily.log 2>&1"`
+☐ **2. TikTok — ห้าม go-live ตอนนี้**
+   2.1 ใช้ `publish_tiktok.py --plan --date <วันนี้>` เพื่อตรวจ local plan เท่านั้น
+   2.2 สร้าง developer app/ขอ scope/ออกแบบ consent + creator-info UI และผ่าน audit ก่อนพิจารณาเส้นทาง API สาธารณะ
+   2.3 ทำแผนสื่อที่ไม่ซ้ำและ QA ครบตาม runway แล้วจึงขออนุมัติเปิด policy/บัญชี/ชิ้นงานรอบใหม่
+   2.4 ห้ามเปิด scheduled task หรือใช้ Playwright fallback ระหว่างที่ข้อ 2.2–2.3 ยังไม่ครบ
 
 ☐ **3. ก่อน 20 ก.ค.:** วางคลิป batch2 ที่ `reels\batch2\` ชื่อตรง placeholder ใน content_map → `git add reels && git commit && git push` (หรือส่งไฟล์ให้ CC จัดการ+verify hosting)
 

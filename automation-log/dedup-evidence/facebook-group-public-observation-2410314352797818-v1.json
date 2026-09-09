@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-08-24T21:07:25.625+07:00",
+  "purpose": "Immutable privacy-safe read-only public Facebook Group comment observation for one legacy permanent-dedup identity; this is not publication authority or a claim of future visibility.",
+  "observation_contract": "read-only-public-facebook-comment-observation-v1",
+  "observations": [
+    {
+      "observation_id": "facebook-group-2410303406132246-comment-2410314352797818",
+      "platform": "facebook",
+      "target_post_url": "https://www.facebook.com/groups/1036176276878306/posts/2410303406132246/",
+      "stable_comment_url": "https://www.facebook.com/groups/1036176276878306/posts/2410303406132246/?comment_id=2410314352797818",
+      "group_id": "1036176276878306",
+      "post_id": "2410303406132246",
+      "actor_display": "เงินเดือนสมองทอง",
+      "actor_profile_id": "100029060247015",
+      "comment_id": "2410314352797818",
+      "displayed_time": "5 สัปดาห์",
+      "observed_text_length": 657,
+      "observed_text_sha256": "CE2695AFE405DE203BB2BD0D823D7BCA1012035629236D2EDF19BB258145CF12",
+      "observed_text": "ถ้าอยากได้แบบน่ารักแล้วออมได้ยาว ๆ ลองดู 3 แบบนี้ค่ะ แต่ละแบบเหมาะกับนิสัยคนละแบบ\n1) ตารางระบายสี 100 ช่อง — ช่องละเท่ากัน ระบายทีละช่องเวลาออม เหมาะกับคนชอบเห็นความคืบหน้าเป็นภาพ\n2) ตารางตามวันที่ 1-31 — วันไหนพอมีก็หยิบเลขนั้นมาออม ยืดหยุ่นสุด เหมาะกับคนรายได้ไม่คงที่\n3) ตารางเป้าหมายเดียว — เขียนสิ่งที่อยากได้ไว้หัวตาราง แล้วแบ่งเป็นช่องย่อย เหมาะกับคนที่ต้องเห็นปลายทางชัดถึงจะมีแรง\nเคล็ดที่ทำให้ไม่ล้มกลางทาง: ตั้งยอดต่อช่องให้ต่ำกว่าที่คิดว่าไหว เพราะเดือนที่ชนคือเดือนที่คนส่วนใหญ่เลิก และถ้าพลาดไปช่องนึงอย่าเริ่มใหม่ ให้ข้ามแล้วไปต่อค่ะ\nถ้าออมไปด้วยแล้วมีหนี้ดอกสูงอยู่ ลองกันเงินส่วนหนึ่งไปจ่ายก้อนที่ดอกแพงก่อน จะเห็นผลไวกว่าค่ะ เป็นกำลังใจนะคะ",
+      "ledger_line": 45,
+      "ledger_row_sha256": "4D62E6C5C4C889F46C1D791F549E264924634E2BC73B19D76AB51ABF2F089313",
+      "observation_mode": "read_only_public_dom",
+      "privacy_status": "PUBLIC_WEB_ONLY_NO_SESSION_ID_PRIVATE_PATH_OR_COOKIE"
+    }
+  ]
+}

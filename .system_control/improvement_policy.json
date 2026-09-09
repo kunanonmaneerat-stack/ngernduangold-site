@@ -1,0 +1,441 @@
+{
+  "schema_version": 2,
+  "effective_on": "2026-08-16",
+  "goal": "Create useful, accurate page content that produces repeatable verified affiliate revenue without sacrificing trust.",
+  "operator": {
+    "actor": "codex",
+    "role": "internal_page_operator",
+    "public_identity": "เงินเดือนสมองทอง",
+    "public_speaker": false,
+    "local_improvement_authorized": true,
+    "unattended_external_mutation": false
+  },
+  "cycle": [
+    "observe",
+    "diagnose",
+    "prioritize",
+    "apply_local_in_scoped_agent_session",
+    "validate",
+    "report",
+    "queue_owner_action"
+  ],
+  "cadence": {
+    "daily": {
+      "purpose": "Observe, diagnose, validate current controls, and prepare no more than three repair actions.",
+      "max_observation_age_hours": 2,
+      "review_due_hours": 26,
+      "score_progression": "provisional",
+      "growth_experiment_selection": false
+    },
+    "weekly": {
+      "purpose": "Review verified revenue and trusted acquisition, ratify score progression, select at most one eligible growth experiment, and record the retrospective.",
+      "max_observation_age_hours": 2,
+      "review_due_hours": 192,
+      "score_progression": "ratified",
+      "growth_experiment_selection": true
+    }
+  },
+  "primary_kpis": [
+    {
+      "id": "paid_affiliate_revenue_thb_28d",
+      "definition": "THB from affiliate transactions whose latest lifecycle state is paid in the last 28 calendar dates; refunded, rejected and cancelled outcomes are excluded, while pending and approved amounts remain diagnostics only.",
+      "source": ".local-private/runtime/sales-log.jsonl",
+      "decisionable_when": "the schema-4 private ledger learning contract is current, reconciled and valid"
+    },
+    {
+      "id": "paid_affiliate_transactions_28d",
+      "definition": "Count of unique affiliate sale ids whose latest lifecycle state is paid in the last 28 calendar dates.",
+      "source": ".local-private/runtime/sales-log.jsonl",
+      "decisionable_when": "the schema-4 private ledger learning contract is current, reconciled and paid_transactions is valid"
+    }
+  ],
+  "drivers": [
+    {
+      "id": "trusted_affiliate_clicks_28d",
+      "meaning": "Affiliate intent only; never revenue or conversion.",
+      "decisionable_when": "GA4 trust is TRUSTED and the 28-day snapshot metadata and hashes match"
+    },
+    {
+      "id": "organic_clicks_to_monetized_pages_28d",
+      "meaning": "Search discovery driver; not revenue.",
+      "decisionable_when": "GSC 28-day snapshot metadata and hashes match"
+    },
+    {
+      "id": "answer_seen_rate",
+      "meaning": "Value-consumption diagnostic calculated from answer_seen and page views; not revenue.",
+      "decisionable_when": "GA4 trust and snapshot contract pass"
+    }
+  ],
+  "guardrails": [
+    "privacy_guard must pass",
+    "public_identity_guard must pass",
+    "automation_policy_guard must pass",
+    "merchant_offer_gate must pass",
+    "manifest_contract must pass",
+    "affiliate disclosure and attribution must pass",
+    "content-scoped official sources fail closed per placement",
+    "no exact same-channel repost",
+    "no provider watermark in active publish media",
+    "publication and deploy remain separately owner-gated"
+  ],
+  "decision_rules": [
+    {
+      "priority": 1,
+      "when": "any safety or integrity guard fails",
+      "action": "repair the guard failure before growth work"
+    },
+    {
+      "priority": 2,
+      "when": "analytics is stale, unversioned, hash-mismatched, or untrusted",
+      "action": "repair measurement; raw values may be displayed but no winner, timing, cadence, or scale action is allowed"
+    },
+    {
+      "priority": 3,
+      "when": "paid affiliate revenue and paid transaction count are both zero while trusted intent exists",
+      "action": "audit offer fit, landing continuity, merchant outcome capture, and commission logging before adding reach"
+    },
+    {
+      "priority": 4,
+      "when": "paid affiliate revenue is positive and at least one paid transaction exists",
+      "action": "run one bounded experiment on the revenue-producing funnel and protect all guardrails"
+    }
+  ],
+  "baseline_target": {
+    "phase": "measurement_repair",
+    "target": "At least one paid affiliate transaction with positive paid affiliate revenue in one complete trusted 28-day window with zero guardrail violations.",
+    "next_target_rule": "Set a numeric growth target only after two complete trusted windows establish a baseline."
+  },
+  "limits": {
+    "max_priorities_per_run": 3,
+    "max_growth_experiments_per_week": 1,
+    "max_local_patch_surfaces_per_run": 1,
+    "max_repair_passes": 3,
+    "owner_action_ttl_hours": 48
+  },
+  "maturity_scorecard": {
+    "schema_version": 1,
+    "model": "same-run-gated-evidence",
+    "max_score": 100,
+    "hard_blocker_score_cap": 49,
+    "stale_evidence_score": 0,
+    "minimum_growth_experiment_score": 90,
+    "progression_authority": "weekly",
+    "criteria": [
+      {
+        "id": "evidence_current_and_bound",
+        "weight": 10,
+        "hard_blocker": true,
+        "acceptance": "Observation is from the current cadence window and the decision-readiness evidence hash and raw facts agree."
+      },
+      {
+        "id": "guardrails_current",
+        "weight": 20,
+        "hard_blocker": true,
+        "acceptance": "Every declared executable guardrail returned an explicit same-run pass with exit code 0."
+      },
+      {
+        "id": "revenue_ledger_trusted",
+        "weight": 15,
+        "hard_blocker": true,
+        "acceptance": "The private 28-day affiliate ledger is readable, reconciled, and contract-valid."
+      },
+      {
+        "id": "analytics_decisionable",
+        "weight": 15,
+        "hard_blocker": true,
+        "acceptance": "GA4 trust and bundle plus the GSC bundle are current, hash-bound, and decisionable."
+      },
+      {
+        "id": "content_scoped_source_enforcement",
+        "weight": 10,
+        "hard_blocker": true,
+        "acceptance": "The current calendar proves exact content_id source mapping and fail-closed source evaluation; unrelated global monitor queues remain diagnostic only."
+      },
+      {
+        "id": "publication_inputs_ready",
+        "weight": 20,
+        "hard_blocker": true,
+        "acceptance": "Publication authority, a publishable calendar item, and local/live release parity all pass."
+      },
+      {
+        "id": "verified_revenue_learning",
+        "weight": 10,
+        "hard_blocker": false,
+        "acceptance": "At least one unique paid affiliate transaction and positive paid affiliate revenue exist in the current window; pending and approved outcomes do not count."
+      }
+    ],
+    "stages": [
+      {
+        "id": "unknown",
+        "minimum_score": 0
+      },
+      {
+        "id": "instrumented",
+        "minimum_score": 25
+      },
+      {
+        "id": "controlled",
+        "minimum_score": 50
+      },
+      {
+        "id": "decision_ready",
+        "minimum_score": 80
+      },
+      {
+        "id": "revenue_learning",
+        "minimum_score": 90
+      }
+    ]
+  },
+  "feedback_cadence": {
+    "daily_acceptance": "A same-run scorecard, blocker-first action queue, validation result, error-learning snapshot, control-health KPI set, and owner requests are written to the private run directory.",
+    "weekly_acceptance": "A comparable weekly scorecard records criterion transitions, recurring/resolved/regressed error fingerprints and a delta, or explicitly resets the baseline when policy/evidence is not comparable.",
+    "progression_rules": [
+      "daily scores are provisional and cannot ratify maturity progression",
+      "weekly comparison requires a valid prior weekly scorecard under the same canonical policy hash",
+      "a score increase requires at least one failed-to-passed criterion transition",
+      "a reopened hard blocker is regression even when the uncapped raw score is higher",
+      "missing, stale, malformed, or hash-mismatched evidence scores zero for that criterion",
+      "growth work cannot appear before or beside an unresolved hard blocker"
+    ]
+  },
+  "task_receipt_monitoring": {
+    "schema_version": 3,
+    "instrumentation_started_at": "2026-08-25T13:52:02+07:00",
+    "tasks": [
+      "ngernduangold_daily",
+      "ngernduangold_weekly"
+    ],
+    "contract_revision": "task-version-ordered-command-manifest-v3",
+    "finished_requires_complete_manifest": true,
+    "legacy_schema_policy": "Only exact hash-bound schema-2 receipts in the migration attestation are diagnostic-only. Known prior invalid evidence remains LEGACY_INVALID; all unknown, mutated, future, boolean, or newer schema values fail closed and never enter trusted KPIs.",
+    "legacy_receipt_attestations": [
+      {
+        "task_name": "ngernduangold_daily",
+        "run_id": "ngernduangold_daily-20260823T100029573378Z-55548-16faa6",
+        "receipt_hash": "bda5137005d488dfd0f5eab56e2de18c45ee5f455ff8f6cdedf674e13e7ec404",
+        "migration_state": "LEGACY_UNVALIDATED",
+        "errors": []
+      },
+      {
+        "task_name": "ngernduangold_daily",
+        "run_id": "ngernduangold_daily-20260823T103603394270Z-54704-6ec012",
+        "receipt_hash": "525f35e1c8e0b4d5a420a113d731a37ab48d19d06935a2634337c7bd066ce873",
+        "migration_state": "LEGACY_UNVALIDATED",
+        "errors": []
+      },
+      {
+        "task_name": "ngernduangold_daily",
+        "run_id": "ngernduangold_daily-20260823T122237619868Z-44516-a2a325",
+        "receipt_hash": "976e05a26ba0a27111c3df26a125cfc0158e0e3e468f959f0a294c8c4df7b501",
+        "migration_state": "LEGACY_UNVALIDATED",
+        "errors": []
+      },
+      {
+        "task_name": "ngernduangold_daily",
+        "run_id": "ngernduangold_daily-20260824T000002465911Z-24448-087682",
+        "receipt_hash": "0d6787c1894bfc1f321c0070b1461d8b3b2f9de9671ebfad91f06ae76720db05",
+        "migration_state": "LEGACY_UNVALIDATED",
+        "errors": []
+      },
+      {
+        "task_name": "ngernduangold_weekly",
+        "run_id": "ngernduangold_weekly-20260823T101441981663Z-37720-8c9a1f",
+        "receipt_hash": "bbc77d86cd55cbbf1c9acb2145ad6581389eca7195a984ed6eecb95089377f4a",
+        "migration_state": "LEGACY_INVALID",
+        "errors": [
+          "receipt step classification is inconsistent"
+        ]
+      },
+      {
+        "task_name": "ngernduangold_weekly",
+        "run_id": "ngernduangold_weekly-20260823T102712428782Z-17756-444f75",
+        "receipt_hash": "433d10be031e74e7c444c74a6c65bb86f66af9606ecbb59ed3bd50c2abd65b1e",
+        "migration_state": "LEGACY_UNVALIDATED",
+        "errors": []
+      },
+      {
+        "task_name": "ngernduangold_weekly",
+        "run_id": "ngernduangold_weekly-20260823T103159585607Z-10920-65c750",
+        "receipt_hash": "c87a24d33b679090855a02bc6102867f7953bd418741a69cd2ad7e5379f58344",
+        "migration_state": "LEGACY_UNVALIDATED",
+        "errors": []
+      },
+      {
+        "task_name": "ngernduangold_weekly",
+        "run_id": "ngernduangold_weekly-20260823T121758701809Z-43832-a6d6d3",
+        "receipt_hash": "6e1c667951dee1c2508ca689c6d428075ce46bb44752aad9f993615ce180fdf3",
+        "migration_state": "LEGACY_UNVALIDATED",
+        "errors": []
+      }
+    ],
+    "activation_attestation": {
+      "activated_at": "2026-08-25T13:52:02+07:00",
+      "receipt_producer_sha256": "a4aebd270e2404d935225cc60049cc2533e5c18d509747c03ae30ba4627a64a6",
+      "receipt_consumer_sha256": "a8b2fb5361658c34d267b9fe66c595cb54a0783b3a588ce598961b09c7e55385",
+      "contract_registry_sha256": "f50b2c330e3c86e6be3a9db1d84e35345ce7b27f81eacb9a4b6128bf2063ce6e",
+      "verification": {
+        "verified_at": "2026-09-05T17:31:02.176673+00:00",
+        "test_sources_sha256": "2ecde4a838f6beec0a653755676e6c32b8c96b0fbf88d83f5dcbc513de8b3615",
+        "suite_results": {
+          "task_receipt_tests": {
+            "tests": 65,
+            "exit_code": 0
+          },
+          "improvement_loop_tests": {
+            "tests": 117,
+            "exit_code": 0
+          },
+          "wiring_tests": {
+            "tests": 4,
+            "exit_code": 0
+          },
+          "policy_tests": {
+            "tests": 9,
+            "exit_code": 0
+          },
+          "batch_exit_tests": {
+            "tests": 20,
+            "exit_code": 0
+          }
+        },
+        "result_hash": "0e9b6d65ed9761f6d2ab7be3676aff3ef04bd356f692f8728bae0b9b731cd460"
+      }
+    },
+    "trusted_receipt_producer_sha256": [
+      "a4aebd270e2404d935225cc60049cc2533e5c18d509747c03ae30ba4627a64a6",
+      "5b517d788cfeae97be52b249f2bb39cec0f3e62bbcc5bddecc4b19057ac20c42",
+      "858cdc42ffdc0200a750c14ed67a926206589ec15a3607b2cb727da04e3def71",
+      "e230e0803b014858f927f737b06fcae6ef38b348d471b9d0941ed5baa039106c",
+      "c81c28de38875b4197040d057e51a5245a67d07f18e4320f2feedad10834b71f",
+      "5a856d26e4756e094a412e2b75e4133d1a5edaa21ef8535f18de05ce5e77352c",
+      "c5c6a1035d7b2b72268a884fdd8a182c7f96271cad88d3a37eb348365cac3ebc",
+      "518d3384aa05be1e72fdc8ceb473ca9bf9a43e77e7620daf699892d78bb20339",
+      "28a8e3604c658b1ec78555ae84c738c82173d3f706f70018767cad00ec09cc82"
+    ],
+    "stuck_after_hours": 2,
+    "origin": "RUNNER_INVOCATION_UNVERIFIED",
+    "scheduler_launch_proven": false,
+    "scheduler_sla_source": "Windows Task Scheduler and parent-process correlation are required separately. A receipt proves only an exact hash-bound command sequence observed through an unverified invocation; it does not prove which parent launched the runner."
+  },
+  "control_health_kpis": [
+    {
+      "id": "terminal_control_run_rate_7d",
+      "definition": "Share of accountable hash-valid daily and weekly command sequences observed through unverified invocations in the last 7 days that wrote a terminal receipt. COMPLETED_WITH_BLOCKERS and ABORTED count as terminal continuity; RUNNING receipts below the bounded task timeout are reported as active but excluded from the rate, while stuck RUNNING receipts enter the denominator as failures. RUNNER_FAILED and UNVERIFIED_NONZERO remain separate failure diagnostics. The official rate is unavailable until receipt instrumentation has covered the full window; the exact currently executing receipt is excluded until its runner closes it. Receipts do not prove a parent process or Windows-scheduled launch.",
+      "target": 1.0,
+      "decision": "Below target, repair runner/evidence continuity before content or growth work."
+    },
+    {
+      "id": "recurring_open_incidents",
+      "definition": "Count of currently observed error fingerprints seen in at least two complete control runs.",
+      "target": 0,
+      "decision": "Recurring incidents receive priority over equally ranked new incidents."
+    },
+    {
+      "id": "regressed_incidents_per_run",
+      "definition": "Count of previously resolved error fingerprints that reappear in the current complete control run.",
+      "target": 0,
+      "decision": "Any regression blocks maturity progression until the cause and missing regression test are recorded."
+    },
+    {
+      "id": "publication_blocker_false_fatal_count",
+      "definition": "Count within the same 7-day control window of hash-valid ABORTED task receipts whose exact terminal step contract proves COMPLETED_BLOCKED. The official value remains unavailable until receipt instrumentation covers the full window; historical FAILED_VALIDATION bundles are unproven diagnostics only.",
+      "target": 0,
+      "decision": "A publication block must keep publication closed without terminating independent diagnostics."
+    },
+    {
+      "id": "fresh_evidence_age_hours",
+      "definition": "Hours between the latest complete control bundle and the current evaluation time.",
+      "target": "at most the cadence max_observation_age_hours",
+      "decision": "Stale evidence is unavailable for decisions and triggers evidence-continuity repair."
+    }
+  ],
+  "error_learning": {
+    "schema_version": 1,
+    "identity_fields": [
+      "id",
+      "fact"
+    ],
+    "recurring_after_runs": 2,
+    "max_incidents": 500,
+    "state_file": "_error-learning-state.json",
+    "resolution_rule": "An open fingerprint is resolved only when it is absent from the next complete control run; an incomplete or failed control run cannot prove resolution.",
+    "priority_rule": "Within the same policy rank, prioritize regressed and consecutively recurring action kinds before new incidents.",
+    "repair_boundary": "Only deterministic local repairs or scoped authorized agent changes may be applied; every repair requires a new validation run and external mutations remain owner-gated."
+  },
+  "action_catalog": {
+    "repair_local_guard": {
+      "owner": "codex",
+      "acceptance_criteria": [
+        "Every named guard returns exit code 0 in one new same-run observation.",
+        "The guardrails_current maturity criterion passes."
+      ]
+    },
+    "repair_measurement": {
+      "owner": "codex",
+      "acceptance_criteria": [
+        "GA4 trust and its exact 28-day bundle are decisionable in a new observation.",
+        "No winner, timing, cadence, or scale conclusion is produced from blocked evidence."
+      ]
+    },
+    "refresh_gsc_bundle": {
+      "owner": "codex",
+      "acceptance_criteria": [
+        "GSC query and page files match one current hash-bound 28-day metadata bundle."
+      ]
+    },
+    "refresh_official_source_snapshot": {
+      "owner": "codex",
+      "acceptance_criteria": [
+        "A new official-source snapshot passes freshness and integrity validation."
+      ]
+    },
+    "repair_revenue_ledger": {
+      "owner": "codex",
+      "acceptance_criteria": [
+        "The private affiliate ledger passes its full contract with unique transaction ids and reconciled metadata."
+      ]
+    },
+    "audit_offer_and_attribution": {
+      "owner": "codex",
+      "acceptance_criteria": [
+        "The audit links one trusted intent path to landing continuity, merchant outcome capture, and commission logging evidence.",
+        "No reach expansion is selected from clicks alone."
+      ]
+    },
+    "design_one_revenue_experiment": {
+      "owner": "codex",
+      "acceptance_criteria": [
+        "The weekly scorecard is eligible, contains no hard blocker, and meets the minimum score.",
+        "The experiment changes one bounded variable and declares metric, guardrail, stop condition, and review date."
+      ]
+    },
+    "verify_ga4_internal_network": {
+      "owner": "owner",
+      "acceptance_criteria": [
+        "The owner confirms the private egress identity outside the scheduled task.",
+        "A later capture records the resulting GA4 trust state without exposing the private value."
+      ]
+    },
+    "review_official_sources": {
+      "owner": "owner",
+      "acceptance_criteria": [
+        "The owner reviews the exact pending claim packets and records an explicit acknowledgement decision.",
+        "A new source snapshot reports zero pending reviews and zero errors."
+      ]
+    }
+  },
+  "external_actions_requiring_owner_action": [
+    "social_publish",
+    "public_comment_or_reply",
+    "source_acknowledge",
+    "git_commit",
+    "git_push",
+    "deploy",
+    "financial_transaction",
+    "external_notify",
+    "external_storage_write",
+    "package_install",
+    "scheduler_mutation"
+  ]
+}

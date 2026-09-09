@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "content_id": "b3-06",
+  "target_channel": "tiktok",
+  "target_contract": {"mode": "planned_no_link_no_affiliate", "outbound_url_allowed": false, "affiliate_claim_expected": false, "provider_license_claim_allowed": false},
+  "asset": "reels/2026-08-01_b3-06.mp4",
+  "sha256": "8B33B15C60044E6C87E921F92F9CA0EAC58FF612AA1FE851404CA74E83EDFCDE",
+  "reviewed_at": "2026-08-16T16:41:15+07:00",
+  "verdict": "BLOCKED",
+  "receipt_created": false,
+  "technical": {
+    "duration_seconds": 21.667, "size_bytes": 9808627,
+    "video": {"codec": "h264", "width": 1080, "height": 1920, "fps": "24/1", "pixel_format": "yuv420p"},
+    "audio": {"codec": "aac", "sample_rate": 16000, "channels": 1, "layout": "mono"},
+    "full_decode": "PASS", "audio_decode": "PASS", "non_silent": "PASS",
+    "mean_volume_db": -22.7, "max_volume_db": -3.5,
+    "decoded_pcm_sha256": "2348C9574FA304583F09D3D31FF742A45B3400DDE141F70135A680B5277B6F4F"
+  },
+  "source_binding": {
+    "staging_asset": "_vidout/b3-06_auto.mp4", "staging_sha256": "8B33B15C60044E6C87E921F92F9CA0EAC58FF612AA1FE851404CA74E83EDFCDE", "byte_identical": true,
+    "authoritative_script": "automation-log/BATCH3-PRODUCTION-KIT.md#b3-06", "render_source": "C:/tmp/build_batch3.py", "voiceover_source_match": "PASS"
+  },
+  "watermark": {
+    "automated_scan": {"status": "PASS", "detector": "tiktok-pipeline/src/qa_watermark.py", "fps": 3.0, "frames": 65, "track_frames": 0, "track_frac": 0.0},
+    "full_frame_visual_review": {"status": "PASS_NO_THIRD_PARTY_WATERMARK", "intentional_brand": "@ngernduangold"}
+  },
+  "visual_evidence": {
+    "frame_times_seconds": [0.5, 3.0, 6.0, 9.0, 12.0, 15.0, 18.0, 21.167],
+    "files": [
+      "_vidout/media-evidence-b3/b3-06/contact-sheet.png", "_vidout/media-evidence-b3/b3-06/frame-01-0.500.png", "_vidout/media-evidence-b3/b3-06/frame-02-3.000.png", "_vidout/media-evidence-b3/b3-06/frame-03-6.000.png", "_vidout/media-evidence-b3/b3-06/frame-04-9.000.png", "_vidout/media-evidence-b3/b3-06/frame-05-12.000.png", "_vidout/media-evidence-b3/b3-06/frame-06-15.000.png", "_vidout/media-evidence-b3/b3-06/frame-07-18.000.png", "_vidout/media-evidence-b3/b3-06/frame-08-21.167.png"
+    ]
+  },
+  "semantic_review": {
+    "status": "FAIL", "intended_topic": "บัตรเครดิตเงินเดือนสามหมื่น เลือกแบบไหนก่อนสมัคร", "source_voiceover_topic_match": "PASS",
+    "blockers": [
+      "WRONG_PRIMARY_HOOK: large underlying hook says ไม่เคยเป็นหนี้ = สมัครบัตรไม่ผ่าน, a different topic",
+      "NO_LINK_MISMATCH: burned CTA says ลิงก์ในไบโอ",
+      "AFFILIATE_MISMATCH: burned disclosure says มีลิงก์พันธมิตร",
+      "UNSUBSTANTIATED_LICENSE_CLAIM: burned disclosure says ผู้ให้บริการมีใบอนุญาต without per-provider evidence"
+    ]
+  }
+}

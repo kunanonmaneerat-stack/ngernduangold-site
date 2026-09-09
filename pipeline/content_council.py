@@ -20,9 +20,17 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 
 
+class GenerationUnavailable(RuntimeError):
+    """A council stage returned no reviewable text."""
+
+
 def _banned_words():
     try:
-        d = json.load(open(os.path.join(ROOT, 'tiktok-pipeline', 'compliance_rules.json'), encoding='utf-8'))
+        with open(
+            os.path.join(ROOT, 'tiktok-pipeline', 'compliance_rules.json'),
+            encoding='utf-8',
+        ) as handle:
+            d = json.load(handle)
         words = []
         for k in ('banned', 'banned_words', 'forbidden', 'prohibited', 'deny'):
             v = d.get(k)
@@ -40,8 +48,12 @@ BANNED = _banned_words()
 def _cases(topic):
     """poor-man's RAG: ดึงจุดเจ็บจริงคนไทยจาก real_cases.md ที่ตรงกับ topic."""
     try:
-        lines = [l.strip() for l in open(os.path.join(HERE, 'real_cases.md'), encoding='utf-8')
-                 if l.strip() and not l.startswith('#')]
+        with open(os.path.join(HERE, 'real_cases.md'), encoding='utf-8') as handle:
+            lines = [
+                line.strip()
+                for line in handle
+                if line.strip() and not line.startswith('#')
+            ]
     except Exception:
         return ''
     words = set(w for w in topic.replace('/', ' ').split() if len(w) > 2)
@@ -60,7 +72,9 @@ SYS = {
 
 def agent(role, user, max_tokens=1500):
     t, m = free_llm.generate(user, system=SYS[role], max_tokens=max_tokens, temperature=0.3)
-    return (t or "").strip(), (m or "?")
+    if not isinstance(t, str) or not t.strip():
+        raise GenerationUnavailable("%s stage returned no content" % role)
+    return t.strip(), (m or "?")
 
 
 def run(topic):
@@ -95,15 +109,27 @@ def _write_queue(topic, final, rep):
         f.write("### ✅ คำตอบ (ตรวจแล้ว — รอ approve ก่อนโพสต์)\n" + final + "\n\n")
         f.write("<details><summary>รายงานการตรวจ</summary>\n\n**Compliance:** " + rep['compliance'] +
                 "\n\n**Value:** " + rep['value'] + "\n\n**Review:** " + rep['review'] + "\n</details>\n\n---\n\n")
-    if "\ufffd" in open(p, encoding="utf-8").read():
+    with open(p, encoding="utf-8") as handle:
+        contains_replacement_character = "\ufffd" in handle.read()
+    if contains_replacement_character:
         import sys as _s; _s.stderr.write("[content_council] WARN U+FFFD in " + p + "\n")
     return p
 
 
-if __name__ == "__main__":
-    topic = sys.argv[1] if len(sys.argv) > 1 else "หนี้บัตรเครดิต+บัตรกดเงินสด รวม 240,000 มี notice อยากไปไกล่เกลี่ย"
-    final, rep = run(topic)
+def main(argv=None):
+    args = sys.argv[1:] if argv is None else list(argv)
+    topic = args[0] if args else "หนี้บัตรเครดิต+บัตรกดเงินสด รวม 240,000 มี notice อยากไปไกล่เกลี่ย"
+    try:
+        final, rep = run(topic)
+    except GenerationUnavailable as exc:
+        print("[content_council] BLOCKED: " + str(exc), file=sys.stderr)
+        return 2
     path = _write_queue(topic, final, rep)
     print("DRAFT model:", rep['m_expert'], "| FINAL model:", rep['m_final'])
     print("QUEUE ->", path)
     print("\n=== FINAL (ตรวจแล้ว) ===\n" + final)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

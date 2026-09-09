@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "receipt_type": "LOCAL_DRAFT_FULFILMENT",
+  "fulfilment_state": "DRAFT_FULFILLED_BLOCKED",
+  "semantic_universality_claimed": false,
+  "publication_authority": "NONE",
+  "release_state": "DRAFT_ONLY_BLOCKED_SOURCE_REVIEW",
+  "created_at": "2026-08-25T10:00:00+07:00",
+  "corpus_review": {
+    "path": "automation-log/dedup-evidence/LOCAL-CONTENT-PACK_20260825_V2-CORPUS-REVIEW.json",
+    "sha256": "A3760DEA1AB1C8BDE867279073D38CE2D18AF0F8895E430EBF2DA35962EA7CD3"
+  },
+  "pack": {
+    "path": "automation-log/cc-outbox/LOCAL-CONTENT-PACK_20260825_V2.md",
+    "sha256": "B871E8BA08BD5BD5A5CB64F0E3ABBD95D888AF86BE1B78E0E944AFC58951DE85",
+    "status": "DRAFT_ONLY_BLOCKED_SOURCE_REVIEW",
+    "platform_variants": 21
+  },
+  "families": [
+    {
+      "family_id": "payroll-net-pay-reconciliation",
+      "topic_sha256": "865867D3D7859B4FEF513F93B613DD4FE6F5F6E2E30EAB0F655D07E52C3618AE"
+    },
+    {
+      "family_id": "annual-expense-sinking-funds",
+      "topic_sha256": "17458A6BA38B886150540A7B280F89E869AD5FCB2B2FDF4EBEF6E19FCAC64582"
+    },
+    {
+      "family_id": "recurring-charge-renewal-audit",
+      "topic_sha256": "9CB485922AE62893566E05B4BC21B444143339C8E6BD10629152F003D3028AF1"
+    },
+    {
+      "family_id": "household-bill-ownership-map",
+      "topic_sha256": "B7601E2838681072A892B7256C1E182A8A9566E059182AB133954AE101CDDC53"
+    },
+    {
+      "family_id": "refund-dispute-evidence-timeline",
+      "topic_sha256": "2646165DF4A302D2654202270EEDA4CC36351C3A550C39B24C149991369D56CB"
+    },
+    {
+      "family_id": "beneficiary-emergency-access-review",
+      "topic_sha256": "78A762143FA924E502213CBD61957DDAE2609A70CC2FF6417FD599102CCEE31B"
+    },
+    {
+      "family_id": "employee-benefit-inventory",
+      "topic_sha256": "173AFF17B91F4C0A715CB5ADFAA9CECF8FB290E4F83D51C4DEFDF57A86136DAC"
+    }
+  ],
+  "safety_audit": {
+    "first_person_hits": 0,
+    "url_hits": 0,
+    "commercial_or_tracking_hits": 0,
+    "guarantee_hits": 0,
+    "live_link_dependency_hits": 0,
+    "comply_gate_failures": 0
+  },
+  "copy_corpus_audit": {
+    "candidate_variants": 21,
+    "historical_records": 4613,
+    "unique_historical_normal_forms": 3491,
+    "historical_exact_collisions": 0,
+    "historical_near_collisions": 0,
+    "cross_family_exact_collisions": 0,
+    "cross_family_near_collisions": 0
+  },
+  "explicit_non_authority": "This receipt proves exact local draft bytes only. Source, claim, media, owner approval, scheduling, publication, commercial links, and release remain blocked."
+}

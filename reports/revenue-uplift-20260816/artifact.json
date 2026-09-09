@@ -1,0 +1,445 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "แผนยกระดับรายได้ เงินเดือนสมองทอง — 16 สิงหาคม 2569",
+    "description": "รายงานตรวจฐานรายได้ ความน่าเชื่อถือของข้อมูล ความเสี่ยง และแผน 30/60/90 วัน",
+    "generatedAt": "2026-08-16T01:24:00+07:00",
+    "blocks": [
+      {
+        "id": "title",
+        "type": "markdown",
+        "layout": "full",
+        "body": "# แผนยกระดับรายได้ เงินเดือนสมองทอง — 16 สิงหาคม 2569"
+      },
+      {
+        "id": "executive-summary",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## Executive Summary\n\n- **รายได้ที่อนุมัติจริงยังเป็น 0 บาท** — Gumroad มี 0 ลูกค้า/0 ออเดอร์ และ AccessTrade เดือนสิงหาคมมี 0 conversion; รายการเดือนกรกฎาคม 35 บาทยังค้างอนุมัติ จึงยังนับเป็นเงินไม่ได้\n- **มีสัญญาณความสนใจ แต่ตัวเลขคลิกเดิมยังใช้ตัดสินใจไม่ได้** — GA4 บันทึก 119 sessions และ 6 affiliate events ใน 28 วัน ขณะที่ AccessTrade แสดง 329 raw clicks เพียง 1–15 สิงหาคม (ต่างกัน 54.8 เท่า) เพราะงานตรวจลิงก์เคยยิง affiliate URL และ event เดิมปน LINE/สินค้าเรา/ลิงก์ภายใน\n- **ปิดความเสี่ยงรายได้เร่งด่วนแล้วในเครื่อง** — หน้าชุดจดหมาย 199 บาทถูกหยุดรับเงินจนกว่าจะมี PDF จริง, FWD ที่ปลายทาง 404 ถูกถอด, schema/event taxonomy ถูกแก้, ตัวตรวจลิงก์ไม่ยิงเครือข่าย และ workflow Meta เก่าถูกปิด\n- **เส้นทางโตที่เหมาะที่สุดคือ “เครื่องมือช่วยตัดสินใจ + แหล่งทางการ + สินค้าที่ส่งมอบได้จริง”** — เร่งหน้า SEO ที่มี impression อยู่แล้ว, วัดผลใหม่หลัง deploy, และเพิ่มทราฟฟิกเฉพาะ funnel ที่พิสูจน์ conversion/การส่งมอบแล้วเท่านั้น"
+      },
+      {
+        "id": "headline-metrics",
+        "type": "metric-strip",
+        "layout": "full",
+        "cardIds": [
+          "sessions-card",
+          "affiliate-events-card",
+          "approved-revenue-card",
+          "gumroad-orders-card"
+        ]
+      },
+      {
+        "id": "revenue-truth-heading",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## สิ่งที่มีอยู่คือสัญญาณทดลอง—not yet a proven business\n\nยอดเดือนกรกฎาคมยัง pending และยอดเดือนสิงหาคมเป็นศูนย์ การเร่งซื้อทราฟฟิกตอนนี้จะขยายทั้งต้นทุนและความคลาดเคลื่อน ก่อนตัดสินว่าหน้าใดชนะ ต้องแยก **approved revenue**, **own-product order**, **qualified affiliate click** และ **test traffic** ออกจากกันให้เด็ดขาด"
+      },
+      {
+        "id": "revenue-truth-table",
+        "type": "table",
+        "layout": "full",
+        "tableId": "revenue-truth"
+      },
+      {
+        "id": "measurement-heading",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## ทราฟฟิกกระจุกใน Direct และฐานวัดผลเดิมปนการทดสอบ\n\nDirect คิดเป็น 68.9% ของ 119 sessions; สัดส่วนสูงผิดปกติเมื่อเทียบกับทราฟฟิกภายนอกเพียง 37 sessions และมีหลักฐานว่า install/test clicks เคยถูกบันทึกเป็น buy intent ดังนั้นรอบหลัง deploy ต้องถือเป็น baseline ใหม่ ห้ามเทียบ conversion ตรงกับข้อมูลก่อนแก้"
+      },
+      {
+        "id": "traffic-source-chart",
+        "type": "chart",
+        "layout": "full",
+        "chartId": "traffic-sources"
+      },
+      {
+        "id": "seo-heading",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "gsc-pages",
+        "body": "## SEO มี demand ให้เก็บเกี่ยว แต่ snippet/อันดับยังไม่เปลี่ยนเป็นคลิก\n\nGoogle Search Console บันทึก 317 page impressions และ 0 clicks หน้าเงินเดือน 30,000 กับหน้ารถยังผ่อนไม่หมดรวมกัน 255 impressions หรือ 80.4% ของทั้งหมด จึงควรแก้สองหน้านี้ก่อนสร้างบทความใหม่จำนวนมาก"
+      },
+      {
+        "id": "seo-table-block",
+        "type": "table",
+        "layout": "full",
+        "tableId": "seo-opportunities"
+      },
+      {
+        "id": "implementation-heading",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## สิ่งที่ลงมือแก้แล้วในรอบนี้\n\nการแก้ทั้งหมดเน้นหยุดความเสียหายก่อนสร้าง growth: ไม่รับเงินถ้าส่งของไม่ได้, ไม่ยิง affiliate click ปลอม, ไม่ให้รายงานอ่าน schema ผิด, และไม่ให้ automation เก่าสวนทางกับนโยบายปัจจุบัน"
+      },
+      {
+        "id": "implementation-table-block",
+        "type": "table",
+        "layout": "full",
+        "tableId": "implemented-changes"
+      },
+      {
+        "id": "plan-30-60-90",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## แผนทำรายได้ 30/60/90 วัน\n\n### 0–30 วัน: สร้าง baseline ที่เชื่อได้และพิสูจน์ออเดอร์แรก\n\n1. Owner review แล้ว deploy ชุดแก้ปัจจุบัน; ตั้ง GA4 custom definitions สำหรับ `affiliate_click`, `buy_intent_click`, `line_lead_click`, `internal_cta_click` และเริ่ม baseline ใหม่วัน deploy\n2. ใช้เฉพาะสินค้า 59 บาทและ toolkit Excel 199 บาทที่ส่งมอบได้จริง; ทำ checkout/delivery dry run ตั้งแต่ชำระเงินถึงดาวน์โหลด พร้อม SLA/refund wording\n3. ปรับ title/H1/snippet และเพิ่มแหล่ง ธปท. ให้ 2 หน้าที่มี 255 impressions รวม; ส่งขอ index ใหม่หลังตรวจ canonical\n4. เกณฑ์ผ่านเดือนแรก: missing deliverable = 0, synthetic affiliate requests = 0, และเกิด approved conversion หรือ own-product order จริงอย่างน้อย 1 รายการ (เป็นเป้าหมาย ไม่ใช่การรับประกัน)\n\n### 31–60 วัน: เพิ่ม qualified traffic และตัดสิ่งที่ไม่แปลง\n\n1. สร้าง debt-triage router แบบไม่เก็บข้อมูล เชื่อมไป calculator, ช่องทางรัฐ, สินค้าที่พร้อมส่ง และผู้ให้บริการที่มีใบอนุญาตตาม intent\n2. ทดสอบ CTA ทีละตัวแปรบนหน้าที่มี traffic; รออย่างน้อย 200 qualified page views ต่อแบบก่อนสรุป winner เพื่อไม่ตัดสินจาก sample เล็ก\n3. เพิ่มชื่อผู้เขียน/ผู้ตรวจทานที่พิสูจน์ได้, correction policy, วันตรวจข้อเท็จจริงจริง และ official-source box ในหน้า YMYL ที่ทำเงิน\n4. ถ้าชุดจดหมายยังไม่มี PDF ที่ผ่าน QA ให้ retire ถาวร; ถ้าจะเปิด ให้ทดสอบซื้อ–ส่งมอบ–เปิดไฟล์–ขอคืนเงินครบวงก่อน\n\n### 61–90 วัน: ขยายเฉพาะ funnel ที่มีรายได้อนุมัติ\n\n1. เพิ่ม distribution เฉพาะหน้า/ช่องที่มี approved revenue หรือ order จริง ไม่ใช้ raw click เป็นเกณฑ์\n2. ทำ comparator เฉพาะผู้ให้บริการที่ตรวจใบอนุญาตและ merchant endpoint ได้ พร้อมระบุขอบเขตว่าครอบคลุมกี่เจ้า\n3. พิจารณา lead generation หลัง privacy/consent/legal review เท่านั้น; ห้ามรับ PII ใน quiz หรือ calculator ระหว่างนี้\n4. รีวิวพอร์ตทุกสัปดาห์: approved THB, qualified clicks, checkout orders, organic clicks, deliverable coverage และ complaint/refund count"
+      },
+      {
+        "id": "further-questions",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## คำถามที่ต้องตอบในรอบถัดไป\n\n- สินค้า 59 บาทหรือ toolkit 199 บาทตัวใดมี margin, delivery และ refund process พร้อมกว่ากัน?\n- AccessTrade export sub ID / unique click / bot filtering ได้แค่ไหน เพื่อสร้าง qualified-click metric?\n- ใครจะเป็นผู้เขียนและผู้ตรวจทานที่แสดงชื่อได้จริงในหน้า YMYL?\n- GA4 Data Retention, internal traffic filter และ consent behavior ตั้งค่าอย่างไรใน property ปัจจุบัน?\n- Merchant 4 รายที่ตรวจไม่ได้เพราะ TLS ต้องยืนยันจาก dashboard/เบราว์เซอร์ก่อนคงไว้หรือถอดออกหรือไม่?"
+      },
+      {
+        "id": "caveats",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## ข้อจำกัดและสมมติฐาน\n\n- ไม่มีวิธีรับประกันรายได้; แผนนี้ลดความเสี่ยงและเพิ่มโอกาสเรียนรู้จากข้อมูลจริง\n- ตัวเลข GA4 ก่อน deploy taxonomy ใหม่ยังปน event และ internal/test traffic จึงใช้เป็น baseline เชิงสังเกตเท่านั้น\n- 329 AccessTrade clicks ไม่ใช่ visitor demand ที่เชื่อถือได้ เพราะ automated checks เคยเปิด affiliate URLs\n- รายการ 35 บาทเดือนกรกฎาคมยัง pending และอาจไม่ผ่านอนุมัติ\n- Gumroad และ AccessTrade เป็นการอ่านแบบ point-in-time ในบัญชีที่ล็อกอิน ณ 16 สิงหาคม 2569\n- รอบนี้ไม่ได้ commit, push หรือ deploy และไม่ได้แก้/ย้อนไฟล์ control-plane ที่ dirty มาก่อน"
+      },
+      {
+        "id": "sources-visible",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## แหล่งข้อมูลหลัก\n\n- [ธปท. — ปิดหนี้ไว ไปต่อได้](https://www.bot.or.th/th/cleardebt.html)\n- [ธปท. — Responsible Lending (PDF)](https://www.bot.or.th/content/dam/bot/fipcs/documents/FPG/2568/ThaiPDF/25680030.pdf)\n- [ธปท. — มาตรการขั้นต่ำบัตรเครดิตปี 2569 (PDF)](https://www.bot.or.th/content/dam/bot/fipcs/documents/FPG/2568/ThaiPDF/25680245.pdf)\n- [ธปท. — ผ่อนคลาย LTV ถึง 30 มิ.ย. 2570](https://www.bot.or.th/th/news-and-media/news/news-20260514.html)\n- [Google Search — Helpful content](https://developers.google.com/search/docs/fundamentals/creating-helpful-content)\n- [Google Search — Spam policies](https://developers.google.com/search/docs/essentials/spam-policies)\n- [Google Search — Qualify outbound links](https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links)"
+      }
+    ],
+    "cards": [
+      {
+        "id": "sessions-card",
+        "dataset": "headline",
+        "sourceId": "ga4-metrics",
+        "description": "Sessions รวมทุก source ในหน้าต่าง 28 วัน; Direct มีความเสี่ยงปน internal/test",
+        "metrics": [
+          {"label": "Sessions 28 วัน", "field": "sessions_28d", "format": "number"},
+          {"label": "Direct share", "field": "direct_share", "format": "percent"}
+        ]
+      },
+      {
+        "id": "affiliate-events-card",
+        "dataset": "headline",
+        "sourceId": "ga4-metrics",
+        "description": "Recorded events ไม่ใช่ยอดอนุมัติ และข้อมูลเดิมปน CTA ที่ไม่ใช่ affiliate",
+        "metrics": [
+          {"label": "Affiliate events", "field": "affiliate_events", "format": "number"}
+        ]
+      },
+      {
+        "id": "approved-revenue-card",
+        "dataset": "headline",
+        "sourceId": "live-account-audit",
+        "description": "รายได้ AccessTrade ที่อนุมัติแล้วเป็นเงินบาท; pending ยังไม่รวม",
+        "metrics": [
+          {"label": "Approved revenue ส.ค.", "field": "approved_revenue_aug", "format": "currency"},
+          {"label": "Pending ก.ค.", "field": "pending_reward_jul", "format": "currency"}
+        ]
+      },
+      {
+        "id": "gumroad-orders-card",
+        "dataset": "headline",
+        "sourceId": "live-account-audit",
+        "description": "ออเดอร์ที่เห็นใน Gumroad dashboard ณ เวลาตรวจ",
+        "metrics": [
+          {"label": "Gumroad orders", "field": "gumroad_orders", "format": "number"}
+        ]
+      }
+    ],
+    "charts": [
+      {
+        "id": "traffic-sources",
+        "title": "เซสชันตามแหล่งที่มา (28 วัน)",
+        "subtitle": "119 sessions; Direct 68.9% และต้องถือเป็นกลุ่มเสี่ยงปน internal/test",
+        "intent": "comparison",
+        "question": "ทราฟฟิกปัจจุบันมาจากแหล่งใดและกระจุกตัวแค่ไหน?",
+        "rationale": "A compact bar chart makes source concentration directly comparable.",
+        "comparisonContext": {
+          "denominator": "all 119 GA4 sessions",
+          "grain": "normalized traffic source",
+          "unit": "sessions"
+        },
+        "type": "bar",
+        "dataset": "traffic_sources",
+        "sourceId": "ga4-metrics",
+        "encodings": {
+          "x": {"field": "source", "type": "nominal", "label": "แหล่งที่มา"},
+          "y": {"field": "sessions", "type": "quantitative", "label": "Sessions", "format": "number"},
+          "tooltip": [
+            {"field": "sessions", "type": "quantitative", "label": "Sessions", "format": "number"},
+            {"field": "share", "type": "quantitative", "label": "Share", "format": "percent"}
+          ]
+        },
+        "valueFormat": "number",
+        "layout": "full",
+        "maxRows": 7,
+        "palette": {"kind": "sequential", "name": "blue"},
+        "labels": {"values": "all"}
+      }
+    ],
+    "tables": [
+      {
+        "id": "traffic-sources",
+        "title": "เซสชันตามแหล่งที่มา (28 วัน)",
+        "subtitle": "119 sessions; Direct 68.9% และต้องถือเป็นกลุ่มเสี่ยงปน internal/test",
+        "dataset": "traffic_sources",
+        "sourceId": "ga4-metrics",
+        "layout": "full",
+        "density": "compact",
+        "defaultSort": {"field": "sessions", "direction": "desc"},
+        "columns": [
+          {"field": "source", "label": "แหล่งที่มา", "type": "text"},
+          {"field": "sessions", "label": "Sessions", "format": "number"},
+          {"field": "share", "label": "Share", "format": "percent"},
+          {"field": "affiliate_events", "label": "Affiliate events", "format": "number"}
+        ]
+      },
+      {
+        "id": "revenue-truth",
+        "title": "สถานะรายได้ที่ตรวจยืนยันได้",
+        "subtitle": "Approved revenue แยกจาก pending, raw clicks และ recorded events",
+        "dataset": "revenue_truth",
+        "sourceId": "live-account-audit",
+        "layout": "full",
+        "density": "spacious",
+        "defaultSort": {"field": "rank", "direction": "asc"},
+        "columns": [
+          {"field": "rank", "label": "#", "format": "number"},
+          {"field": "period", "label": "ช่วงเวลา", "type": "text"},
+          {"field": "system", "label": "ระบบ", "type": "text"},
+          {"field": "observed_signal", "label": "สัญญาณที่เห็น", "type": "text"},
+          {"field": "approved_revenue_thb", "label": "Approved THB", "format": "currency"},
+          {"field": "reliability", "label": "ความหมาย", "type": "text"}
+        ]
+      },
+      {
+        "id": "seo-opportunities",
+        "title": "หน้า SEO ที่มีโอกาสก่อนสร้างหน้าใหม่",
+        "subtitle": "Google Search Console page data; 317 impressions รวม, 0 clicks",
+        "dataset": "seo_opportunities",
+        "sourceId": "gsc-pages",
+        "layout": "full",
+        "density": "spacious",
+        "defaultSort": {"field": "impressions", "direction": "desc"},
+        "columns": [
+          {"field": "page", "label": "หน้า", "type": "text"},
+          {"field": "impressions", "label": "Impressions", "format": "number"},
+          {"field": "clicks", "label": "Clicks", "format": "number"},
+          {"field": "avg_position", "label": "Avg position", "format": "number"},
+          {"field": "share", "label": "Share of impressions", "format": "percent"},
+          {"field": "next_action", "label": "ทำต่อ", "type": "text"}
+        ]
+      },
+      {
+        "id": "implemented-changes",
+        "title": "รายการแก้ที่ทำเสร็จใน working tree",
+        "subtitle": "ยังไม่ commit, push หรือ deploy",
+        "dataset": "implemented_changes",
+        "sourceId": "repo-audit",
+        "layout": "full",
+        "density": "spacious",
+        "defaultSort": {"field": "priority_order", "direction": "asc"},
+        "columns": [
+          {"field": "priority_order", "label": "#", "format": "number"},
+          {"field": "priority", "label": "ระดับ", "type": "text"},
+          {"field": "change", "label": "สิ่งที่แก้", "type": "text"},
+          {"field": "business_effect", "label": "ผลต่อธุรกิจ", "type": "text"},
+          {"field": "validation", "label": "หลักฐาน", "type": "text"}
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "id": "ga4-metrics",
+        "label": "GA4 source metrics (28-day snapshot)",
+        "path": "automation-log/ga4-metrics.csv",
+        "query": {
+          "engine": "sqlite",
+          "language": "sql",
+          "sql": "SELECT SUM(sessions) AS sessions_28d, ROUND(1.0 * SUM(CASE WHEN source = 'direct' THEN sessions ELSE 0 END) / NULLIF(SUM(sessions), 0), 3) AS direct_share, SUM(affiliate_click) AS affiliate_events FROM ga4_metrics;\nSELECT source, sessions, ROUND(1.0 * sessions / SUM(sessions) OVER (), 3) AS share, affiliate_click AS affiliate_events, buy_intent_click AS buy_intent_events FROM ga4_metrics ORDER BY sessions DESC;",
+          "description": "Read the latest normalized source-level GA4 export",
+          "executed_at": "2026-08-15T07:29:00+07:00",
+          "tables_used": ["automation-log/ga4-metrics.csv"],
+          "filters": ["28-day window", "localhost hostnames excluded by ga4_pull.py"],
+          "metric_definitions": [
+            "sessions_28d = sum(sessions) across source rows",
+            "direct_share = direct sessions / all sessions",
+            "affiliate_events = recorded affiliate_click event count; not approved revenue"
+          ]
+        }
+      },
+      {
+        "id": "gsc-pages",
+        "label": "Google Search Console page performance snapshot",
+        "path": "automation-log/gsc-pages.csv",
+        "query": {
+          "engine": "sqlite",
+          "language": "sql",
+          "sql": "WITH totals AS (SELECT SUM(impressions) AS total FROM gsc_pages) SELECT CASE WHEN page = 'https://ngernduangold.com/' THEN '/' ELSE REPLACE(page, 'https://ngernduangold.com/', '') END AS page, impressions, clicks, position AS avg_position, ROUND(1.0 * impressions / NULLIF(total, 0), 3) AS share FROM gsc_pages CROSS JOIN totals ORDER BY impressions DESC;",
+          "description": "Read the latest page-level Search Console export",
+          "executed_at": "2026-08-15T07:29:00+07:00",
+          "tables_used": ["automation-log/gsc-pages.csv"],
+          "metric_definitions": ["share = page impressions / 317 total page impressions"]
+        }
+      },
+      {
+        "id": "live-account-audit",
+        "label": "Point-in-time Gumroad and AccessTrade account audit",
+        "path": "reports/revenue-uplift-20260816/evidence.json",
+        "query": {
+          "engine": "sqlite",
+          "language": "sql",
+          "sql": "SELECT MAX(CASE WHEN metric = 'approved_revenue_aug' THEN value END) AS approved_revenue_aug, MAX(CASE WHEN metric = 'pending_reward_jul' THEN value END) AS pending_reward_jul, MAX(CASE WHEN metric = 'gumroad_orders' THEN value END) AS gumroad_orders FROM account_metrics;\nSELECT rank, period, system, observed_signal, approved_revenue_thb, reliability FROM revenue_truth ORDER BY rank;",
+          "description": "Read-only signed-in account verification with only aggregate, non-sensitive results retained",
+          "executed_at": "2026-08-16T00:45:00+07:00",
+          "tables_used": ["reports/revenue-uplift-20260816/evidence.json"],
+          "metric_definitions": [
+            "approved_revenue excludes pending rewards",
+            "Gumroad orders and customers are dashboard counts at verification time"
+          ]
+        }
+      },
+      {
+        "id": "repo-audit",
+        "label": "Repository audit and post-build validation evidence",
+        "path": "reports/revenue-uplift-20260816/evidence.json",
+        "query": {
+          "engine": "sqlite",
+          "language": "sql",
+          "sql": "SELECT priority_order, priority, change, business_effect, validation FROM implemented_changes ORDER BY priority_order;",
+          "description": "Aggregated results from source inspection, build, smoke, static affiliate, schema, and deliverable checks",
+          "executed_at": "2026-08-16T01:24:00+07:00",
+          "tables_used": ["reports/revenue-uplift-20260816/evidence.json"],
+          "filters": ["No deploy", "No commit", "No push", "Preexisting dirty control files preserved"]
+        }
+      },
+      {
+        "id": "bot-policy",
+        "label": "Bank of Thailand Responsible Lending criteria",
+        "href": "https://www.bot.or.th/content/dam/bot/fipcs/documents/FPG/2568/ThaiPDF/25680030.pdf"
+      },
+      {
+        "id": "google-helpful-content",
+        "label": "Google Search helpful content guidance",
+        "href": "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-08-16T01:24:00+07:00",
+    "status": "ready",
+    "datasets": {
+      "headline": [
+        {
+          "sessions_28d": 119,
+          "direct_share": 0.689,
+          "affiliate_events": 6,
+          "approved_revenue_aug": 0,
+          "pending_reward_jul": 35,
+          "gumroad_orders": 0
+        }
+      ],
+      "traffic_sources": [
+        {"source": "direct", "sessions": 82, "share": 0.689, "affiliate_events": 0, "buy_intent_events": 2, "reliability": "High contamination risk"},
+        {"source": "pantip", "sessions": 14, "share": 0.118, "affiliate_events": 4, "buy_intent_events": 0, "reliability": "Recorded events; approval unknown"},
+        {"source": "chatgpt", "sessions": 12, "share": 0.101, "affiliate_events": 2, "buy_intent_events": 0, "reliability": "Recorded events; approval unknown"},
+        {"source": "fb", "sessions": 5, "share": 0.042, "affiliate_events": 0, "buy_intent_events": 0, "reliability": "Low sample"},
+        {"source": "yt", "sessions": 3, "share": 0.025, "affiliate_events": 0, "buy_intent_events": 0, "reliability": "Low sample"},
+        {"source": "threads", "sessions": 2, "share": 0.017, "affiliate_events": 0, "buy_intent_events": 0, "reliability": "Low sample"},
+        {"source": "bing", "sessions": 1, "share": 0.008, "affiliate_events": 0, "buy_intent_events": 0, "reliability": "Low sample"}
+      ],
+      "revenue_truth": [
+        {"rank": 1, "period": "กรกฎาคม 2569", "system": "AccessTrade", "observed_signal": "1 conversion; reward pending 35 THB", "approved_revenue_thb": 0, "reliability": "Pending ไม่ใช่เงิน และอาจไม่ผ่าน"},
+        {"rank": 2, "period": "1–15 สิงหาคม 2569", "system": "AccessTrade", "observed_signal": "329 raw clicks; 0 conversion", "approved_revenue_thb": 0, "reliability": "Clicks ปน automated link checks"},
+        {"rank": 3, "period": "ณ 16 สิงหาคม 2569", "system": "Gumroad", "observed_signal": "0 customers; 0 orders", "approved_revenue_thb": 0, "reliability": "Live dashboard point-in-time"}
+      ],
+      "seo_opportunities": [
+        {"page": "credit-card-salary-30000-2026", "impressions": 154, "clicks": 0, "avg_position": 38.0, "share": 0.486, "next_action": "Rewrite title/H1/snippet around credit-limit intent; add official sources"},
+        {"page": "car-still-installment-loan-2026", "impressions": 101, "clicks": 0, "avg_position": 59.2, "share": 0.319, "next_action": "Tighten answer-first copy; clarify refinance vs title-loan eligibility"},
+        {"page": "refinance-home-2026", "impressions": 20, "clicks": 0, "avg_position": 84.4, "share": 0.063, "next_action": "Update with 2027 LTV window and original savings examples"},
+        {"page": "old-car-financing-20years", "impressions": 9, "clicks": 0, "avg_position": 64.9, "share": 0.028, "next_action": "Add model-year decision table and internal links"},
+        {"page": "credit-card-salary-20000-2026", "impressions": 3, "clicks": 0, "avg_position": 9.3, "share": 0.009, "next_action": "Quick-win snippet test because ranking is already near page one"}
+      ],
+      "implemented_changes": [
+        {"priority_order": 1, "priority": "P0", "change": "Pause letter-kit payment and rewrite paid anchors at build", "business_effect": "Prevents taking 199 THB for a missing PDF", "validation": "Deliverable check PASS: 1 paused before payment"},
+        {"priority_order": 2, "priority": "P0", "change": "Remove FWD provider from every generated surface", "business_effect": "Removes merchant destination confirmed 404", "validation": "180 placements / 18 unique; FWD absent"},
+        {"priority_order": 3, "priority": "P0", "change": "Replace network affiliate checks with static shape validation", "business_effect": "Stops self-click pollution in AccessTrade", "validation": "Network requests: 0"},
+        {"priority_order": 4, "priority": "P0", "change": "Add shared affiliate_click schema adapter for four consumers", "business_effect": "Reports, dashboard, review and optimizer read current GA4 output", "validation": "8 schema checks PASS; current summary shows 6 events"},
+        {"priority_order": 5, "priority": "P0", "change": "Count quiz_start event instead of /quiz page view", "business_effect": "Channel funnel measures an actual answer interaction", "validation": "10 attribution/event checks PASS"},
+        {"priority_order": 6, "priority": "P0", "change": "Split affiliate, own-product, LINE and internal CTA events", "business_effect": "Future data can distinguish revenue paths", "validation": "Built listener contains four exclusive branches"},
+        {"priority_order": 7, "priority": "P1", "change": "Production canonical default, canonical smoke assertion and security headers", "business_effect": "Prevents example.com artifacts and adds baseline browser hardening", "validation": "71/71 pages PASS"},
+        {"priority_order": 8, "priority": "P1", "change": "Retire stale Meta publish/token workflows", "business_effect": "Stops automation that conflicts with current token policy", "validation": "Schedules removed; jobs gated false"},
+        {"priority_order": 9, "priority": "P1", "change": "Add official-source monitor and weekly integration", "business_effect": "Flags BOT/Google changes before facts become stale", "validation": "5/5 sources fetched; second pass unchanged; 0 errors"},
+        {"priority_order": 10, "priority": "P1", "change": "Add GA4 privacy disclosure, official-source boxes and honest quiz copy", "business_effect": "Improves YMYL trust and removes comparison overpromise", "validation": "Rebuild and 71-page smoke PASS"},
+        {"priority_order": 11, "priority": "P1", "change": "Force UTF-8 decoding for preflight subprocess output", "business_effect": "Preflight no longer crashes on Thai or emoji output on Windows", "validation": "Full preflight completes; remaining FAIL is business state"}
+      ]
+    }
+  },
+  "sources": [
+    {
+      "id": "ga4-metrics",
+      "label": "GA4 source metrics (28-day snapshot)",
+      "path": "automation-log/ga4-metrics.csv",
+      "query": {
+        "engine": "sqlite",
+        "language": "sql",
+        "sql": "SELECT SUM(sessions) AS sessions_28d, ROUND(1.0 * SUM(CASE WHEN source = 'direct' THEN sessions ELSE 0 END) / NULLIF(SUM(sessions), 0), 3) AS direct_share, SUM(affiliate_click) AS affiliate_events FROM ga4_metrics;\nSELECT source, sessions, ROUND(1.0 * sessions / SUM(sessions) OVER (), 3) AS share, affiliate_click AS affiliate_events, buy_intent_click AS buy_intent_events FROM ga4_metrics ORDER BY sessions DESC;",
+        "description": "Read the latest normalized source-level GA4 export",
+        "executed_at": "2026-08-15T07:29:00+07:00",
+        "tables_used": ["automation-log/ga4-metrics.csv"],
+        "filters": ["28-day window", "localhost hostnames excluded by ga4_pull.py"],
+        "metric_definitions": [
+          "sessions_28d = sum(sessions) across source rows",
+          "direct_share = direct sessions / all sessions",
+          "affiliate_events = recorded affiliate_click event count; not approved revenue"
+        ]
+      }
+    },
+    {
+      "id": "gsc-pages",
+      "label": "Google Search Console page performance snapshot",
+      "path": "automation-log/gsc-pages.csv",
+      "query": {
+        "engine": "sqlite",
+        "language": "sql",
+        "sql": "WITH totals AS (SELECT SUM(impressions) AS total FROM gsc_pages) SELECT CASE WHEN page = 'https://ngernduangold.com/' THEN '/' ELSE REPLACE(page, 'https://ngernduangold.com/', '') END AS page, impressions, clicks, position AS avg_position, ROUND(1.0 * impressions / NULLIF(total, 0), 3) AS share FROM gsc_pages CROSS JOIN totals ORDER BY impressions DESC;",
+        "description": "Read the latest page-level Search Console export",
+        "executed_at": "2026-08-15T07:29:00+07:00",
+        "tables_used": ["automation-log/gsc-pages.csv"],
+        "metric_definitions": ["share = page impressions / 317 total page impressions"]
+      }
+    },
+    {
+      "id": "live-account-audit",
+      "label": "Point-in-time Gumroad and AccessTrade account audit",
+      "path": "reports/revenue-uplift-20260816/evidence.json",
+      "query": {
+        "engine": "sqlite",
+        "language": "sql",
+        "sql": "SELECT MAX(CASE WHEN metric = 'approved_revenue_aug' THEN value END) AS approved_revenue_aug, MAX(CASE WHEN metric = 'pending_reward_jul' THEN value END) AS pending_reward_jul, MAX(CASE WHEN metric = 'gumroad_orders' THEN value END) AS gumroad_orders FROM account_metrics;\nSELECT rank, period, system, observed_signal, approved_revenue_thb, reliability FROM revenue_truth ORDER BY rank;",
+        "description": "Read-only signed-in account verification with only aggregate, non-sensitive results retained",
+        "executed_at": "2026-08-16T00:45:00+07:00",
+        "tables_used": ["reports/revenue-uplift-20260816/evidence.json"],
+        "metric_definitions": [
+          "approved_revenue excludes pending rewards",
+          "Gumroad orders and customers are dashboard counts at verification time"
+        ]
+      }
+    },
+    {
+      "id": "repo-audit",
+      "label": "Repository audit and post-build validation evidence",
+      "path": "reports/revenue-uplift-20260816/evidence.json",
+      "query": {
+        "engine": "sqlite",
+        "language": "sql",
+        "sql": "SELECT priority_order, priority, change, business_effect, validation FROM implemented_changes ORDER BY priority_order;",
+        "description": "Aggregated results from source inspection, build, smoke, static affiliate, schema, and deliverable checks",
+        "executed_at": "2026-08-16T01:24:00+07:00",
+        "tables_used": ["reports/revenue-uplift-20260816/evidence.json"],
+        "filters": ["No deploy", "No commit", "No push", "Preexisting dirty control files preserved"]
+      }
+    },
+    {"id": "bot-policy", "label": "Bank of Thailand Responsible Lending criteria", "href": "https://www.bot.or.th/content/dam/bot/fipcs/documents/FPG/2568/ThaiPDF/25680030.pdf"},
+    {"id": "google-helpful-content", "label": "Google Search helpful content guidance", "href": "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"}
+  ]
+}

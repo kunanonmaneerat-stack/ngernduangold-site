@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "as_of": "2026-08-23",
+  "strict_no_watermark": true,
+  "unknown_origin_state": "BLOCKED",
+  "google_flow": {
+    "role": "IDEATION_STORYBOARD_ONLY",
+    "final_pixels_allowed": false,
+    "final_audio_allowed": false,
+    "reason": "Google documents invisible SynthID on Flow outputs even when visible watermarking is disabled.",
+    "official_sources": [
+      "https://support.google.com/flow/answer/16353333?hl=en",
+      "https://support.google.com/flow/answer/16935308?hl=en"
+    ],
+    "live_ui_snapshot": {
+      "observed_on": "2026-08-23",
+      "plan": "Google AI Pro",
+      "credits_observed": 1050,
+      "visible_watermarking": "OFF",
+      "warning": "A point-in-time UI observation; not an entitlement or no-watermark attestation."
+    }
+  },
+  "final_asset_required_fields": [
+    "generator_origin",
+    "contains_flow_pixels",
+    "contains_flow_audio",
+    "synthid_expected"
+  ],
+  "allowed_final_origins": [
+    "LOCAL_HTML_SVG_FFMPEG_WINDOWS_TTS",
+    "LOCAL_HTML_CSS_BROWSER_RENDER",
+    "LOCAL_PIL_NUMPY_FFMPEG_LOCAL_WAV",
+    "LOCAL_FRAME_EXPORT_FROM_ATTESTED_LOCAL_VIDEO"
+  ]
+}

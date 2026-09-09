@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""automation-log/log_run.py — central run-logger for ngernduangold routines.
+"""automation-log/log_run.py — durable local run logger.
 
-ทุก routine เรียกตอนจบรอบ → บันทึก proof-of-execution ลง GitHub ให้ Cowork เห็น
-(ไฟล์อยู่ repo root → Netlify publish=site/ จึง **ไม่ขึ้นเว็บ public**, เห็นเฉพาะบน GitHub).
+Routines write local proof-of-execution only. This module never stages, commits,
+pushes, deploys, notifies, or claims that a tracked row reached a remote system.
 
 ⚠️ repo เป็น public → ห้ามใส่ข้อมูลอ่อนไหว (ยอดรายได้/PII/token). ใส่ได้แค่ status/count/permalink สาธารณะ.
 
@@ -12,7 +12,16 @@ CLI:
 import:
   from log_run import log_run; log_run("queue-keeper","ok","เติม 6 โพสต์",{"added":6})
 """
-import json, os, sys, re, argparse, datetime
+import argparse
+from contextlib import contextmanager
+import datetime
+import json
+import os
+from pathlib import Path
+import re
+import sys
+import time
+from public_log_sanitize import sanitize_public_record
 try:  # cp874-safe UTF-8 stdout/stderr (idempotent)
     import sys as _sys; _sys.stdout.reconfigure(encoding="utf-8", errors="replace"); _sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 except Exception:
@@ -20,37 +29,94 @@ except Exception:
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
+
+@contextmanager
+def _runlog_lock():
+    """Serialize monthly append plus latest.md rebuild across processes."""
+    lock_dir = Path(HERE).resolve().parent / ".local-private" / "runtime" / "locks"
+    lock_dir.mkdir(parents=True, exist_ok=True)
+    lock_path = lock_dir / "automation-runlog.lock"
+    handle = lock_path.open("a+b")
+    handle.seek(0, os.SEEK_END)
+    if handle.tell() == 0:
+        handle.write(b"0")
+        handle.flush()
+        os.fsync(handle.fileno())
+    handle.seek(0)
+    try:
+        if os.name == "nt":
+            import msvcrt
+            deadline = time.monotonic() + 30
+            while True:
+                try:
+                    msvcrt.locking(handle.fileno(), msvcrt.LK_NBLCK, 1)
+                    break
+                except OSError:
+                    if time.monotonic() >= deadline:
+                        raise TimeoutError("timed out acquiring automation runlog lock")
+                    time.sleep(0.05)
+        else:  # pragma: no cover - production host is Windows
+            import fcntl
+            fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+        yield
+    finally:
+        try:
+            handle.seek(0)
+            if os.name == "nt":
+                import msvcrt
+                msvcrt.locking(handle.fileno(), msvcrt.LK_UNLCK, 1)
+            else:  # pragma: no cover - production host is Windows
+                import fcntl
+                fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+        finally:
+            handle.close()
+
 def _now_iso():
     return datetime.datetime.now(datetime.timezone.utc).astimezone().isoformat(timespec="seconds")
 
 def log_run(routine, status, summary="", metrics=None, ts=None):
     ts = ts or _now_iso()
-    entry = {"ts": ts, "routine": routine, "status": status,
-             "summary": summary, "metrics": metrics or {}}
+    entry = sanitize_public_record({
+        "ts": ts, "routine": routine, "status": status,
+        "summary": summary, "metrics": metrics or {},
+    })
     jpath = os.path.join(HERE, ts[:7] + ".jsonl")          # e.g. 2026-06.jsonl
-    with open(jpath, "a", encoding="utf-8") as f:
-        f.write(json.dumps(entry, ensure_ascii=False) + "\n")
-    rebuild_latest()
+    with _runlog_lock():
+        with open(jpath, "a", encoding="utf-8", newline="\n") as f:
+            f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+            f.flush()
+            os.fsync(f.fileno())
+        _rebuild_latest_locked()
     return entry
 
-def rebuild_latest():
+
+def _rebuild_latest_locked():
     latest = {}
     for fn in sorted(os.listdir(HERE)):
         # ONLY the monthly run-log files (YYYY-MM.jsonl) — never other .jsonl
         # such as post-ledger.jsonl (per-post dedup record, has no 'routine' key).
         if not re.match(r"\d{4}-\d{2}\.jsonl$", fn):
             continue
-        for line in open(os.path.join(HERE, fn), encoding="utf-8"):
-            line = line.strip()
-            if not line:
-                continue
-            try:
-                e = json.loads(line)
-            except Exception:
-                continue
-            if "routine" not in e:                # defensive: skip non-run-log rows
-                continue
-            latest[e["routine"]] = e              # keep last per routine
+        with open(os.path.join(HERE, fn), encoding="utf-8") as source:
+            for number, line in enumerate(source, 1):
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    e = json.loads(line)
+                except Exception as exc:
+                    raise RuntimeError(
+                        f"runlog corruption at {fn}:{number}"
+                    ) from exc
+                if isinstance(e, dict) and "_recovered" in e:
+                    # Deliberate redaction placeholder written by the
+                    # 2026-08-16 privacy remediation. Not corruption:
+                    # it carries no routine/ts by design. Skip it.
+                    continue
+                if not isinstance(e, dict) or "routine" not in e or "ts" not in e:
+                    raise RuntimeError(f"runlog record is malformed at {fn}:{number}")
+                e = sanitize_public_record(e)
+                latest[e["routine"]] = e          # keep last per routine
     rows = sorted(latest.values(), key=lambda e: e["routine"])
     md = ["# ngernduangold — Automation last-run (auto-generated by log_run.py)",
           "",
@@ -62,13 +128,36 @@ def rebuild_latest():
         md.append("| {routine} | {ts} | {status} | {summary} |".format(
             routine=e["routine"], ts=e["ts"], status=e["status"], summary=e.get("summary", "")))
     md.append("")
-    with open(os.path.join(HERE, "latest.md"), "w", encoding="utf-8") as f:
-        f.write("\n".join(md) + "\n")
+    destination = Path(HERE) / "latest.md"
+    temporary = destination.with_name(
+        destination.name + f".tmp-{os.getpid()}-{datetime.datetime.now().timestamp():.6f}"
+    )
+    payload = ("\n".join(md) + "\n").encode("utf-8")
+    descriptor = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    try:
+        with os.fdopen(descriptor, "wb") as handle:
+            handle.write(payload)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, destination)
+    finally:
+        try:
+            temporary.unlink(missing_ok=True)
+        except OSError:
+            pass
+
+
+def rebuild_latest():
+    with _runlog_lock():
+        _rebuild_latest_locked()
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--routine", required=True)
-    ap.add_argument("--status", required=True, help="ok | fail | partial | registered")
+    ap.add_argument(
+        "--status", required=True,
+        help="started | ok | warn | blocked | fail | partial | registered",
+    )
     ap.add_argument("--summary", default="")
     ap.add_argument("--metrics", default="{}")
     a = ap.parse_args()

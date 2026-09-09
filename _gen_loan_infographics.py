@@ -38,9 +38,6 @@ display:flex;align-items:center;justify-content:center;color:var(--navy);font-si
 TPL = """<!doctype html><html lang="th"><head><meta charset="utf-8">
 <title>{title}</title><meta name="robots" content="noindex">
 <meta property="og:title" content="{ogt}"><meta property="og:description" content="{ogd}">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@500;700&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>{css}</style></head>
 <body>
   <div class="brand"><span class="coin">฿</span><span class="nm">เงินเดือนสมองทอง</span></div>

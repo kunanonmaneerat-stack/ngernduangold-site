@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-08-23T20:25:00+07:00",
+  "purpose": "Hash-bound historical canonical collision tombstone. It permanently prevents reuse without deciding which external delivery occurred or changing any ledger row.",
+  "tombstones": [
+    {
+      "tombstone_id": "collision-v1-tiktok-titleloan",
+      "channel": "tiktok",
+      "identity_type": "clip",
+      "identity": "titleloan",
+      "reuse_policy": "HISTORICAL_CANONICAL_COLLISION_NON_REUSABLE",
+      "external_delivery_resolution": "UNKNOWN_NO_INFERENCE",
+      "occurrences": [
+        {
+          "line": 1,
+          "row_sha256": "79E089A17F4D6F7A9C148767559BFFBFAE5FC87F076AF58D1D0DE6B0F397780E",
+          "ledger_status": "scheduled",
+          "ledger_date": "2026-06-15"
+        },
+        {
+          "line": 19,
+          "row_sha256": "CDB0378762906204B113AF0A2B5813DBBE04F552457CE770CEB838719AC2AED7",
+          "ledger_status": "posted",
+          "ledger_date": "2026-07-10"
+        }
+      ]
+    },
+    {
+      "tombstone_id": "collision-v1-instagram-aed0406157eb7257c3bf86c7906a6822f8b86e79",
+      "channel": "instagram",
+      "identity_type": "text_hash",
+      "identity": "aed0406157eb7257c3bf86c7906a6822f8b86e79",
+      "reuse_policy": "HISTORICAL_CANONICAL_COLLISION_NON_REUSABLE",
+      "external_delivery_resolution": "UNKNOWN_NO_INFERENCE",
+      "occurrences": [
+        {
+          "line": 63,
+          "row_sha256": "8E5275E458C7D083AE7C052ABA9D2F314E964826A236D9189455C7A22789BF8E",
+          "ledger_status": "",
+          "ledger_date": "2026-07-21"
+        },
+        {
+          "line": 89,
+          "row_sha256": "425784D988E5380F9F95BE88CB132DF0D1EBD4729473B1468882DA8DEBA18BC5",
+          "ledger_status": "",
+          "ledger_date": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "tombstone_id": "collision-v1-youtube-90e43a4ddc4d3da3f72e17d10fd38f153e0741bc",
+      "channel": "youtube",
+      "identity_type": "text_hash",
+      "identity": "90e43a4ddc4d3da3f72e17d10fd38f153e0741bc",
+      "reuse_policy": "HISTORICAL_CANONICAL_COLLISION_NON_REUSABLE",
+      "external_delivery_resolution": "UNKNOWN_NO_INFERENCE",
+      "occurrences": [
+        {
+          "line": 31,
+          "row_sha256": "ED85FE9CF6D29B4DEF258BE01B218F526A7A6563EB24D068EC34872024BC4692",
+          "ledger_status": "",
+          "ledger_date": "2026-07-18"
+        },
+        {
+          "line": 47,
+          "row_sha256": "5C6E978388CB350E1F18488FA981A91A3EC937F06E28EDE995574FBF43E23C32",
+          "ledger_status": "",
+          "ledger_date": "2026-07-19"
+        },
+        {
+          "line": 55,
+          "row_sha256": "DF8DD19918019F1CD1A6EA1B6128F2D2CE93D2C5280EF3821E68AD9AFD8E3EAA",
+          "ledger_status": "",
+          "ledger_date": "2026-07-20"
+        },
+        {
+          "line": 62,
+          "row_sha256": "6091E85BBD69A223BB84760A7C05B3892ED45D0BC849D38CBA51A410208C9B78",
+          "ledger_status": "",
+          "ledger_date": "2026-07-21"
+        },
+        {
+          "line": 70,
+          "row_sha256": "7119FF7E7BEF140CD4896F8AA99DF7817557258E4D02779D5EFA45B2CEF0BDF2",
+          "ledger_status": "",
+          "ledger_date": "2026-07-23"
+        },
+        {
+          "line": 78,
+          "row_sha256": "7A0F1A048176F728A7E5A4A979D68DCB608FB97E1D39D4F71837E8C3EE978BDC",
+          "ledger_status": "",
+          "ledger_date": "2026-07-24"
+        },
+        {
+          "line": 87,
+          "row_sha256": "23C146C3007B921E4AC49D8F4888D213F0754599718FA49FB4254A0EC5B38296",
+          "ledger_status": "",
+          "ledger_date": "2026-07-25"
+        },
+        {
+          "line": 94,
+          "row_sha256": "A7AF48D0CB8F0982877996A0ACBF7BC9685047DC0345B5E878D3A2D0E4BCCD37",
+          "ledger_status": "",
+          "ledger_date": "2026-07-26"
+        },
+        {
+          "line": 103,
+          "row_sha256": "78545F0BA37C92AB7782A42CE2D11E6040E52E811E2F0AF4898FA3B42C048786",
+          "ledger_status": "",
+          "ledger_date": "2026-07-30"
+        },
+        {
+          "line": 113,
+          "row_sha256": "85CE687E47FAEDDEE9AAF4058F830CBB4C4AE413AE7DDAC335D29A934749DBA5",
+          "ledger_status": "",
+          "ledger_date": "2026-07-31"
+        },
+        {
+          "line": 120,
+          "row_sha256": "49CC0E1C6D4F66F1EAAE731D88418DD68DD9D6151C007547357E9391FD233024",
+          "ledger_status": "",
+          "ledger_date": "2026-08-01"
+        },
+        {
+          "line": 129,
+          "row_sha256": "79E14FB627285278E7726C6DB8AD80A7EBB9CD0EA2FB291C3AAD0347CDFDD4A9",
+          "ledger_status": "",
+          "ledger_date": "2026-08-06"
+        },
+        {
+          "line": 137,
+          "row_sha256": "E3A1A825D2E1333C25F57591C1DB05A939E1C987164FDE0F9B27499D6A9078F9",
+          "ledger_status": "",
+          "ledger_date": "2026-08-07"
+        },
+        {
+          "line": 155,
+          "row_sha256": "683422B5CEB75066AAF233BFE6CFF53AEF664F7146DB616F6D1D4A3BA7D81599",
+          "ledger_status": "",
+          "ledger_date": "2026-08-09"
+        }
+      ]
+    }
+  ],
+  "self_sha256": "C223D3EF36AA5ED0671ADFD11B5D5AD4120F861F28ED363F9EFADF37D09E5205"
+}

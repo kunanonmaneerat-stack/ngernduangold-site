@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "receipt_id": "qt14-media-binding-20260830-r1",
+  "created_at": "2026-08-30T21:56:24+07:00",
+  "change_kind": "LOCAL_MEDIA_COMPLETION",
+  "scope": "QT14_THREE_HELD_PLACEMENTS_ONLY",
+  "source": {
+    "path": "automation-log/QUOTE-CARDS_20260723-0822.md",
+    "sha256": "6D97BF105E8A00A298A25DA963C0C7AE5906048DD58270F193967166DE06AB6A",
+    "row_id": "qt-14",
+    "field": "caption",
+    "exact_overlay_text": "อิสรภาพทางการเงินไม่ใช่การมีเงินไม่จำกัด แต่คือการไม่ต้องกังวลทุกครั้งที่สิ้นเดือนมาถึง",
+    "source_review": "NOT_REQUIRED_EXACT_EVERGREEN_QUOTE"
+  },
+  "calendar": {
+    "path": ".system_control/content_calendar.json",
+    "file_sha256": "978B5C91453D548E1285193A80428F7936CCCE052BE7ED2D6B9739969A762D23",
+    "canonical_sha256": "A7DC57B51EA25472DC61CF73F93B0E96ED8325203BE934EC08DD89C22ED26161"
+  },
+  "assets": {
+    "facebook_instagram": {
+      "path": "media/quotes/week-20260824-30-r5/qt-14_fb-ig_4x5.jpg",
+      "sha256": "3BD6FC7DA3CA64BEC9864B58DE5C8AE6A4DBB5A76536D2CCCB786C196177C187",
+      "size_bytes": 81607,
+      "dimensions": [1080, 1350],
+      "qa_receipt": "automation-log/media-qa/qt-14-fb-ig-image-r5.json",
+      "qa_receipt_sha256": "7C720F2D4B812C61DA9884358F9FB3C54B51CF6668BD3438497C0F7ECAD62E70",
+      "media_publish_guard": "PASS_NO_PUBLICATION_AUTHORITY"
+    },
+    "pinterest": {
+      "path": "media/quotes/week-20260824-30-r5/qt-14_pinterest_2x3.jpg",
+      "sha256": "BCC340F0951EB44307FF4DA9B843A61FBEC51870B2BC161CAA374BFF4775021F",
+      "size_bytes": 78318,
+      "dimensions": [1000, 1500],
+      "qa_receipt": "automation-log/media-qa/qt-14-pinterest-image-r5.json",
+      "qa_receipt_sha256": "9397AA3B5AF962255FF34F2CC873D4A316FBCD8E2161BDB067FBCA2E67819537",
+      "media_publish_guard": "PASS_NO_PUBLICATION_AUTHORITY"
+    }
+  },
+  "placement_bindings": {
+    "qt-14__facebook_main": {
+      "asset_key": "facebook_instagram",
+      "placement_canonical_sha256": "E21B969E9C822B0379B59339F7237E6F2FC5E9897108D9A7FFDF21D65F5BDA34",
+      "remaining_blockers": ["publication_authority"]
+    },
+    "qt-14__instagram_main": {
+      "asset_key": "facebook_instagram",
+      "placement_canonical_sha256": "9C26F333D61A935B62B42115C903420B845041C9E1A9A6AAA830D0361B4AF3D1",
+      "remaining_blockers": ["publication_authority", "channel_review"]
+    },
+    "qt-14__pinterest_main": {
+      "asset_key": "pinterest",
+      "placement_canonical_sha256": "0C660135E6030ABB124DB5B0593BE91E8562FC982D36B7A5E948A2B83A77E105",
+      "remaining_blockers": ["publication_authority", "channel_review"]
+    }
+  },
+  "qa": {
+    "technical_dimensions": "PASS",
+    "exact_text_binding": "PASS",
+    "full_frame_visual_review": "PASS",
+    "watermark_logo_handle_url_tracking_mark": "NONE_OBSERVED",
+    "novelty_exact_hash": "PASS",
+    "origin_attestation": "DECLARED_ALLOWED_NOT_INDEPENDENTLY_VERIFIED"
+  },
+  "authority_changes": {
+    "policy_mutated": false,
+    "publication_authority_mutated": false,
+    "owner_approval_minted": false,
+    "channel_review_minted": false
+  },
+  "external_actions": {
+    "posted": false,
+    "scheduled": false,
+    "network_used": false,
+    "tracker_opened": false,
+    "test_traffic_created": false,
+    "commit_or_push": false,
+    "deploy": false
+  }
+}

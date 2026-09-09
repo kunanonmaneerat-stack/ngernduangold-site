@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "content_id": "b3-01",
+  "target_channel": "tiktok",
+  "target_contract": {
+    "mode": "planned_no_link_no_affiliate",
+    "outbound_url_allowed": false,
+    "affiliate_claim_expected": false,
+    "provider_license_claim_allowed": false
+  },
+  "asset": "reels/2026-07-27_b3-01.mp4",
+  "sha256": "81C25DC4F0D6338E134D77F0D1D95C3C4388C79FCD0EBCB8D344530003F0E5D8",
+  "reviewed_at": "2026-08-16T16:41:15+07:00",
+  "verdict": "BLOCKED",
+  "receipt_created": false,
+  "technical": {
+    "duration_seconds": 24.5,
+    "size_bytes": 7525861,
+    "video": {"codec": "h264", "width": 1080, "height": 1920, "fps": "24/1", "pixel_format": "yuv420p"},
+    "audio": {"codec": "aac", "sample_rate": 16000, "channels": 1, "layout": "mono"},
+    "full_decode": "PASS",
+    "audio_decode": "PASS",
+    "non_silent": "PASS",
+    "mean_volume_db": -21.0,
+    "max_volume_db": -1.0,
+    "decoded_pcm_sha256": "1752944A77C40FB1BC93B01156BF590DDAE8E8D8970533E231DC9D19FD616401"
+  },
+  "source_binding": {
+    "staging_asset": "_vidout/b3-01_autotest.mp4",
+    "staging_sha256": "81C25DC4F0D6338E134D77F0D1D95C3C4388C79FCD0EBCB8D344530003F0E5D8",
+    "byte_identical": true,
+    "authoritative_script": "automation-log/BATCH3-PRODUCTION-KIT.md#b3-01",
+    "render_source": "C:/tmp/b3-01_win_tts.ps1",
+    "voiceover_source_match": "PASS"
+  },
+  "watermark": {
+    "automated_scan": {"status": "PASS", "detector": "tiktok-pipeline/src/qa_watermark.py", "fps": 3.0, "frames": 74, "track_frames": 0, "track_frac": 0.0},
+    "full_frame_visual_review": {"status": "PASS_NO_THIRD_PARTY_WATERMARK", "intentional_brand": "@ngernduangold"}
+  },
+  "visual_evidence": {
+    "frame_times_seconds": [0.5, 3.0, 6.0, 9.0, 12.0, 15.0, 18.0, 24.0],
+    "files": [
+      "_vidout/media-evidence-b3/b3-01/contact-sheet.png",
+      "_vidout/media-evidence-b3/b3-01/frame-01-0.500.png",
+      "_vidout/media-evidence-b3/b3-01/frame-02-3.000.png",
+      "_vidout/media-evidence-b3/b3-01/frame-03-6.000.png",
+      "_vidout/media-evidence-b3/b3-01/frame-04-9.000.png",
+      "_vidout/media-evidence-b3/b3-01/frame-05-12.000.png",
+      "_vidout/media-evidence-b3/b3-01/frame-06-15.000.png",
+      "_vidout/media-evidence-b3/b3-01/frame-07-18.000.png",
+      "_vidout/media-evidence-b3/b3-01/frame-08-24.000.png"
+    ]
+  },
+  "semantic_review": {
+    "status": "FAIL",
+    "intended_topic": "รถยังผ่อนไม่หมดจำนำได้ไหม",
+    "source_voiceover_topic_match": "PASS",
+    "blockers": [
+      "NO_LINK_MISMATCH: burned CTA says ลิงก์ในไบโอ",
+      "AFFILIATE_MISMATCH: burned disclosure says มีลิงก์พันธมิตร",
+      "UNSUBSTANTIATED_LICENSE_CLAIM: burned disclosure says ผู้ให้บริการมีใบอนุญาต without per-provider evidence",
+      "LEFTOVER_BASE_COPY: large underlying hook ต้องใช้เงินด่วน แต่ไม่อยากขายรถ? is not the exact planned query"
+    ]
+  }
+}

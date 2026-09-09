@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "asset": "reels/2026-08-16_b4-p01-poster.png",
+  "sha256": "81B1E95087164260D2B49E10C5C46443A7F51918E8EB0F8249A61E5188C2C57B",
+  "media_type": "image",
+  "reviewed_at": "2026-08-16T05:21:40+07:00",
+  "media_origin": {
+    "generator_origin": "LOCAL_FRAME_EXPORT_FROM_ATTESTED_LOCAL_VIDEO",
+    "contains_flow_pixels": false,
+    "contains_flow_audio": false,
+    "synthid_expected": false,
+    "evidence": [
+      "automation-log/video-production/b4-p01_qa.json",
+      "automation-log/video-production/b4-p01_manual_qa.md"
+    ]
+  },
+  "novelty_review": {
+    "status": "PASS",
+    "content_id": "b4-p01-poster",
+    "reviewer": "Codex visual duplicate audit",
+    "corpus_fingerprint": "AC1AB9B513986D3D4E5F702171CAFF31E449DB1C01FA6C7323DF41239B6646E4",
+    "compared_assets": 31,
+    "scope": "current publish-like still inventory; no exact or visually matching prior poster"
+  },
+  "watermark": {
+    "visual_review": {
+      "status": "PASS",
+      "reviewer": "Codex visual review",
+      "scope": "full-resolution poster; no third-party or provider watermark; intentional channel brand text is not treated as a provider watermark",
+      "evidence": [
+        "reels/2026-08-16_b4-p01-poster.png",
+        "automation-log/video-production/b4-p01_manual_qa.md"
+      ],
+      "evidence_sha256": {
+        "reels/2026-08-16_b4-p01-poster.png": "81B1E95087164260D2B49E10C5C46443A7F51918E8EB0F8249A61E5188C2C57B",
+        "automation-log/video-production/b4-p01_manual_qa.md": "C4BDA863232E18CECB9F16FA22BE90700AF946D178E2A5E91D820146D924C6DF"
+      }
+    }
+  }
+}

@@ -1,9 +1,22 @@
-# orders.txt — รอบหลัง consult (หัวข้อตรง real_cases → RAG ยิงจุดเจ็บจริง)
-หนี้บัตรเครดิตหลายใบ จ่ายขั้นต่ำทุกเดือนแต่ยอดไม่ลด อยากรวมหนี้ลดดอก เริ่มยังไง
-ผ่อนรถอยู่แต่เริ่มผ่อนไม่ไหว ควรขายดาวน์ รีไฟแนนซ์ หรือคืนรถ ต่างกันยังไง
-ฟรีแลนซ์รายได้ไม่ประจำ อยากได้บัตร/สินเชื่อ ทำโปรไฟล์ยังไงให้มีโอกาสผ่าน
-เงินเดือน 15000 อยากได้บัตรเครดิตใบแรก สมัครใบไหนพอมีโอกาสผ่าน
-เงินเดือนชนเดือนทุกที เก็บเงินไม่อยู่ เริ่มออมยังไงให้ได้ดอกสูงกว่าบัญชีทั่วไป
-สมัครบัตร/สินเชื่อไม่ผ่านบ่อย ควรเช็กเครดิตบูโรตัวเองก่อนยังไง
-ผ่อนบ้านมาเกิน 3 ปี อยากรีไฟแนนซ์ลดดอก ดูอะไรก่อนตัดสินใจ
-# หมายเหตุ: หัวข้ออิง real-demand (Pantip รวมหนี้/บัตร มีกระทู้ถามสดทุกวัน + IG ฮุก "เงินเดือนชนเดือน/บัตรใบแรก" reach ดีสุด)
+# orders.txt — semantic-family candidate registry (local-only, novelty-gated)
+# Format: <family-id><TAB><topic><TAB><provisional-review-receipt><TAB><SHA256>
+# Active families are RESERVED first and CONSUMED only after exact draft receipt.
+# Do not reuse an old family id or paraphrase an already consumed angle.
+
+payroll-net-pay-reconciliation	สลิปเงินเดือนกับเงินเข้าบัญชีไม่ตรงกัน: กระทบยอดรายได้ รายการหัก และยอดสุทธิก่อนวางงบ	automation-log/dedup-evidence/LOCAL-CONTENT-PACK_20260825_V2-CORPUS-REVIEW-V2.json	2425EE93400773E0B1FA7D61A06D80D28DA45167DF9D6D4FBBFD85F6CD095A0A
+annual-expense-sinking-funds	ค่าใช้จ่ายรายปีไม่ใช่เหตุฉุกเฉิน: แปลงประกัน ภาษี ซ่อม และสมาชิกภาพเป็นกองเงินรายเดือน	automation-log/dedup-evidence/LOCAL-CONTENT-PACK_20260825_V2-CORPUS-REVIEW-V2.json	2425EE93400773E0B1FA7D61A06D80D28DA45167DF9D6D4FBBFD85F6CD095A0A
+recurring-charge-renewal-audit	รายการตัดบัตรอัตโนมัติ: ทำทะเบียนวันต่ออายุ หลักฐานยกเลิก และตรวจยอดตัดซ้ำ	automation-log/dedup-evidence/LOCAL-CONTENT-PACK_20260825_V2-CORPUS-REVIEW-V2.json	2425EE93400773E0B1FA7D61A06D80D28DA45167DF9D6D4FBBFD85F6CD095A0A
+household-bill-ownership-map	ค่าใช้จ่ายร่วมในบ้าน: ระบุเจ้าภาพ วันครบกำหนด ส่วนแบ่ง และหลักฐานจ่ายให้ตรวจย้อนหลังได้	automation-log/dedup-evidence/LOCAL-CONTENT-PACK_20260825_V2-CORPUS-REVIEW-V2.json	2425EE93400773E0B1FA7D61A06D80D28DA45167DF9D6D4FBBFD85F6CD095A0A
+refund-dispute-evidence-timeline	รอเงินคืนหรือโต้แย้งรายการ: แยกเงินที่ยังไม่กลับเข้าบัญชีและทำลำดับหลักฐานกับเลขรับเรื่อง	automation-log/dedup-evidence/LOCAL-CONTENT-PACK_20260825_V2-CORPUS-REVIEW-V2.json	2425EE93400773E0B1FA7D61A06D80D28DA45167DF9D6D4FBBFD85F6CD095A0A
+beneficiary-emergency-access-review	ทบทวนผู้รับผลประโยชน์และผู้ติดต่อฉุกเฉินโดยไม่แชร์รหัสผ่านหรือสิทธิ์เข้าบัญชี	automation-log/dedup-evidence/LOCAL-CONTENT-PACK_20260825_V2-CORPUS-REVIEW-V2.json	2425EE93400773E0B1FA7D61A06D80D28DA45167DF9D6D4FBBFD85F6CD095A0A
+employee-benefit-inventory	สำรวจสวัสดิการนายจ้างก่อนซื้อเพิ่ม: ประกันกลุ่ม กองทุน วันลา และสิทธิช่วยเหลือที่มีอยู่จริง	automation-log/dedup-evidence/LOCAL-CONTENT-PACK_20260825_V2-CORPUS-REVIEW-V2.json	2425EE93400773E0B1FA7D61A06D80D28DA45167DF9D6D4FBBFD85F6CD095A0A
+
+# Historical source orders are preserved verbatim and pre-consumed on first run.
+# They remain auditable but can never re-enter the active queue.
+# HISTORICAL_CONSUMED	legacy-card-debt-minimum	หนี้บัตรเครดิตหลายใบ จ่ายขั้นต่ำทุกเดือนแต่ยอดไม่ลด อยากรวมหนี้ลดดอก เริ่มยังไง
+# HISTORICAL_CONSUMED	legacy-car-payment-distress	ผ่อนรถอยู่แต่เริ่มผ่อนไม่ไหว ควรขายดาวน์ รีไฟแนนซ์ หรือคืนรถ ต่างกันยังไง
+# HISTORICAL_CONSUMED	legacy-freelance-income-profile	ฟรีแลนซ์รายได้ไม่ประจำ อยากได้บัตร/สินเชื่อ ทำโปรไฟล์ยังไงให้มีโอกาสผ่าน
+# HISTORICAL_CONSUMED	legacy-first-card-salary-15000	เงินเดือน 15000 อยากได้บัตรเครดิตใบแรก สมัครใบไหนพอมีโอกาสผ่าน
+# HISTORICAL_CONSUMED	legacy-payday-saving-high-yield	เงินเดือนชนเดือนทุกที เก็บเงินไม่อยู่ เริ่มออมยังไงให้ได้ดอกสูงกว่าบัญชีทั่วไป
+# HISTORICAL_CONSUMED	legacy-credit-report-rejection	สมัครบัตร/สินเชื่อไม่ผ่านบ่อย ควรเช็กเครดิตบูโรตัวเองก่อนยังไง
+# HISTORICAL_CONSUMED	legacy-home-refinance-three-years	ผ่อนบ้านมาเกิน 3 ปี อยากรีไฟแนนซ์ลดดอก ดูอะไรก่อนตัดสินใจ

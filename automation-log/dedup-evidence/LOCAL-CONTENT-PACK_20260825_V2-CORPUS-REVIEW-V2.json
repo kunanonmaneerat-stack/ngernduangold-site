@@ -1,0 +1,453 @@
+{
+  "schema_version": 2,
+  "receipt_type": "PROVISIONAL_LOCAL_CORPUS_REVIEW",
+  "producer": "ngernduangold.local-deterministic-corpus-audit",
+  "method": "normalized-exact-near-sequence-trigram-v2",
+  "review_state": "PROVISIONAL_LOCAL_REVIEW",
+  "semantic_universality_claimed": false,
+  "publication_authority": "NONE",
+  "created_at": "2026-08-25T12:47:58+07:00",
+  "method_limit": "Local deterministic exact/near checks do not prove universal semantic novelty.",
+  "candidate_path": "automation-log/cc-outbox/LOCAL-CONTENT-PACK_20260825_V2.md",
+  "families": [
+    {
+      "family_id": "payroll-net-pay-reconciliation",
+      "topic": "สลิปเงินเดือนกับเงินเข้าบัญชีไม่ตรงกัน: กระทบยอดรายได้ รายการหัก และยอดสุทธิก่อนวางงบ",
+      "topic_sha256": "865867D3D7859B4FEF513F93B613DD4FE6F5F6E2E30EAB0F655D07E52C3618AE"
+    },
+    {
+      "family_id": "annual-expense-sinking-funds",
+      "topic": "ค่าใช้จ่ายรายปีไม่ใช่เหตุฉุกเฉิน: แปลงประกัน ภาษี ซ่อม และสมาชิกภาพเป็นกองเงินรายเดือน",
+      "topic_sha256": "17458A6BA38B886150540A7B280F89E869AD5FCB2B2FDF4EBEF6E19FCAC64582"
+    },
+    {
+      "family_id": "recurring-charge-renewal-audit",
+      "topic": "รายการตัดบัตรอัตโนมัติ: ทำทะเบียนวันต่ออายุ หลักฐานยกเลิก และตรวจยอดตัดซ้ำ",
+      "topic_sha256": "9CB485922AE62893566E05B4BC21B444143339C8E6BD10629152F003D3028AF1"
+    },
+    {
+      "family_id": "household-bill-ownership-map",
+      "topic": "ค่าใช้จ่ายร่วมในบ้าน: ระบุเจ้าภาพ วันครบกำหนด ส่วนแบ่ง และหลักฐานจ่ายให้ตรวจย้อนหลังได้",
+      "topic_sha256": "B7601E2838681072A892B7256C1E182A8A9566E059182AB133954AE101CDDC53"
+    },
+    {
+      "family_id": "refund-dispute-evidence-timeline",
+      "topic": "รอเงินคืนหรือโต้แย้งรายการ: แยกเงินที่ยังไม่กลับเข้าบัญชีและทำลำดับหลักฐานกับเลขรับเรื่อง",
+      "topic_sha256": "2646165DF4A302D2654202270EEDA4CC36351C3A550C39B24C149991369D56CB"
+    },
+    {
+      "family_id": "beneficiary-emergency-access-review",
+      "topic": "ทบทวนผู้รับผลประโยชน์และผู้ติดต่อฉุกเฉินโดยไม่แชร์รหัสผ่านหรือสิทธิ์เข้าบัญชี",
+      "topic_sha256": "78A762143FA924E502213CBD61957DDAE2609A70CC2FF6417FD599102CCEE31B"
+    },
+    {
+      "family_id": "employee-benefit-inventory",
+      "topic": "สำรวจสวัสดิการนายจ้างก่อนซื้อเพิ่ม: ประกันกลุ่ม กองทุน วันลา และสิทธิช่วยเหลือที่มีอยู่จริง",
+      "topic_sha256": "173AFF17B91F4C0A715CB5ADFAA9CECF8FB290E4F83D51C4DEFDF57A86136DAC"
+    }
+  ],
+  "corpus_inputs": {
+    ".system_control/content_manifest.json": "0E33B5B0D42ECB7CD8422C531B985FF4F52DBC6ECDF719853E9C1AD449B3F912",
+    ".system_control/content_calendar.json": "1DDAF076374C34469998BB4D15C373EC8D3617469775E1145C602D621AE8F203",
+    "automation-log/post-ledger.jsonl": "416C768E3F6740C531C0F45F98AE1745B88C23C93D35E404F92708E43BC6909E",
+    "prior_generated_fulfilled_withdrawn_pack_inventory": {
+      "file_count": 96,
+      "files": [
+        {
+          "path": "automation-log/cc-outbox/LOCAL-CONTENT-PACK_20260825.md",
+          "sha256": "8CF90B07E62D25A4AFE7DE07B71ACD904E34B644D1F5D50BFB941C982809CAA8"
+        },
+        {
+          "path": "automation-log/content-packages/20260621-2036-หน--บ-ตรเครด-ตหลายใบ-จ-ายข--นต-ำ.md",
+          "sha256": "756120F25A3899C20A39A6235C06E6E535C2D508C686CA45C4E24875760A8334"
+        },
+        {
+          "path": "automation-log/content-packages/20260621-2044-หน--บ-ตรเครด-ตหลายใบ-จ-ายข--นต-ำ.md",
+          "sha256": "EAD6B406AA2985B5FE82031320699C4139C9195CD808125EB2BFEE753FD97A80"
+        },
+        {
+          "path": "automation-log/content-packages/20260621-2154-หน--บ-ตรหลายใบ-จ-ายข--นต-ำไม-ลด.md",
+          "sha256": "C01B8E5BEF2648F1FD5C7EF114266F454F62C1C563414FC3089F700977F9CCBE"
+        },
+        {
+          "path": "automation-log/content-packages/20260621-2203-เง-นเด-อน-15000-อยากได-บ-ตรเครด.md",
+          "sha256": "01C71FD9DC633893C05771027A8FAF6155E781D2606562BA0F5F5E7C4FDD90D2"
+        },
+        {
+          "path": "automation-log/content-packages/20260621-2205-ฟร-แลนซ-รายได-ไม-ประจำ-อยากได-บ.md",
+          "sha256": "50B159223002A43C7428BDAD849F29BF8306D284CD7DA9E692B8ED5F924118CA"
+        },
+        {
+          "path": "automation-log/content-packages/20260621-2206-ผ-อนรถอย--แต-เร--มผ-อนไม-ไหว-ควร.md",
+          "sha256": "94AA37A205AAFB3508A24424D0F70643030A2284DBB905EAFBF091471EF9CE46"
+        },
+        {
+          "path": "automation-log/content-packages/20260621-2210-เง-นเด-อน-15000-อยากได-บ-ตรเครด.md",
+          "sha256": "4E85463CB9DA5C878C4F695CD7C22F001C9BCFDFF1F2B35FBA971A43A86570AC"
+        },
+        {
+          "path": "automation-log/content-packages/20260621-2211-ฟร-แลนซ-รายได-ไม-ประจำ-อยากได-บ.md",
+          "sha256": "157F0F80A356446C3E86ACDB154CF1C774B2E2D3E6C2E84749632E913B3C6647"
+        },
+        {
+          "path": "automation-log/content-packages/20260621-2212-ผ-อนรถอย--แต-เร--มผ-อนไม-ไหว-ควร.md",
+          "sha256": "2AD5037F9324CD694BE99260A1E3077E236A0EB4AA0CE7DF1E2650EF8259FA36"
+        },
+        {
+          "path": "automation-log/content-packages/20260621-2231-เง-นเด-อนชนเด-อนท-กท--เก-บเง-นไม.md",
+          "sha256": "C6970985D2F8A6DE08181E3D342D0DC273AE5662ADC60C5B3C4B5DA6BA7EED36"
+        },
+        {
+          "path": "automation-log/content-packages/20260622-0115-tiktok-threads-drama.md",
+          "sha256": "22E96DE0E4305C61214BAE679083AE23FF9A11037D95730DE96AC0B2B39FB442"
+        },
+        {
+          "path": "automation-log/content-packages/20260622-0202-tiktok-video-flow.md",
+          "sha256": "B8ED82B526E8E36369D06CFAE5DD204FCC62C78995BFC444C6B5C28B030877EF"
+        },
+        {
+          "path": "automation-log/content-packages/20260622-0708-ผ-อนรถอย--แต-เร--มผ-อนไม-ไหว-ควร.md",
+          "sha256": "FF53DEEC0FC00F664A75A9FCEBA10F220140CE01BB3C087E81EA94C73332C629"
+        },
+        {
+          "path": "automation-log/content-packages/20260623-0708-ฟร-แลนซ-รายได-ไม-ประจำ-อยากได-บ.md",
+          "sha256": "8072430B6A5E5298F18F1E7E70C45514BD3940B4694F4FAB9B9791D7D624E4B7"
+        },
+        {
+          "path": "automation-log/content-packages/20260623-0853-ฟร-แลนซ-รายได-ไม-ประจำ-อยากได-บ.md",
+          "sha256": "53EAB506F871B9DE6AA2BB8E80EE2DAF847072BD8E475B4954688E2D47703790"
+        },
+        {
+          "path": "automation-log/content-packages/20260624-0709-เง-นเด-อน-15000-อยากได-บ-ตรเครด.md",
+          "sha256": "10B96C170E99A92D8876525605985B94B85861B9813991F14B15CC058828BA5E"
+        },
+        {
+          "path": "automation-log/content-packages/20260624-0827-เง-นเด-อน-15000-อยากได-บ-ตรเครด.md",
+          "sha256": "256628517DC1FD38F910550344EC6C3B821D16343E4FB07492C7AAC168C16A7A"
+        },
+        {
+          "path": "automation-log/content-packages/20260626-1056-สม-ครบ-ตร-ส-นเช--อไม-ผ-านบ-อย-คว.md",
+          "sha256": "CDAF727D9307E03804294704AD28A8F4F16F6E405C862D0654BAF7D996FF661C"
+        },
+        {
+          "path": "automation-log/content-packages/20260627-0722-ผ-อนบ-านมาเก-น-3-ป--อยากร-ไฟแนนซ.md",
+          "sha256": "B4E7747B3908FD07A3D58BF4346CA06D017489DA1A4DDD80963402235E3E422D"
+        },
+        {
+          "path": "automation-log/content-packages/20260627-0739-ผ-อนบ-านมาเก-น-3-ป--อยากร-ไฟแนนซ.md",
+          "sha256": "4870D6E87DD80023C5B672FFD3E6946BA92B90B631A4F3FC5F043C8E8BE66119"
+        },
+        {
+          "path": "automation-log/content-packages/20260628-1103-หน--บ-ตรเครด-ตหลายใบ-จ-ายข--นต-ำ.md",
+          "sha256": "445255CDE63DA8C0779183513D394AD428604DCEBCEF828181AD74E88BA16F34"
+        },
+        {
+          "path": "automation-log/content-packages/20260629-0724-ผ-อนรถอย--แต-เร--มผ-อนไม-ไหว-ควร.md",
+          "sha256": "3B00EA919F5C6D459D042372E3E25746C541985473CCA953942BDF3B4B88B071"
+        },
+        {
+          "path": "automation-log/content-packages/20260629-0742-ผ-อนรถอย--แต-เร--มผ-อนไม-ไหว-ควร.md",
+          "sha256": "AC686D5AA0BD2F4B7C881897711EC995402CBAF3276DD11AC858E5AB02A3EC2F"
+        },
+        {
+          "path": "automation-log/content-packages/20260630-0734-ฟร-แลนซ-รายได-ไม-ประจำ-อยากได-บ.md",
+          "sha256": "2621E7A4C33EA9E27738D1322681C6D1C99B43FAE291B96FCA98401520E97FC5"
+        },
+        {
+          "path": "automation-log/content-packages/20260701-0730-เง-นเด-อน-15000-อยากได-บ-ตรเครด.md",
+          "sha256": "A3810C8AE9518993A1BAAC50919D703796B457AA334C7C519C4E40B3D30FC54C"
+        },
+        {
+          "path": "automation-log/content-packages/20260702-0500-เง-นเด-อนชนเด-อนท-กท--เก-บเง-นไม.md",
+          "sha256": "09C03C5DCF7B9370FBFB633E08A854C3812A73A765809A309CFAE85CAFF7084D"
+        },
+        {
+          "path": "automation-log/content-packages/20260702-0857-เง-นเด-อนชนเด-อนท-กท--เก-บเง-นไม.md",
+          "sha256": "2E135079F23BDD77F40C63626AA42088D7B17DBEB8EEECDB41FB3E9397FE9297"
+        },
+        {
+          "path": "automation-log/content-packages/20260703-0720-สม-ครบ-ตร-ส-นเช--อไม-ผ-านบ-อย-คว.md",
+          "sha256": "750DAA0798D309FC875A9A32E60A1BFC411504B3FA132A8DFD17F55EA2880DC0"
+        },
+        {
+          "path": "automation-log/content-packages/20260703-0742-สม-ครบ-ตร-ส-นเช--อไม-ผ-านบ-อย-คว.md",
+          "sha256": "97C4BA9634E24B98541DFE550CD7AD84062DD6A6A312C7E7211A60432345529F"
+        },
+        {
+          "path": "automation-log/content-packages/20260704-0721-ผ-อนบ-านมาเก-น-3-ป--อยากร-ไฟแนนซ.md",
+          "sha256": "BE043733CE06ECBF098B9C31736F4B3C7DA9D0B044FB337FB6795032388355E8"
+        },
+        {
+          "path": "automation-log/content-packages/20260704-0751-ผ-อนบ-านมาเก-น-3-ป--อยากร-ไฟแนนซ.md",
+          "sha256": "24499A6AF4932124FE86AB041970EF0477E0862880FA2F04EEA4CB73C3D7CB93"
+        },
+        {
+          "path": "automation-log/content-packages/20260705-0722-หน--บ-ตรเครด-ตหลายใบ-จ-ายข--นต-ำ.md",
+          "sha256": "5BCA77B081E477C4AB709CEAD88190B8C8B700CD5D8871EAF10886835EA5FE60"
+        },
+        {
+          "path": "automation-log/content-packages/20260705-0740-หน--บ-ตรเครด-ตหลายใบ-จ-ายข--นต-ำ.md",
+          "sha256": "9091AF4A56A3A9D9F81F1AE72DEF1A0F9B420662E0B9E00B5BEF27E432A535F9"
+        },
+        {
+          "path": "automation-log/content-packages/20260706-0725-ผ-อนรถอย--แต-เร--มผ-อนไม-ไหว-ควร.md",
+          "sha256": "8B698AF4D47EDF57983999B0EC301803A7290F81F72263F442912EF6F3DF0BA1"
+        },
+        {
+          "path": "automation-log/content-packages/20260707-1412-ฟร-แลนซ-รายได-ไม-ประจำ-อยากได-บ.md",
+          "sha256": "2F254FEDB2A5D3987EF74E8688A8D1AA118B1D7545DF8D56AF24CCD4B9CC0CE8"
+        },
+        {
+          "path": "automation-log/content-packages/20260708-0726-เง-นเด-อน-15000-อยากได-บ-ตรเครด.md",
+          "sha256": "50CAA09B11F1447A87A2577195E2894A5FBDAE9922FA59F4D78CEB65AD4E1407"
+        },
+        {
+          "path": "automation-log/content-packages/20260709-0846-เง-นเด-อนชนเด-อนท-กท--เก-บเง-นไม.md",
+          "sha256": "EC0D6EBFF5C4F312C01C838DFFD88D87B9DC03B5475E805EC0EB3E2DFD38184C"
+        },
+        {
+          "path": "automation-log/content-packages/20260710-0711-สม-ครบ-ตร-ส-นเช--อไม-ผ-านบ-อย-คว.md",
+          "sha256": "8A3B3C7CF2CB3268EB555A95DB3E50EF3E144F18860601A015E87D78C8E40AC8"
+        },
+        {
+          "path": "automation-log/content-packages/20260710-0814-สม-ครบ-ตร-ส-นเช--อไม-ผ-านบ-อย-คว.md",
+          "sha256": "CCFD7C9F603731C121156B7509B453D99344311D6A35038DB9DDC60752C9E566"
+        },
+        {
+          "path": "automation-log/content-packages/20260711-0707-ผ-อนบ-านมาเก-น-3-ป--อยากร-ไฟแนนซ.md",
+          "sha256": "E6AB9B74BC2C1E9049B72731E7F8A48CB8D2C47386F5DCDA9C0F4241751FBE48"
+        },
+        {
+          "path": "automation-log/content-packages/20260711-0735-ผ-อนบ-านมาเก-น-3-ป--อยากร-ไฟแนนซ.md",
+          "sha256": "9628F07735586EEA58C50B77FFE7066B75BC29DEEA2EF43F4CDAE854FCD979AC"
+        },
+        {
+          "path": "automation-log/content-packages/20260712-0709-หน--บ-ตรเครด-ตหลายใบ-จ-ายข--นต-ำ.md",
+          "sha256": "A8369834B0ADCC9686822BF3B4DFC44595F6A2110572C5393141DD6AE6804008"
+        },
+        {
+          "path": "automation-log/content-packages/20260712-0734-หน--บ-ตรเครด-ตหลายใบ-จ-ายข--นต-ำ.md",
+          "sha256": "BEBAD4E17196EABC639AD6C2CEBEF00014B36C28EF2C2186F6FD0E6D467EA3E7"
+        },
+        {
+          "path": "automation-log/content-packages/20260713-0710-ผ-อนรถอย--แต-เร--มผ-อนไม-ไหว-ควร.md",
+          "sha256": "4346B6626A7EBC0084D0779A19C985DEA781E89C6093D791CC96AB41B3E94CFC"
+        },
+        {
+          "path": "automation-log/content-packages/20260713-0736-ผ-อนรถอย--แต-เร--มผ-อนไม-ไหว-ควร.md",
+          "sha256": "9378B86F4BC7F9C72C580C192FC6C5375E67301498B8AE13BD0A1818D0C495A7"
+        },
+        {
+          "path": "automation-log/content-packages/20260714-0709-ฟร-แลนซ-รายได-ไม-ประจำ-อยากได-บ.md",
+          "sha256": "1030991EB1B835EE4E3D9E100243F496B27271AE789B0C6F5F87F5C8100B8C2D"
+        },
+        {
+          "path": "automation-log/content-packages/20260714-0735-ฟร-แลนซ-รายได-ไม-ประจำ-อยากได-บ.md",
+          "sha256": "A333EDCECBA345DB26B097117A25A2948C54E4DD7111B87B27D94D876E47AD45"
+        },
+        {
+          "path": "automation-log/content-packages/20260715-0711-เง-นเด-อน-15000-อยากได-บ-ตรเครด.md",
+          "sha256": "C955ED7CCB03E0B94D1C06A957D31A0B928C223AD75728A7DC7FA966B3EA4AFF"
+        },
+        {
+          "path": "automation-log/content-packages/20260715-0735-เง-นเด-อน-15000-อยากได-บ-ตรเครด.md",
+          "sha256": "569E46C4DC6D1B43A707D2FDE3EE18FBC713DD237AEC42CF707FDF35F37D8008"
+        },
+        {
+          "path": "automation-log/content-packages/20260716-0711-เง-นเด-อนชนเด-อนท-กท--เก-บเง-นไม.md",
+          "sha256": "F04F90DADBC3A301D157D287F0E384D50D71B2495515DA4D6D8BB771798B3C26"
+        },
+        {
+          "path": "automation-log/content-packages/20260716-0735-เง-นเด-อนชนเด-อนท-กท--เก-บเง-นไม.md",
+          "sha256": "E4101230E684A10A5658057748CBB50DB97205D08935EFCEFEA094A35A237137"
+        },
+        {
+          "path": "automation-log/content-packages/20260717-0712-สม-ครบ-ตร-ส-นเช--อไม-ผ-านบ-อย-คว.md",
+          "sha256": "5DD22B10EB2D6A51267B233CA4A92F645DA6C0AFF0842BC61EB43EF12EF7FF99"
+        },
+        {
+          "path": "automation-log/content-packages/20260717-0736-สม-ครบ-ตร-ส-นเช--อไม-ผ-านบ-อย-คว.md",
+          "sha256": "8F633A5CB9E1C13A8AEAC672A9BE6F2F05C0C196F8E25684303FF93E09C36236"
+        },
+        {
+          "path": "automation-log/content-packages/20260718-0715-ผ-อนบ-านมาเก-น-3-ป--อยากร-ไฟแนนซ.md",
+          "sha256": "5B23602A29D6BC48B75DA9203190F47FB91410B71B4F9270DDD088D712CF5DD2"
+        },
+        {
+          "path": "automation-log/content-packages/20260718-0741-ผ-อนบ-านมาเก-น-3-ป--อยากร-ไฟแนนซ.md",
+          "sha256": "B036B89015EB6A1ABFE64D4BA7A79468BC2744B014A0FB5233E72F57204D3C27"
+        },
+        {
+          "path": "automation-log/content-packages/20260719-0712-หน--บ-ตรเครด-ตหลายใบ-จ-ายข--นต-ำ.md",
+          "sha256": "EC56A33374F9523DDF9247D42FA95729DD8ED7905E639D5489996D429D91E5F6"
+        },
+        {
+          "path": "automation-log/content-packages/20260719-0743-หน--บ-ตรเครด-ตหลายใบ-จ-ายข--นต-ำ.md",
+          "sha256": "3C739B9EEA56904E65C5DDC49845247385A12A69D14D5D2ACE0D3508C0EF797C"
+        },
+        {
+          "path": "automation-log/content-packages/20260720-0714-ผ-อนรถอย--แต-เร--มผ-อนไม-ไหว-ควร.md",
+          "sha256": "B4AA493D314478670377FDB70102AB44EB80C27E1B32C1B9345DF9F839696E30"
+        },
+        {
+          "path": "automation-log/content-packages/20260720-0741-ผ-อนรถอย--แต-เร--มผ-อนไม-ไหว-ควร.md",
+          "sha256": "ADE2381C5AD7CE3E18B786351E8AA3751FEA87476862612BA0BA53B0BD572F54"
+        },
+        {
+          "path": "automation-log/content-packages/20260721-0716-ฟร-แลนซ-รายได-ไม-ประจำ-อยากได-บ.md",
+          "sha256": "9EBDB8C72A5378E18C11EA7CDA5907F5672DE1407EFF0403F0D7FDD0197278A9"
+        },
+        {
+          "path": "automation-log/content-packages/20260721-0748-ฟร-แลนซ-รายได-ไม-ประจำ-อยากได-บ.md",
+          "sha256": "81945D8533F1841F47E1E963132ACD536334C954E0D6D83F554D06D1D1ABB546"
+        },
+        {
+          "path": "automation-log/content-packages/20260722-0719-เง-นเด-อน-15000-อยากได-บ-ตรเครด.md",
+          "sha256": "861CE65CAA9D2F016D1A093155ECC0B6D19605E4270B329BD39C489ADDDB2F27"
+        },
+        {
+          "path": "automation-log/content-packages/20260722-0745-เง-นเด-อน-15000-อยากได-บ-ตรเครด.md",
+          "sha256": "B70ECA893CF2289D1C4CD5E80A5FD6C416F6B77B80C354CEB1AFEA084F90939F"
+        },
+        {
+          "path": "automation-log/content-packages/20260723-0711-เง-นเด-อนชนเด-อนท-กท--เก-บเง-นไม.md",
+          "sha256": "06A3EEA474CA0149C334E5380CF940019CF39119C8682EB791AA89E18F6EB044"
+        },
+        {
+          "path": "automation-log/content-packages/20260723-0740-เง-นเด-อนชนเด-อนท-กท--เก-บเง-นไม.md",
+          "sha256": "F9E483BD3331C4C7CB925FDD73611D09CFA45545E01FB053FC2CE2A40D7EE960"
+        },
+        {
+          "path": "automation-log/content-packages/20260724-0713-สม-ครบ-ตร-ส-นเช--อไม-ผ-านบ-อย-คว.md",
+          "sha256": "8A0C517FDB90C66D19AE1F360E2E52687E27827EBDBCA11D70148E775BEB4E85"
+        },
+        {
+          "path": "automation-log/content-packages/20260724-0743-สม-ครบ-ตร-ส-นเช--อไม-ผ-านบ-อย-คว.md",
+          "sha256": "21A41AD4C323C57F63A4CA36E2FDBE2CD3443D347544F53B54343AE570E7C285"
+        },
+        {
+          "path": "automation-log/content-packages/20260725-0714-ผ-อนบ-านมาเก-น-3-ป--อยากร-ไฟแนนซ.md",
+          "sha256": "AA8497D1BE7CE1841732E0F9AB49D9D72ADE52739DD52CE8CCACC4FF8C097B3A"
+        },
+        {
+          "path": "automation-log/content-packages/20260725-0744-ผ-อนบ-านมาเก-น-3-ป--อยากร-ไฟแนนซ.md",
+          "sha256": "9BE2D22BA906C0D67F8F24952CF20AC654CCF6183469E5E96EBAFF6675B8FE52"
+        },
+        {
+          "path": "automation-log/content-packages/20260726-0713-หน--บ-ตรเครด-ตหลายใบ-จ-ายข--นต-ำ.md",
+          "sha256": "A4CCF23F8B14D6745EC47DB0C509E4489B722389DA2566CCDD26ADB86582B461"
+        },
+        {
+          "path": "automation-log/content-packages/20260726-0746-หน--บ-ตรเครด-ตหลายใบ-จ-ายข--นต-ำ.md",
+          "sha256": "8237B12DD54DD1C1998EB0A59C365954A9709A9CCE899DA771C29C06796B0A88"
+        },
+        {
+          "path": "automation-log/content-packages/20260727-0715-ผ-อนรถอย--แต-เร--มผ-อนไม-ไหว-ควร.md",
+          "sha256": "1E1A0096C811604831A7755544845B34D4845B9C0BEF9CDF51EBFB31C1456DF1"
+        },
+        {
+          "path": "automation-log/content-packages/20260727-0741-ผ-อนรถอย--แต-เร--มผ-อนไม-ไหว-ควร.md",
+          "sha256": "291FEB1A6C96A8280A6B94F52FB4981CAD9DAF891A7A7231AF4A07D13C384FF0"
+        },
+        {
+          "path": "automation-log/content-packages/20260728-0715-ฟร-แลนซ-รายได-ไม-ประจำ-อยากได-บ.md",
+          "sha256": "DD60093BEDF058A2A4A8FD45C3B4CAC72DC9F028C0BCB8F82584C8001F82CD2B"
+        },
+        {
+          "path": "automation-log/content-packages/20260728-0746-ฟร-แลนซ-รายได-ไม-ประจำ-อยากได-บ.md",
+          "sha256": "5200C2BCE1DEE57981668B779CDA3D4840C96BD167BD3B9499BC0D9CE67DA09E"
+        },
+        {
+          "path": "automation-log/content-packages/20260729-0715-เง-นเด-อน-15000-อยากได-บ-ตรเครด.md",
+          "sha256": "09187D041F0ECA53DB9E267CD4D95C143A4DAA4D5615F1DCF9BD6FFB1D240988"
+        },
+        {
+          "path": "automation-log/content-packages/20260729-0743-เง-นเด-อน-15000-อยากได-บ-ตรเครด.md",
+          "sha256": "CEE13F29A1919DBC1BABEBA2D1E223D7D1C0755C84B1AE49BE4B5E110D66BF7C"
+        },
+        {
+          "path": "automation-log/content-packages/20260730-0712-เง-นเด-อนชนเด-อนท-กท--เก-บเง-นไม.md",
+          "sha256": "3363AEF95B736C69DA2F6068E6EC04FA767B021FADE13057BC9C960311720731"
+        },
+        {
+          "path": "automation-log/content-packages/20260731-0715-สม-ครบ-ตร-ส-นเช--อไม-ผ-านบ-อย-คว.md",
+          "sha256": "D64934875351E4F25579BEFD8B0D6CBF531F968E4006044D076596B24379D0F5"
+        },
+        {
+          "path": "automation-log/content-packages/20260801-0716-ผ-อนบ-านมาเก-น-3-ป--อยากร-ไฟแนนซ.md",
+          "sha256": "B844E97DE6AE9841DF432841E9EC892C1778BA53D21F9BED84B71E76DE954C01"
+        },
+        {
+          "path": "automation-log/content-packages/20260802-0722-หน--บ-ตรเครด-ตหลายใบ-จ-ายข--นต-ำ.md",
+          "sha256": "5E88779C501E2E574CBABA6F3C8E2137D165101C6A8881D148AE7009CD62055A"
+        },
+        {
+          "path": "automation-log/content-packages/20260803-0716-ผ-อนรถอย--แต-เร--มผ-อนไม-ไหว-ควร.md",
+          "sha256": "BD9B9BAC092563E64E612D8DB9CE3FAA80652EB1878ADEACE59B65835D11120D"
+        },
+        {
+          "path": "automation-log/content-packages/20260804-0717-ฟร-แลนซ-รายได-ไม-ประจำ-อยากได-บ.md",
+          "sha256": "8955DEF0303D546B65F94533BF56AA2387FF709919B2D8B2C822A1A17956C788"
+        },
+        {
+          "path": "automation-log/content-packages/20260805-0718-เง-นเด-อน-15000-อยากได-บ-ตรเครด.md",
+          "sha256": "354F6B06E10B145267B0F2660BA3EB19A769F8BCC22C1B4E3F3ABA5F2134236F"
+        },
+        {
+          "path": "automation-log/content-packages/20260806-0718-เง-นเด-อนชนเด-อนท-กท--เก-บเง-นไม.md",
+          "sha256": "1D7B3301139056476F8EF15CEA45AD61FF0C8246E1E9858363F6D5A1C7E55289"
+        },
+        {
+          "path": "automation-log/content-packages/20260807-0719-สม-ครบ-ตร-ส-นเช--อไม-ผ-านบ-อย-คว.md",
+          "sha256": "A4A34E86B71778BE1A6442315730CF05FABC8559DC657A474F2CE8769A809C45"
+        },
+        {
+          "path": "automation-log/content-packages/20260808-0723-ผ-อนบ-านมาเก-น-3-ป--อยากร-ไฟแนนซ.md",
+          "sha256": "B14C60D2FF4FCD9E433C5841CB5E717C1418D10D35783628EFB6249EE504C6F6"
+        },
+        {
+          "path": "automation-log/content-packages/20260809-0719-หน--บ-ตรเครด-ตหลายใบ-จ-ายข--นต-ำ.md",
+          "sha256": "228CB911770815C4A6DEFE688B7DE5BEB49F3B1011BD2B0BA707D21B2955731D"
+        },
+        {
+          "path": "automation-log/content-packages/20260810-0719-ผ-อนรถอย--แต-เร--มผ-อนไม-ไหว-ควร.md",
+          "sha256": "F4886ECB6907F12514D08BE1655C94DF08D6C0B665ADE81D8C065BBF084D67CC"
+        },
+        {
+          "path": "automation-log/content-packages/20260811-0738-ฟร-แลนซ-รายได-ไม-ประจำ-อยากได-บ.md",
+          "sha256": "359776BB369435ED570CBB02273DED0A22B5E319283D409BC764B6BBFCBC15A6"
+        },
+        {
+          "path": "automation-log/content-packages/20260812-0729-เง-นเด-อน-15000-อยากได-บ-ตรเครด.md",
+          "sha256": "34CDC8569BAE550189E11C2D729768A6E6346844688E24592ED2B2B7A3C9A0E7"
+        },
+        {
+          "path": "automation-log/content-packages/20260813-0732-เง-นเด-อนชนเด-อนท-กท--เก-บเง-นไม.md",
+          "sha256": "E588A4396C2B154E8F0753C18E445DF320512511AEEC99112E62F021817CFBBA"
+        },
+        {
+          "path": "automation-log/content-packages/20260814-0712-สม-ครบ-ตร-ส-นเช--อไม-ผ-านบ-อย-คว.md",
+          "sha256": "B01FA22D00E965DA933CA400F9BC0AED1F71B751F6839FDE22343566CE544D4A"
+        },
+        {
+          "path": "automation-log/content-packages/20260815-0724-ผ-อนบ-านมาเก-น-3-ป--อยากร-ไฟแนนซ.md",
+          "sha256": "28BCE421F79023631BF3C6CF98971D1EE52DCB5BF742F2C0765ECC07E38A1236"
+        },
+        {
+          "path": "automation-log/content-packages/20260816-0716-หน--บ-ตรเครด-ตหลายใบ-จ-ายข--นต-ำ.md",
+          "sha256": "3E224988B49C3E75C333B5896E55535C4A0C9BFB26A2AED224C3A31358842B2F"
+        }
+      ],
+      "canonical_path_sha256_inventory": "610E967703668C2624C2C4BF31C13DB7D8E25FDF30323DE9126D12BB0D918C44"
+    }
+  },
+  "corpus_audit": {
+    "topic_candidates": 7,
+    "topic_baseline_records": 209,
+    "historical_exact_collisions": 0,
+    "historical_near_collisions": 0,
+    "cross_family_exact_collisions": 0,
+    "cross_family_near_collisions": 0
+  },
+  "explicit_non_authority": "Provisional local corpus review only; no source, claim, media, schedule, release, or publication authority."
+}

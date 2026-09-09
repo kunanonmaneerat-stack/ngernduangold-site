@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-08-24T19:20:00+07:00",
+  "purpose": "Exact hash-bound repair for the two kn-01 manual publication descriptors; no publication or delivery fact is created.",
+  "records": [
+    {
+      "evidence_id": "legacy-line-000041",
+      "source_path": "automation-log/KNOWLEDGE-POSTS_20260720-0802.md",
+      "source_sha256": "DAFE4FB6CAFC267BC5AA6285290489BA23C1F342157F701D169E5AA5E5121FF3",
+      "source_field": "table[id=kn-01].threads_text",
+      "value": {
+        "id": "kn-01",
+        "date": "2026-07-19",
+        "channel": "threads",
+        "text_sha256": "19430CB1F14542BD416A01E860ACC8189BE5C6F25AD300B856F5DCDC1AA0D9A2",
+        "join_mode": "kn01_manual_descriptor"
+      }
+    },
+    {
+      "evidence_id": "legacy-line-000048",
+      "source_path": "automation-log/KNOWLEDGE-POSTS_20260720-0802.md",
+      "source_sha256": "DAFE4FB6CAFC267BC5AA6285290489BA23C1F342157F701D169E5AA5E5121FF3",
+      "source_field": "table[id=kn-01].fb_text",
+      "value": {
+        "id": "kn-01",
+        "date": "2026-07-19",
+        "channel": "facebook",
+        "text_sha256": "E3355C5A17B986AE1AF244673A11E019A36DA6DFB433C610C0387762000BD461",
+        "join_mode": "kn01_manual_descriptor"
+      }
+    }
+  ]
+}

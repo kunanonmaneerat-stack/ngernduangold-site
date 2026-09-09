@@ -1,0 +1,104 @@
+{
+  "schema_version": 2,
+  "effective_at": "2026-08-16T11:37:02+07:00",
+  "authority": [
+    ".system_control/policy.json",
+    "automation-log/CC-PROTOCOL.md",
+    "automation-log/OWNER-MANDATE_20260702.md"
+  ],
+  "default": "deny",
+  "capability_semantics": "Actor booleans are maximum role capabilities, not action authorization. Every current hard stop and action-specific gate still applies; agent-facing tools cannot authenticate an owner string and therefore remain local-only.",
+  "delegations": {
+    "codex": {
+      "authorized_by": "owner",
+      "authorized_on": "2026-08-16",
+      "role": "internal_page_operator",
+      "scope": "All reversible local project work: read, research, analyze, edit, refactor, draft, design systems, build, validate, and maintain continuous-improvement loops.",
+      "capabilities_ref": "#/actors/codex",
+      "public_identity_ref": ".system_control/policy.json#/public_identity",
+      "public_speaker": false,
+      "unattended_external_mutation": false
+    }
+  },
+  "actors": {
+    "owner": {
+      "local_write": true,
+      "web_research": true,
+      "social_publish": true,
+      "git_commit": true,
+      "git_push": true,
+      "deploy": true,
+      "financial_transaction": true,
+      "source_acknowledge": true,
+      "external_notify": true,
+      "external_storage_write": true,
+      "package_install": true,
+      "scheduler_mutation": true
+    },
+    "codex": {
+      "local_write": true,
+      "web_research": true,
+      "social_publish": false,
+      "git_commit": false,
+      "git_push": false,
+      "deploy": false,
+      "financial_transaction": false,
+      "source_acknowledge": false,
+      "external_notify": false,
+      "external_storage_write": false,
+      "package_install": false,
+      "scheduler_mutation": false
+    },
+    "cowork": {
+      "local_write": true,
+      "web_research": true,
+      "social_publish": false,
+      "git_commit": false,
+      "git_push": false,
+      "deploy": false,
+      "financial_transaction": false,
+      "source_acknowledge": false,
+      "external_notify": false,
+      "external_storage_write": false,
+      "package_install": false,
+      "scheduler_mutation": false
+    },
+    "claude_code": {
+      "local_write": true,
+      "web_research": true,
+      "social_publish": false,
+      "git_commit": false,
+      "git_push": false,
+      "deploy": false,
+      "financial_transaction": false,
+      "source_acknowledge": false,
+      "external_notify": false,
+      "external_storage_write": false,
+      "package_install": false,
+      "scheduler_mutation": false
+    },
+    "github_actions": {
+      "local_write": false,
+      "web_research": false,
+      "social_publish": false,
+      "git_commit": false,
+      "git_push": false,
+      "deploy": false,
+      "financial_transaction": false,
+      "source_acknowledge": false,
+      "external_notify": false,
+      "external_storage_write": false,
+      "package_install": false,
+      "scheduler_mutation": false
+    }
+  },
+  "reactivation_rule": "A non-owner capability may change only through a dated owner authorization plus a passing privacy/source/policy/quota/QA/publication gate. Historical prompts never grant capability.",
+  "current_hard_stops": [
+    "publication_authorized=false for every channel",
+    "official-source review is pending",
+    "GA4 decision data is UNTRUSTED until internal traffic exclusion is verified",
+    "historical public-repository exposure remains unresolved; no push or deploy is authorized",
+    "letter-kit-199 deliverable is missing",
+    "future video publication schedule has no fully approved item"
+  ]
+}

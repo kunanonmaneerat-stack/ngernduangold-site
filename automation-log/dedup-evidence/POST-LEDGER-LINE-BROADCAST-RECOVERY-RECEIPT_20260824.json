@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-08-24T21:54:12+07:00",
+  "audit_kind": "LOCAL_LEGACY_LINE_BROADCAST_IDENTITY_RECOVERY",
+  "status": "COMPLETED_BLOCKED",
+  "meaning": "Ledger line 33 now has a hash-bound permanent-dedup identity recovered from the uniquely named version-A section of the original local draft. This recovery does not claim delivery, reach, or VOOM publication. Facebook Story line 39 remains unresolved.",
+  "scope": {
+    "target_ledger_line": 33,
+    "post_ledger_bytes_changed": false,
+    "publication_status_changed": false,
+    "external_action_performed": false,
+    "browser_or_network_used_for_this_recovery": false,
+    "scheduler_or_deploy_changed": false
+  },
+  "recovery_contract": {
+    "ledger_path": "automation-log/post-ledger.jsonl",
+    "ledger_sha256": "416C768E3F6740C531C0F45F98AE1745B88C23C93D35E404F92708E43BC6909E",
+    "ledger_line": 33,
+    "ledger_row_sha256": "03E265193B83155829621FD241E6F1E6548FED1C57DD2218C2FEC9E3C96CCFF4",
+    "source_path": "automation-log/LINE-BROADCAST-01_draft.md",
+    "source_sha256": "21CAB4F1577A22651E6CA7B792EE505A0A233D2A3FF5BA4590E3DB2BB1B1AA47",
+    "source_field": "section[version=A].body",
+    "exact_source_text_sha256": "FFB5159F9D3201560A3E5AF6CC2611CD38B53F992F7666CE5809CA83F003EEE1",
+    "join_mode": "line_broadcast_version_descriptor",
+    "evidence_path": "automation-log/dedup-evidence/line-broadcast-01a-local-recovery-v1.json",
+    "evidence_sha256": "34DBDB95767FE3208B6B32D02002BA75AD2DA9389B8F44D02CFF155C289EF9E7"
+  },
+  "result": {
+    "binding_id": "plid-v1-000033",
+    "binding_sha256": "B35F3F41819AD24E75EB125381EEADB1CA2D7BD94C301B93E763858E718B87B9",
+    "identity_kind": "text_hash",
+    "identity_value": "a78c4df4477c866dcde998abf663fb676657ea0a",
+    "reuse_policy": "PERMANENT_DEDUP",
+    "identity_bindings_total": 80,
+    "final_seal_sha256": "164B25329B6F13B2B2E78493507FC5B93A075EC5FD381FAB1D167A113EE2EF5D",
+    "identity_overlay_sha256": "0DD4BE27E36210B0339F1F54CEAA3453BCC4149A42C9E621ED1E461EE3C23918"
+  },
+  "coverage": {
+    "before": {
+      "complete_rows": 123,
+      "incomplete_rows": 2,
+      "identity_rows": 125,
+      "coverage_percent": 98.4
+    },
+    "after": {
+      "complete_rows": 124,
+      "incomplete_rows": 1,
+      "identity_rows": 125,
+      "coverage_percent": 99.2,
+      "identity_binding_state": "PASS"
+    }
+  },
+  "remaining_blocker": {
+    "ledger_line": 39,
+    "type": "story",
+    "channel": "facebook",
+    "state": "UNKNOWN_IDENTITY",
+    "reason": "The local row is a descriptive Story reshare record without a stable Story object id, permalink, exact source-post id, or story-media hash. Similar debt-guide candidates and the recorded time cannot be resolved one-to-one from local evidence alone.",
+    "required_recovery_evidence": [
+      "stable Story id or canonical Story archive/permalink",
+      "displayed Story publication timestamp matching the ledger event",
+      "exact source-post id or exact Story media SHA-256 tied to that Story object"
+    ],
+    "must_not_infer_from": [
+      "caption similarity alone",
+      "a Facebook Reel date without Story linkage",
+      "an empty Story archive",
+      "the ledger descriptor by itself"
+    ]
+  },
+  "verification": {
+    "identity_binding_tests": "34/34 PASS",
+    "post_ledger_completeness_tests": "14/14 PASS",
+    "week_content_r5_novelty_tests": "10/10 PASS",
+    "post_ledger_permanent_dedup_tests": "10/10 PASS",
+    "collision_tombstone_tests": "8/8 PASS",
+    "channel_scope_tests": "3/3 PASS",
+    "post_ledger_integrity_tests": "PASS",
+    "novelty_guard_runtime_verdict": "BLOCKED_SYSTEM_HISTORY_NO_R5_COLLISION_DETECTED",
+    "novelty_guard_blocker": "LEDGER_IDENTITY_COVERAGE_INCOMPLETE",
+    "novelty_receipt_path": "automation-log/dedup-evidence/WEEK-CONTENT-R5-NOVELTY-RECEIPT_20260823.json",
+    "novelty_receipt_sha256": "3B1156434AD886D6F15562D3F5CB34CE31B7C4185F46B62D0BF878BE0ED8BFE3"
+  }
+}

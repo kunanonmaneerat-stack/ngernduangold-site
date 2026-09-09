@@ -21,7 +21,8 @@ USAGE
 
 ASCII-ONLY SOURCE: repo rule - scripts that touch Thai must not contain Thai literals.
 """
-import io, os, sys, json, datetime, importlib
+import copy, io, os, sys, json, datetime, importlib, hashlib, ipaddress, platform
+from pathlib import Path
 
 # A Thai Windows console is cp874. This file prints fixture text containing U+26D4 and
 # other symbols that cp874 cannot encode, so running it by hand died with
@@ -36,6 +37,7 @@ for _s in (sys.stdout, sys.stderr):
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
+import import_accesstrade_csv as AT
 TMP = os.path.join(HERE, "_test_ledger.tmp.jsonl")
 
 import preflight as P
@@ -72,8 +74,33 @@ def write(rel, data):
     d = os.path.dirname(path)
     if d and not os.path.isdir(d):
         os.makedirs(d)
+    payload = copy.deepcopy(data)
+
+    def materialize(item):
+        if isinstance(item, dict):
+            attestation = item.get("coverage_attestation")
+            if isinstance(attestation, dict):
+                observation = attestation.pop(
+                    "_admin_observation_fixture", None
+                )
+                if observation is not None:
+                    contract = attestation["admin_observation_contract"]
+                    evidence_path = os.path.join(
+                        os.path.dirname(path), contract["default"]
+                    )
+                    with io.open(
+                        evidence_path, "wb"
+                    ) as evidence_file:
+                        evidence_file.write(_ga4_fixture_json_bytes(observation))
+            for child in item.values():
+                materialize(child)
+        elif isinstance(item, list):
+            for child in item:
+                materialize(child)
+
+    materialize(payload)
     with io.open(path, "w", encoding="utf-8", newline="\n") as fh:
-        fh.write(json.dumps(data, ensure_ascii=False) if isinstance(data, (dict, list)) else data)
+        fh.write(json.dumps(payload, ensure_ascii=False) if isinstance(payload, (dict, list)) else payload)
     return path
 
 
@@ -108,11 +135,31 @@ def run_check_detail(fn_name, **consts):
     return P.results[0].get("detail", "") if P.results else ""
 
 
+def run_check_results(fn_name, **consts):
+    """Return every result when one check intentionally reports separate concerns."""
+    importlib.reload(P)
+    for k, v in consts.items():
+        setattr(P, k, v)
+    P.results[:] = []
+    getattr(P, fn_name)()
+    return list(P.results)
+
+
 def run_cap(rows):
     importlib.reload(P)
     with io.open(TMP, "w", encoding="utf-8", newline="\n") as fh:
         for r in rows:
             fh.write(json.dumps(r, ensure_ascii=False) + "\n")
+    P.LEDGER = TMP
+    P.results[:] = []
+    P.check_posting_cap()
+    return P.results[0]["status"]
+
+
+def run_cap_raw(raw):
+    importlib.reload(P)
+    with io.open(TMP, "w", encoding="utf-8", newline="\n") as fh:
+        fh.write(raw)
     P.LEDGER = TMP
     P.results[:] = []
     P.check_posting_cap()
@@ -170,6 +217,21 @@ check("pinterest 3 pins spaced (cap is 5)",
 check("pinterest 6 pins",
       run_cap([live(h, "pinterest", "image")
                for h in ("01", "05", "09", "13", "17", "21")]), "FAIL")
+check("malformed live timestamp cannot bypass gap",
+      run_cap([live("09"), {"type": "text", "channel": "facebook",
+                             "ts": TODAY + "T10:00:00+07:00junk"}]), "FAIL")
+check("naive live timestamp is unclassifiable",
+      run_cap([{"type": "text", "channel": "facebook",
+                "ts": TODAY + "T10:00:00"}]), "FAIL")
+check("duplicate ledger key is malformed",
+      run_cap_raw('{"type":"comment","type":"text","channel":"facebook",'
+                  '"ts":"%sT10:00:00+07:00"}\n' % TODAY), "FAIL")
+check("non-finite ledger value is malformed",
+      run_cap_raw('{"type":"comment","channel":"facebook","unused":NaN,'
+                  '"ts":"%sT10:00:00+07:00"}\n' % TODAY), "FAIL")
+check("overflowed JSON number is malformed",
+      run_cap_raw('{"type":"comment","channel":"facebook","unused":1e999,'
+                  '"ts":"%sT10:00:00+07:00"}\n' % TODAY), "FAIL")
 
 print("\nPOLICY WIRING  (numbers must come from policy.json, and fail safe without it)")
 importlib.reload(P)
@@ -180,6 +242,18 @@ _saved, P.POLICY = P.POLICY, os.path.join(HERE, "no-such-policy.json")
 _caps, _gap, _types = P._limits()
 P.POLICY = _saved
 check("missing policy still enforces the written rule", (_caps.get("default"), _gap), (2, 3))
+_fallback = ({"default": 2, "pinterest": 5}, 3, {"text", "video", "image"})
+for _label, _raw in (
+    ("duplicate policy key", '{"limits":{"posts_per_day":{"default":2,"default":999},"min_gap_hours":3,"post_types":["text","video","image"]}}'),
+    ("NaN policy gap", '{"limits":{"posts_per_day":{"default":2},"min_gap_hours":NaN,"post_types":["text","video","image"]}}'),
+    ("overflowed policy number", '{"limits":{"posts_per_day":{"default":2},"min_gap_hours":1e999,"post_types":["text","video","image"]}}'),
+    ("boolean policy cap", '{"limits":{"posts_per_day":{"default":true},"min_gap_hours":3,"post_types":["text","video","image"]}}'),
+    ("policy omits a post type", '{"limits":{"posts_per_day":{"default":2},"min_gap_hours":3,"post_types":["text","video"]}}'),
+):
+    _fixture = write("limits-%s.json" % _label.replace(" ", "-"), _raw)
+    P.POLICY = _fixture
+    check(_label + " falls back closed", P._limits(), _fallback)
+P.POLICY = _saved
 
 print("\nREPEAT FAILURES  (must fire when broken, go quiet once genuinely fixed)")
 check("one failure is noise", run_fail([fail("facebook", "09")])["status"], "PASS")
@@ -199,6 +273,13 @@ _r = run_fail([fail("tiktok", "09"), fail("tiktok", "11")])
 check("auto=false + no auto_legs is tagged as drift", "DRIFT" in _r["detail"], True)
 _r = run_fail([fail("facebook", "09"), fail("facebook", "11")])
 check("a channel with declared auto_legs is not drift", "DRIFT" in _r["detail"], False)
+check("malformed delivery cannot forge recovery",
+      run_fail([fail("facebook", "09"),
+                {"type": "text", "channel": "facebook",
+                 "ts": TODAY + "T99:00:00+07:00"}])["status"], "FAIL")
+check("malformed failure row cannot disappear",
+      run_fail([{"type": "failure", "channel": "facebook",
+                 "ts": TODAY + "-not-a-time"}])["status"], "FAIL")
 
 print("\nPROMPT DRIFT  (must know every date field policy owns, not just 'until')")
 importlib.reload(P)
@@ -250,6 +331,9 @@ check("bare alias 'ig' as a real word still counts",
       run_drift("ig paused until %s" % _wrong), "FAIL")
 check("correct date for the channel is fine",
       run_drift("instagram is paused until %s" % _ig), "PASS")
+check("completed one-shot task is historical, not live drift",
+      run_drift("---\nname: old\ndescription: [DONE 2026-08-16] closed gate\n---\n"
+                "instagram was paused until %s" % _wrong), "PASS")
 import shutil
 shutil.rmtree(os.path.join(HERE, "_test_sched.tmp"), ignore_errors=True)
 P.SCHEDULED_DIR = _sd
@@ -363,7 +447,7 @@ shutil.rmtree(os.path.join(HERE, "_test_dates_empty.tmp"), ignore_errors=True)
 P.OWN_TASKS_DIR = _od3
 P.SCHEDULED_DIR = _sd3
 
-print("\nSALES RECORDED  (clicks without a single recorded sale must not stay silent)")
+print("\nSALES RECORDED  (only a complete schema-5 event export may define paid revenue)")
 _sl, _repo = P.SALES_LOG, P.REPO
 
 
@@ -393,19 +477,408 @@ def run_sales(sales_lines, ga4_csv=None):
     return P.results[0]["status"]
 
 
-_HEADER = '{"note":"metadata header","created":"2026-07-24"}'
-_SALE = '{"date":"2026-08-01","product":"letter-kit-199","amount_thb":199,"source":"line"}'
+def reconciled_sales(status=None):
+    bangkok = datetime.timezone(datetime.timedelta(hours=7))
+    now = datetime.datetime.now(bangkok)
+    today = now.date()
+    event_time = now - datetime.timedelta(seconds=3)
+    extracted_time = now - datetime.timedelta(seconds=2)
+    reconciled_time = now - datetime.timedelta(seconds=1)
+    fields = [
+        "event_id", "sale_id", "date", "product", "status", "gross_amount_thb", "fee_thb",
+        "net_amount_thb", "channel_source", "ref", "note", "ts",
+    ]
+    rows = []
+    if status:
+        amounts = {
+            "paid": (100, 10, 90),
+            "pending": (100, 10, 90),
+            "approved": (100, 10, 90),
+        }[status]
+        rows.append({
+            "event_id": "event-sale-1-" + status,
+            "sale_id": "sale-1", "date": event_time.date().isoformat(),
+            "product": "affiliate-commission", "status": status,
+            "gross_amount_thb": amounts[0], "fee_thb": amounts[1],
+            "net_amount_thb": amounts[2], "channel_source": "atth",
+            "ref": "ref-1", "note": "fixture",
+            "ts": event_time.isoformat(timespec="seconds"),
+        })
+    start = today - datetime.timedelta(days=27)
+    meta = {
+        "_meta": "reconciled affiliate export", "schema_version": 5,
+        "fields": fields, "products": {"affiliate-commission": {}},
+        "blocked_products": [], "channel_source_values": ["atth"],
+        "created": start.isoformat(), "updated": today.isoformat(),
+        "source_system": "fixture", "coverage_start": start.isoformat(),
+        "coverage_end": today.isoformat(),
+        "extracted_at": extracted_time.isoformat(timespec="seconds"),
+        "reconciled_at": reconciled_time.isoformat(timespec="seconds"),
+        "source_snapshot_sha256": "a" * 64,
+        "source_row_count": len(rows), "upstream_evidence": [], "complete": True,
+    }
+    bindings = []
+    for row in rows:
+        token = hashlib.sha256(("provider:" + row["event_id"]).encode("utf-8")).hexdigest()
+        bindings.append({
+            "provider_identity_sha256": token,
+            "provider_conversion_id_hash": token,
+            "transaction_id_hash": None,
+            "campaign_id_hash": hashlib.sha256(
+                ("campaign:" + row["event_id"]).encode("utf-8")
+            ).hexdigest(),
+            "source_row_sha256": hashlib.sha256(
+                ("row:" + row["event_id"]).encode("utf-8")
+            ).hexdigest(),
+            "event_id": row["event_id"], "sale_id": row["sale_id"],
+            "date": row["date"], "status": row["status"],
+            "gross_amount_thb": row["gross_amount_thb"],
+            "fee_thb": row["fee_thb"], "net_amount_thb": row["net_amount_thb"],
+            "channel_source": row["channel_source"], "ref": row["ref"],
+        })
+    reward = sum(float(binding["gross_amount_thb"]) for binding in bindings)
+    evidence = {
+        "schema_version": 1, "provider": "accesstrade", "format": AT.FORMAT_ID,
+        "verification_mode": AT.VERIFICATION_MODE,
+        "raw_file_sha256": hashlib.sha256(b"preflight-raw-fixture").hexdigest(),
+        "raw_file_row_count": len(bindings),
+        "header_sha256": AT._header_sha256(),
+        "browser_evidence_sha256": hashlib.sha256(
+            b"preflight-browser-fixture"
+        ).hexdigest(),
+        "filter_assertion": {
+            "coverage_start": start.isoformat(), "coverage_end": today.isoformat(),
+            "date_basis": AT.DATE_BASIS, "status_filter": "ALL",
+            "campaign_filter": "ALL", "asserted_conversion_count": len(bindings),
+            "asserted_reward_thb": "%.2f" % reward, "currency": "THB",
+            "timezone": "Asia/Bangkok",
+            "asserted_from": "authenticated_browser_filter_not_csv",
+        },
+        "extracted_at": extracted_time.isoformat(timespec="seconds"),
+        "importer_sha256": AT._importer_sha256(),
+        "sub_id_available": False, "attribution_state": "UNATTRIBUTED",
+        "bindings": bindings,
+    }
+    receipt = {
+        "_meta": "private AccessTrade CSV evidence receipt",
+        "evidence": evidence,
+        "evidence_sha256": AT.canonical_sha256(evidence),
+    }
+    receipt_hash = AT.canonical_sha256(receipt)
+    meta["upstream_evidence"] = [{
+        "receipt_file_sha256": hashlib.sha256(
+            (receipt_hash + chr(10)).encode("ascii")
+        ).hexdigest(),
+        "receipt_sha256": receipt_hash,
+        "receipt": receipt,
+        "canonical_source_sha256": meta["source_snapshot_sha256"],
+        "canonical_source_row_count": len(rows),
+    }]
+    return [json.dumps(meta)] + [json.dumps(row) for row in rows]
+
+
+_LEGACY_HEADER = '{"note":"metadata header","created":"2026-07-24"}'
 _GA4_CLICKS = "source,sessions,quiz_start,affiliate_click" + chr(10) + "pantip,18,2,5" + chr(10)
 _GA4_ZERO = "source,sessions,quiz_start,affiliate_click" + chr(10) + "direct,166,0,0" + chr(10)
 _GA4_OLDHEAD = "source,sessions,quiz_start,conversion" + chr(10) + "pantip,18,2,5" + chr(10)
 
-check("clicks but not one sale recorded", run_sales([_HEADER], _GA4_CLICKS), "WARN")
-check("a real sale on record", run_sales([_HEADER, _SALE], _GA4_CLICKS), "PASS")
-check("no clicks and no sales is consistent", run_sales([_HEADER], _GA4_ZERO), "PASS")
+check("trusted zero-sale export is decisionable regardless of click CSV", run_sales(reconciled_sales(), _GA4_CLICKS), "PASS")
+check("a paid affiliate transaction is recorded", run_sales(reconciled_sales("paid"), _GA4_CLICKS), "PASS")
+check("pending settlement remains visible", run_sales(reconciled_sales("pending"), _GA4_ZERO), "WARN")
 check("no sales log at all", run_sales(None, _GA4_CLICKS), "WARN")
-check("empty log and no GA4 to compare", run_sales([_HEADER], None), "WARN")
-check("metadata header alone is not a sale", run_sales([_HEADER], _GA4_CLICKS), "WARN")
-check("old CSV header (conversion) is still read", run_sales([_HEADER], _GA4_OLDHEAD), "WARN")
+check("legacy metadata is not accepted as reconciled", run_sales([_LEGACY_HEADER], None), "WARN")
+check("old conversion CSV cannot make legacy revenue trusted", run_sales([_LEGACY_HEADER], _GA4_OLDHEAD), "WARN")
+
+print("\nDASHBOARD PROVENANCE  (a stale trusted-zero artifact must not survive input changes)")
+_dash_dir = tempfile.mkdtemp(prefix="pf_dashboard_")
+_dash = os.path.join(_dash_dir, "dashboard.html")
+_dash_sales = os.path.join(_dash_dir, "sales.jsonl")
+_dash_reader = os.path.join(_dash_dir, "revenue_ledger.py")
+_dash_log_sale_reader = os.path.join(_dash_dir, "log_sale.py")
+_dash_accesstrade_reader = os.path.join(_dash_dir, "import_accesstrade_csv.py")
+_dash_private_runtime_reader = os.path.join(_dash_dir, "private_runtime.py")
+_dash_revenue_readers = (
+    _dash_reader, _dash_log_sale_reader,
+    _dash_accesstrade_reader, _dash_private_runtime_reader,
+)
+_dash_producer = os.path.join(_dash_dir, "dashboard_agent.py")
+_dash_ga4_snapshot = os.path.join(_dash_dir, "ga4-snapshot.json")
+_dash_ga4_metrics = os.path.join(_dash_dir, "ga4-metrics.csv")
+_dash_ga4_pages = os.path.join(_dash_dir, "ga4-pages.csv")
+_dash_ga4_funnel = os.path.join(_dash_dir, "ga4-funnel.csv")
+_dash_ga4_pilot_sessions = os.path.join(_dash_dir, "ga4-pilot-sessions.csv")
+_dash_gsc_snapshot = os.path.join(_dash_dir, "gsc-snapshot.json")
+_dash_gsc_queries = os.path.join(_dash_dir, "gsc-queries.csv")
+_dash_gsc_pages = os.path.join(_dash_dir, "gsc-pages.csv")
+_dash_decision_reader = os.path.join(_dash_dir, "decision_readiness.py")
+_dash_observation_reader = os.path.join(_dash_dir, "observation_snapshot.py")
+_dash_ga4_producer = os.path.join(_dash_dir, "ga4_pull.py")
+_dash_gsc_producer = os.path.join(_dash_dir, "gsc_pull.py")
+_dash_ga4_trust_reader = os.path.join(_dash_dir, "ga4_decision_trust.py")
+_dash_ga4_schema_reader = os.path.join(_dash_dir, "ga4_schema.py")
+_dash_content_source_reader = os.path.join(_dash_dir, "content_source_gate.py")
+_dash_analytics_inputs = (
+    _dash_ga4_snapshot, _dash_ga4_metrics, _dash_ga4_pages,
+    _dash_ga4_funnel, _dash_ga4_pilot_sessions, _dash_gsc_snapshot,
+    _dash_gsc_queries, _dash_gsc_pages,
+)
+_dash_analytics_readers = (
+    _dash_decision_reader, _dash_observation_reader,
+    _dash_ga4_producer, _dash_gsc_producer,
+    _dash_ga4_trust_reader, _dash_ga4_schema_reader,
+    _dash_content_source_reader,
+)
+with io.open(_dash_sales, "w", encoding="utf-8") as fh:
+    fh.write(chr(10).join(reconciled_sales()) + chr(10))
+for _fixture_path in (
+    *_dash_revenue_readers, _dash_producer,
+    *_dash_analytics_inputs, *_dash_analytics_readers,
+):
+    with io.open(_fixture_path, "w", encoding="utf-8") as fh:
+        fh.write("fixture: " + os.path.basename(_fixture_path) + chr(10))
+
+
+def _hash(path):
+    return hashlib.sha256(open(path, "rb").read()).hexdigest()
+
+
+def _combined_hash(paths):
+    digest = hashlib.sha256()
+    for path in paths:
+        selected = Path(path)
+        digest.update(str(selected.resolve()).encode("utf-8"))
+        digest.update(b"\0FILE\0")
+        digest.update(selected.read_bytes())
+        digest.update(b"\0")
+    return digest.hexdigest()
+
+
+def run_dashboard(*, sales_hash=None, reader_hash=None, producer_hash=None,
+                  analytics_input_hash=None, analytics_reader_hash=None, trusted="true",
+                  state="RECONCILED", quality_state=None, revenue_expiry=None,
+                  ga4_trusted="true", ga4_state="CURRENT", ga4_expiry=None,
+                  gsc_trusted="true", gsc_state="CURRENT",
+                  gsc_expiry=None,
+                  expected_ga4_trusted=None, expected_ga4_state=None,
+                  expected_gsc_trusted=None, expected_gsc_state=None,
+                  expected_ga4_sessions=None,
+                  expected_gsc_impressions=None, expected_gsc_clicks=None,
+                  paid_net="0.00", paid_count="0",
+                  pending_amount="0.00", pending_count="0",
+                  revenue_metric=None, revenue_count=None, pending_metric=None,
+                  pending_count_metric=None, ga4_metric=None,
+                  gsc_impressions=None, gsc_clicks=None,
+                  ga4_metric_grain=None, gsc_metric_grain=None,
+                  generated=None, include_all=True):
+    generated = generated or datetime.datetime.now(datetime.timezone.utc).isoformat()
+    expected_ga4_trusted = (ga4_trusted if expected_ga4_trusted is None
+                            else expected_ga4_trusted)
+    expected_ga4_state = ga4_state if expected_ga4_state is None else expected_ga4_state
+    expected_gsc_trusted = (gsc_trusted if expected_gsc_trusted is None
+                            else expected_gsc_trusted)
+    expected_gsc_state = gsc_state if expected_gsc_state is None else expected_gsc_state
+    expected_ga4_sessions = (10 if expected_ga4_sessions is None
+                             else expected_ga4_sessions)
+    expected_gsc_impressions = (20 if expected_gsc_impressions is None
+                                else expected_gsc_impressions)
+    expected_gsc_clicks = (2 if expected_gsc_clicks is None
+                           else expected_gsc_clicks)
+    future_expiry = (
+        datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=1)
+    ).isoformat(timespec="seconds")
+    revenue_now = P._affiliate_revenue_summary()
+    quality_state = quality_state or (
+        revenue_now.get("quality_state") or "UNAVAILABLE"
+    )
+    if revenue_expiry is None:
+        revenue_expiry = (
+            revenue_now.get("trust_expires_at") or future_expiry
+            if trusted == "true" else "UNAVAILABLE"
+        )
+    ga4_expiry = ga4_expiry or (
+        future_expiry if ga4_trusted == "true" else "UNAVAILABLE"
+    )
+    gsc_expiry = gsc_expiry or (
+        future_expiry if gsc_trusted == "true" else "UNAVAILABLE"
+    )
+    expected_ga4_expiry = (
+        ga4_expiry if expected_ga4_trusted == "true" else None
+    )
+    expected_gsc_expiry = (
+        gsc_expiry if expected_gsc_trusted == "true" else None
+    )
+    P.DASHBOARD_READINESS_READER = lambda: {
+        "ga4": {"trusted": expected_ga4_trusted == "true",
+                "state": expected_ga4_state,
+                "expires_at": expected_ga4_expiry,
+                "sessions": expected_ga4_sessions},
+        "gsc": {"trusted": expected_gsc_trusted == "true",
+                "state": expected_gsc_state,
+                "expires_at": expected_gsc_expiry,
+                "impressions": expected_gsc_impressions,
+                "clicks": expected_gsc_clicks},
+    }
+    if trusted != "true":
+        paid_net = paid_count = pending_amount = pending_count = "UNAVAILABLE"
+    revenue_metric = revenue_metric or (
+        (paid_net + chr(3647)) if trusted == "true" else "UNAVAILABLE"
+    )
+    revenue_count = revenue_count or paid_count
+    pending_metric = pending_metric or (
+        (pending_amount + chr(3647)) if trusted == "true" else "UNAVAILABLE"
+    )
+    pending_count_metric = pending_count_metric or pending_count
+    ga4_metric = ga4_metric or (
+        "10" if ga4_trusted == "true" else "UNAVAILABLE"
+    )
+    gsc_impressions = gsc_impressions or (
+        "20" if gsc_trusted == "true" else "UNAVAILABLE"
+    )
+    gsc_clicks = gsc_clicks or (
+        "2" if gsc_trusted == "true" else "UNAVAILABLE"
+    )
+    tags = [
+        ("ngernduangold-dashboard-contract", P.DASHBOARD_CONTRACT_VERSION),
+        ("ngernduangold-dashboard-generated-at", generated),
+        ("ngernduangold-sales-input-sha256", sales_hash or _hash(_dash_sales)),
+        ("ngernduangold-revenue-reader-sha256",
+         reader_hash or _combined_hash(_dash_revenue_readers)),
+        ("ngernduangold-dashboard-producer-sha256", producer_hash or _hash(_dash_producer)),
+        ("ngernduangold-analytics-input-sha256",
+         analytics_input_hash or _combined_hash(_dash_analytics_inputs)),
+        ("ngernduangold-analytics-reader-sha256",
+         analytics_reader_hash or _combined_hash(_dash_analytics_readers)),
+        ("ngernduangold-revenue-trusted", trusted),
+        ("ngernduangold-revenue-state", state),
+        ("ngernduangold-revenue-quality-state", quality_state),
+        ("ngernduangold-revenue-expires-at", revenue_expiry),
+        ("ngernduangold-revenue-paid-net-thb", paid_net),
+        ("ngernduangold-revenue-paid-count", paid_count),
+        ("ngernduangold-revenue-pending-amount-thb", pending_amount),
+        ("ngernduangold-revenue-pending-count", pending_count),
+        ("ngernduangold-ga4-trusted", ga4_trusted),
+        ("ngernduangold-ga4-state", ga4_state),
+        ("ngernduangold-ga4-expires-at", ga4_expiry),
+        ("ngernduangold-ga4-metric-grain",
+         ga4_metric_grain or P.DASHBOARD_GA4_METRIC_GRAIN),
+        ("ngernduangold-gsc-trusted", gsc_trusted),
+        ("ngernduangold-gsc-state", gsc_state),
+        ("ngernduangold-gsc-expires-at", gsc_expiry),
+        ("ngernduangold-gsc-metric-grain",
+         gsc_metric_grain or P.DASHBOARD_GSC_METRIC_GRAIN),
+    ]
+    if not include_all:
+        tags = tags[:-1]
+    with io.open(_dash, "w", encoding="utf-8") as fh:
+        fh.write("<html><head>" + "".join(
+            '<meta name="%s" content="%s">' % pair for pair in tags
+        ) + "</head><body>" +
+        '<b data-dashboard-source="revenue" data-dashboard-metric="revenue-28d">%s</b>' % revenue_metric +
+        '<span data-dashboard-source="revenue" data-dashboard-metric="revenue-paid-count">%s</span>' % revenue_count +
+        '<span data-dashboard-source="revenue" data-dashboard-metric="revenue-pending-amount">%s</span>' % pending_metric +
+        '<span data-dashboard-source="revenue" data-dashboard-metric="revenue-pending-count">%s</span>' % pending_count_metric +
+        '<b data-dashboard-source="ga4" data-dashboard-metric="ga4-sessions">%s</b>' % ga4_metric +
+        '<b data-dashboard-source="gsc" data-dashboard-metric="gsc-impressions">%s</b>' % gsc_impressions +
+        '<b data-dashboard-source="gsc" data-dashboard-metric="gsc-clicks">%s</b>' % gsc_clicks +
+        "<script>Date.now() >= deadline; STALE_AT_VIEW</script></body></html>")
+    P.results[:] = []
+    P.check_dashboard_provenance()
+    return P.results[0]["status"]
+
+
+_old_dashboard = (
+    P.DASHBOARD, P.REVENUE_READER, P.SALES_LOG_FILE, P.SALES_LOG,
+    P.DASHBOARD_REVENUE_READERS,
+    P.DASHBOARD_PRODUCER, P.DASHBOARD_ANALYTICS_INPUTS,
+    P.DASHBOARD_ANALYTICS_READERS, P.DASHBOARD_READINESS_READER,
+)
+P.DASHBOARD, P.REVENUE_READER = _dash, _dash_reader
+P.SALES_LOG_FILE, P.SALES_LOG = _dash_sales, _dash_sales
+P.DASHBOARD_REVENUE_READERS = _dash_revenue_readers
+P.DASHBOARD_PRODUCER = _dash_producer
+P.DASHBOARD_ANALYTICS_INPUTS = _dash_analytics_inputs
+P.DASHBOARD_ANALYTICS_READERS = _dash_analytics_readers
+check("current hash-bound dashboard is accepted", run_dashboard(), "PASS")
+check("changed reader invalidates dashboard", run_dashboard(reader_hash="0" * 64), "FAIL")
+_before_transitive_change = _combined_hash(_dash_revenue_readers)
+with io.open(_dash_accesstrade_reader, "a", encoding="utf-8") as fh:
+    fh.write("# changed transitive reader" + chr(10))
+check("changed transitive revenue reader invalidates dashboard",
+      run_dashboard(reader_hash=_before_transitive_change), "FAIL")
+check("changed producer invalidates dashboard", run_dashboard(producer_hash="0" * 64), "FAIL")
+check("changed analytics input invalidates dashboard",
+      run_dashboard(analytics_input_hash="0" * 64), "FAIL")
+check("changed analytics reader invalidates dashboard",
+      run_dashboard(analytics_reader_hash="0" * 64), "FAIL")
+_before_official_source_reader_change = _combined_hash(_dash_analytics_readers)
+with io.open(_dash_content_source_reader, "a", encoding="utf-8") as fh:
+    fh.write("# changed official-source contract" + chr(10))
+check("changed official-source transitive reader invalidates dashboard",
+      run_dashboard(analytics_reader_hash=_before_official_source_reader_change),
+      "FAIL")
+check("missing provenance invalidates dashboard", run_dashboard(include_all=False), "FAIL")
+check("truthful unavailable analytics labels are accepted", run_dashboard(
+      ga4_trusted="false", ga4_state="INVALID_METADATA",
+      gsc_trusted="false", gsc_state="INVALID_METADATA"), "PASS")
+check("untrusted analytics cannot render numeric zero", run_dashboard(
+      ga4_trusted="false", ga4_state="INVALID_METADATA", ga4_metric="0"), "FAIL")
+check("analytics trust label must match strict reader", run_dashboard(
+      ga4_trusted="true", ga4_state="CURRENT",
+      expected_ga4_trusted="false", expected_ga4_state="INVALID_METADATA"), "FAIL")
+check("trusted revenue cannot declare an expired runtime boundary", run_dashboard(
+      revenue_expiry="2020-01-01T00:00:00+00:00"), "FAIL")
+check("trusted analytics cannot declare an expired runtime boundary", run_dashboard(
+      ga4_expiry="2020-01-01T00:00:00+00:00"), "FAIL")
+check("trusted GA4 headline must equal strict observation total", run_dashboard(
+      ga4_metric="11", expected_ga4_sessions=10), "FAIL")
+check("trusted GSC headline must equal page-grain observation total", run_dashboard(
+      gsc_impressions="19", expected_gsc_impressions=20), "FAIL")
+check("query-grain GSC declaration is rejected", run_dashboard(
+      gsc_metric_grain="gsc-queries-query-total"), "FAIL")
+
+
+def run_pending_dashboard(*, paid_net="0.00"):
+    with io.open(_dash_sales, "w", encoding="utf-8") as fh:
+        fh.write(chr(10).join(reconciled_sales("pending")) + chr(10))
+    return run_dashboard(
+        sales_hash=_hash(_dash_sales), paid_net=paid_net, paid_count="0",
+        pending_amount="90.00", pending_count="1",
+    )
+
+
+check("pending commission is separate from zero paid revenue",
+      run_pending_dashboard(), "PASS")
+check("pending commission cannot be promoted into paid revenue",
+      run_pending_dashboard(paid_net="90.00"), "FAIL")
+
+
+def run_unreconciled_with_false_trusted_label():
+    with io.open(_dash_sales, "w", encoding="utf-8") as fh:
+        fh.write(_LEGACY_HEADER + chr(10))
+    return run_dashboard(sales_hash=_hash(_dash_sales))
+
+
+check("trusted-zero label cannot mask unreconciled input",
+      run_unreconciled_with_false_trusted_label(), "FAIL")
+
+
+def run_all_invalid_truthfully_unavailable():
+    with io.open(_dash_sales, "w", encoding="utf-8") as fh:
+        fh.write(_LEGACY_HEADER + chr(10))
+    return run_dashboard(
+        sales_hash=_hash(_dash_sales), trusted="false", state="UNRECONCILED",
+        ga4_trusted="false", ga4_state="INVALID_METADATA",
+        gsc_trusted="false", gsc_state="INVALID_METADATA",
+    )
+
+
+check("invalid inputs pass only when every visible metric is unavailable",
+      run_all_invalid_truthfully_unavailable(), "PASS")
+(P.DASHBOARD, P.REVENUE_READER, P.SALES_LOG_FILE, P.SALES_LOG,
+ P.DASHBOARD_REVENUE_READERS,
+ P.DASHBOARD_PRODUCER, P.DASHBOARD_ANALYTICS_INPUTS,
+ P.DASHBOARD_ANALYTICS_READERS, P.DASHBOARD_READINESS_READER) = _old_dashboard
+shutil.rmtree(_dash_dir, ignore_errors=True)
 
 shutil.rmtree(os.path.join(TMPDIR, "_test_sales"), ignore_errors=True)
 P.SALES_LOG, P.REPO = _sl, _repo
@@ -447,7 +920,7 @@ _gm = P.GA4_METRICS
 _syn_dir = tempfile.mkdtemp(prefix="pf_syn_")   # fixture อยู่นอก repo (ของเดิมเคยค้างใน tools/)
 
 
-def run_syn(csv_text):
+def run_syn(csv_text, trusted=True):
     p = os.path.join(_syn_dir, "ga4-metrics.csv")
     if csv_text is None:
         if os.path.exists(p):
@@ -457,6 +930,9 @@ def run_syn(csv_text):
         with io.open(p, "w", encoding="utf-8", newline=chr(10)) as fh:
             fh.write(csv_text)
         P.GA4_METRICS = p
+    P.GA4_TRUST_EVALUATOR = lambda *_: type(
+        "Trust", (), {"trusted": trusted, "reason": "fixture"}
+    )()
     P.results[:] = []
     P.check_synthetic_traffic()
     return P.results[0]["status"]
@@ -474,6 +950,7 @@ check("direct ท่วมแต่มี engagement = คนจริง", run_
 check("direct ไม่ท่วม", run_syn(_BALANCED), "PASS")
 check("ยังไม่มี sessions", run_syn(_EMPTY), "PASS")
 check("ไม่มีไฟล์ ga4-metrics.csv", run_syn(None), "WARN")
+check("untrusted GA4 suppresses traffic-shape interpretation", run_syn(_REAL, trusted=False), "WARN")
 
 shutil.rmtree(_syn_dir, ignore_errors=True)
 P.GA4_METRICS = _gm
@@ -574,16 +1051,34 @@ _fresh_tmp()
 _led = lambda days: write("led.jsonl", "\n".join(json.dumps(
     {"type": "text", "channel": "facebook", "text_first80": "x",
      "ts": "%sT09:00:00+07:00" % (datetime.date.today() - datetime.timedelta(days=days)).isoformat()})
-    for _ in [0]))
+    for _ in [0]) + "\n")
 check("posted today", run_check("check_delivery_gap", LEDGER=_led(0)), "PASS")
 check("silent %d days" % P.DELIVERY_WARN_DAYS,
       run_check("check_delivery_gap", LEDGER=_led(P.DELIVERY_WARN_DAYS)), "WARN")
 check("silent %d days" % P.DELIVERY_FAIL_DAYS,
       run_check("check_delivery_gap", LEDGER=_led(P.DELIVERY_FAIL_DAYS)), "FAIL")
+_comment_does_not_reset = write(
+    "comment_does_not_reset.jsonl",
+    chr(10).join([
+        json.dumps({"type": "text", "channel": "facebook",
+                    "ts": "%sT09:00:00+07:00" % (datetime.date.today() - datetime.timedelta(days=P.DELIVERY_FAIL_DAYS)).isoformat()}),
+        json.dumps({"type": "comment", "channel": "pantip",
+                    "ts": datetime.date.today().isoformat() + "T09:00:00+07:00"}),
+    ]) + "\n",
+)
+check("a fresh community reply cannot hide a stale owned feed",
+      run_check("check_delivery_gap", LEDGER=_comment_does_not_reset), "FAIL")
 check("ledger with no content rows at all",
       run_check("check_delivery_gap", LEDGER=write("empty.jsonl", "")), "FAIL")
 check("ledger file missing entirely",
       run_check("check_delivery_gap", LEDGER=os.path.join(TMPDIR, "nope.jsonl")), "FAIL")
+_bad_delivery_time = write(
+    "bad-delivery-time.jsonl",
+    json.dumps({"type": "text", "channel": "facebook",
+                "ts": TODAY + "T99:00:00+07:00"}) + "\n",
+)
+check("malformed content time cannot report fresh delivery",
+      run_check("check_delivery_gap", LEDGER=_bad_delivery_time), "FAIL")
 
 print("\nCAPTIONS  (must reject what the posting policy forbids, and only that)")
 _cap = lambda txt, ch="threads": write("man.json", {"items": [{"id": "x", "captions": {ch: txt}}]})
@@ -678,15 +1173,38 @@ check("site/ not built is a WARN",
       run_check("check_attribution", SITE=os.path.join(TMPDIR, "no-site2")), "WARN")
 
 print("\nQUEUED CLIP SPEC  (checks on the way IN, not on the way out)")
-check("policy.json missing -> WARN, not a silent pass",
-      run_check("check_queued_clip_spec", REPO=os.path.join(TMPDIR, "no-repo")), "WARN")
+check("policy.json missing -> FAIL closed",
+      run_check("check_queued_clip_spec", REPO=os.path.join(TMPDIR, "no-repo")), "FAIL")
 check("nothing queued from today onward -> WARN",
       run_check("check_queued_clip_spec", REPO=REPO_REAL,
                 SCHEDULE=write("s0.json", {"2020-01-01": {"file": "old.mp4"}})), "WARN")
 check("queued clip missing on disk -> FAIL",
       run_check("check_queued_clip_spec", REPO=REPO_REAL,
                 SCHEDULE=write("s1.json", {_today: {"file": "definitely-not-here.mp4"}})),
-      "FAIL" if __import__("shutil").which("ffprobe") else "FAIL")
+      "FAIL")
+_clip_repo = os.path.join(TMPDIR, "cliprepo")
+_clip = write("cliprepo/reels/clip.mp4", "fixture")
+_clip_policy = write("cliprepo/.system_control/policy.json",
+                     {"specs": {"reel_width": 1080, "reel_height": 1920}})
+_clip_report = write("cliprepo/automation-log/media-qa/clip.json", {"fixture": True})
+_clip_schedule = write("cliprepo/reels/schedule.json", {
+    _today: {"file": "clip.mp4", "qa_report": "automation-log/media-qa/clip.json"}
+})
+check("hash-bound clean queued clip -> PASS",
+      run_check("check_queued_clip_spec", REPO=_clip_repo, SCHEDULE=_clip_schedule,
+                QUEUED_CLIP_PROBER=lambda _path: "1080,1920",
+                MEDIA_GUARD_RUNNER=lambda _asset, _report: (0, "PASS")), "PASS")
+check("watermark guard failure -> FAIL",
+      run_check("check_queued_clip_spec", REPO=_clip_repo, SCHEDULE=_clip_schedule,
+                QUEUED_CLIP_PROBER=lambda _path: "1080,1920",
+                MEDIA_GUARD_RUNNER=lambda _asset, _report: (2, "watermark detected")), "FAIL")
+_no_receipt_schedule = write("cliprepo/reels/schedule-no-receipt.json", {
+    _today: {"file": "clip.mp4"}
+})
+check("queued clip without QA receipt -> FAIL",
+      run_check("check_queued_clip_spec", REPO=_clip_repo, SCHEDULE=_no_receipt_schedule,
+                QUEUED_CLIP_PROBER=lambda _path: "1080,1920",
+                MEDIA_GUARD_RUNNER=lambda _asset, _report: (0, "PASS")), "FAIL")
 
 print("\nDELIVERABLES  (a page may not take money for a file that does not exist)")
 
@@ -696,8 +1214,13 @@ def products(items, repo=None):
     d = os.path.join(TMPDIR, "prod_%d" % abs(hash(str(items))))
     os.makedirs(os.path.join(d, ".system_control"), exist_ok=True)
     pol = os.path.join(d, ".system_control", "policy.json")
+    normalized = []
+    for item in items:
+        item = dict(item)
+        item.setdefault("promotion_authorized", True)
+        normalized.append(item)
     with io.open(pol, "w", encoding="utf-8") as fh:
-        json.dump({"products": {"items": items}}, fh, ensure_ascii=False)
+        json.dump({"products": {"items": normalized}}, fh, ensure_ascii=False)
     return pol, (repo or d)
 
 
@@ -717,12 +1240,55 @@ _pol, _ = products([{"id": "kit", "sold_on": _page, "deliverable": _file}])
 check("page + real file -> ready",
       run_check("check_deliverables", POLICY=_pol, REPO=_d), "PASS")
 
+# A file existing is not owner authorization to promote it. Purchase intent is
+# allowed only when the explicit product switch is true, and every intent must
+# carry a declared stable id.
+with io.open(os.path.join(_d, _page), "w", encoding="utf-8") as fh:
+    fh.write('<a data-buy="kit" href="https://example.test/checkout">buy</a>')
+_pol, _ = products([{"id": "kit", "sold_on": _page, "deliverable": _file,
+                     "promotion_authorized": False}])
+check("deliverable ready but promotion unauthorized -> FAIL",
+      run_check("check_deliverables", POLICY=_pol, REPO=_d), "FAIL")
+_pol, _ = products([{"id": "kit", "sold_on": _page, "deliverable": _file,
+                     "promotion_authorized": True}])
+check("declared authorized purchase intent -> PASS",
+      run_check("check_deliverables", POLICY=_pol, REPO=_d), "PASS")
+with io.open(os.path.join(_d, _page), "w", encoding="utf-8") as fh:
+    fh.write('<a data-note="send payment" href="https://example.test/checkout">buy</a>')
+check("unbound data-note purchase intent -> FAIL",
+      run_check("check_deliverables", POLICY=_pol, REPO=_d), "FAIL")
+with io.open(os.path.join(_d, _page), "w", encoding="utf-8") as fh:
+    fh.write('<a data-buy="unknown" href="https://example.test/checkout">buy</a>')
+check("undeclared own-product id -> FAIL",
+      run_check("check_deliverables", POLICY=_pol, REPO=_d), "FAIL")
+with io.open(os.path.join(_d, _page), "w", encoding="utf-8") as fh:
+    fh.write("ordinary product page")
+with io.open(_pol, encoding="utf-8") as fh:
+    _missing_auth = json.load(fh)
+del _missing_auth["products"]["items"][0]["promotion_authorized"]
+with io.open(_pol, "w", encoding="utf-8") as fh:
+    json.dump(_missing_auth, fh)
+check("missing promotion authorization -> FAIL closed",
+      run_check("check_deliverables", POLICY=_pol, REPO=_d), "FAIL")
+
 # THE 9 Aug CASE: the page is live, the promise is in it, the file does not exist.
 _pol, _ = products([{"id": "kit", "sold_on": _page, "deliverable": None}])
 check("page live, nothing to hand over -> FAIL",
       run_check("check_deliverables", POLICY=_pol, REPO=_d), "FAIL")
 check("...and the product is NAMED",
       "kit" in run_check_detail("check_deliverables", POLICY=_pol, REPO=_d), True)
+
+# A badge cannot conceal a live checkout.  Both source and generated output are
+# inspected because build-time rewrites previously made the two disagree.
+with io.open(os.path.join(_d, _page), "w", encoding="utf-8") as fh:
+    fh.write('<div data-offer-status="paused"></div><a data-buy="kit" href="https://gumroad.com/l/kit">buy</a>')
+_pol, _ = products([{"id": "kit", "sold_on": _page, "deliverable": None}])
+check("paused badge plus checkout -> FAIL",
+      run_check("check_deliverables", POLICY=_pol, REPO=_d), "FAIL")
+with io.open(os.path.join(_d, _page), "w", encoding="utf-8") as fh:
+    fh.write('<div data-offer-status="paused"></div><a href="/free-tool">free tool</a>')
+check("paused badge plus free internal help -> PASS",
+      run_check("check_deliverables", POLICY=_pol, REPO=_d), "PASS")
 
 _pol, _ = products([{"id": "kit", "sold_on": _page, "deliverable": "files/nope.pdf"}])
 check("file listed in policy but absent on disk -> FAIL",
@@ -742,22 +1308,24 @@ check("product whose page no longer exists is out of scope",
 
 # Gumroad hosts the file; disk cannot answer. Must say 'cannot check', never assume.
 _pol, _ = products([{"id": "gr", "sold_on": _page, "deliverable": "gumroad:l/x"}])
-check("externally hosted product does not read as a local failure",
-      run_check("check_deliverables", POLICY=_pol, REPO=_d), "PASS")
+check("authorized hosted fulfillment remains unverified -> WARN",
+      run_check("check_deliverables", POLICY=_pol, REPO=_d), "WARN")
 check("...and the report admits it could not verify it",
       "not checkable" in run_check_detail("check_deliverables", POLICY=_pol, REPO=_d), True)
 
 # One good product must not mask one broken one.
+with io.open(os.path.join(_d, _page), "w", encoding="utf-8") as fh:
+    fh.write("ordinary product page")
 _pol, _ = products([{"id": "ok", "sold_on": _page, "deliverable": _file},
                     {"id": "broken", "sold_on": _page, "deliverable": None}])
 check("a ready product does not hide a missing one",
       run_check("check_deliverables", POLICY=_pol, REPO=_d), "FAIL")
 
 _pol, _ = products([])
-check("no products declared -> WARN, never a silent PASS",
-      run_check("check_deliverables", POLICY=_pol, REPO=_d), "WARN")
-check("unreadable policy -> WARN",
-      run_check("check_deliverables", POLICY=os.path.join(TMPDIR, "nope.json"), REPO=_d), "WARN")
+check("no products declared -> FAIL closed",
+      run_check("check_deliverables", POLICY=_pol, REPO=_d), "FAIL")
+check("unreadable policy -> FAIL closed",
+      run_check("check_deliverables", POLICY=os.path.join(TMPDIR, "nope.json"), REPO=_d), "FAIL")
 
 print("\nSTUCK RUNS  (evidence written before the risky step, then actually read)")
 
@@ -775,8 +1343,23 @@ def runlog_dir(rows, name="2026-08.jsonl"):
 
 
 def _run(routine, status, hours_ago):
-    ts = (datetime.datetime.now() - datetime.timedelta(hours=hours_ago)).isoformat(timespec="seconds")
+    bangkok = datetime.timezone(datetime.timedelta(hours=7))
+    ts = (datetime.datetime.now(bangkok) - datetime.timedelta(hours=hours_ago)).isoformat(timespec="seconds")
     return {"ts": ts, "routine": routine, "status": status, "summary": "x", "metrics": {}}
+
+
+def raw_runlog(text, name="2026-08.jsonl"):
+    d = os.path.join(TMPDIR, "runlogs_raw_%d" % abs(hash(text)))
+    os.makedirs(d, exist_ok=True)
+    for f in os.listdir(d):
+        path = os.path.join(d, f)
+        if os.path.isfile(path):
+            os.unlink(path)
+        else:
+            shutil.rmtree(path)
+    with io.open(os.path.join(d, name), "w", encoding="utf-8", newline="") as fh:
+        fh.write(text)
+    return d
 
 
 check("a finished run is not stuck",
@@ -806,6 +1389,29 @@ check("an unreadable timestamp is surfaced, never skipped",
       run_check("check_stuck_runs",
                 RUNLOG_DIR=runlog_dir([{"ts": "not-a-date", "routine": "a", "status": "started"}])),
       "WARN")
+_valid_before = json.dumps(_run("a", "ok", 2))
+_valid_after = json.dumps(_run("b", "ok", 1))
+_malformed_dir = raw_runlog(_valid_before + "\n{broken-json\n" + _valid_after + "\n")
+check("malformed middle JSONL row fails closed",
+      run_check("check_stuck_runs", RUNLOG_DIR=_malformed_dir), "WARN")
+check("malformed runlog is reported as UNKNOWN",
+      "UNKNOWN" in run_check_detail("check_stuck_runs", RUNLOG_DIR=_malformed_dir), True)
+_unreadable_dir = os.path.join(TMPDIR, "runlogs_unreadable")
+shutil.rmtree(_unreadable_dir, ignore_errors=True)
+os.makedirs(os.path.join(_unreadable_dir, "2026-08.jsonl"))
+check("unreadable runlog path fails closed",
+      run_check("check_stuck_runs", RUNLOG_DIR=_unreadable_dir), "WARN")
+_z_stamp = (datetime.datetime.now(datetime.timezone.utc)
+            - datetime.timedelta(hours=1)).isoformat(timespec="seconds").replace("+00:00", "Z")
+check("Z timestamp is normalized before age comparison",
+      run_check("check_stuck_runs", RUNLOG_DIR=runlog_dir([
+          {"ts": _z_stamp, "routine": "utc-z", "status": "started"}
+      ])), "PASS")
+_weekly_dir = runlog_dir([_run("ngernduangold-weekly-review", "started", 30)])
+check("weekly-review started remains reconciliation-required",
+      run_check("check_stuck_runs", RUNLOG_DIR=_weekly_dir), "WARN")
+check("weekly-review guard never claims a synthetic terminal",
+      "do not synthesize" in run_check_detail("check_stuck_runs", RUNLOG_DIR=_weekly_dir), True)
 check("no runlog at all is a WARN, never a silent PASS",
       run_check("check_stuck_runs", RUNLOG_DIR=os.path.join(TMPDIR, "no-runlogs")), "WARN")
 # post-ledger.jsonl lives in the same directory and has no `routine` key. Reading it
@@ -818,11 +1424,36 @@ check("rows without a routine key are ignored, not crashed on",
 print("\nDELEGATED CHECKS  (queue + build gate shell out - prove the mapping)")
 
 
-def fake_tool(name, code, out):
-    d = _sub = os.path.join(TMPDIR, "bin"); os.makedirs(d, exist_ok=True)
+def fake_tool(name, code, out, delay_seconds=0):
+    # Every invocation gets a fresh directory.  Reusing TMPDIR/bin meant that
+    # the bounded-timeout case below killed content_calendar_guard.py and the
+    # next case immediately tried to truncate that same executable path.  On
+    # the scheduled Windows run the recently terminated path can still be held
+    # briefly, so io.open() failed before the fail-closed assertion could run.
+    # Isolation avoids the handle race without retrying or masking fixture I/O
+    # failures: an unsuccessful mkdir/open still fails the self-test.
+    d = tempfile.mkdtemp(prefix="fake_tool_", dir=TMPDIR)
     with io.open(os.path.join(d, name), "w", encoding="utf-8", newline="\n") as fh:
-        fh.write("import sys\nprint(%r)\nsys.exit(%d)\n" % (out, code))
+        fh.write(
+            "import sys, time\ntime.sleep(%r)\nprint(%r)\nsys.exit(%d)\n"
+            % (delay_seconds, out, code)
+        )
     return d
+
+
+_isolated_tool_a = fake_tool("content_calendar_guard.py", 0, "first fixture")
+_isolated_tool_b = fake_tool("content_calendar_guard.py", 2, "second fixture")
+check("delegated tool fixtures use isolated executable paths",
+      _isolated_tool_a != _isolated_tool_b, True)
+with io.open(os.path.join(_isolated_tool_a, "content_calendar_guard.py"),
+             encoding="utf-8") as _isolated_a_fh:
+    _isolated_a_text = _isolated_a_fh.read()
+with io.open(os.path.join(_isolated_tool_b, "content_calendar_guard.py"),
+             encoding="utf-8") as _isolated_b_fh:
+    _isolated_b_text = _isolated_b_fh.read()
+check("a later delegated fixture cannot overwrite an earlier one",
+      "first fixture" in _isolated_a_text and "second fixture" in _isolated_b_text,
+      True)
 
 
 check("runway_guard says OK",
@@ -864,6 +1495,91 @@ check("runway_guard cannot run at all",
       run_check("check_queue", HERE=os.path.join(TMPDIR, "no-bin")), "FAIL")
 check("smoke test passes", run_check("check_build_gate", HERE=fake_tool("postdeploy_smoke.py", 0, "ok")), "PASS")
 check("smoke test fails", run_check("check_build_gate", HERE=fake_tool("postdeploy_smoke.py", 1, "boom")), "FAIL")
+check("live release parity passes", run_check(
+      "check_live_release_parity", HERE=fake_tool("postdeploy_smoke.py", 0, "live parity ok")), "PASS")
+check("live release drift blocks production readiness", run_check(
+      "check_live_release_parity", HERE=fake_tool("postdeploy_smoke.py", 1, "0/72 live pages match")), "FAIL")
+check("live release verifier unavailable fails closed", run_check(
+      "check_live_release_parity", HERE=os.path.join(TMPDIR, "no-release-verifier")), "FAIL")
+check("privacy scan passes", run_check("check_privacy_guard", HERE=fake_tool("privacy_guard.py", 0, "clean")), "PASS")
+check("privacy finding blocks publication", run_check("check_privacy_guard", HERE=fake_tool("privacy_guard.py", 1, "finding")), "FAIL")
+check("privacy scanner failure also blocks", run_check("check_privacy_guard", HERE=fake_tool("privacy_guard.py", 2, "unavailable")), "FAIL")
+check("automation ownership guard passes", run_check(
+      "check_automation_policy_guard", HERE=fake_tool("automation_policy_guard.py", 0, "automation-policy-guard: PASS")), "PASS")
+check("duplicate executable automation owner blocks preflight", run_check(
+      "check_automation_policy_guard", HERE=fake_tool("automation_policy_guard.py", 1, "FAIL duplicate executable task id")), "FAIL")
+check("automation guard unavailable fails closed", run_check(
+      "check_automation_policy_guard", HERE=os.path.join(TMPDIR, "no-automation-guard")), "FAIL")
+_identity_ok_dir = fake_tool(
+    "public_identity_guard.py", 0,
+    '{"verdict":"PASS","counts":{"pages":1,"caption_fields":1,"knowledge_rows":1,"outward_prompts":1}}')
+check("public identity scan passes", run_check(
+      "check_public_identity_guard",
+      PUBLIC_IDENTITY_GUARD=os.path.join(_identity_ok_dir, "public_identity_guard.py")), "PASS")
+_identity_fail_dir = fake_tool(
+    "public_identity_guard.py", 2,
+    '{"verdict":"FAIL","findings":[{"category":"PERSONAL_VOICE"}]}')
+check("public identity finding blocks publication", run_check(
+      "check_public_identity_guard",
+      PUBLIC_IDENTITY_GUARD=os.path.join(_identity_fail_dir, "public_identity_guard.py")), "FAIL")
+_identity_bad_dir = fake_tool("public_identity_guard.py", 0, "not-json")
+check("malformed public identity evidence fails closed", run_check(
+      "check_public_identity_guard",
+      PUBLIC_IDENTITY_GUARD=os.path.join(_identity_bad_dir, "public_identity_guard.py")), "FAIL")
+check("public identity scan budget covers the real inventory",
+      P.PUBLIC_IDENTITY_TIMEOUT_SECONDS >= 180, True)
+check("manifest contract passes", run_check("check_manifest_contract", HERE=fake_tool("manifest_contract.py", 0, "clean")), "PASS")
+check("manifest evidence drift blocks", run_check("check_manifest_contract", HERE=fake_tool("manifest_contract.py", 1, "drift")), "FAIL")
+_calendar_pass = '{"verdict":"PASS","process_state":"PASS","findings":[],"counts":{"placements":65,"content_ids":40,"publishable":0,"source_content_evaluated":37,"source_content_allowed":0,"source_content_blocked":37,"source_failure_reasons":37}}'
+check("calendar guard timeout exceeds twice the measured high-water mark",
+      P.CONTENT_CALENDAR_GUARD_TIMEOUT_SECONDS >= 104, True)
+check("calendar guard timeout remains fixed at its explicit cap",
+      P.CONTENT_CALENDAR_GUARD_TIMEOUT_SECONDS == 120, True)
+check("content calendar contract passes", run_check(
+      "check_content_calendar_contract",
+      HERE=fake_tool("content_calendar_guard.py", 0, _calendar_pass)), "PASS")
+_calendar_results = run_check_results(
+    "check_content_calendar_contract",
+    HERE=fake_tool("content_calendar_guard.py", 0, _calendar_pass))
+check("calendar structure is reported separately",
+      [(row["check"], row["status"]) for row in _calendar_results],
+      [("calendar structure", "PASS"), ("publish readiness", "WARN")])
+check("structural pass does not imply publish authority",
+      "does not authorize posting" in _calendar_results[1]["detail"], True)
+_calendar_bounded_success = run_check_results(
+    "check_content_calendar_contract",
+    HERE=fake_tool("content_calendar_guard.py", 0, _calendar_pass, delay_seconds=0.05),
+    CONTENT_CALENDAR_GUARD_TIMEOUT_SECONDS=1)
+check("calendar guard completing inside its bound is accepted",
+      [(row["check"], row["status"]) for row in _calendar_bounded_success],
+      [("calendar structure", "PASS"), ("publish readiness", "WARN")])
+_calendar_real_timeout = run_check_results(
+    "check_content_calendar_contract",
+    HERE=fake_tool("content_calendar_guard.py", 0, _calendar_pass, delay_seconds=0.25),
+    CONTENT_CALENDAR_GUARD_TIMEOUT_SECONDS=0.05)
+check("calendar guard exceeding its bound fails closed",
+      [(row["check"], row["status"]) for row in _calendar_real_timeout],
+      [("calendar structure", "FAIL"), ("publish readiness", "FAIL")])
+check("calendar timeout names the enforced bound",
+      "timed out after 0.05s" in _calendar_real_timeout[0]["detail"], True)
+_calendar_fail = '{"verdict":"FAIL","process_state":"BLOCKED","findings":[{"code":"PLACEMENT_DUPLICATE","message":"duplicate placement"}],"counts":{}}'
+check("content calendar drift blocks preflight", run_check(
+      "check_content_calendar_contract",
+      HERE=fake_tool("content_calendar_guard.py", 2, _calendar_fail)), "FAIL")
+_calendar_business_blocked = '{"verdict":"FAIL","process_state":"BLOCKED","findings":[{"code":"PERMANENT_DEDUP_INCOMPLETE","message":"history incomplete","classification":"PUBLICATION_BLOCKER"}],"counts":{"placements":65,"content_ids":40,"publishable":0,"source_content_evaluated":37,"source_content_allowed":0,"source_content_blocked":37,"source_failure_reasons":37}}'
+_calendar_blocked_results = run_check_results(
+    "check_content_calendar_contract",
+    HERE=fake_tool("content_calendar_guard.py", 2, _calendar_business_blocked))
+check("valid calendar control separates business blockers",
+      [(row["check"], row["status"]) for row in _calendar_blocked_results],
+      [("calendar structure", "PASS"), ("publish readiness", "FAIL")])
+check("malformed calendar evidence fails closed", run_check(
+      "check_content_calendar_contract",
+      HERE=fake_tool("content_calendar_guard.py", 0, "not-json")), "FAIL")
+_calendar_bad_source_counts = '{"verdict":"PASS","process_state":"PASS","findings":[],"counts":{"placements":1,"content_ids":1,"publishable":0,"source_content_evaluated":1,"source_content_allowed":1,"source_content_blocked":1,"source_failure_reasons":0}}'
+check("inconsistent content-scoped source counts fail closed", run_check(
+      "check_content_calendar_contract",
+      HERE=fake_tool("content_calendar_guard.py", 0, _calendar_bad_source_counts)), "FAIL")
 
 print("\nTWO TASK ROOTS  (the guard must read the file the scheduler runs, not the mirror)")
 
@@ -916,7 +1632,7 @@ _a, _b = two_roots({"t": _RET}, {})
 check("retired cc task does not FAIL the gate either",
       run_check("check_dead_tooling", OWN_TASKS_DIR=_a, SCHEDULED_DIR=_b), "PASS")
 
-print("\nTASK MIRROR  (one id must not mean two different sets of orders)")
+print("\nPROMPT BYTE CONSISTENCY  (ownership comes from the scheduler registry)")
 _a, _b = two_roots({"t": "same"}, {"t": "same"})
 check("identical in both roots", run_check("check_task_mirror", OWN_TASKS_DIR=_a, SCHEDULED_DIR=_b), "PASS")
 _a, _b = two_roots({"t": "orders A"}, {"t": "orders B"})
@@ -941,7 +1657,7 @@ check("...but it must still be SAID, never silently swallowed",
       "retired on one side" in run_check_detail("check_task_mirror", OWN_TASKS_DIR=_a, SCHEDULED_DIR=_b),
       True)
 _a, _b = two_roots({"t": _LIVE}, {"t": _TOMB})
-check("the tombstone may be on either side", 
+check("the tombstone may be on either side",
       run_check("check_task_mirror", OWN_TASKS_DIR=_a, SCHEDULED_DIR=_b), "PASS")
 _a, _b = two_roots({"t": _LIVE}, {"t": _LIVE.replace("actual", "completely different")})
 check("two LIVE prompts that differ is still drift",
@@ -978,67 +1694,211 @@ _a, _b = two_roots({}, {"t": _FLD_P})
 check("'phase_until' is a FIELD NAME, not the deadline word 'until'",
       run_check("check_policy_dates_in_prompts", OWN_TASKS_DIR=_a, SCHEDULED_DIR=_b), "PASS")
 
-print("\nGA4 INTERNAL IP  (the rule that existed, was Active, and matched nothing)")
-# 1 Aug 2026: GA4 had an internal-traffic rule pinned to 184.22.17.215 and an ACTIVE
-# Exclude filter, while the machine had been rotated to 27.130.5.93 by the ISP. Every
-# visible signal said "protected". Nothing on disk recorded the real egress IP, so
-# nothing could contradict it. These cases exist so the next rotation is loud.
+print("\nGA4 INTERNAL IP  (every unverifiable trust state must fail closed)")
+# A previous incident left an ACTIVE Exclude filter pinned to an obsolete address.
+# Every visible signal said "protected" while the current host was uncovered.
+# These documentation-network fixtures ensure the next rotation is loud without
+# retaining or printing any real address.
+
+
+def _ga4_fixture_json_bytes(value):
+    return (
+        json.dumps(
+            value,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+        + "\n"
+    ).encode("utf-8")
+
+
+def bind_ga4_coverage(block):
+    try:
+        normalized = sorted({
+            str(ipaddress.ip_network(str(value).strip(), strict=False))
+            for value in block.get("ips", [])
+        })
+        fingerprint = hashlib.sha256(
+            json.dumps(
+                normalized, ensure_ascii=True, separators=(",", ":")
+            ).encode("utf-8")
+        ).hexdigest()
+    except ValueError:
+        fingerprint = "0" * 64
+    verified_at = block["verified_at"]
+    block["coverage_attestation"] = {
+        "schema_version": 1,
+        "source": "authenticated_ga4_admin_read_only",
+        "verified_at": verified_at,
+        "attested_at": verified_at + "T00:00:00+07:00",
+        "cidr_set_sha256": fingerprint,
+    }
+    attestation = block["coverage_attestation"]
+    raw_cidrs = block.get("ips", [])
+    observation = {
+        "schema_version": 1,
+        "mode": "authenticated_browser_read_only",
+        "observed_at": attestation["attested_at"],
+        "external_mutations": [],
+        "internal_traffic": {
+            "filter_state": "Active",
+            "filter_operation": "Exclude",
+            "exact_normalized_set_match": True,
+            "condition_count": len(set(raw_cidrs)),
+            "private_contract_condition_count": len(set(raw_cidrs)),
+            "raw_network_values_emitted": False,
+            "cidr_set_sha256": fingerprint,
+        },
+    }
+    evidence_name = "ga4-admin-observation-fixture.json"
+    observation_bytes = _ga4_fixture_json_bytes(observation)
+    attestation["admin_observation_contract"] = {
+        "schema_version": 1,
+        "default": evidence_name,
+        "sha256": hashlib.sha256(observation_bytes).hexdigest(),
+    }
+    attestation["_admin_observation_fixture"] = observation
+    return block
 
 
 def ga4_env(pinned, host_ip, days_ago=0, state="Active", drop_block=False, no_host=False):
     """Build a policy + host_ip fixture pair and return them as constant overrides."""
-    ga4 = {} if drop_block else {"internal_traffic": {"filter_state": state, "ips": pinned}}
+    verified = (datetime.date.today() - datetime.timedelta(days=35)).isoformat()
+    ga4 = {} if drop_block else {"internal_traffic": bind_ga4_coverage({
+        "filter_state": state, "filter_operation": "Exclude",
+        "verified_at": verified, "ips": pinned})}
     pol = write("pol_%s.json" % abs(hash((str(pinned), host_ip, days_ago, state,
                                           drop_block, no_host))),
                 {"ga4": ga4})
     if no_host:
         return {"POLICY": pol, "HOST_IP_FILE": os.path.join(TMPDIR, "no_such_host_ip.json")}
-    seen = (datetime.datetime.now() - datetime.timedelta(days=days_ago)).strftime(
-        "%Y-%m-%dT%H:%M:%S")
+    seen = (
+        datetime.datetime.now(datetime.timezone.utc)
+        - datetime.timedelta(days=days_ago)
+    ).isoformat(timespec="seconds")
     hip = write("hip_%s.json" % abs(hash((host_ip, days_ago))),
-                {"ip": host_ip, "checked_at": seen})
+                {"ip": host_ip, "checked_at": seen,
+                 "source": "api.ipify.org", "host": platform.node()})
     return {"POLICY": pol, "HOST_IP_FILE": hip}
 
 
 check("egress ip is inside the pinned CIDR",
-      run_check("check_ga4_internal_ip", **ga4_env(["27.130.5.93/32"], "27.130.5.93")), "PASS")
-check("THE REAL 1 Aug CASE: pinned 184.22.17.215, box is on 27.130.5.93",
-      run_check("check_ga4_internal_ip", **ga4_env(["184.22.17.215/32"], "27.130.5.93")), "WARN")
+      run_check("check_ga4_internal_ip", **ga4_env(["203.0.113.17/32"], "203.0.113.17")), "PASS")
+check("historical rotated-address mismatch is blocked",
+      run_check("check_ga4_internal_ip", **ga4_env(["198.51.100.42/32"], "203.0.113.17")), "FAIL")
 check("both old and new pinned -> still covered",
       run_check("check_ga4_internal_ip",
-                **ga4_env(["184.22.17.215/32", "27.130.5.93/32"], "27.130.5.93")), "PASS")
-check("real CIDR math, not string compare (/24 contains .93)",
-      run_check("check_ga4_internal_ip", **ga4_env(["27.130.5.0/24"], "27.130.5.93")), "PASS")
+                **ga4_env(["198.51.100.42/32", "203.0.113.17/32"], "203.0.113.17")), "PASS")
+check("real CIDR math, not string compare (/24 contains fixture host)",
+      run_check("check_ga4_internal_ip", **ga4_env(["203.0.113.0/24"], "203.0.113.17")), "PASS")
 check("neighbouring /24 does NOT contain it",
-      run_check("check_ga4_internal_ip", **ga4_env(["27.130.6.0/24"], "27.130.5.93")), "WARN")
+      run_check("check_ga4_internal_ip", **ga4_env(["203.0.112.0/24"], "203.0.113.17")), "FAIL")
 check("Data Filter left in Testing = configured but not excluding",
       run_check("check_ga4_internal_ip",
-                **ga4_env(["27.130.5.93/32"], "27.130.5.93", state="Testing")), "WARN")
+                **ga4_env(["203.0.113.17/32"], "203.0.113.17", state="Testing")), "FAIL")
 check("no ga4.internal_traffic block at all",
       run_check("check_ga4_internal_ip",
-                **ga4_env(["27.130.5.93/32"], "27.130.5.93", drop_block=True)), "WARN")
+                **ga4_env(["203.0.113.17/32"], "203.0.113.17", drop_block=True)), "FAIL")
 check("ips list empty = not protected, must not read as PASS",
-      run_check("check_ga4_internal_ip", **ga4_env([], "27.130.5.93")), "WARN")
+      run_check("check_ga4_internal_ip", **ga4_env([], "203.0.113.17")), "FAIL")
 check("unparseable CIDR in policy is surfaced, not skipped",
-      run_check("check_ga4_internal_ip", **ga4_env(["27.130.5.93/nope"], "27.130.5.93")), "WARN")
+      run_check("check_ga4_internal_ip", **ga4_env(["203.0.113.17/nope"], "203.0.113.17")), "FAIL")
 check("host_ip.json missing = blind, and blind must never print PASS",
       run_check("check_ga4_internal_ip",
-                **ga4_env(["27.130.5.93/32"], "27.130.5.93", no_host=True)), "WARN")
+                **ga4_env(["203.0.113.17/32"], "203.0.113.17", no_host=True)), "FAIL")
 check("host_ip.json 30 days old = uptime_check stopped running",
       run_check("check_ga4_internal_ip",
-                **ga4_env(["27.130.5.93/32"], "27.130.5.93", days_ago=30)), "WARN")
+                **ga4_env(["203.0.113.17/32"], "203.0.113.17", days_ago=30)), "FAIL")
 check("6 days old is still inside the freshness window",
       run_check("check_ga4_internal_ip",
-                **ga4_env(["27.130.5.93/32"], "27.130.5.93", days_ago=6)), "PASS")
+                **ga4_env(["203.0.113.17/32"], "203.0.113.17", days_ago=6)), "PASS")
 _p = write("pol_badip.json", {"ga4": {"internal_traffic":
-                                      {"filter_state": "Active", "ips": ["27.130.5.93/32"]}}})
+                                      bind_ga4_coverage({"filter_state": "Active", "filter_operation": "Exclude",
+                                       "verified_at": (datetime.date.today() - datetime.timedelta(days=35)).isoformat(),
+                                       "ips": ["203.0.113.17/32"]})}})
 _h = write("hip_badip.json", {"ip": "not-an-ip", "checked_at":
-                              datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")})
-check("garbage recorded as the host ip is a WARN, not a crash",
-      run_check("check_ga4_internal_ip", POLICY=_p, HOST_IP_FILE=_h), "WARN")
-_h = write("hip_badts.json", {"ip": "27.130.5.93", "checked_at": "yesterday-ish"})
-check("unreadable checked_at is a WARN, not an assumed-fresh PASS",
-      run_check("check_ga4_internal_ip", POLICY=_p, HOST_IP_FILE=_h), "WARN")
+                              datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"),
+                              "source": "api.ipify.org", "host": platform.node()})
+check("garbage recorded as the host ip fails closed without a crash",
+      run_check("check_ga4_internal_ip", POLICY=_p, HOST_IP_FILE=_h), "FAIL")
+_h = write("hip_badts.json", {"ip": "203.0.113.17", "checked_at": "yesterday-ish",
+                              "source": "api.ipify.org", "host": platform.node()})
+check("unreadable checked_at fails closed, never assumed fresh",
+      run_check("check_ga4_internal_ip", POLICY=_p, HOST_IP_FILE=_h), "FAIL")
+_h = write("hip_wrong_host.json", {
+    "ip": "203.0.113.17", "checked_at": datetime.datetime.now(
+        datetime.timezone.utc
+    ).isoformat(),
+    "source": "api.ipify.org", "host": "different-fixture-host",
+})
+check("egress evidence from a different host fails closed",
+      run_check("check_ga4_internal_ip", POLICY=_p, HOST_IP_FILE=_h), "FAIL")
+check("host mismatch detail suppresses both network and hostname values",
+      all(token not in run_check_detail(
+          "check_ga4_internal_ip", POLICY=_p, HOST_IP_FILE=_h)
+          for token in ("203.0.113", "different-fixture-host")), True)
+
+print("\nOFFICIAL SOURCE MONITOR  (global queue is diagnostic; content gates are exact)")
+_news_fresh = write("official_fresh.json", {
+    "checked_at": datetime.datetime.now().isoformat(),
+    "sources": [{"url": "https://example.test/official"}],
+    "changed": [],
+    "errors": [],
+    "review_required": [],
+})
+check("schema-less synthetic clean snapshot never passes", run_check(
+      "check_official_source_freshness", OFFICIAL_NEWS_SNAPSHOT=_news_fresh), "WARN")
+_news_stale = write("official_stale.json", {
+    "checked_at": (datetime.datetime.now() - datetime.timedelta(days=30)).isoformat(),
+    "sources": [{"url": "https://example.test/official"}],
+    "changed": [],
+    "errors": [],
+    "review_required": [],
+})
+check("stale global snapshot warns while content gates remain responsible", run_check(
+      "check_official_source_freshness", OFFICIAL_NEWS_SNAPSHOT=_news_stale,
+      OFFICIAL_NEWS_STALE_DAYS=7), "WARN")
+_news_changed = write("official_changed.json", {
+    "checked_at": datetime.datetime.now().isoformat(),
+    "sources": [{"url": "https://example.test/official"}],
+    "changed": [{"url": "https://example.test/official"}],
+    "errors": [],
+    "review_required": [],
+})
+check("changed global fingerprint warns without a site-wide block", run_check(
+      "check_official_source_freshness", OFFICIAL_NEWS_SNAPSHOT=_news_changed), "WARN")
+_news_pending = write("official_pending.json", {
+    "checked_at": datetime.datetime.now().isoformat(),
+    "sources": [{"url": "https://example.test/official"}],
+    "changed": [],
+    "errors": [],
+    "review_required": ["source-a"],
+})
+check("durable global pending review remains visible without blocking unrelated content", run_check(
+      "check_official_source_freshness", OFFICIAL_NEWS_SNAPSHOT=_news_pending), "WARN")
+check("missing global snapshot never passes silently", run_check(
+      "check_official_source_freshness",
+      OFFICIAL_NEWS_SNAPSHOT=os.path.join(TMPDIR, "does-not-exist.json")), "WARN")
+_news_future = write("official_future.json", {
+    "schema": 3,
+    "checked_at": (datetime.datetime.now(datetime.timezone.utc) +
+                   datetime.timedelta(days=1)).isoformat(),
+    "purpose": "change detection only; review official source before publishing",
+    "changed": [], "errors": [], "review_required": [],
+    "acknowledged_this_run": [], "sources": [],
+})
+check("future global timestamp never passes", run_check(
+      "check_official_source_freshness", OFFICIAL_NEWS_SNAPSHOT=_news_future), "WARN")
+_news_malformed = write("official_malformed.json", {
+    "schema": 3,
+    "checked_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+    "purpose": "change detection only; review official source before publishing",
+    "changed": "none", "errors": {}, "review_required": ["source-a", "source-a"],
+    "acknowledged_this_run": [], "sources": [{"id": "source-a"}],
+})
+check("malformed and duplicate global state lists never pass", run_check(
+      "check_official_source_freshness", OFFICIAL_NEWS_SNAPSHOT=_news_malformed), "WARN")
 
 print("\nMETA  (no check may exist without proof it can both fire and stay quiet)")
 importlib.reload(P)
@@ -1070,4 +1930,5 @@ except OSError:
 bad = results.count(False)
 print("\n%d checks, %d failed" % (len(results), bad))
 print("ALL PASS" if not bad else "*** FAILURES ABOVE ***")
-sys.exit(1 if bad else 0)
+if __name__ == "__main__":
+    sys.exit(1 if bad else 0)

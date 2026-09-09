@@ -1,0 +1,364 @@
+{
+  "schema_version": 1,
+  "receipt_id": "system-scorecard-20260823-r1",
+  "assessed_at": "2026-08-23T22:05:07+07:00",
+  "timezone": "Asia/Bangkok",
+  "scope": "local_system_audit_and_safe_hardening_only",
+  "official_score": {
+    "score": 40,
+    "maximum_score": 100,
+    "stage": "instrumented",
+    "evaluated_at": "2026-08-23T19:30:31+07:00",
+    "source_path": ".local-private/runtime/improvement-runs/20260823-192649/maturity-scorecard.json",
+    "source_sha256": "DA951ACDF9DC78E2FEB859B59E5800FBFF3BB7D6AD27793EF53CE4269E11F75A",
+    "status": "LATEST_OFFICIAL_NOT_REEVALUATED_AFTER_LOCAL_HARDENING",
+    "reason_not_recalculated": "A fresh official run includes live-release and other network-bound observations. This local-safe audit did not create network traffic or external mutations, so the latest official score is retained without inflation.",
+    "hard_blocker_cap": 49,
+    "hard_blockers": [
+      "revenue_ledger_trusted",
+      "analytics_decisionable",
+      "publication_inputs_ready"
+    ],
+    "criteria": [
+      {
+        "id": "evidence_current_and_bound",
+        "weight": 10,
+        "awarded": 10,
+        "passed": true,
+        "hard_blocker": true
+      },
+      {
+        "id": "guardrails_current",
+        "weight": 20,
+        "awarded": 20,
+        "passed": true,
+        "hard_blocker": true
+      },
+      {
+        "id": "revenue_ledger_trusted",
+        "weight": 15,
+        "awarded": 0,
+        "passed": false,
+        "hard_blocker": true,
+        "state": "STALE_COVERAGE"
+      },
+      {
+        "id": "analytics_decisionable",
+        "weight": 15,
+        "awarded": 0,
+        "passed": false,
+        "hard_blocker": true,
+        "ga4": "UNTRUSTED_INVALID_METADATA",
+        "gsc": "CURRENT_AT_OFFICIAL_EVALUATION"
+      },
+      {
+        "id": "content_scoped_source_enforcement",
+        "weight": 10,
+        "awarded": 10,
+        "passed": true,
+        "hard_blocker": true
+      },
+      {
+        "id": "publication_inputs_ready",
+        "weight": 20,
+        "awarded": 0,
+        "passed": false,
+        "hard_blocker": true
+      },
+      {
+        "id": "verified_revenue_learning",
+        "weight": 10,
+        "awarded": 0,
+        "passed": false,
+        "hard_blocker": false,
+        "state": "NO_VERIFIED_PAID_OUTCOME"
+      }
+    ]
+  },
+  "post_hardening_local_diagnostics": {
+    "not_an_official_rescore": true,
+    "calendar": {
+      "placements": 65,
+      "planned_blocked": 65,
+      "publishable": 0,
+      "stale_historical_blocked": 23,
+      "upcoming_48h": 7,
+      "upcoming_48h_blocked": 7,
+      "eligible_publication_slots_missed": 0,
+      "process_state": "BLOCKED",
+      "runner_failed": false,
+      "publication_blocking_findings": 6,
+      "structural_findings": 0
+    },
+    "novelty_and_permanent_dedup": {
+      "r5_candidates": 7,
+      "public_variants": 23,
+      "candidate_media_assets": 11,
+      "historical_text_records": 4542,
+      "historical_media_assets": 67,
+      "r5_exact_or_near_collisions": 0,
+      "identity_complete_rows": 90,
+      "identity_incomplete_rows": 35,
+      "identity_total_rows": 125,
+      "coverage_percent": 72.0,
+      "unresolved_duplicate_identity_groups": 0,
+      "valid_non_reusable_tombstones": 1,
+      "system_state": "BLOCKED_INCOMPLETE_HISTORY"
+    },
+    "media": {
+      "full_local_technical_scan": "PASS",
+      "canonical_videos_scanned": 45,
+      "canonical_images_scanned": 1,
+      "watermark_track_frames": 0,
+      "r5_manifest_integrity": "PASS",
+      "r5_technical_qa": "PASS",
+      "r5_assets_bound": 11,
+      "r5_images_final_guard_pass": 4,
+      "r5_videos_final_guard_pass": 0,
+      "r5_videos_blocked_human_listening": 7,
+      "r5_final_media_guard": "BLOCKED",
+      "origin_evidence": "DECLARED_ALLOWLIST_ONLY_NOT_INDEPENDENTLY_VERIFIED",
+      "publication_authority_granted": false
+    },
+    "analytics_and_revenue": {
+      "ga4": "UNTRUSTED_INVALID_METADATA",
+      "gsc": "CURRENT_AT_OFFICIAL_EVALUATION",
+      "revenue_ledger": "STALE_COVERAGE_UNTRUSTED",
+      "verified_paid_revenue": "UNAVAILABLE",
+      "winner_or_scale_decision_allowed": false
+    },
+    "windows_tasks": {
+      "ngernduangold_daily": {
+        "state": "Ready",
+        "last_task_result": 2,
+        "missed_runs": 0,
+        "latest_receipt_status": "FINISHED",
+        "latest_execution_state": "COMPLETED_WITH_BLOCKERS",
+        "latest_publication_state": "BLOCKED_LOCAL_ONLY",
+        "latest_origin": "RUNNER_INVOCATION_UNVERIFIED"
+      },
+      "ngernduangold_weekly": {
+        "state": "Ready",
+        "last_task_result": 2,
+        "missed_runs": 0,
+        "latest_receipt_status": "FINISHED",
+        "latest_execution_state": "COMPLETED_WITH_BLOCKERS",
+        "latest_publication_state": "BLOCKED_LOCAL_ONLY",
+        "latest_origin": "RUNNER_INVOCATION_UNVERIFIED"
+      }
+    },
+    "runtime_contract": {
+      "previous_static_path_count": 45,
+      "current_bounded_file_count": 323,
+      "errors": [],
+      "contract_hash": "96dc9e600be99fc31babd0017db387b72cf11338c27d25478f4b1e1f8b41e7bf",
+      "dynamic_media_and_manifest_dependencies_bound": true
+    }
+  },
+  "hardening_completed": [
+    {
+      "priority": 1,
+      "area": "test_orchestration",
+      "change": "Root discovery now executes custom safety scripts, rejects configured zero-test modules and includes Instagram publisher safety.",
+      "verified": true
+    },
+    {
+      "priority": 2,
+      "area": "media_final_gate",
+      "change": "Human listening and visual evidence are exact asset-hash bound; missing listening is a publication blocker, while hash, origin and visual drift remain structural failures.",
+      "verified": true
+    },
+    {
+      "priority": 3,
+      "area": "publisher_toctou",
+      "change": "Instagram verifies bounded no-redirect hosted bytes and reauthorizes before mutation; TikTok reruns the media guard and exact file hash immediately before upload and Post.",
+      "verified": true
+    },
+    {
+      "priority": 4,
+      "area": "permanent_dedup",
+      "change": "Collision tombstones bind the exact full occurrence set; a new third occurrence invalidates the old tombstone and hard-blocks.",
+      "verified": true
+    },
+    {
+      "priority": 5,
+      "area": "revenue_import",
+      "change": "AccessTrade frozen CSV intake supports multiple rows with order-independent exact row binding and rejects missing, extra, replayed or duplicate rows.",
+      "verified": true
+    },
+    {
+      "priority": 6,
+      "area": "official_rss",
+      "change": "Missing Content-Type fallback is restricted to exact configured same-host RSS/Atom bytes with bounded size, exact hash and parsed feed root; malformed, replayed or redirected evidence fails closed.",
+      "verified": true
+    },
+    {
+      "priority": 7,
+      "area": "runtime_evidence_binding",
+      "change": "The improvement runtime contract now binds policy, identity, publisher, authority, active media, QA receipts and weekly manifest dependencies.",
+      "verified": true
+    },
+    {
+      "priority": 8,
+      "area": "origin_claim_language",
+      "change": "The origin gate reports allow-list declarations as attestations and no longer overclaims that Flow output is proven absent.",
+      "verified": true
+    }
+  ],
+  "findings": [
+    {
+      "priority": 1,
+      "severity": "วิกฤต",
+      "area": "รายได้ Affiliate",
+      "state": "BLOCKED",
+      "evidence": "Revenue ledger = STALE_COVERAGE; verified paid revenue ยัง UNAVAILABLE",
+      "impact": "ยังวัดรายได้จริงหรือเลือก funnel ที่ชนะไม่ได้",
+      "remediation": "นำเข้า frozen AccessTrade export ให้ครบ 28 วัน กระทบ lifecycle และยืนยัน unique paid transaction",
+      "verified": "ยืนยันแล้ว"
+    },
+    {
+      "priority": 2,
+      "severity": "วิกฤต",
+      "area": "GA4 / Analytics",
+      "state": "BLOCKED",
+      "evidence": "GA4 capture/current trust = UNTRUSTED และ bundle = INVALID_METADATA; GSC เคย CURRENT",
+      "impact": "ห้ามสรุปผู้ชนะ เวลาโพสต์ cadence หรือ scale จากคลิก",
+      "remediation": "ซ่อม GA4 trust/metadata แล้ว repull โดยไม่สร้าง test traffic; ตรวจ freshness ของ GSC ใหม่",
+      "verified": "ยืนยันแล้ว"
+    },
+    {
+      "priority": 3,
+      "severity": "วิกฤต",
+      "area": "Publication inputs",
+      "state": "BLOCKED",
+      "evidence": "publishable 0/65; live/local parity และ publication authority ยังไม่ผ่าน",
+      "impact": "ยังโพสต์ ตั้งเวลา หรือตอบในนามเพจไม่ได้อย่างปลอดภัย",
+      "remediation": "ปิด dedup, media, source, release parity และขออนุมัติรายชิ้นที่ผูก content/caption/media/target/slot",
+      "verified": "ยืนยันแล้ว"
+    },
+    {
+      "priority": 4,
+      "severity": "สูง",
+      "area": "สื่อวิดีโอ",
+      "state": "BLOCKED",
+      "evidence": "Technical QA PASS แต่ final guard บล็อก 7/7 คลิปเพราะไม่มี exact hash-bound human listening",
+      "impact": "ลดความเสี่ยงเสียงผิดเพี้ยนหรืออ่านผิด แม้ภาพและ watermark scan จะผ่าน",
+      "remediation": "ให้ HUMAN/OWNER ฟังไฟล์จริงครบและออก receipt ผูก SHA-256 ต่อคลิป",
+      "verified": "ยืนยันแล้ว"
+    },
+    {
+      "priority": 5,
+      "severity": "สูง",
+      "area": "Permanent dedup",
+      "state": "BLOCKED",
+      "evidence": "coverage 90/125 = 72%; ยังมี 35 UNKNOWN; unresolved duplicate groups = 0",
+      "impact": "ยังพิสูจน์ความไม่ซ้ำตลอดประวัติได้ไม่ครบ",
+      "remediation": "เติมหรือปิดสถานะ identity ของ 35 แถวโดยใช้หลักฐานจริง แล้วรัน collision guard ใหม่",
+      "verified": "ยืนยันแล้ว"
+    },
+    {
+      "priority": 6,
+      "severity": "สูง",
+      "area": "Live release",
+      "state": "BLOCKED",
+      "evidence": "Local repair ผ่าน แต่ production parity ยังไม่รับรองและ affiliate receipt ระบุ stale release",
+      "impact": "ลิงก์และเหตุการณ์บนเว็บจริงอาจไม่ตรงกับ build ที่ตรวจ",
+      "remediation": "ทำ governed owner-approved release แล้วตรวจ live parity ใหม่โดยไม่ใช้ tracking redirect",
+      "verified": "ยืนยันจากหลักฐานในเครื่อง"
+    },
+    {
+      "priority": 7,
+      "severity": "กลาง",
+      "area": "Windows runners",
+      "state": "COMPLETED_BLOCKED",
+      "evidence": "Daily/weekly = Ready, missed runs 0, LastTaskResult 2; receipts FINISHED/COMPLETED_WITH_BLOCKERS",
+      "impact": "ตัวรันจบตามปกติแต่ระบบธุรกิจยังบล็อก ไม่ควรตีความเป็น runner failure",
+      "remediation": "คง exit/state taxonomy และติดตาม scheduler correlation แยกจาก receipt origin",
+      "verified": "ยืนยันแล้ว"
+    },
+    {
+      "priority": 8,
+      "severity": "แก้แล้ว",
+      "area": "ช่องโหว่ระบบ",
+      "state": "VERIFIED_FIXED",
+      "evidence": "Root 131/131; preflight 260/260; media, authority, social, dedup, source และ revenue suites ผ่าน",
+      "impact": "ลด false green, TOCTOU, tombstone bypass, RSS replay และ multi-row revenue import drift",
+      "remediation": "รักษาชุด regression ไว้ใน root discovery และรันก่อนรอบหลักฐานทางการทุกครั้ง",
+      "verified": "ยืนยันแล้ว"
+    }
+  ],
+  "remaining_blockers_in_priority_order": [
+    {
+      "priority": 1,
+      "criterion": "revenue_ledger_trusted",
+      "state": "BLOCKED",
+      "required_evidence": "A frozen AccessTrade transaction export covering the complete decision window, then local import, lifecycle reconciliation and strict ledger validation. Pending commission is not paid revenue."
+    },
+    {
+      "priority": 2,
+      "criterion": "analytics_decisionable",
+      "state": "BLOCKED",
+      "required_evidence": "Repair GA4 capture/current trust and metadata, then repull without generating test traffic; revalidate GSC freshness at the next official run."
+    },
+    {
+      "priority": 3,
+      "criterion": "publication_inputs_ready",
+      "state": "BLOCKED",
+      "required_evidence": "Resolve the 35 UNKNOWN permanent-dedup rows, complete exact hash-bound human listening for video, clear content-scoped source review, prove local/live release parity and obtain one-time per-piece owner approval."
+    },
+    {
+      "priority": 4,
+      "criterion": "verified_revenue_learning",
+      "state": "BLOCKED",
+      "required_evidence": "At least one unique paid transaction and positive paid affiliate revenue in the current verified window; pending or approved-only outcomes do not count."
+    }
+  ],
+  "verification": {
+    "root_discovery": "131/131 PASS",
+    "improvement_loop": "57/57 PASS",
+    "media_publish_guard": "16/16 PASS",
+    "publication_authority": "45/45 PASS",
+    "youtube_safety": "21/21 PASS",
+    "content_calendar": "60/60 PASS",
+    "post_ledger_completeness": "13/13 PASS",
+    "week_manifest": "3/3 PASS",
+    "origin_gate": "7/7 PASS",
+    "accesstrade_importer": "13/13 PASS",
+    "revenue_ledger": "19/19 PASS",
+    "analytics_decision_safety": "14/14 PASS",
+    "revenue_adversarial": "14/14 PASS",
+    "revenue_end_to_end": "2/2 PASS",
+    "preflight_contract": "260/260 PASS",
+    "official_news_monitor": "51/51 PASS",
+    "content_source_gate": "21/21 PASS",
+    "root_discovery_note": "Counts overlap because root discovery executes several listed suites; no aggregate unique-test total is claimed."
+  },
+  "evidence": {
+    "improvement_policy_sha256": "EA4061FA6EB55A22ED9A23DED0CE748900D60DFCA7F3847679B5481C664FE9C3",
+    "content_calendar_sha256": "855977B20C18CE027AC3CA469446FC35DBDA58775C7313DAF560643EEA6D7E53",
+    "publication_policy_sha256": "BAFEA518C3FEFBA956987BF81EDE0DA146E1309F495554FE2F2A3CD35FD4814B",
+    "generative_media_policy_sha256": "3D9019753760C9C8C4BD7F6390CC3ABED122183AE7A89151E87B9A106C05EB72",
+    "week_content_qa_sha256": "8043DA8543FFA44B5B03BE0D7158891D5A5AAF921A56096B8B5F4777BBBD5705",
+    "week_content_pack_sha256": "0ACD60E0D44F689841C8AAF2C7AF1ADAADA6A5E03CCCAF87C3B626BE84A21A28",
+    "week_media_manifest_sha256": "297E1E8AA222E1B55ECE947D3428E2BF1A2A9ED09DCA3BBEFBEFC5592988BE3D",
+    "official_news_snapshot_sha256": "BB0A8D76A1460DBED0F42D9595367D6B61EA3A3D8DFB36248882823C362C73B3",
+    "post_ledger_sha256": "416C768E3F6740C531C0F45F98AE1745B88C23C93D35E404F92708E43BC6909E",
+    "identity_bindings_sha256": "D299DEB830983FCCC0A276DF3B4269BF8E6968E8C2331E6C43309BB42E26406B",
+    "collision_tombstones_sha256": "1451E046F40E130CC70A1A5F7231A2F4FA3ED58349DD0FB418AC2BD7141947A1",
+    "daily_task_receipt_sha256": "EE6D2E3D7033B738363CA82EF46E5EC8FA18382293B354E3B672FE20ECD835ED",
+    "weekly_task_receipt_sha256": "0967CBED58B4A7478D41952771CF71E8F593B34C00913F3F4C429653EBA77ECE"
+  },
+  "external_actions": {
+    "posts_sent": 0,
+    "replies_sent": 0,
+    "likes_or_reactions": 0,
+    "social_schedules_created": 0,
+    "tracker_or_test_traffic": 0,
+    "source_acknowledgements": 0,
+    "paid_api_or_llm_calls": 0,
+    "google_flow_generations": 0,
+    "commits": 0,
+    "pushes": 0,
+    "deploys": 0
+  }
+}

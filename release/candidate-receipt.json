@@ -1,0 +1,62 @@
+{
+  "archive": {
+    "bytes": 168233209,
+    "format": "zip-store-fixed-metadata-v1",
+    "member_count": 139,
+    "path": "release/candidates/candidate-245c6626f4db45d54e7823322bce4262ff93880f6415a679eb8b59f026a3f178.zip",
+    "sha256": "245c6626f4db45d54e7823322bce4262ff93880f6415a679eb8b59f026a3f178"
+  },
+  "artifact": {
+    "archive_verified": true,
+    "content_addressed": true,
+    "reproducible_from_archive": true
+  },
+  "candidate_id": "sha256:245c6626f4db45d54e7823322bce4262ff93880f6415a679eb8b59f026a3f178",
+  "contract": "local-release-candidate-v1",
+  "deployment": {
+    "action_receipt": null,
+    "authority_source": ".system_control/role_capabilities.json",
+    "authorized": false,
+    "path": "netlify_git_connected"
+  },
+  "external_action_authorized": false,
+  "manifest_schema": 2,
+  "manifest_sha256": "60a7006e30ae7901d7db02c4a740490510a9a65374f0ce16b0a5e058bdfe0119",
+  "manifest_source_input_count": 14,
+  "postdeploy": {
+    "receipt": null,
+    "required_zero_finding_families": [
+      "exact_release",
+      "attribution",
+      "offer_safety"
+    ],
+    "state": "NOT_CREATED"
+  },
+  "release_id": "sha256:c84f4d10be940850979fca5622b5c6544371fadb0f0c36362f31d6289c1a7f59",
+  "rollback": {
+    "artifact_location": "LOCAL_ONLY",
+    "previous_deploy_id": null,
+    "previous_release_id": null,
+    "ready": false,
+    "restore_path_verified": false
+  },
+  "schema_version": 1,
+  "source_revision": {
+    "branch": "main",
+    "clean": false,
+    "clean_rebuild_verified": false,
+    "dirty_path_fingerprint_sha256": "650078fa753c1103d9a9357e660cde833511d7e8f9402a7d9389dd93f2e68c5a",
+    "excluded_generated_outputs": [
+      "release/PREDEPLOY-ACCEPTANCE.md",
+      "release/RELEASE-FUNNEL-READINESS.json"
+    ],
+    "head": "af1d714037218418c7ee0f89fe6da54bcd1615b0",
+    "scope": "git-worktree-excluding-candidate-and-declared-downstream-outputs-v1",
+    "tracked_changes_count": 127,
+    "tracked_content_sha256": "063e33742c608b84dd0f97daa20ce7b22c2465cec5d5bbff4492ebd2ee288b1c",
+    "tracked_state_sha256": "2e590cc8cef8772417a2d728090fba2c6a9568bdb97f89356407990713bc93e1",
+    "untracked_content_sha256": "b92d91c7bfd2bd8e5d2425bb3926849ecc18aa4800891ee1fe20d253013f15c3",
+    "untracked_paths_count": 665,
+    "working_tree_content_sha256": "96394835d7b3edb8fdfec93eb1f24e66fb75e6e49c97506a4ddc99e25f33f8be"
+  }
+}

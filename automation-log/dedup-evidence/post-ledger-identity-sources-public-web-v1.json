@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-08-24T21:07:25.625+07:00",
+  "purpose": "Hash-bound commitments to three exact read-only public-web observations used only for legacy permanent-dedup identity repair.",
+  "records": [
+    {
+      "evidence_id": "facebook-group-2410303406132246-comment-2410314352797818",
+      "source_path": "automation-log/dedup-evidence/facebook-group-public-observation-2410314352797818-v1.json",
+      "source_sha256": "3B8E0233A57FFF14BF8A2DA73C73B2A6520C052385442DEB9526F7C41837AAF0",
+      "source_field": "observations[observation_id=facebook-group-2410303406132246-comment-2410314352797818]",
+      "value": {
+        "observation_id": "facebook-group-2410303406132246-comment-2410314352797818",
+        "observation_sha256": "23A928589447137A382293B6A846ECEB1432551934EAA8E4CC2F7141C038C472"
+      }
+    },
+    {
+      "evidence_id": "pantip-44168590-comment3",
+      "source_path": "automation-log/dedup-evidence/pantip-public-observation-44168590-comment3-v1.json",
+      "source_sha256": "B7DEA0881EAE45268503316AE329374EC8AD86445DC840289EBC944AC19AC9FE",
+      "source_field": "observations[observation_id=pantip-44168590-comment3]",
+      "value": {
+        "observation_id": "pantip-44168590-comment3",
+        "observation_sha256": "CAB15BE119A5EB4F7C275D4CAB474F63D8D8C79498C8BC811BD71ECB503E4B60"
+      }
+    },
+    {
+      "evidence_id": "facebook-page-1824608881851102-comment-1028158030069586",
+      "source_path": "automation-log/dedup-evidence/facebook-page-public-observation-1028158030069586-v1.json",
+      "source_sha256": "C0E0E38F28B1E4A5F10A055E3109EB75CCA66724A256B0C94687011097C64C8F",
+      "source_field": "observations[observation_id=facebook-page-1824608881851102-comment-1028158030069586]",
+      "value": {
+        "observation_id": "facebook-page-1824608881851102-comment-1028158030069586",
+        "observation_sha256": "93C0B28B9A30965F13D67A338662E8483BBFFAC14F4A3A5A1FBA83A91459EA8C"
+      }
+    }
+  ]
+}

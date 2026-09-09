@@ -1,0 +1,131 @@
+{
+  "schema_version": 2,
+  "receipt_kind": "LOCAL_ONLY_NEXT48_MEDIA_REVALIDATION",
+  "receipt_id": "next48-media-revalidation-20260901T000425+0700",
+  "evaluated_at": "2026-09-01T00:04:25+07:00",
+  "timezone": "Asia/Bangkok",
+  "window": {
+    "start_inclusive": "2026-09-01T00:04:25+07:00",
+    "end_inclusive": "2026-09-03T00:04:25+07:00",
+    "hours": 48,
+    "calendar": ".system_control/content_calendar.json",
+    "calendar_sha256": "978B5C91453D548E1285193A80428F7936CCCE052BE7ED2D6B9739969A762D23",
+    "selection_rule": "Every and only media-bearing placement whose exact Bangkok scheduled_at is inside the inclusive 48-hour window."
+  },
+  "guard_implementation": {
+    "generator": {
+      "path": "tools/next48_media_revalidation.py",
+      "sha256": "5F05EF6CC5DAA97B296A753C24810EA18DBAA840BA27032BD608FCAC8EB3F6D3"
+    },
+    "media_publish_guard": {
+      "path": "tools/media_publish_guard.py",
+      "sha256": "6D044817DD21A5B3C5D76CF5A9C4E98B52293C38768408D0C683BFE7FC9D824A"
+    },
+    "watermark_scanner": {
+      "path": "tiktok-pipeline/src/qa_watermark.py",
+      "sha256": "98153A1DD589AA9CC40CDFC4B9C66226995832E4D6F82AFC15501DFC46EA7201"
+    },
+    "generative_media_origin_gate": {
+      "path": "tools/generative_media_origin_gate.py",
+      "sha256": "66B270828BD954D99D201984427B83ECED5634E7CE30D2016AE65A2E163EC964"
+    }
+  },
+  "summary": {
+    "calendar_placements_in_window": 4,
+    "media_placements_in_window": 3,
+    "media_publish_guard_pass": 2,
+    "media_publish_guard_blocked": 1,
+    "human_audio_reviews_outstanding": 1,
+    "publication_authority_granted": false,
+    "calendar_or_authority_mutated": false,
+    "verdict": "COMPLETED_WITH_HUMAN_LISTENING_BLOCKERS"
+  },
+  "placements": [
+    {
+      "placement_id": "qt-13__pinterest_main",
+      "scheduled_at": "2026-09-02T10:00:00+07:00",
+      "calendar_placement_sha256": "6990186374F149EDB4957EA671DA03A0206BBC8B24F1D030601BAB4F0EC65B0B",
+      "asset": "media/quotes/week-20260824-30-r5/qt-13_pinterest_2x3.jpg",
+      "asset_sha256": "9B773CAEF625CA022CEED1B5DDFFABA8C8DD59E9E937DAAC82E08832671BDA1A",
+      "asset_size_bytes": 71337,
+      "canonical_receipt": "automation-log/media-qa/qt-13-pinterest-image-r5.json",
+      "canonical_receipt_sha256": "EE7885D9984FDEB24479FE29656E9359FE61D19FDA9CC2B2AB1737B6C47CFC05",
+      "source_binding": {
+        "path": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+        "sha256": "0ACD60E0D44F689841C8AAF2C7AF1ADAADA6A5E03CCCAF87C3B626BE84A21A28",
+        "row_id": "qt-13",
+        "field": "threads_text"
+      },
+      "fresh_automated_qa": null,
+      "media_publish_guard": {
+        "verdict": "PASS",
+        "findings": [],
+        "finding": null,
+        "publication_authority_granted": false
+      },
+      "state": "MEDIA_GATE_PASS_AUTHORITY_STILL_BLOCKED"
+    },
+    {
+      "placement_id": "qt-14__facebook_main",
+      "scheduled_at": "2026-09-02T16:00:00+07:00",
+      "calendar_placement_sha256": "E21B969E9C822B0379B59339F7237E6F2FC5E9897108D9A7FFDF21D65F5BDA34",
+      "asset": "media/quotes/week-20260824-30-r5/qt-14_fb-ig_4x5.jpg",
+      "asset_sha256": "3BD6FC7DA3CA64BEC9864B58DE5C8AE6A4DBB5A76536D2CCCB786C196177C187",
+      "asset_size_bytes": 81607,
+      "canonical_receipt": "automation-log/media-qa/qt-14-fb-ig-image-r5.json",
+      "canonical_receipt_sha256": "7C720F2D4B812C61DA9884358F9FB3C54B51CF6668BD3438497C0F7ECAD62E70",
+      "source_binding": {
+        "path": "automation-log/QUOTE-CARDS_20260723-0822.md",
+        "sha256": "6D97BF105E8A00A298A25DA963C0C7AE5906048DD58270F193967166DE06AB6A",
+        "row_id": "qt-14",
+        "field": "caption"
+      },
+      "fresh_automated_qa": null,
+      "media_publish_guard": {
+        "verdict": "PASS",
+        "findings": [],
+        "finding": null,
+        "publication_authority_granted": false
+      },
+      "state": "MEDIA_GATE_PASS_AUTHORITY_STILL_BLOCKED"
+    },
+    {
+      "placement_id": "b4-p01__instagram_main",
+      "scheduled_at": "2026-09-02T19:00:00+07:00",
+      "calendar_placement_sha256": "2E81BA228034A87BFBA76DFEDC26553DA0B9241BF417FF2DD92CE9690F10F6A2",
+      "asset": "reels/2026-08-16_b4-p01.mp4",
+      "asset_sha256": "D0A07323742B42FCCF147A067A4654A1438418C7404CD8E4C56F3F76F88A8DAC",
+      "asset_size_bytes": 2766824,
+      "canonical_receipt": "automation-log/media-qa/b4-p01-video.json",
+      "canonical_receipt_sha256": "D9CAF1124E719D35FD9EC4FAE451C3091CA2A769CBDC3D7BD833E7A076E87AF9",
+      "source_binding": {
+        "path": "automation-log/BATCH4-PILOT_20260816.md",
+        "sha256": "BF88D5273FAD9988848FDFE038C8CB657A27DAB89E263CD2E47E51E42EEF31D0",
+        "row_id": "b4-p01",
+        "field": "social_caption"
+      },
+      "fresh_automated_qa": {
+        "asset": "reels/2026-08-16_b4-p01.mp4",
+        "verdict": "PASS",
+        "frames": 65,
+        "track_frames": 0,
+        "track_frac": 0.0
+      },
+      "media_publish_guard": {
+        "verdict": "FAIL",
+        "findings": [
+          "human audio review is missing"
+        ],
+        "finding": "human audio review is missing",
+        "publication_authority_granted": false
+      },
+      "state": "AUTOMATED_MEDIA_PASS_HUMAN_LISTENING_BLOCKED"
+    }
+  ],
+  "limitations": [
+    "Automated media checks are not a substitute for human listening.",
+    "This receipt grants no publication authority and does not change PLANNED_BLOCKED.",
+    "No network, platform, scheduler, tracker, deployment or external action was performed."
+  ],
+  "receipt_payload_sha256": "E83504D840709A26CF2B150B6DA9D609A1F920E40EAFC128A2D4AD08DBCC2CF8"
+}

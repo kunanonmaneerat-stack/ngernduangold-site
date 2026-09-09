@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-08-25T00:22:00+07:00",
+  "audit_kind": "FACEBOOK_STORY_LINE39_LOCAL_ARTIFACT_FORENSICS",
+  "status": "COMPLETED_BLOCKED",
+  "meaning": "Contemporaneous local Chrome history and a Claude browser transcript corroborate that Meta Business Suite's Story composer was open before the ledger event, but no stable Story object, Story permalink, Story archive row, Story media binding, or displayed Story text was recovered. Ledger line 39 therefore remains UNKNOWN_IDENTITY.",
+  "scope": {
+    "target_ledger_line": 39,
+    "local_only": true,
+    "external_action_performed": false,
+    "facebook_interaction_performed": false,
+    "post_ledger_bytes_changed": false,
+    "identity_binding_appended": false,
+    "content_calendar_changed": false,
+    "policy_or_status_changed": false,
+    "raw_browser_artifacts_copied": false
+  },
+  "target": {
+    "ledger_path": "automation-log/post-ledger.jsonl",
+    "ledger_sha256": "416C768E3F6740C531C0F45F98AE1745B88C23C93D35E404F92708E43BC6909E",
+    "ledger_line": 39,
+    "ledger_row_sha256": "99630AA535EB01267439E37028ECADA5B4F50340E5BA8E18F06356B70D18EE49",
+    "ledger_timestamp": "2026-07-19T13:03:00+07:00",
+    "descriptor": "FB Story #1 - reshared top post (debt guide clip, links-in-bio + disclosure)"
+  },
+  "browser_history_observation": {
+    "source_alias": "LOCAL_CHROME_DEFAULT_HISTORY",
+    "source_location_pattern": "%LOCALAPPDATA%/Google/Chrome/User Data/Default/History",
+    "source_sha256_at_audit": "B255FDB8243817F0ECC5E1ADFDF71B8032BCF4CE1981CB09E0E814A6067464F3",
+    "source_size_bytes_at_audit": 20414464,
+    "read_mode": "sqlite_read_only_immutable",
+    "privacy": "Only Facebook/Business Suite rows needed for the target interval are represented; unrelated history and the private business id are omitted.",
+    "rows": [
+      {
+        "visit_id": 12836,
+        "visited_at_utc": "2026-07-19T05:51:58Z",
+        "visited_at_asia_bangkok": "2026-07-19T12:51:58+07:00",
+        "sanitized_url": "https://www.facebook.com/reel/2224735601674299/",
+        "canonical_raw_row_sha256": "305F5A9F8D84D8D9EE910ABBABAEA7572BEDEECA9AFE7CFB86C92DD636C5AA72",
+        "interpretation": "A Reel was viewed, but the history row has no referrer or Story relation."
+      },
+      {
+        "visit_id": 12839,
+        "visited_at_utc": "2026-07-19T05:53:26Z",
+        "visited_at_asia_bangkok": "2026-07-19T12:53:26+07:00",
+        "sanitized_url": "https://business.facebook.com/latest/story_composer",
+        "canonical_raw_row_sha256": "74967606E05CE402493B4CCF7881A5C21EE449D782B3DAA236FB3A058953F977",
+        "interpretation": "The generic Story composer route opened 574 seconds before the ledger timestamp."
+      },
+      {
+        "visit_id": 12840,
+        "visited_at_utc": "2026-07-19T05:53:26Z",
+        "visited_at_asia_bangkok": "2026-07-19T12:53:26+07:00",
+        "sanitized_url": "https://business.facebook.com/latest/story_composer?asset_id=583765282304956&business_id=[REDACTED]&ir_qe_exposed=1",
+        "canonical_raw_row_sha256": "8CE7094525EB378AC45AA9F7BBDB65E33F90938DA8268458746DCBD68496DCF4",
+        "interpretation": "The composer was scoped to the correct page asset, but its URL contains no published Story id or source-post id."
+      }
+    ],
+    "edge_duplicate_note": "Edge History contains the same relevant timestamps and URLs. Exact timestamp duplication is compatible with imported or synchronized history and is not treated as an independent publication observation."
+  },
+  "session_artifact_observation": {
+    "source_alias": "LOCAL_CLAUDE_BROWSER_TRANSCRIPT",
+    "source_sha256": "FBA348E3D9C49FFC3CF433194C9DB00EE459142998D7E01DF63AAC1824954380",
+    "source_size_bytes": 3738337,
+    "privacy": "The local path and session id are withheld; only hash commitments and non-secret Facebook navigation facts are recorded.",
+    "committed_events": [
+      {
+        "physical_line": 120,
+        "event_timestamp": "2026-07-19T05:51:58.999Z",
+        "event_sha256": "2955E865B7B9BAA82E470718B48FB71B2F59B119C7BFEC28E95AB347B36866AC",
+        "fact": "A click navigated the audited tab to Reel 2224735601674299."
+      },
+      {
+        "physical_line": 125,
+        "event_timestamp": "2026-07-19T05:52:05.721Z",
+        "event_sha256": "9A55FCD04FE785E44870FD323F00618747B698DB4AA8F56F62ECF50222597362",
+        "fact": "A screenshot was captured while that Reel was open; it is a Reel observation, not a Story archive observation."
+      },
+      {
+        "physical_line": 144,
+        "event_timestamp": "2026-07-19T05:53:22.118Z",
+        "event_sha256": "2409D0FE8D006F4647EEADAE489C4F3AA6FB95C79E01223AE5005654D2CBE499",
+        "fact": "The audited tab navigated away to Instagram four seconds before Chrome recorded the separate Business Suite Story composer visit."
+      }
+    ],
+    "rejection_reason": "This transcript is a comment-audit flow and contains no share-to-Story action, Story success confirmation, Story id, Story permalink, Story archive row, or Story text observation. It cannot join Reel 2224735601674299 to ledger line 39."
+  },
+  "other_local_artifacts": {
+    "facebook_export_or_archive_found": false,
+    "contemporaneous_story_screenshot_found": false,
+    "story_object_in_browser_session_or_cache_found": false,
+    "media_hash_tied_to_story_object_found": false,
+    "notes": [
+      "The only user screenshot dated 2026-07-19 was created at 17:27 Asia/Bangkok and showed unrelated finance-research content.",
+      "The retained Chrome cache file dated near the target interval was a WOFF2 font, not a Facebook response or Story asset.",
+      "Current Chrome session files contain no target Story object or permalink."
+    ]
+  },
+  "verified_now": [
+    "The correct Meta Business Suite Story composer for Facebook page asset 583765282304956 opened at 2026-07-19T12:53:26+07:00.",
+    "The ledger event was recorded 574 seconds later at 2026-07-19T13:03:00+07:00.",
+    "No recovered local artifact proves that submission succeeded or identifies the resulting Story object.",
+    "Reel 2224735601674299 cannot be asserted as the Story source because its contemporaneous transcript belongs to a separate comment-audit tab and contains no Story relation."
+  ],
+  "required_owner_collection": {
+    "private_raw_root": ".local-private/runtime/story39-recovery/raw/",
+    "browser_root": "https://business.facebook.com/latest/content_calendar/?asset_id=583765282304956",
+    "navigation_target": "Meta Business Suite published content or Story archive/insights for 2026-07-19 12:55-13:10 Asia/Bangkok",
+    "required_fields": [
+      "stable Facebook Story object id",
+      "canonical Story permalink or archive permalink",
+      "displayed Story publication timestamp",
+      "exact source post id or source Reel id recorded by the Story archive",
+      "Story media file or media fingerprint that can be SHA-256 bound",
+      "exact displayed Story text, or an explicit no-text value tied to that same Story object",
+      "page asset id 583765282304956 visible in the same observation"
+    ],
+    "acceptable_capture": "A Meta export JSON/HTML row or a continuous screenshot/DOM capture showing the object id/permalink, timestamp, source relation, media, and text state in the same Story archive object.",
+    "insufficient_capture": [
+      "the composer page alone",
+      "a Reel permalink without an explicit Story relation",
+      "an expired or empty archive",
+      "a screenshot lacking the Story object id or permalink",
+      "topic or caption similarity"
+    ]
+  },
+  "result": {
+    "state": "UNKNOWN_IDENTITY",
+    "route_corroborated": true,
+    "publication_success_verified": false,
+    "stable_story_identity_verified": false,
+    "source_reel_identity_verified": false,
+    "identity_bindings_sha256_unchanged": "0DD4BE27E36210B0339F1F54CEAA3453BCC4149A42C9E621ED1E461EE3C23918",
+    "permanent_dedup_complete_rows": 124,
+    "permanent_dedup_incomplete_rows": 1,
+    "remaining_incomplete_lines": [39]
+  }
+}

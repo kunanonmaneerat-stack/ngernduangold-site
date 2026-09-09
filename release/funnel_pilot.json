@@ -1,0 +1,98 @@
+{
+  "schema_version": 2,
+  "pilot_id": "salary30k-ktccard-context-v1",
+  "state": "planned_blocked",
+  "external_action_authorized": false,
+  "hypothesis": "A single context-matched KTC card CTA after the sourced salary-30k answer can produce a measurable affiliate-click rate without increasing application pressure or changing the offer.",
+  "target": {
+    "canonical_url": "https://ngernduangold.com/credit-card-salary-30000-2026",
+    "page_file": "credit-card-salary-30000-2026.html",
+    "content_id": "salary30k-2026",
+    "provider": "ktccard",
+    "cta_id": "salary30000-ktc-lower",
+    "position": "after-faq",
+    "primary_event": "affiliate_click"
+  },
+  "design": {
+    "unit": "qualified_landing_session",
+    "primary_metric": "affiliate_click_sessions / qualified_landing_sessions",
+    "minimum_qualified_sessions": 100,
+    "maximum_qualified_sessions": 300,
+    "maximum_duration_days": 14,
+    "success_threshold": {
+      "value": 0.08,
+      "status": "provisional_planning_assumption",
+      "confidence": "low",
+      "trusted_historical_baseline_available": false,
+      "reset_after_first_trusted_baseline": true,
+      "rationale": "No trusted session-scoped historical baseline exists; 8% is only a planning assumption for a bounded first read and is not a performance promise."
+    },
+    "maximum_cta_variants": 1,
+    "freeze_page_offer_and_cta_during_window": true,
+    "clicks_do_not_prove_revenue": true,
+    "outcome_classification": "directional_only",
+    "winner_declaration_allowed": false,
+    "scale_decision_allowed": false,
+    "decision_rule": "At the first limit reached, classify the observation as directional-positive only when the minimum sample is met and the primary rate is at least the provisional threshold; otherwise classify it as inconclusive or below-threshold. Never declare a winner or scale from this pilot."
+  },
+  "prerequisites": {
+    "minimum_live_readiness_score": 80,
+    "required_categories": [
+      "inventory",
+      "exact_release",
+      "attribution",
+      "offer_safety"
+    ],
+    "analytics_trust": "TRUSTED",
+    "measurement_contract_support": "REQUIRED",
+    "publishable_placement_receipt": "REQUIRED",
+    "owner_execution_authority": "REQUIRED_SEPARATELY",
+    "exact_release_lock": true
+  },
+  "measurement_contract": {
+    "contract_version": 1,
+    "producer_path": "pipeline/ga4_pull.py",
+    "schema_adapter_path": "pipeline/ga4_schema.py",
+    "producer_contract_symbol": "PILOT_MEASUREMENT_CONTRACT",
+    "schema_fields_symbol": "PILOT_MEASUREMENT_FIELDS",
+    "primary_metric": "affiliate_click_sessions / qualified_landing_sessions",
+    "required_fields": [
+      "affiliate_click_sessions",
+      "qualified_landing_sessions"
+    ],
+    "required_dimensions": [
+      "provider",
+      "cta_id",
+      "position",
+      "content_id",
+      "acquisition_content_id",
+      "sub_id",
+      "channel",
+      "campaign"
+    ],
+    "required_scopes": {
+      "affiliate_click_sessions": "session",
+      "qualified_landing_sessions": "session"
+    },
+    "qualified_landing_session_definition": "A session whose landing page is the exact target canonical, excluding internal and synthetic traffic."
+  },
+  "attribution_dimensions": [
+    "provider",
+    "cta_id",
+    "position",
+    "content_id",
+    "acquisition_content_id",
+    "sub_id",
+    "channel",
+    "campaign"
+  ],
+  "stop_conditions": [
+    "exact_release_drift",
+    "attribution_contract_failure",
+    "offer_safety_failure",
+    "merchant_inactive_or_content_mismatch",
+    "official_source_review_required",
+    "analytics_trust_not_trusted",
+    "page_offer_or_cta_changed"
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-08-24T22:25:00+07:00",
+  "audit_kind": "FACEBOOK_STORY_LINE39_ONE_TO_ONE_RECOVERY_AUDIT",
+  "status": "COMPLETED_BLOCKED",
+  "meaning": "Local evidence was exhausted without finding a one-to-one Facebook Story object. Ledger line 39 remains permanently dedup-incomplete rather than being falsely bound to a similar Reel or caption.",
+  "scope": {
+    "target_ledger_line": 39,
+    "post_ledger_bytes_changed": false,
+    "identity_binding_appended": false,
+    "publication_or_delivery_claim_changed": false,
+    "content_calendar_changed": false,
+    "external_action_performed": false,
+    "browser_or_network_used": false
+  },
+  "target": {
+    "ledger_path": "automation-log/post-ledger.jsonl",
+    "ledger_sha256": "416C768E3F6740C531C0F45F98AE1745B88C23C93D35E404F92708E43BC6909E",
+    "ledger_line": 39,
+    "ledger_row_sha256": "99630AA535EB01267439E37028ECADA5B4F50340E5BA8E18F06356B70D18EE49",
+    "type": "story",
+    "channel": "facebook",
+    "ledger_timestamp": "2026-07-19T13:03:00+07:00",
+    "descriptor": "FB Story #1 - reshared top post (debt guide clip, links-in-bio + disclosure)",
+    "stable_story_id": null,
+    "canonical_story_permalink": null,
+    "exact_source_post_id": null,
+    "story_media_sha256": null,
+    "exact_displayed_text_sha256": null
+  },
+  "candidate_evidence": [
+    {
+      "candidate_id": "manifest-reel-eb02",
+      "source_path": ".system_control/content_manifest.json",
+      "source_sha256": "0E33B5B0D42ECB7CD8422C531B985FF4F52DBC6ECDF719853E9C1AD449B3F912",
+      "source_field": "items[id=2026-07-17_eb02]",
+      "content_id": "2026-07-17_eb02",
+      "facebook_schedule_evidence": "scheduled-ui 19:00 (business-suite-batch1, backfilled 20260717)",
+      "media_path": "reels/2026-07-17_eb02.mp4",
+      "media_sha256": "ADDE8F67EE36C4CA539C9766BB137F131BFE3CDB445A24116F9986ADEFA6FA43",
+      "one_to_one_story_link": false,
+      "rejection_reasons": [
+        "no Story object id or Story permalink",
+        "no observation tying this media hash to the Story object",
+        "the ledger descriptor does not name eb02 or its source-post id"
+      ]
+    },
+    {
+      "candidate_id": "manifest-reel-eb03",
+      "source_path": ".system_control/content_manifest.json",
+      "source_sha256": "0E33B5B0D42ECB7CD8422C531B985FF4F52DBC6ECDF719853E9C1AD449B3F912",
+      "source_field": "items[id=2026-07-19_eb03]",
+      "content_id": "2026-07-19_eb03",
+      "facebook_schedule_evidence": "scheduled-ui 19:00 (business-suite-batch1, backfilled 20260717)",
+      "scheduled_timestamp": "2026-07-19T19:00:00+07:00",
+      "media_path": "reels/2026-07-19_eb03.mp4",
+      "media_sha256": "982044EFF7FCFC9860400A3799AC63F594B78131F557402F29FADCD3AEDD72B5",
+      "one_to_one_story_link": false,
+      "rejection_reasons": [
+        "the 19:00 Reel schedule is 5 hours 57 minutes after the 13:03 Story ledger event",
+        "no Story object id, Story permalink, or source-post-to-Story relation",
+        "caption similarity does not establish an ephemeral Story identity"
+      ]
+    },
+    {
+      "candidate_id": "operational-log-eb03-live-unverified",
+      "source_path": "automation-log/2026-07.jsonl",
+      "source_sha256": "EC66848605543CCCCD18F3AE4D2DBF60679C601F4C94A2B941077E6823EC8863",
+      "source_line": 82,
+      "source_row_sha256": "2FBB80E200419391F2AAFE3ECA10E8142AA1AD7D08E0BF7DE9ACF8C2694FD2F9",
+      "assertion": "The Facebook eb03 Reel was scheduled for 19:00 and live status was unverified.",
+      "one_to_one_story_link": false,
+      "rejection_reasons": [
+        "the record discusses a Reel schedule, not a Story object",
+        "the record explicitly says Facebook live state was unverified"
+      ]
+    }
+  ],
+  "ambiguity": {
+    "candidate_count": 2,
+    "candidate_content_ids": [
+      "2026-07-17_eb02",
+      "2026-07-19_eb03"
+    ],
+    "reason": "Both local assets are debt-guide promotional clips with links-in-bio and disclosure language, while the ledger descriptor names neither content id. The manifest additionally marks eb03 as a near-duplicate of eb02.",
+    "independent_exact_story_matches": 0
+  },
+  "required_recovery_evidence": [
+    "stable Facebook Story object id and canonical Story permalink",
+    "displayed Story publication timestamp matching 2026-07-19T13:03:00+07:00",
+    "exact source-post id or Story-media SHA-256 tied to that Story object",
+    "exact displayed Story text, or an explicit no-text observation tied to the same Story object"
+  ],
+  "must_not_infer_from": [
+    "caption or topic similarity",
+    "a Facebook Reel id or permalink without a Story relation",
+    "a local media hash without a Story object observation",
+    "calendar date or scheduled Reel time",
+    "an empty or expired Story archive",
+    "the ledger descriptor by itself"
+  ],
+  "safeguard": {
+    "implementation": "automation-log/post_ledger_identity.py",
+    "rule": "Ledger line 39 is rejected before every generic identity evidence route. A future recovery requires a dedicated pinned one-to-one Story observation validator.",
+    "test": "pipeline/test_facebook_story39_recovery_guard.py"
+  },
+  "result": {
+    "state": "UNKNOWN_IDENTITY",
+    "identity_rows": 125,
+    "complete_rows": 124,
+    "incomplete_rows": 1,
+    "coverage_percent": 99.2,
+    "remaining_incomplete_lines": [
+      39
+    ],
+    "identity_bindings_sha256_unchanged": "0DD4BE27E36210B0339F1F54CEAA3453BCC4149A42C9E621ED1E461EE3C23918",
+    "calendar_sha_update_required": false
+  }
+}

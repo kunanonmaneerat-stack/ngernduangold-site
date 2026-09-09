@@ -1,0 +1,251 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "คะแนน 100: สถานะจริงและเส้นทางปิดช่องว่าง",
+    "description": "รายงานสถานะความพร้อมของระบบ affiliate หลังการแก้ไขและตรวจซ้ำวันที่ 31 สิงหาคม 2026",
+    "generatedAt": "2026-08-31T00:47:21+07:00",
+    "sources": [
+      {
+        "id": "scorecard",
+        "label": "Canonical maturity scorecard",
+        "path": ".local-private/runtime/improvement-runs/final-day-boundary-20260831-0040/maturity-scorecard.json"
+      },
+      {
+        "id": "validation",
+        "label": "Canonical validation result",
+        "path": ".local-private/runtime/improvement-runs/final-day-boundary-20260831-0040/validation.json"
+      },
+      {
+        "id": "next48",
+        "label": "NEXT48 exact readiness packet",
+        "path": "automation-log/owner-decision/NEXT48-EXACT-READINESS_20260831T002939+0700.json"
+      },
+      {
+        "id": "verification",
+        "label": "Independent local verification receipt",
+        "path": "automation-log/LOCAL-VERIFICATION-RECEIPT_20260831.md"
+      }
+    ],
+    "blocks": [
+      {
+        "id": "title",
+        "type": "markdown",
+        "body": "# คะแนน 100: สถานะจริงและเส้นทางปิดช่องว่าง"
+      },
+      {
+        "id": "executive-summary",
+        "type": "markdown",
+        "body": "## Executive Summary\n\n- **คะแนนที่พิสูจน์ได้ขณะนี้คือ 20/100 ไม่ใช่ 100.** ระบบคำนวณและ bundle ถูกต้อง แต่หลักฐานรายได้และ GSC หมดหน้าต่างเมื่อข้ามวันที่ 31 สิงหาคม\n- **รอบนี้แก้ defect ภายในเพิ่มอีกหลายจุด.** ปิดช่อง tamper ของ receipt สื่อ ผูกเวลาประเมินให้ตรงกัน แก้ footer รายงานที่ทำให้สถานะผสมถูกตีความผิด และแทนค่า `None` ด้วย `UNAVAILABLE`\n- **ระบบตรวจผ่านการยืนยันอิสระ 228/228 tests.** Canonical bundle ครบ hash-valid validation ผ่าน และ packet 48 ชั่วโมงยืนยันว่าพร้อมโพสต์ 0 จาก 5 ตำแหน่ง\n- **80 คะแนนที่เหลือต้องมาจากหลักฐานจริง.** การลดเกณฑ์ เปลี่ยนน้ำหนัก หรือสร้าง human/revenue/authority evidence เทียมจะทำให้เลข 100 ไม่มีความหมาย"
+      },
+      {
+        "id": "score-finding",
+        "type": "markdown",
+        "sourceId": "scorecard",
+        "body": "## คะแนน 80 จุดที่ยังขาดกระจุกอยู่ในห้า gate\n\nคะแนนที่ได้มาจากความสดและการผูกหลักฐาน 10 คะแนน กับการบังคับใช้แหล่งข่าวแบบ fail-closed อีก 10 คะแนน ส่วนช่องว่าง 80 คะแนนอยู่ใน human media QA บัญชีรายได้ analytics ปัจจัยพร้อมเผยแพร่ และรายได้ paid จริง การผ่าน source enforcement หมายถึงกฎทำงานและบล็อก 26/26 ชิ้นอย่างถูกต้อง ไม่ได้หมายความว่าชิ้นงานพร้อมโพสต์"
+      },
+      {
+        "id": "score-chart-block",
+        "type": "chart",
+        "chartId": "score-gap-chart"
+      },
+      {
+        "id": "fixes",
+        "type": "markdown",
+        "body": "## ระบบภายในที่แก้จนปิด regression แล้ว\n\n- Receipt สื่อต้องใช้เวลา anchor เดียวกับ guard และ packet ต้อง replay semantic ผลจริงก่อนยอมรับ\n- Verdict, state, findings, summary, source binding, implementation hash และ media hash ต้อง reconcile กันทั้งหมด\n- รายงาน analytics ไม่รวมสถานะหลายแหล่งในประโยคที่อาจยกระดับ evidence ที่ถูกบล็อก\n- รายงาน control-run แสดง `UNAVAILABLE` เมื่อไม่มีหลักฐาน แทนค่า Python `None`\n- การตรวจอิสระยืนยัน 228 tests ผ่าน และ NEXT48 packet ผ่าน deterministic validation"
+      },
+      {
+        "id": "path-to-100",
+        "type": "markdown",
+        "body": "## เส้นทางขึ้น 100 ต้องปิดตามลำดับหลักฐาน\n\nตารางนี้แยกคะแนนที่ขาด ผู้รับผิดชอบ และหลักฐานยอมรับขั้นต่ำ แต่ละข้อจะเพิ่มคะแนนได้ต่อเมื่อ bundle รอบใหม่ตรวจหลักฐานนั้นว่าปัจจุบันและผูกกับงานจริง"
+      },
+      {
+        "id": "requirements-table-block",
+        "type": "table",
+        "tableId": "requirements-table"
+      },
+      {
+        "id": "further-decisions",
+        "type": "markdown",
+        "body": "## การตัดสินใจและเหตุการณ์ที่ยังต้องเกิด\n\n1. ให้มนุษย์ฟังเสียงวิดีโอ BATCH4 และออก receipt ที่ผูก exact hash\n2. นำหลักฐาน AccessTrade รอบวันที่ 31 สิงหาคมมากระทบยอดใหม่\n3. ยืนยัน GA4 trust และดึง GA4/GSC รอบปัจจุบัน\n4. อนุมัติชิ้นงานและช่องทางแบบเฉพาะเจาะจง พร้อมพิสูจน์ live/local parity\n5. สร้าง conversion จริงจนมีธุรกรรม paid ที่ตรวจสอบย้อนกลับได้"
+      },
+      {
+        "id": "caveats",
+        "type": "markdown",
+        "body": "## ข้อจำกัดและสมมติฐาน\n\nรายงานนี้เป็น snapshot แบบ local-only ณ 31 สิงหาคม 2026 เวลา 00:47 น. Asia/Bangkok ไม่มีการเปิด tracker สร้าง test traffic ติดต่อ API สด โพสต์ ตั้งเวลา deploy หรือเปลี่ยน external scheduler คะแนนอาจเพิ่มได้เมื่อมีหลักฐานภายนอกใหม่ และอาจลดได้เมื่อหลักฐานหมดอายุอีกครั้ง"
+      }
+    ],
+    "charts": [
+      {
+        "id": "score-gap-chart",
+        "title": "คะแนนที่ได้และคะแนนที่ยังขาดตามเกณฑ์",
+        "description": "คะแนนรวม 20 จาก 100 ณ 31 สิงหาคม 2026; แท่งซ้อนแสดงส่วนที่ได้แล้วเทียบกับช่องว่าง",
+        "type": "bar",
+        "dataset": "score_gap",
+        "encodings": {
+          "x": {
+            "field": "criterion",
+            "type": "nominal",
+            "title": "เกณฑ์"
+          },
+          "y": {
+            "field": "points",
+            "type": "quantitative",
+            "title": "คะแนน"
+          },
+          "color": {
+            "field": "portion",
+            "type": "nominal",
+            "title": "สถานะ"
+          }
+        },
+        "options": {
+          "orientation": "vertical",
+          "grouping": "stacked",
+          "legend": {
+            "position": "top"
+          }
+        },
+        "source": {
+          "id": "scorecard-chart-query",
+          "label": "Score contribution transformation",
+          "path": ".local-private/runtime/improvement-runs/final-day-boundary-20260831-0040/maturity-scorecard.json",
+          "query": {
+            "engine": "sqlite",
+            "language": "sql",
+            "description": "Expand each reviewed maturity criterion into awarded and missing point rows for a stacked comparison.",
+            "sql": "WITH criteria(criterion, awarded, weight, passed, owner, evidence_state) AS (VALUES ('หลักฐานปัจจุบัน',10,10,1,'ระบบ','CURRENT_AND_BOUND'),('Guardrails',0,20,0,'Human QA','B4_AUDIO_LISTENING_MISSING'),('บัญชีรายได้',0,15,0,'AccessTrade evidence','STALE_COVERAGE'),('Analytics',0,15,0,'GA4/GSC evidence','GA4_INVALID_GSC_STALE'),('บังคับใช้แหล่งข่าว',10,10,1,'ระบบ','26_OF_26_BLOCKED_BY_RULES'),('ปัจจัยพร้อมเผยแพร่',0,20,0,'Owner + live evidence','AUTHORITY_CALENDAR_PARITY_FALSE'),('รายได้ paid จริง',0,10,0,'Business outcome','NO_VERIFIED_PAID_TRANSACTION')), portions(portion) AS (VALUES ('ได้แล้ว'),('ยังขาด')) SELECT criterion, portion, CASE WHEN portion='ได้แล้ว' THEN awarded ELSE weight-awarded END AS points, weight AS maximum_points, passed, owner, evidence_state FROM criteria CROSS JOIN portions",
+            "tables_used": [
+              "canonical maturity-scorecard criteria"
+            ],
+            "filters": [
+              "canonical run final-day-boundary-20260831-0040"
+            ],
+            "metric_definitions": {
+              "points": "Awarded points for ได้แล้ว; criterion weight minus awarded points for ยังขาด."
+            }
+          }
+        }
+      }
+    ],
+    "tables": [
+      {
+        "id": "requirements-table",
+        "title": "หลักฐานที่ต้องมีเพื่อปิดช่องว่าง",
+        "description": "เรียงตามลำดับความปลอดภัยและความพร้อมในการตัดสินใจ",
+        "dataset": "requirements",
+        "columns": [
+          {
+            "field": "priority",
+            "label": "ลำดับ",
+            "type": "number"
+          },
+          {
+            "field": "gate",
+            "label": "Gate",
+            "type": "string"
+          },
+          {
+            "field": "missing_points",
+            "label": "คะแนนที่ขาด",
+            "type": "number"
+          },
+          {
+            "field": "current_state",
+            "label": "สถานะ",
+            "type": "string"
+          },
+          {
+            "field": "evidence_needed",
+            "label": "หลักฐานที่ต้องมี",
+            "type": "string"
+          },
+          {
+            "field": "actor",
+            "label": "ผู้รับผิดชอบ",
+            "type": "string"
+          }
+        ],
+        "defaultSort": {
+          "field": "priority",
+          "direction": "asc"
+        },
+        "source": {
+          "id": "requirements-query",
+          "label": "Score-to-100 requirement mapping",
+          "path": "automation-log/LOCAL-VERIFICATION-RECEIPT_20260831.md",
+          "query": {
+            "engine": "sqlite",
+            "language": "sql",
+            "description": "Return the reviewed evidence gates that account for the 80-point gap.",
+            "sql": "WITH requirements(priority, gate, missing_points, current_state, evidence_needed, actor) AS (VALUES (1,'Human media QA',20,'BLOCKED','ฟังเสียงวิดีโอ b4-p01 และออก receipt ที่ผูก exact hash','มนุษย์ผู้ตรวจ'),(2,'Revenue ledger',15,'STALE_COVERAGE','กระทบยอด AccessTrade ครบหน้าต่างถึง 31 ส.ค.','หลักฐาน AccessTrade'),(3,'Analytics',15,'GA4 INVALID / GSC STALE','ยืนยัน GA4 trust แล้วดึง GA4 และ GSC ชุดปัจจุบันใหม่','เจ้าของ + แหล่งข้อมูล'),(4,'Publication inputs',20,'3 CHECKS FALSE','อนุมัติแบบระบุช่องและชิ้นงาน พร้อมอย่างน้อย 1 slot และหลักฐาน live/local parity','เจ้าของ + release evidence'),(5,'Paid revenue learning',10,'NO VERIFIED PAID','ธุรกรรม affiliate paid ไม่ซ้ำอย่างน้อย 1 รายการและรายได้มากกว่า 0 บาท','ผลลัพธ์ธุรกิจ')) SELECT priority, gate, missing_points, current_state, evidence_needed, actor FROM requirements ORDER BY priority",
+            "tables_used": [
+              "canonical maturity-scorecard criteria",
+              "NEXT48 exact readiness packet"
+            ],
+            "filters": [
+              "missing_points > 0",
+              "canonical run final-day-boundary-20260831-0040"
+            ],
+            "metric_definitions": {
+              "missing_points": "Criterion weight minus awarded points in the canonical scorecard."
+            }
+          }
+        }
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "status": "ready",
+    "generatedAt": "2026-08-31T00:47:21+07:00",
+    "datasets": {
+      "score_gap": [
+        {"criterion": "หลักฐานปัจจุบัน", "portion": "ได้แล้ว", "points": 10, "maximum_points": 10, "passed": true, "owner": "ระบบ", "evidence_state": "CURRENT_AND_BOUND"},
+        {"criterion": "หลักฐานปัจจุบัน", "portion": "ยังขาด", "points": 0, "maximum_points": 10, "passed": true, "owner": "ระบบ", "evidence_state": "CURRENT_AND_BOUND"},
+        {"criterion": "Guardrails", "portion": "ได้แล้ว", "points": 0, "maximum_points": 20, "passed": false, "owner": "Human QA", "evidence_state": "B4_AUDIO_LISTENING_MISSING"},
+        {"criterion": "Guardrails", "portion": "ยังขาด", "points": 20, "maximum_points": 20, "passed": false, "owner": "Human QA", "evidence_state": "B4_AUDIO_LISTENING_MISSING"},
+        {"criterion": "บัญชีรายได้", "portion": "ได้แล้ว", "points": 0, "maximum_points": 15, "passed": false, "owner": "AccessTrade evidence", "evidence_state": "STALE_COVERAGE"},
+        {"criterion": "บัญชีรายได้", "portion": "ยังขาด", "points": 15, "maximum_points": 15, "passed": false, "owner": "AccessTrade evidence", "evidence_state": "STALE_COVERAGE"},
+        {"criterion": "Analytics", "portion": "ได้แล้ว", "points": 0, "maximum_points": 15, "passed": false, "owner": "GA4/GSC evidence", "evidence_state": "GA4_INVALID_GSC_STALE"},
+        {"criterion": "Analytics", "portion": "ยังขาด", "points": 15, "maximum_points": 15, "passed": false, "owner": "GA4/GSC evidence", "evidence_state": "GA4_INVALID_GSC_STALE"},
+        {"criterion": "บังคับใช้แหล่งข่าว", "portion": "ได้แล้ว", "points": 10, "maximum_points": 10, "passed": true, "owner": "ระบบ", "evidence_state": "26_OF_26_BLOCKED_BY_RULES"},
+        {"criterion": "บังคับใช้แหล่งข่าว", "portion": "ยังขาด", "points": 0, "maximum_points": 10, "passed": true, "owner": "ระบบ", "evidence_state": "26_OF_26_BLOCKED_BY_RULES"},
+        {"criterion": "ปัจจัยพร้อมเผยแพร่", "portion": "ได้แล้ว", "points": 0, "maximum_points": 20, "passed": false, "owner": "Owner + live evidence", "evidence_state": "AUTHORITY_CALENDAR_PARITY_FALSE"},
+        {"criterion": "ปัจจัยพร้อมเผยแพร่", "portion": "ยังขาด", "points": 20, "maximum_points": 20, "passed": false, "owner": "Owner + live evidence", "evidence_state": "AUTHORITY_CALENDAR_PARITY_FALSE"},
+        {"criterion": "รายได้ paid จริง", "portion": "ได้แล้ว", "points": 0, "maximum_points": 10, "passed": false, "owner": "Business outcome", "evidence_state": "NO_VERIFIED_PAID_TRANSACTION"},
+        {"criterion": "รายได้ paid จริง", "portion": "ยังขาด", "points": 10, "maximum_points": 10, "passed": false, "owner": "Business outcome", "evidence_state": "NO_VERIFIED_PAID_TRANSACTION"}
+      ],
+      "requirements": [
+        {"priority": 1, "gate": "Human media QA", "missing_points": 20, "current_state": "BLOCKED", "evidence_needed": "ฟังเสียงวิดีโอ b4-p01 และออก receipt ที่ผูก exact hash", "actor": "มนุษย์ผู้ตรวจ"},
+        {"priority": 2, "gate": "Revenue ledger", "missing_points": 15, "current_state": "STALE_COVERAGE", "evidence_needed": "กระทบยอด AccessTrade ครบหน้าต่างถึง 31 ส.ค.", "actor": "หลักฐาน AccessTrade"},
+        {"priority": 3, "gate": "Analytics", "missing_points": 15, "current_state": "GA4 INVALID / GSC STALE", "evidence_needed": "ยืนยัน GA4 trust แล้วดึง GA4 และ GSC ชุดปัจจุบันใหม่", "actor": "เจ้าของ + แหล่งข้อมูล"},
+        {"priority": 4, "gate": "Publication inputs", "missing_points": 20, "current_state": "3 CHECKS FALSE", "evidence_needed": "อนุมัติแบบระบุช่องและชิ้นงาน พร้อมอย่างน้อย 1 slot และหลักฐาน live/local parity", "actor": "เจ้าของ + release evidence"},
+        {"priority": 5, "gate": "Paid revenue learning", "missing_points": 10, "current_state": "NO VERIFIED PAID", "evidence_needed": "ธุรกรรม affiliate paid ไม่ซ้ำอย่างน้อย 1 รายการและรายได้มากกว่า 0 บาท", "actor": "ผลลัพธ์ธุรกิจ"}
+      ]
+    }
+  },
+  "sources": [
+    {
+      "id": "scorecard",
+      "label": "Canonical maturity scorecard",
+      "path": ".local-private/runtime/improvement-runs/final-day-boundary-20260831-0040/maturity-scorecard.json"
+    },
+    {
+      "id": "validation",
+      "label": "Canonical validation result",
+      "path": ".local-private/runtime/improvement-runs/final-day-boundary-20260831-0040/validation.json"
+    },
+    {
+      "id": "next48",
+      "label": "NEXT48 exact readiness packet",
+      "path": "automation-log/owner-decision/NEXT48-EXACT-READINESS_20260831T002939+0700.json"
+    },
+    {
+      "id": "verification",
+      "label": "Independent local verification receipt",
+      "path": "automation-log/LOCAL-VERIFICATION-RECEIPT_20260831.md"
+    }
+  ]
+}

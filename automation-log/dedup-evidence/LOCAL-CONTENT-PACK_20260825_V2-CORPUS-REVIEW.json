@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "receipt_type": "PROVISIONAL_LOCAL_CORPUS_REVIEW",
+  "review_state": "PROVISIONAL_LOCAL_REVIEW",
+  "semantic_universality_claimed": false,
+  "publication_authority": "NONE",
+  "created_at": "2026-08-25T10:00:00+07:00",
+  "method_limit": "Family IDs, exact normalized hashes, and deterministic trigram/SequenceMatcher rules prevent proven mechanical reuse only. They do not prove universal semantic or paraphrase novelty.",
+  "families": [
+    {
+      "family_id": "payroll-net-pay-reconciliation",
+      "topic_sha256": "865867D3D7859B4FEF513F93B613DD4FE6F5F6E2E30EAB0F655D07E52C3618AE"
+    },
+    {
+      "family_id": "annual-expense-sinking-funds",
+      "topic_sha256": "17458A6BA38B886150540A7B280F89E869AD5FCB2B2FDF4EBEF6E19FCAC64582"
+    },
+    {
+      "family_id": "recurring-charge-renewal-audit",
+      "topic_sha256": "9CB485922AE62893566E05B4BC21B444143339C8E6BD10629152F003D3028AF1"
+    },
+    {
+      "family_id": "household-bill-ownership-map",
+      "topic_sha256": "B7601E2838681072A892B7256C1E182A8A9566E059182AB133954AE101CDDC53"
+    },
+    {
+      "family_id": "refund-dispute-evidence-timeline",
+      "topic_sha256": "2646165DF4A302D2654202270EEDA4CC36351C3A550C39B24C149991369D56CB"
+    },
+    {
+      "family_id": "beneficiary-emergency-access-review",
+      "topic_sha256": "78A762143FA924E502213CBD61957DDAE2609A70CC2FF6417FD599102CCEE31B"
+    },
+    {
+      "family_id": "employee-benefit-inventory",
+      "topic_sha256": "173AFF17B91F4C0A715CB5ADFAA9CECF8FB290E4F83D51C4DEFDF57A86136DAC"
+    }
+  ],
+  "corpus_inputs": {
+    ".system_control/content_manifest.json": "0E33B5B0D42ECB7CD8422C531B985FF4F52DBC6ECDF719853E9C1AD449B3F912",
+    ".system_control/content_calendar.json": "1DDAF076374C34469998BB4D15C373EC8D3617469775E1145C602D621AE8F203",
+    "automation-log/post-ledger.jsonl": "416C768E3F6740C531C0F45F98AE1745B88C23C93D35E404F92708E43BC6909E",
+    "automation-log/content-packages/*.md": {
+      "file_count": 95,
+      "canonical_path_sha256_inventory": "3290FE593450F1622E8E66EEE0E9F268EA7E5CEF57323F0F39683BACDD17298A"
+    }
+  },
+  "corpus_audit": {
+    "topic_candidates": 7,
+    "topic_baseline_records": 193,
+    "historical_exact_collisions": 0,
+    "historical_near_collisions": 0,
+    "cross_family_exact_collisions": 0,
+    "cross_family_near_collisions": 0
+  },
+  "explicit_non_authority": "This is a provisional local corpus review before generation. It does not prove universal semantic novelty or approve sources, claims, media, scheduling, publication, or release."
+}

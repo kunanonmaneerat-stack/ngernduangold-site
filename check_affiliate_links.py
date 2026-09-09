@@ -1,39 +1,60 @@
 # -*- coding: utf-8 -*-
-"""Affiliate link health check for ngernduangold.
-Parses every atth.me affiliate link out of build_site.py and verifies each still
-resolves (follows redirects, expects HTTP 200). Exit code 1 if any link is broken
-so it can gate a scheduled alert. Run:  python check_affiliate_links.py
+"""Static affiliate-link safety check for the built site.
+
+This checker deliberately does not request atth.me. Calling an affiliate URL
+creates a network click, contaminates publisher reports, and can look like
+self-clicking. Merchant availability must be verified against a direct,
+non-tracking merchant URL maintained outside the affiliate redirect.
+
+Exit 0: every published link has a valid AccessTrade shape.
+Exit 1: malformed or non-HTTPS affiliate links were found.
+Exit 2: the built site is missing, or a forbidden network flag was requested.
 """
-import re, sys, urllib.request, urllib.error
+import glob
+import os
+import re
+import sys
 
-SRC = "build_site.py"
-try:
-    src = open(SRC, encoding="utf-8").read()
-except FileNotFoundError:
-    print("ERR: run this from the outputs/ folder (build_site.py not found)"); sys.exit(2)
 
-links = sorted(set(re.findall(r"https://atth\.me/(?:go/)?[0-9A-Za-z]+", src)))
-if not links:
-    print("WARN: no atth.me links found in build_site.py"); sys.exit(2)
+SITE = "site"
+HREF = re.compile(r'href=["\'](https?://atth\.me/[^"\']+)["\']', re.I)
+VALID = re.compile(r"^https://atth\.me/(?:go/)?[0-9A-Za-z]+(?:\?[^\s]*)?$")
 
-bad = []
-for u in links:
-    try:
-        req = urllib.request.Request(u, headers={"User-Agent": "Mozilla/5.0 (ngernduangold link-health)"})
-        r = urllib.request.urlopen(req, timeout=20)
-        code, final = r.getcode(), r.geturl()
-        ok = code == 200  # atth.me responds 200 then redirects client-side; 200 = alive, 404/410/5xx = dead
-        print(("OK   " if ok else "WARN ") + f"{u} -> {code} {final}")
-        if not ok:
-            bad.append((u, code, final))
-    except urllib.error.HTTPError as e:
-        print(f"DEAD {u} -> HTTP {e.code}"); bad.append((u, e.code, ""))
-    except Exception as e:
-        print(f"ERR  {u} -> {type(e).__name__}: {str(e)[:120]}"); bad.append((u, "ERR", str(e)[:120]))
 
-print(f"\nchecked {len(links)} affiliate links — {len(bad)} problem(s)")
-if bad:
-    print("PROBLEM LINKS:")
-    for u, c, f in bad:
-        print(f"  - {u}  ({c})")
-sys.exit(1 if bad else 0)
+def main():
+    if any(flag in sys.argv[1:] for flag in ("--http", "--live", "--network")):
+        print("REFUSED: network-checking affiliate redirects creates synthetic clicks")
+        return 2
+
+    pages = sorted(glob.glob(os.path.join(SITE, "*.html")))
+    if not pages:
+        print("ERR: site/*.html not found; run build_site.py first")
+        return 2
+
+    occurrences = []
+    for path in pages:
+        with open(path, encoding="utf-8") as handle:
+            for url in HREF.findall(handle.read()):
+                occurrences.append((os.path.basename(path), url))
+
+    malformed = [(page, url) for page, url in occurrences if not VALID.fullmatch(url)]
+    unique = sorted({url.split("?", 1)[0] for _, url in occurrences})
+    print(
+        "checked %d built pages, %d affiliate placements, %d unique links"
+        % (len(pages), len(occurrences), len(unique))
+    )
+    print("network requests: 0 (intentional anti-self-click guard)")
+
+    if malformed:
+        print("MALFORMED LINKS:")
+        for page, url in malformed:
+            print("  - %s: %s" % (page, url))
+        return 1
+    if not occurrences:
+        print("WARN: no published affiliate links found")
+        return 2
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

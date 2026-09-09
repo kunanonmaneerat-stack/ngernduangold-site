@@ -23,12 +23,12 @@ def _sch(args):
 
 
 def install():
-    rc, out = _sch(["/create", "/tn", TASK, "/tr", RUN_DAILY,
-                    "/sc", "DAILY", "/st", RUN_TIME, "/f"])
-    ok = rc == 0
-    print("[scheduler_agent] install:", "OK" if ok else "FAIL(rc=%d)" % rc)
-    print(out[:300])
-    return ok
+    # The former /create /f definition was incomplete and could overwrite the
+    # hardened task's catch-up, battery, runtime, and user settings.  Keep this
+    # legacy helper read-only; installation belongs to the reviewed host-local
+    # task contract.
+    print("[scheduler_agent] REFUSED: install is retired; status is read-only.")
+    return False
 
 
 def status():
@@ -60,14 +60,22 @@ def status():
     return {"exists": exists, "file": fp, "lines": keep}
 
 
+def main(argv=None):
+    argv = list(sys.argv[1:] if argv is None else argv)
+    cmd = argv[0] if argv else "status"
+    if cmd == "install":
+        install()
+        return 2
+    if cmd != "status":
+        print("usage: scheduler_agent.py status")
+        return 2
+    result = status()
+    return 0 if result["exists"] else 1
+
+
 if __name__ == "__main__":
     try:
         sys.stdout.reconfigure(encoding="utf-8")
     except Exception:
         pass
-    cmd = sys.argv[1] if len(sys.argv) > 1 else "status"
-    if cmd == "install":
-        install()
-        status()
-    else:
-        status()
+    raise SystemExit(main())

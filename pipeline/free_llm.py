@@ -1,19 +1,15 @@
-"""free_llm.py — rotating free/cheap LLM client for the ngernduangold engine.
+"""Offline compatibility surface for the retired network LLM pool.
 
-หลักการ: มี "pool" โมเดลเรียงตามลำดับความสำคัญ · เรียกทีละตัว · ตัวไหนยอดหมด/เต็ม
-(402/429) หรือไม่มี (404) ก็ข้ามไปตัวถัดไปอัตโนมัติ -> "เต็มแล้วสลับ วนทั้งเดือน".
+The old implementation rotated from nominally free providers into Qwen/DeepSeek
+fallbacks that could consume paid quota.  Scheduled/local callers also had no
+authenticated owner proof, so an actor string or flag could never safely enable
+that network action.  Network generation is therefore disabled at this shared
+sink: ``generate`` is a no-op and ``_call`` fails closed before any HTTP request.
 
-คีย์อ่านจาก ENVIRONMENT เท่านั้น (ห้าม hardcode -- repo public):
-  setx GLM_KEY      "<zhipu key>"       # glm-4.5-flash (ฟรี)
-  setx QW_KEY       "<dashscope-intl>"  # qwen-plus / qwen-turbo
-  setx DEEPSEEK_KEY "<sk-...>"          # deepseek-chat (เมื่อมียอด)
-  (QWEN_API_KEY = OpenRouter เดิม ใช้เป็น fallback)
-
-ใช้:  from free_llm import generate
-      text, model = generate("คำถาม...")   # คืน (ข้อความ, ชื่อโมเดล) หรือ (None, None)
-stdlib only.
+An authenticated owner-managed generation path may be implemented later as a
+separate capability.  It must not be restored with a CLI actor/flag alone.
 """
-import os, json, urllib.request, urllib.error
+import os
 try:  # cp874-safe: UTF-8 stdout/stderr so Thai/emoji prints never crash on Windows console (idempotent)
     import sys as _sys; _sys.stdout.reconfigure(encoding="utf-8", errors="replace"); _sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 except Exception:
@@ -34,6 +30,10 @@ POOL = [
 SKIP_CODES = (401, 402, 403, 404, 429)
 
 
+class NetworkGenerationBlocked(RuntimeError):
+    """Raised before a legacy provider call can reach the network."""
+
+
 def _get_key(name):
     """อ่านคีย์: process env ก่อน, ถ้าว่างอ่านจาก HKCU\\Environment (setx) -- กัน env เก่าค้างใน process แม่."""
     v = os.environ.get(name, "")
@@ -50,45 +50,13 @@ def _get_key(name):
 
 
 def _call(url, model, key, prompt, system, max_tokens, temperature):
-    msgs = []
-    if system:
-        msgs.append({"role": "system", "content": system})
-    msgs.append({"role": "user", "content": prompt})
-    body = json.dumps({"model": model, "messages": msgs,
-                       "max_tokens": max_tokens, "temperature": temperature}).encode("utf-8")
-    req = urllib.request.Request(url, data=body, headers={
-        "Authorization": "Bearer " + key, "Content-Type": "application/json"})
-    with urllib.request.urlopen(req, timeout=90) as r:
-        d = json.load(r)
-        m = d["choices"][0]["message"]
-        txt = (m.get("content") or m.get("reasoning_content") or "")
-        if "\ufffd" in txt:  # provider returned a lossy/truncated multibyte char; strip the marker so it never reaches written files
-            import sys as _s; _s.stderr.write("[free_llm] WARN stripped U+FFFD from " + str(model) + " response\n")
-            txt = txt.replace("\ufffd", "")
-        txt = txt.encode("utf-8", "ignore").decode("utf-8")  # drop any half/dangling multibyte (defensive, Round 2)
-        return txt.strip()
+    raise NetworkGenerationBlocked(
+        "network LLM generation is disabled; authenticated owner authority is not configured"
+    )
 
 
 def generate(prompt, system="", max_tokens=2000, temperature=0.4, verbose=False):
-    """ลองทีละตัวใน POOL -- คืน (text, model_label) ของตัวแรกที่สำเร็จ, ไม่งั้น (None, None)."""
-    for label, url, model, env in POOL:
-        key = _get_key(env)
-        if not key:
-            if verbose:
-                print("[free_llm] skip", label, "(no", env + ")")
-            continue
-        try:
-            txt = _call(url, model, key, prompt, system, max_tokens, temperature)
-            if txt and len(txt.strip()) > 10:
-                if verbose:
-                    print("[free_llm] OK", label)
-                return txt, label
-        except urllib.error.HTTPError as e:
-            if verbose:
-                print("[free_llm]", label, "HTTP", e.code, "-> rotate")
-            if e.code in SKIP_CODES:
-                continue
-        except Exception as e:
-            print("[free_llm]", label, "ERR", str(e)[:120], "-> rotate")
-            continue
+    """Return an offline miss without reading credentials or touching network."""
+    if verbose:
+        print("[free_llm] BLOCKED: network/paid generation requires authenticated owner authority")
     return None, None

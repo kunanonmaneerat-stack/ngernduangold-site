@@ -1,0 +1,6 @@
+# Exact local guard runtime used by the scheduled fail-closed Python launcher.
+# Install into the project .venv; the launcher still verifies imports at run time.
+numpy==2.4.6
+opencv-python-headless==4.13.0.92
+Pillow==12.2.0
+cryptography==48.0.1

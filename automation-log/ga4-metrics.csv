@@ -1,8 +1,8 @@
-source,sessions,quiz_start,affiliate_click,buy_intent_click
-bing,1,0,0,0
-chatgpt,12,0,2,0
-direct,82,0,0,2
-fb,5,0,0,0
-pantip,14,0,4,0
-threads,2,0,0,0
-yt,3,0,0,0
+source,sessions,quiz_start,affiliate_click,buy_intent_click,answer_seen,line_lead_click,internal_cta_click,video_start
+bing,1,0,0,0,0,0,0,0
+chatgpt,12,0,2,0,0,0,0,0
+direct,67,0,0,2,0,0,0,0
+fb,3,0,0,0,0,0,0,0
+pantip,14,0,4,0,0,0,0,0
+threads,2,0,0,0,0,0,0,0
+yt,3,0,0,0,0,0,0,0

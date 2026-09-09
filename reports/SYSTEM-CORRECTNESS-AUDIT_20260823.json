@@ -1,0 +1,206 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-23T23:31:00+07:00",
+  "timezone": "Asia/Bangkok",
+  "scope": "local-safe system audit and repair; no posting, scheduling, replying, deploy, commit, push, paid API, or external account mutation",
+  "verdict": {
+    "control_state": "VALID_WITH_BLOCKERS",
+    "publication_ready": false,
+    "growth_ready": false,
+    "learning_ready": false,
+    "maturity_score": 40,
+    "maturity_stage": "instrumented",
+    "latest_run": "audit-final-20260823-2325",
+    "latest_run_status": "COMPLETED_WITH_BLOCKERS",
+    "validation_passed": true
+  },
+  "state_counts": [
+    {
+      "state": "READY_FOR_OWNER_APPROVAL",
+      "count": 0,
+      "severity_rank": 6,
+      "scope": "calendar placements",
+      "meaning": "No placement passes every gate",
+      "overlap_note": "State categories use different operational grains"
+    },
+    {
+      "state": "BLOCKED",
+      "count": 65,
+      "severity_rank": 1,
+      "scope": "calendar placements",
+      "meaning": "Every calendar placement remains PLANNED_BLOCKED",
+      "overlap_note": "Includes historical blocked placements"
+    },
+    {
+      "state": "MISSED",
+      "count": 23,
+      "severity_rank": 2,
+      "scope": "calendar slots",
+      "meaning": "Past slots retained as report-only; never auto-backfill",
+      "overlap_note": "Subset of blocked placements"
+    },
+    {
+      "state": "COMPLETED_BLOCKED",
+      "count": 3,
+      "severity_rank": 3,
+      "scope": "two Windows tasks plus latest control run",
+      "meaning": "Execution completed and reported blockers",
+      "overlap_note": "Run/task grain, not placement grain"
+    },
+    {
+      "state": "SKIP",
+      "count": 1,
+      "severity_rank": 5,
+      "scope": "Instagram policy state",
+      "meaning": "Paused until owner review on 2026-08-25",
+      "overlap_note": "Channel grain"
+    },
+    {
+      "state": "RUNNER_FAILED",
+      "count": 0,
+      "severity_rank": 4,
+      "scope": "latest verified runners",
+      "meaning": "No current runner crash; Windows result 2 is completed-with-blockers",
+      "overlap_note": "Run/task grain"
+    }
+  ],
+  "control_metrics": {
+    "calendar_placements": 65,
+    "calendar_content_ids": 40,
+    "calendar_publishable": 0,
+    "calendar_stale_slots": 23,
+    "content_scoped_sources_evaluated": 37,
+    "content_scoped_sources_blocked": 37,
+    "content_scoped_failure_reasons": 246,
+    "permanent_dedup_complete": 90,
+    "permanent_dedup_total": 125,
+    "permanent_dedup_coverage_pct": 72.0,
+    "human_audio_blocked_placements": 5,
+    "official_sources_changed": 13,
+    "official_sources_errors": 1,
+    "official_sources_pending_review": 31,
+    "local_site_pages_passed": 70,
+    "local_site_pages_total": 70,
+    "local_affiliate_buttons": 110,
+    "live_release_pages_passed": 0,
+    "live_release_pages_total": 73,
+    "live_affiliate_buttons_observed": 185,
+    "canonical_videos_scanned": 45,
+    "canonical_images_guarded": 1,
+    "privacy_files_scanned": 197,
+    "merchant_products": 16,
+    "merchant_promotions": 2,
+    "merchant_placements": 110,
+    "merchant_documents": 98,
+    "root_tests_passed": 133,
+    "preflight_checks_passed": 261,
+    "preflight_failures": 3,
+    "preflight_warnings": 7,
+    "current_incidents": 4,
+    "regressed_incidents": 0,
+    "resolved_incidents": 1
+  },
+  "trust_states": [
+    {
+      "source": "GA4",
+      "state": "UNTRUSTED / INVALID_METADATA",
+      "decisionable": false,
+      "note": "Internal-traffic coverage does not span the full 28-day window"
+    },
+    {
+      "source": "GSC",
+      "state": "CURRENT",
+      "decisionable": true,
+      "note": "Snapshot expires 2026-08-24T00:00:00+07:00 and must then be refreshed"
+    },
+    {
+      "source": "AccessTrade revenue",
+      "state": "INVALID_LEDGER / UNRECONCILED",
+      "decisionable": false,
+      "note": "Verified paid revenue is unavailable, not zero"
+    },
+    {
+      "source": "Official sources",
+      "state": "ERROR / REVIEW_REQUIRED",
+      "decisionable": false,
+      "note": "13 changed, 1 error, 31 pending review; exact content gates remain fail-closed"
+    }
+  ],
+  "priority_actions": [
+    {
+      "severity_rank": 1,
+      "priority": "P0",
+      "area": "Live release parity",
+      "state": "BLOCKED",
+      "action": "Build a reviewed release candidate, obtain explicit deploy authority, deploy, then require 73/73 live parity before posting",
+      "acceptance": "Exact origin, no redirect, taxonomy, content IDs, affiliate registry, and release hashes all pass"
+    },
+    {
+      "severity_rank": 2,
+      "priority": "P0",
+      "area": "Revenue evidence",
+      "state": "BLOCKED",
+      "action": "Export the exact authenticated 28-day AccessTrade transaction view and reconcile the private ledger",
+      "acceptance": "Full schema-5 contract passes and paid revenue is either a proven amount or a proven zero"
+    },
+    {
+      "severity_rank": 3,
+      "priority": "P0",
+      "area": "GA4 trust",
+      "state": "OWNER_ACTION_REQUIRED",
+      "action": "Owner confirms the current private egress before changing the exclusion range; then repull the exact 28-day bundle",
+      "acceptance": "Capture and current trust are TRUSTED, metadata is current, and no private network value is exposed"
+    },
+    {
+      "severity_rank": 4,
+      "priority": "P0",
+      "area": "Content sources",
+      "state": "BLOCKED",
+      "action": "Review and acknowledge only the exact official-source changes relevant to each content ID",
+      "acceptance": "Each intended placement has current content-scoped source evidence"
+    },
+    {
+      "severity_rank": 5,
+      "priority": "P0",
+      "area": "Media and permanent dedup",
+      "state": "BLOCKED",
+      "action": "Complete exact hash-bound human listening and fill 35 missing permanent identities",
+      "acceptance": "No audio blocker remains and permanent dedup coverage is 125/125"
+    },
+    {
+      "severity_rank": 6,
+      "priority": "P1",
+      "area": "Calendar continuity",
+      "state": "BLOCKED",
+      "action": "After upstream gates pass, register the 2026-08-24 to 2026-08-30 R5 drafts as per-channel PLANNED_BLOCKED placements, then request item-specific owner approval",
+      "acceptance": "At least one future placement passes all gates without promoting a blocked row automatically"
+    },
+    {
+      "severity_rank": 7,
+      "priority": "P1",
+      "area": "Run reconciliation",
+      "state": "WARN",
+      "action": "Reconcile the 326-hour weekly-review started row and close the overdue Pantip decision without synthesizing evidence",
+      "acceptance": "Every run has an evidence-backed terminal state and overdue decisions use an allowed closed status"
+    }
+  ],
+  "residual_risks": [
+    "TikTok success can still be misattributed to an unrelated concurrent same-account post because no action-bound remote submission ID exists.",
+    "TikTok, YouTube, and Instagram cannot yet prove immutable remote media bytes across the final network boundary.",
+    "Facebook, Instagram, and YouTube do not yet share one atomic permanent dedup/quota/gap claim at the mutation boundary.",
+    "PENDING or UNKNOWN publication attempts have no production remote reconciler.",
+    "Owner receipts stored under the same Windows user remain attestations, not independently authenticated signatures.",
+    "TikTok live publication intentionally remains blocked because no reviewed authenticated-account reader is wired."
+  ],
+  "evidence": [
+    ".local-private/runtime/improvement-runs/audit-final-20260823-2325/run.json",
+    ".local-private/runtime/improvement-runs/audit-final-20260823-2325/validation.json",
+    ".local-private/runtime/improvement-runs/audit-final-20260823-2325/maturity-scorecard.json",
+    ".local-private/runtime/improvement-runs/audit-final-20260823-2325/observation.json",
+    ".local-private/runtime/improvement-runs/audit-final-20260823-2325/diagnosis.json",
+    ".system_control/content_calendar.json",
+    ".system_control/policy.json",
+    "automation-log/post-ledger.jsonl",
+    "automation-log/knowledge-base/official-news-snapshot.json"
+  ]
+}

@@ -1,0 +1,291 @@
+{
+  "schema_version": 1,
+  "pack_id": "week-content-20260824-30-r5",
+  "created_at": "2026-08-23T15:40:16+07:00",
+  "updated_at": "2026-08-23T19:02:26+07:00",
+  "public_identity": "เงินเดือนสมองทอง",
+  "state": "DRAFT_ONLY",
+  "calendar_action": "REPLACEMENT_CANDIDATES_ONLY_DO_NOT_ADD_OR_REPLACE_AUTOMATICALLY",
+  "content_rules": {
+    "body_url": false,
+    "affiliate_cta": false,
+    "financial_product_claim": false,
+    "provider_or_platform_watermark_allowed": false,
+    "logo_or_handle_overlay_allowed": false,
+    "ai_disclosure_required": true,
+    "google_flow_role": "IDEATION_STORYBOARD_ONLY_NO_OUTPUT_IN_FINAL_ASSETS",
+    "publication_requires_exact_owner_approval": true
+  },
+  "source_binding": {
+    "content_calendar_sha256": "855977B20C18CE027AC3CA469446FC35DBDA58775C7313DAF560643EEA6D7E53",
+    "policy_sha256": "BAFEA518C3FEFBA956987BF81EDE0DA146E1309F495554FE2F2A3CD35FD4814B",
+    "post_ledger_sha256": "416C768E3F6740C531C0F45F98AE1745B88C23C93D35E404F92708E43BC6909E",
+    "official_news_snapshot_sha256": "E27E6D1A9912CC1D11A53F7901C1A7CDB8B590133676D50855CB108EE7525920"
+  },
+  "days": [
+    {
+      "date": "2026-08-24",
+      "candidate_id": "wk36-sf01",
+      "theme": "เริ่มเห็นภาพเงินด้วยสามช่อง",
+      "source_ids": [],
+      "source_review": "NOT_REQUIRED_IF_TEXT_REMAINS_EXACT",
+      "threads_text": "เปิดสมุดหนึ่งหน้า แล้วแบ่งเป็น 3 ช่อง: เงินเข้า / ค่าใช้จ่ายจำเป็น / ค่าใช้จ่ายที่เลือกได้\n\nถ้าจะเริ่มดูแค่ช่องเดียววันนี้ คุณอยากเริ่มจากช่องไหน?\n\nข้อมูลเพื่อการศึกษา · ผลิตด้วย AI",
+      "facebook_text": "ถ้าไม่รู้จะเริ่มจัดการเงินตรงไหน ลองเปิดสมุดหนึ่งหน้าแล้วแบ่งเป็น 3 ช่อง\n\n1. เงินเข้า\n2. ค่าใช้จ่ายจำเป็น\n3. ค่าใช้จ่ายที่เลือกได้\n\nยังไม่ต้องรีบตัดอะไรออก แค่เลือกดูให้ชัดทีละช่องก็พอ วันนี้คุณอยากเริ่มจากช่องไหน?\n\nข้อมูลเพื่อการศึกษา · ผลิตด้วย AI",
+      "tiktok_draft": {
+        "duration_target_seconds": 18,
+        "hook": "เริ่มจัดการเงินจากสมุดหนึ่งหน้า",
+        "voiceover": "แบ่งหน้ากระดาษเป็นเงินเข้า ค่าใช้จ่ายจำเป็น และค่าใช้จ่ายที่เลือกได้ วันนี้ยังไม่ต้องตัดสินตัวเอง แค่เลือกหนึ่งช่องมาดูให้ชัดก่อน",
+        "shots": ["มือเปิดสมุดเปล่า", "เขียนหัวข้อสามช่อง", "วงกลมช่องที่จะเริ่มดู"],
+        "onscreen_text": ["เงินเข้า", "จำเป็น", "เลือกได้", "เริ่มทีละช่อง"],
+        "end_card": "ข้อมูลเพื่อการศึกษา · ผลิตด้วย AI",
+        "media_status": "CANDIDATE_PRODUCED_LOCAL_ONLY",
+        "visual_qa": "PASS",
+        "watermark_qa": "PASS",
+        "audio_qa": "SOURCE_TEXT_BOUND_TECHNICAL_PASS_VOICE_ONLY_SHORT_TAIL_HUMAN_LISTENING_NOT_RUN",
+        "candidate_asset": {
+          "path": "reels/week-20260824-30-r5/2026-08-24_wk36-sf01.mp4",
+          "sha256": "ADB59197D732993C69435D15456B9C227F8A8072EF2133E9933D8DE376D88CEC",
+          "qa_receipt": "automation-log/media-qa/wk36-sf01-tiktok-video-r5.json",
+          "media_origin": {"generator_origin": "LOCAL_HTML_SVG_FFMPEG_WINDOWS_TTS", "contains_flow_pixels": false, "contains_flow_audio": false, "synthid_expected": false},
+          "duration_seconds": 12.125,
+          "video": "h264 yuv420p 1080x1920 24fps",
+          "audio": "AAC mono 48kHz; exact local Microsoft Pattara th-TH narration only; no ambient, music, or foreign audio; voice-bound tail <=1.0s; human listening not run"
+        }
+      }
+    },
+    {
+      "date": "2026-08-25",
+      "candidate_id": "wk36-sf02",
+      "theme": "พักการตัดสินใจหนึ่งคืน",
+      "source_ids": [],
+      "source_review": "NOT_REQUIRED_IF_TEXT_REMAINS_EXACT",
+      "threads_text": "ก่อนจ่ายรายการที่ยังไม่แน่ใจ ลองเขียนชื่อมันไว้ แล้วกลับมาดูอีกครั้งพรุ่งนี้\n\nถ้าพรุ่งนี้ยังเห็นคุณค่า ค่อยตัดสินใจ\n\nข้อมูลเพื่อการศึกษา · ผลิตด้วย AI",
+      "facebook_text": "มีรายการที่อยากซื้อ แต่ยังไม่แน่ใจว่าอยากได้จริงหรือแค่อยากได้ตอนนี้ไหม?\n\nลองเขียนชื่อรายการนั้นไว้ แล้วกลับมาดูอีกครั้งพรุ่งนี้ ถ้ายังเห็นคุณค่า ค่อยตัดสินใจด้วยข้อมูลที่ชัดขึ้น\n\nวันนี้มีรายการไหนที่คุณอยากพักไว้ก่อนหนึ่งคืน?\n\nข้อมูลเพื่อการศึกษา · ผลิตด้วย AI",
+      "tiktok_draft": {
+        "duration_target_seconds": 17,
+        "hook": "ยังไม่แน่ใจว่าจะซื้อไหม ลองทำอย่างนี้",
+        "voiceover": "เขียนชื่อของที่อยากซื้อไว้ก่อน แล้วกลับมาดูอีกครั้งพรุ่งนี้ ถ้ายังเห็นคุณค่า ค่อยตัดสินใจ",
+        "shots": ["พิมพ์ชื่อรายการในโน้ต", "วางโทรศัพท์คว่ำ", "เปิดโน้ตอีกครั้งในเช้าวันถัดไป"],
+        "onscreen_text": ["เขียนไว้ก่อน", "กลับมาดูพรุ่งนี้", "ค่อยตัดสินใจ"],
+        "end_card": "ข้อมูลเพื่อการศึกษา · ผลิตด้วย AI",
+        "media_status": "CANDIDATE_PRODUCED_LOCAL_ONLY",
+        "visual_qa": "PASS",
+        "watermark_qa": "PASS",
+        "audio_qa": "SOURCE_TEXT_BOUND_TECHNICAL_PASS_VOICE_ONLY_SHORT_TAIL_HUMAN_LISTENING_NOT_RUN",
+        "candidate_asset": {
+          "path": "reels/week-20260824-30-r5/2026-08-25_wk36-sf02.mp4",
+          "sha256": "BF204A23D83820DABF941D62C4D4F93EA79753A42AB24A150D800BAC9790A61B",
+          "qa_receipt": "automation-log/media-qa/wk36-sf02-tiktok-video-r5.json",
+          "media_origin": {"generator_origin": "LOCAL_HTML_SVG_FFMPEG_WINDOWS_TTS", "contains_flow_pixels": false, "contains_flow_audio": false, "synthid_expected": false},
+          "duration_seconds": 8.125,
+          "video": "h264 yuv420p 1080x1920 24fps",
+          "audio": "AAC mono 48kHz; exact local Microsoft Pattara th-TH narration only; no ambient, music, or foreign audio; voice-bound tail <=1.0s; human listening not run"
+        }
+      }
+    },
+    {
+      "date": "2026-08-26",
+      "candidate_id": "qt-12",
+      "theme": "ไม่เปรียบเทียบสถานะการเงิน",
+      "source_ids": [],
+      "source_review": "NOT_REQUIRED",
+      "quote_text": "อย่าเอาสถานะการเงินของเราไปเทียบกับภาพชีวิตของคนอื่น เพราะเราไม่เห็นภาพการเงินทั้งหมดของเขา",
+      "threads_text": "อย่าเอาสถานะการเงินของเราไปเทียบกับภาพชีวิตของคนอื่น เพราะเราไม่เห็นภาพการเงินทั้งหมดของเขา\n\nวันนี้กลับมาดูจังหวะของเราเองก็พอ\n\nข้อมูลเพื่อการศึกษา · ภาพประกอบผลิตด้วย AI",
+      "facebook_text": "“อย่าเอาสถานะการเงินของเราไปเทียบกับภาพชีวิตของคนอื่น เพราะเราไม่เห็นภาพการเงินทั้งหมดของเขา”\n\nสิ่งที่เห็นจากภายนอกไม่ใช่ภาพการเงินทั้งหมด วันนี้กลับมาดูจังหวะและเป้าหมายของเราเองก็พอ\n\nข้อมูลเพื่อการศึกษา · ภาพประกอบผลิตด้วย AI",
+      "image_spec": {
+        "facebook_instagram": "ภาพ 4:5 โทนอุ่น คนไทยเดินในเมืองยามเย็น แต่ละคนถือของต่างกัน โฟกัสคนหนึ่งที่พอใจกับถุงผ้าใบเดียว เว้นพื้นที่ข้อความ อ่านง่าย ไม่มีโลโก้ ไม่มีชื่อบัญชี และไม่มีลายน้ำใด ๆ",
+        "pinterest": "ภาพ 2:3 แนวตั้ง ใช้ฉากเดียวกัน เว้นพื้นที่ข้อความด้านบนและพื้นที่หายใจรอบขอบ ไม่มีโลโก้ ไม่มีชื่อบัญชี และไม่มีลายน้ำใด ๆ",
+        "exact_overlay_text": "อย่าเอาสถานะการเงินของเราไปเทียบกับภาพชีวิตของคนอื่น เพราะเราไม่เห็นภาพการเงินทั้งหมดของเขา",
+        "media_status": "CANDIDATE_PRODUCED_LOCAL_ONLY",
+        "visual_qa": "PASS",
+        "watermark_qa": "PASS",
+        "candidate_assets": {
+          "facebook_instagram": {
+            "path": "media/quotes/week-20260824-30-r5/qt-12_fb-ig_4x5.jpg",
+            "sha256": "01A3FA967DAEF32206C0E11EBC3D6D0A681977F6E13106CCE60A70AB0744E6B0",
+            "qa_receipt": "automation-log/media-qa/qt-12-fb-ig-image-r5.json",
+            "media_origin": {"generator_origin": "LOCAL_HTML_CSS_BROWSER_RENDER", "contains_flow_pixels": false, "contains_flow_audio": false, "synthid_expected": false}
+          },
+          "pinterest": {
+            "path": "media/quotes/week-20260824-30-r5/qt-12_pinterest_2x3.jpg",
+            "sha256": "337F6A1F0D708DD119F36854B22094888EFB7566555BE520CC85164320F22B49",
+            "qa_receipt": "automation-log/media-qa/qt-12-pinterest-image-r5.json",
+            "media_origin": {"generator_origin": "LOCAL_HTML_CSS_BROWSER_RENDER", "contains_flow_pixels": false, "contains_flow_audio": false, "synthid_expected": false}
+          }
+        }
+      },
+      "tiktok_draft": {
+        "duration_target_seconds": 18,
+        "hook": "อย่าเอาสถานะการเงินของเราไปเทียบกับภาพชีวิตของคนอื่น",
+        "voiceover": "อย่าเอาสถานะการเงินของเราไปเทียบกับภาพชีวิตของคนอื่น เพราะเราไม่เห็นภาพการเงินทั้งหมดของเขา กลับมาดูเป้าหมายของเราเอง",
+        "shots": ["ผู้คนเดินถือของต่างกัน", "โคลสอัปถุงผ้าเรียบง่าย", "สมุดเป้าหมายส่วนตัว"],
+        "onscreen_text": ["สถานะการเงินของเรา", "ภาพชีวิตของคนอื่น", "ไม่เห็นภาพการเงินทั้งหมด", "กลับมาดูเป้าหมายเรา"],
+        "end_card": "ข้อมูลเพื่อการศึกษา · ผลิตด้วย AI",
+        "media_status": "CANDIDATE_PRODUCED_LOCAL_ONLY",
+        "visual_qa": "PASS",
+        "watermark_qa": "PASS",
+        "audio_qa": "SOURCE_TEXT_BOUND_TECHNICAL_PASS_VOICE_ONLY_SHORT_TAIL_HUMAN_LISTENING_NOT_RUN",
+        "candidate_asset": {
+          "path": "reels/week-20260824-30-r5/2026-08-26_qt-12.mp4",
+          "sha256": "5302D53836218A0F1664F6058B58B73368382E2AF041F00EE98C38D1556DA1FA",
+          "qa_receipt": "automation-log/media-qa/qt-12-tiktok-video-r5.json",
+          "media_origin": {"generator_origin": "LOCAL_HTML_SVG_FFMPEG_WINDOWS_TTS", "contains_flow_pixels": false, "contains_flow_audio": false, "synthid_expected": false},
+          "duration_seconds": 12.417,
+          "video": "h264 yuv420p 1080x1920 24fps",
+          "audio": "AAC mono 48kHz; exact local Microsoft Pattara th-TH narration only; no ambient, music, or foreign audio; voice-bound tail <=1.0s; human listening not run"
+        }
+      }
+    },
+    {
+      "date": "2026-08-27",
+      "candidate_id": "wk36-sf03",
+      "theme": "ทบทวนคุณค่าของรายจ่าย",
+      "source_ids": [],
+      "source_review": "NOT_REQUIRED_IF_TEXT_REMAINS_EXACT",
+      "threads_text": "ปลายเดือนนี้ รายจ่ายรายการไหนให้คุณค่ากับชีวิตมากที่สุด?\n\nเก็บคำตอบนั้นไว้เป็นเข็มทิศสำหรับเดือนหน้า\n\nข้อมูลเพื่อการศึกษา · ผลิตด้วย AI",
+      "facebook_text": "ก่อนจบเดือน ลองมองรายจ่ายที่ผ่านมาโดยไม่รีบตัดสินว่าดีหรือแย่\n\nรายการไหนให้คุณค่ากับชีวิตมากที่สุด และรายการไหนให้คุณค่าน้อยกว่าที่คิด?\n\nเก็บคำตอบไว้เป็นเข็มทิศสำหรับเดือนหน้า\n\nข้อมูลเพื่อการศึกษา · ผลิตด้วย AI",
+      "tiktok_draft": {
+        "duration_target_seconds": 16,
+        "hook": "คำถามเดียวก่อนจบเดือน",
+        "voiceover": "รายจ่ายรายการไหนให้คุณค่ากับชีวิตมากที่สุด เก็บคำตอบนั้นไว้ใช้วางแผนเดือนหน้า",
+        "shots": ["เปิดรายการรายจ่าย", "ทำเครื่องหมายหนึ่งรายการ", "เขียนหัวข้อเดือนหน้า"],
+        "onscreen_text": ["อะไรให้คุณค่ามากที่สุด?", "เก็บไว้เป็นเข็มทิศ"],
+        "end_card": "ข้อมูลเพื่อการศึกษา · ผลิตด้วย AI",
+        "media_status": "CANDIDATE_PRODUCED_LOCAL_ONLY",
+        "visual_qa": "PASS",
+        "watermark_qa": "PASS",
+        "audio_qa": "SOURCE_TEXT_BOUND_TECHNICAL_PASS_VOICE_ONLY_SHORT_TAIL_HUMAN_LISTENING_NOT_RUN",
+        "candidate_asset": {
+          "path": "reels/week-20260824-30-r5/2026-08-27_wk36-sf03.mp4",
+          "sha256": "E8B87B3D1A97A0517068F90FD12237439F97E31EC08AA12E279E52312F3723D0",
+          "qa_receipt": "automation-log/media-qa/wk36-sf03-tiktok-video-r5.json",
+          "media_origin": {"generator_origin": "LOCAL_HTML_SVG_FFMPEG_WINDOWS_TTS", "contains_flow_pixels": false, "contains_flow_audio": false, "synthid_expected": false},
+          "duration_seconds": 8.25,
+          "video": "h264 yuv420p 1080x1920 24fps",
+          "audio": "AAC mono 48kHz; exact local Microsoft Pattara th-TH narration only; no ambient, music, or foreign audio; voice-bound tail <=1.0s; human listening not run"
+        }
+      }
+    },
+    {
+      "date": "2026-08-28",
+      "candidate_id": "wk36-sf04",
+      "theme": "จดรายจ่ายโดยไม่ตัดสินตัวเอง",
+      "source_ids": [],
+      "source_review": "NOT_REQUIRED_IF_TEXT_REMAINS_EXACT",
+      "threads_text": "ทุกครั้งที่เงินออก ลองจดรายการรายจ่ายไว้ โดยยังไม่ต้องตัดสินตัวเอง\n\nเป้าหมายแรกคือเห็นภาพ ไม่ใช่ทำให้ทุกอย่างสมบูรณ์ทันที\n\nข้อมูลเพื่อการศึกษา · ผลิตด้วย AI",
+      "facebook_text": "ทุกครั้งที่เงินออก ลองจดรายการรายจ่ายไว้ โดยยังไม่ต้องตัดสินตัวเองว่าควรหรือไม่ควร\n\nจดให้เห็นภาพก่อน แล้วค่อยกลับมาดูว่าอะไรจำเป็น อะไรเลือกได้ และอะไรอยากเปลี่ยนในเดือนหน้า\n\nเป้าหมายแรกคือเห็นภาพ ไม่ใช่ทำให้ทุกอย่างสมบูรณ์ทันที\n\nข้อมูลเพื่อการศึกษา · ผลิตด้วย AI",
+      "tiktok_draft": {
+        "duration_target_seconds": 18,
+        "hook": "วันนี้ยังไม่ต้องลด แค่จดให้เห็น",
+        "voiceover": "ทุกครั้งที่เงินออก ลองจดรายการรายจ่ายไว้ โดยยังไม่ต้องตัดสินตัวเอง เป้าหมายแรกคือเห็นภาพ",
+        "shots": ["จ่ายค่าเดินทาง", "จดรายการสั้น ๆ", "มองรายการทั้งหมดช่วงเย็น"],
+        "onscreen_text": ["เงินออกเมื่อไร", "จดรายการไว้", "เห็นภาพก่อน"],
+        "end_card": "ข้อมูลเพื่อการศึกษา · ผลิตด้วย AI",
+        "media_status": "CANDIDATE_PRODUCED_LOCAL_ONLY",
+        "visual_qa": "PASS",
+        "watermark_qa": "PASS",
+        "audio_qa": "SOURCE_TEXT_BOUND_TECHNICAL_PASS_VOICE_ONLY_SHORT_TAIL_HUMAN_LISTENING_NOT_RUN",
+        "candidate_asset": {
+          "path": "reels/week-20260824-30-r5/2026-08-28_wk36-sf04.mp4",
+          "sha256": "CEA93EA3E6E7944FE7E4BC9D1E5104121DE250329A5AB33C4FFBFB8C06AEF11C",
+          "qa_receipt": "automation-log/media-qa/wk36-sf04-tiktok-video-r5.json",
+          "media_origin": {"generator_origin": "LOCAL_HTML_SVG_FFMPEG_WINDOWS_TTS", "contains_flow_pixels": false, "contains_flow_audio": false, "synthid_expected": false},
+          "duration_seconds": 8.0,
+          "video": "h264 yuv420p 1080x1920 24fps",
+          "audio": "AAC mono 48kHz; exact local Microsoft Pattara th-TH narration only; no ambient, music, or foreign audio; voice-bound tail <=1.0s; human listening not run"
+        }
+      }
+    },
+    {
+      "date": "2026-08-29",
+      "candidate_id": "qt-13",
+      "theme": "เติบโตจากความสม่ำเสมอ",
+      "source_ids": [],
+      "source_review": "NOT_REQUIRED",
+      "quote_text": "ต้นไม้ใหญ่ไม่ได้โตในวันเดียว เงินก้อนแรกก็เช่นกัน แค่ดูแลมันทุกเดือน",
+      "threads_text": "ต้นไม้ใหญ่ไม่ได้โตในวันเดียว เงินก้อนแรกก็เช่นกัน แค่ดูแลมันทุกเดือน\n\nเลือกก้าวเล็กที่ทำต่อได้จริง แล้วให้เวลาทำหน้าที่ของมัน\n\nข้อมูลเพื่อการศึกษา · ภาพประกอบผลิตด้วย AI",
+      "facebook_text": "“ต้นไม้ใหญ่ไม่ได้โตในวันเดียว เงินก้อนแรกก็เช่นกัน แค่ดูแลมันทุกเดือน”\n\nเลือกก้าวเล็กที่ทำต่อได้จริง แล้วให้เวลาทำหน้าที่ของมัน\n\nข้อมูลเพื่อการศึกษา · ภาพประกอบผลิตด้วย AI",
+      "image_spec": {
+        "facebook_instagram": "ภาพ 4:5 โทนอุ่น มือคนปลูกต้นกล้าในกระถางดินเผา ข้างกันมีโหลเหรียญ แสงเช้าผ่านหน้าต่าง เว้นพื้นที่ข้อความ อ่านง่าย ไม่มีโลโก้ ไม่มีชื่อบัญชี และไม่มีลายน้ำใด ๆ",
+        "pinterest": "ภาพ 2:3 แนวตั้ง ใช้ฉากเดียวกัน เว้นพื้นที่ข้อความด้านบนและพื้นที่หายใจรอบขอบ ไม่มีโลโก้ ไม่มีชื่อบัญชี และไม่มีลายน้ำใด ๆ",
+        "exact_overlay_text": "ต้นไม้ใหญ่ไม่ได้โตในวันเดียว เงินก้อนแรกก็เช่นกัน แค่ดูแลมันทุกเดือน",
+        "media_status": "CANDIDATE_PRODUCED_LOCAL_ONLY",
+        "visual_qa": "PASS",
+        "watermark_qa": "PASS",
+        "candidate_assets": {
+          "facebook_instagram": {
+            "path": "media/quotes/week-20260824-30-r5/qt-13_fb-ig_4x5.jpg",
+            "sha256": "F0E64962659977273CC8398638348091A7BF1208CE1A578DAAD92DADB63929AE",
+            "qa_receipt": "automation-log/media-qa/qt-13-fb-ig-image-r5.json",
+            "media_origin": {"generator_origin": "LOCAL_HTML_CSS_BROWSER_RENDER", "contains_flow_pixels": false, "contains_flow_audio": false, "synthid_expected": false}
+          },
+          "pinterest": {
+            "path": "media/quotes/week-20260824-30-r5/qt-13_pinterest_2x3.jpg",
+            "sha256": "9B773CAEF625CA022CEED1B5DDFFABA8C8DD59E9E937DAAC82E08832671BDA1A",
+            "qa_receipt": "automation-log/media-qa/qt-13-pinterest-image-r5.json",
+            "media_origin": {"generator_origin": "LOCAL_HTML_CSS_BROWSER_RENDER", "contains_flow_pixels": false, "contains_flow_audio": false, "synthid_expected": false}
+          }
+        }
+      },
+      "tiktok_draft": {
+        "duration_target_seconds": 18,
+        "hook": "เงินก้อนแรกเหมือนต้นกล้า",
+        "voiceover": "ต้นไม้ใหญ่ไม่ได้โตในวันเดียว เงินก้อนแรกก็เช่นกัน เลือกก้าวเล็กที่ทำต่อได้ แล้วค่อยดูแลมันทุกเดือน",
+        "shots": ["ปลูกต้นกล้า", "วางเหรียญลงในโหล", "รดน้ำต้นกล้า"],
+        "onscreen_text": ["เริ่มเล็ก", "ทำต่อได้", "ดูแลทุกเดือน"],
+        "end_card": "ข้อมูลเพื่อการศึกษา · ผลิตด้วย AI",
+        "media_status": "CANDIDATE_PRODUCED_LOCAL_ONLY",
+        "visual_qa": "PASS",
+        "watermark_qa": "PASS",
+        "audio_qa": "SOURCE_TEXT_BOUND_TECHNICAL_PASS_VOICE_ONLY_SHORT_TAIL_HUMAN_LISTENING_NOT_RUN",
+        "candidate_asset": {
+          "path": "reels/week-20260824-30-r5/2026-08-29_qt-13.mp4",
+          "sha256": "01299233BA32AAA1400076C5575D9DEEEE649D287C14EB0589B64972CBDBC12C",
+          "qa_receipt": "automation-log/media-qa/qt-13-tiktok-video-r5.json",
+          "media_origin": {"generator_origin": "LOCAL_HTML_SVG_FFMPEG_WINDOWS_TTS", "contains_flow_pixels": false, "contains_flow_audio": false, "synthid_expected": false},
+          "duration_seconds": 9.875,
+          "video": "h264 yuv420p 1080x1920 24fps",
+          "audio": "AAC mono 48kHz; exact local Microsoft Pattara th-TH narration only; no ambient, music, or foreign audio; voice-bound tail <=1.0s; human listening not run"
+        }
+      }
+    },
+    {
+      "date": "2026-08-30",
+      "candidate_id": "wk36-sf05",
+      "theme": "วางแผนสามการตัดสินใจสำหรับสัปดาห์หน้า",
+      "source_ids": [],
+      "source_review": "NOT_REQUIRED_IF_TEXT_REMAINS_EXACT",
+      "threads_text": "เก็บ 1 พฤติกรรม ลด 1 รายจ่าย และทดลองเปลี่ยน 1 วิธีใช้เงิน\n\nแผนเล็กที่ชัดเจน เริ่มทำได้ง่ายกว่าแผนใหญ่ที่ยังไม่รู้จะเริ่มตรงไหน\n\nข้อมูลเพื่อการศึกษา · ผลิตด้วย AI",
+      "facebook_text": "ก่อนเริ่มสัปดาห์ใหม่ ลองเลือกไว้ 3 อย่าง\n\n- เก็บ 1 พฤติกรรม\n- ลด 1 รายจ่าย\n- ทดลองเปลี่ยน 1 วิธีใช้เงิน\n\nคุณจะเลือกอะไรในแต่ละข้อ?\n\nข้อมูลเพื่อการศึกษา · ผลิตด้วย AI",
+      "tiktok_draft": {
+        "duration_target_seconds": 18,
+        "hook": "แผนเงินสัปดาห์หน้าในสามบรรทัด",
+        "voiceover": "เก็บหนึ่งพฤติกรรม ลดหนึ่งรายจ่าย และทดลองเปลี่ยนหนึ่งวิธีใช้เงิน เขียนให้ชัด แล้วเริ่มจากสิ่งที่ทำได้จริง",
+        "shots": ["เขียนเลขหนึ่งถึงสาม", "เติมคำว่าเก็บ ลด ทดลอง", "ติดโน้ตไว้บนโต๊ะ"],
+        "onscreen_text": ["เก็บ 1 พฤติกรรม", "ลด 1 รายจ่าย", "ทดลอง 1 วิธีใช้เงิน"],
+        "end_card": "ข้อมูลเพื่อการศึกษา · ผลิตด้วย AI",
+        "media_status": "CANDIDATE_PRODUCED_LOCAL_ONLY",
+        "visual_qa": "PASS",
+        "watermark_qa": "PASS",
+        "audio_qa": "SOURCE_TEXT_BOUND_TECHNICAL_PASS_VOICE_ONLY_SHORT_TAIL_HUMAN_LISTENING_NOT_RUN",
+        "candidate_asset": {
+          "path": "reels/week-20260824-30-r5/2026-08-30_wk36-sf05.mp4",
+          "sha256": "CB733BDA1E5322ED90DE9DC48CF9BDD253417D5167FC547E05402F398940D1B1",
+          "qa_receipt": "automation-log/media-qa/wk36-sf05-tiktok-video-r5.json",
+          "media_origin": {"generator_origin": "LOCAL_HTML_SVG_FFMPEG_WINDOWS_TTS", "contains_flow_pixels": false, "contains_flow_audio": false, "synthid_expected": false},
+          "duration_seconds": 10.333,
+          "video": "h264 yuv420p 1080x1920 24fps",
+          "audio": "AAC mono 48kHz; exact local Microsoft Pattara th-TH narration only; no ambient, music, or foreign audio; voice-bound tail <=1.0s; human listening not run"
+        }
+      }
+    }
+  ],
+  "global_blockers": [
+    "candidates_not_registered_in_permanent_dedup",
+    "calendar_slots_already_occupied_by_planned_blocked_items",
+    "publication_authority_false_for_all_channels",
+    "exact_per_piece_owner_approval_missing",
+    "tiktok_media_candidates_not_yet_bound_to_calendar_placements",
+    "quote_media_candidates_not_yet_bound_to_calendar_placements"
+  ]
+}

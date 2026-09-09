@@ -1,0 +1,171 @@
+{
+  "schema_version": 1,
+  "receipt_id": "tiktok-week-replacement-20260824-r5",
+  "created_at": "2026-08-24T21:13:51+07:00",
+  "change_kind": "OWNER_AUTHORIZED_LOCAL_PLAN_REPLACEMENT",
+  "scope": "LOCAL_EDITORIAL_PLAN_ONLY",
+  "reason": "Replace seven unproduced TikTok creative-brief reservations with seven same-date exact weekly-pack videos whose asset and QA identities are already hash-bound. This closes only local production and receipt gaps; human listening and every publication, source, dedup, live-parity, channel, and owner gate remain blocked.",
+  "calendar": {
+    "path": ".system_control/content_calendar.json",
+    "after_file_sha256": "978B5C91453D548E1285193A80428F7936CCCE052BE7ED2D6B9739969A762D23",
+    "after_canonical_sha256": "A7DC57B51EA25472DC61CF73F93B0E96ED8325203BE934EC08DD89C22ED26161"
+  },
+  "evidence": {
+    "pack": {
+      "path": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+      "sha256": "0ACD60E0D44F689841C8AAF2C7AF1ADAADA6A5E03CCCAF87C3B626BE84A21A28"
+    },
+    "superseded_plan": {
+      "path": "automation-log/TIKTOK-REACTIVATION-PLAN_20260817-30.md",
+      "sha256": "69734CD2D4BDC5D6AEFE144D7A5686344CD0C840D0A0BF754FF32947E1BE8A30"
+    }
+  },
+  "supersedes": {
+    "tt-r14-08": "wk36-sf01",
+    "tt-r14-09": "wk36-sf02",
+    "tt-r14-10": "qt-12",
+    "tt-r14-11": "wk36-sf03",
+    "tt-r14-12": "wk36-sf04",
+    "tt-r14-13": "qt-13",
+    "tt-r14-14": "wk36-sf05"
+  },
+  "superseded_plan_bindings": {
+    "tt-r14-08": {
+      "candidate_id": "wk36-sf01",
+      "plan_row_canonical_sha256": "25510040B568F0A0CC02F64D03A4E3A660C8B6A36676B5851D0912DC1BFF808F"
+    },
+    "tt-r14-09": {
+      "candidate_id": "wk36-sf02",
+      "plan_row_canonical_sha256": "3C1616A6AB125F78F9D4A3FDF7B88D8CFDEAFD06D017737A96ACD24A8221D3E1"
+    },
+    "tt-r14-10": {
+      "candidate_id": "qt-12",
+      "plan_row_canonical_sha256": "E670B774678F65EC9A0343497B460D962465A560A9B6E21415D881F72D0E29C7"
+    },
+    "tt-r14-11": {
+      "candidate_id": "wk36-sf03",
+      "plan_row_canonical_sha256": "E29F42B923D9EBC13A6368355E3F84395CEE49845724A69732D6B0456DB91224"
+    },
+    "tt-r14-12": {
+      "candidate_id": "wk36-sf04",
+      "plan_row_canonical_sha256": "4FD3FC743F064A67EEC46617DB53988BB232343673A1B5AEB40DF7FC202421B9"
+    },
+    "tt-r14-13": {
+      "candidate_id": "qt-13",
+      "plan_row_canonical_sha256": "01FED0E217013898455D8B3B72E38FF67CB6C27FA779F978BD2A741B9F9AF9F2"
+    },
+    "tt-r14-14": {
+      "candidate_id": "wk36-sf05",
+      "plan_row_canonical_sha256": "AE1624C59CCBE9048649EE3527BCE9DDB63810775C7AD8AAFC62D979EA24276A"
+    }
+  },
+  "replacement_bindings": {
+    "wk36-sf01__tiktok_main": {
+      "source_field": "threads_text",
+      "caption_sha256": "74F16E1C0DC09880F83E8C82DA25087EFC150FD25C80A6779DA56E8AC68836BE",
+      "asset": "reels/week-20260824-30-r5/2026-08-24_wk36-sf01.mp4",
+      "asset_sha256": "ADB59197D732993C69435D15456B9C227F8A8072EF2133E9933D8DE376D88CEC",
+      "media_receipt": "automation-log/media-qa/wk36-sf01-tiktok-video-r5.json",
+      "media_receipt_sha256": "7EA8F4A2626A93A3A59E0D4983C5C2324754BCD88E8411DA5B8539B30C6FC9BF",
+      "placement_canonical_sha256": "C3C0B749426249F874659FDE55D12F69A8DCAD9FD17C853C7730921C9461782C",
+      "limitation": "HUMAN_LISTENING_NOT_RUN",
+      "remaining_blockers": ["publication_authority", "channel_review", "per_piece_owner_confirmation", "official_source_review", "live_tiktok_history_dedup", "live_landing_parity", "bio_route_parity", "human_listening_not_run"]
+    },
+    "wk36-sf02__tiktok_main": {
+      "source_field": "threads_text",
+      "caption_sha256": "862AADCB1BB95F42E9360FADA5AAC67B2C933394D008E6CA9D85F2EFAC3B36C3",
+      "asset": "reels/week-20260824-30-r5/2026-08-25_wk36-sf02.mp4",
+      "asset_sha256": "BF204A23D83820DABF941D62C4D4F93EA79753A42AB24A150D800BAC9790A61B",
+      "media_receipt": "automation-log/media-qa/wk36-sf02-tiktok-video-r5.json",
+      "media_receipt_sha256": "1FE8E70CF890292E41B2F798951518D6B1FFEA625D1D900426AD6D2E8A8F7F13",
+      "placement_canonical_sha256": "17BA63ADB65C8B511F3EE0F4389641B41F6C0E20D3D683C4F0C9F0288E910185",
+      "limitation": "HUMAN_LISTENING_NOT_RUN",
+      "remaining_blockers": ["publication_authority", "channel_review", "per_piece_owner_confirmation", "official_source_review", "live_tiktok_history_dedup", "live_landing_parity", "bio_route_parity", "human_listening_not_run"]
+    },
+    "qt-12__tiktok_main": {
+      "source_field": "threads_text",
+      "caption_sha256": "34C41FE6464BC468F2691F1A9BEE5B3DCF860DFABDD5FED6494CE3FAA093B1EB",
+      "asset": "reels/week-20260824-30-r5/2026-08-26_qt-12.mp4",
+      "asset_sha256": "5302D53836218A0F1664F6058B58B73368382E2AF041F00EE98C38D1556DA1FA",
+      "media_receipt": "automation-log/media-qa/qt-12-tiktok-video-r5.json",
+      "media_receipt_sha256": "921884BDDD4F23BF6521AAB43FA88840894180782D37468295DA21DC4EE60ECC",
+      "placement_canonical_sha256": "DD25A07C5EB80C3D942F847CD576424482AFFFA63333690F26E53B234CA973DB",
+      "limitation": "HUMAN_LISTENING_NOT_RUN",
+      "remaining_blockers": ["publication_authority", "channel_review", "per_piece_owner_confirmation", "official_source_review", "live_tiktok_history_dedup", "live_landing_parity", "bio_route_parity", "human_listening_not_run"]
+    },
+    "wk36-sf03__tiktok_main": {
+      "source_field": "threads_text",
+      "caption_sha256": "E4B5E05AEB9DB8C9A1AA346CADB7141A7C3F0491338FD31B71955895E6215D19",
+      "asset": "reels/week-20260824-30-r5/2026-08-27_wk36-sf03.mp4",
+      "asset_sha256": "E8B87B3D1A97A0517068F90FD12237439F97E31EC08AA12E279E52312F3723D0",
+      "media_receipt": "automation-log/media-qa/wk36-sf03-tiktok-video-r5.json",
+      "media_receipt_sha256": "B6B035414F7980441B34329BBAFE713CC731502C3E4236EE045DEC90851FC88D",
+      "placement_canonical_sha256": "D0B1B8BEB4E2704C488DB9DF525C078B34A40C9B06667D2B162C37461992C339",
+      "limitation": "HUMAN_LISTENING_NOT_RUN",
+      "remaining_blockers": ["publication_authority", "channel_review", "per_piece_owner_confirmation", "official_source_review", "live_tiktok_history_dedup", "live_landing_parity", "bio_route_parity", "human_listening_not_run"]
+    },
+    "wk36-sf04__tiktok_main": {
+      "source_field": "threads_text",
+      "caption_sha256": "9B0539BB1FA6683FC7989CD3F7245256C4B28BFFCC63F764F6BA0F4DC5EED38C",
+      "asset": "reels/week-20260824-30-r5/2026-08-28_wk36-sf04.mp4",
+      "asset_sha256": "CEA93EA3E6E7944FE7E4BC9D1E5104121DE250329A5AB33C4FFBFB8C06AEF11C",
+      "media_receipt": "automation-log/media-qa/wk36-sf04-tiktok-video-r5.json",
+      "media_receipt_sha256": "B63416F602083C5B138B825EBFF5C0C75C2B1A45133AEE706CD8F620BE063182",
+      "placement_canonical_sha256": "D4FF8FC4936F52F0212E05023981DAA8D7FEC219330B537CBE8AAB7F1BD080AD",
+      "limitation": "HUMAN_LISTENING_NOT_RUN",
+      "remaining_blockers": ["publication_authority", "channel_review", "per_piece_owner_confirmation", "official_source_review", "live_tiktok_history_dedup", "live_landing_parity", "bio_route_parity", "human_listening_not_run"]
+    },
+    "qt-13__tiktok_main": {
+      "source_field": "threads_text",
+      "caption_sha256": "86FF3385C34BD7BB3B9D1ABD073AB94DA5008456E8FE542CA00F2EEE0B5945D6",
+      "asset": "reels/week-20260824-30-r5/2026-08-29_qt-13.mp4",
+      "asset_sha256": "01299233BA32AAA1400076C5575D9DEEEE649D287C14EB0589B64972CBDBC12C",
+      "media_receipt": "automation-log/media-qa/qt-13-tiktok-video-r5.json",
+      "media_receipt_sha256": "A899C6CBC7E0C64995B3FCA8AFE9601AC6744FFEA71773C878C7DEC3BA3FB24D",
+      "placement_canonical_sha256": "9FFB0F7D39D333DC7BBA9808EF0EA1F6169C0BF736C54A7B4D248E8F735BA7CC",
+      "limitation": "HUMAN_LISTENING_NOT_RUN",
+      "remaining_blockers": ["publication_authority", "channel_review", "per_piece_owner_confirmation", "official_source_review", "live_tiktok_history_dedup", "live_landing_parity", "bio_route_parity", "human_listening_not_run"]
+    },
+    "wk36-sf05__tiktok_main": {
+      "source_field": "threads_text",
+      "caption_sha256": "42EA245D50015A04AB77188EE99BDA7C81277EECB8E3B5BD295157CF2978A63D",
+      "asset": "reels/week-20260824-30-r5/2026-08-30_wk36-sf05.mp4",
+      "asset_sha256": "CB733BDA1E5322ED90DE9DC48CF9BDD253417D5167FC547E05402F398940D1B1",
+      "media_receipt": "automation-log/media-qa/wk36-sf05-tiktok-video-r5.json",
+      "media_receipt_sha256": "F1736630469EB36E47B26ED4141E7A5ACEBFDC818B98EC7A0F30DD1386872D7D",
+      "placement_canonical_sha256": "DE35E743BDC1EB062069B0BE516C74A7C4CC9308E943571961A426DDAF43DDE2",
+      "limitation": "HUMAN_LISTENING_NOT_RUN",
+      "remaining_blockers": ["publication_authority", "channel_review", "per_piece_owner_confirmation", "official_source_review", "live_tiktok_history_dedup", "live_landing_parity", "bio_route_parity", "human_listening_not_run"]
+    }
+  },
+  "closed_local_gates": [
+    "SEVEN_EXACT_WEEK_PACK_SOURCE_BINDINGS",
+    "SEVEN_EXACT_ASSET_SHA256_BINDINGS",
+    "SEVEN_EXACT_MEDIA_RECEIPT_SHA256_BINDINGS",
+    "SEVEN_TECHNICAL_AND_WATERMARK_QA_RECEIPTS_PRESENT",
+    "NO_LINK_CAPTION_SOURCE_BOUND",
+    "REVERSIBLE_SUPERSEDES_MAP_BOUND"
+  ],
+  "remaining_blockers": [
+    "PUBLICATION_AUTHORITY_FALSE",
+    "PRIVATE_ONE_TIME_OWNER_RECEIPT_MISSING",
+    "OFFICIAL_SOURCE_REVIEW_BLOCKED",
+    "LIVE_TIKTOK_HISTORY_DEDUP_BLOCKED",
+    "LIVE_LANDING_AND_BIO_PARITY_BLOCKED",
+    "HUMAN_LISTENING_NOT_RUN",
+    "GLOBAL_PERMANENT_DEDUP_IDENTITY_COVERAGE_INCOMPLETE"
+  ],
+  "external_actions": {
+    "posted": false,
+    "scheduled": false,
+    "commented": false,
+    "deployed": false,
+    "tracker_opened": false
+  },
+  "authority_changes": {
+    "policy_mutated": false,
+    "role_capabilities_mutated": false,
+    "publication_authority_mutated": false,
+    "owner_receipt_minted": false
+  }
+}

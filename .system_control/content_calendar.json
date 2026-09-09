@@ -1,0 +1,2820 @@
+{
+  "schema_version": 1,
+  "calendar_id": "ngernduangold-editorial-plan-2026-08-17",
+  "purpose": "editorial_plan_only_no_publication",
+  "plan_as_of": "2026-08-16",
+  "not_before": "2026-08-17",
+  "timezone": "Asia/Bangkok",
+  "public_identity": {
+    "canonical_brand": "เงินเดือนสมองทอง",
+    "entity_type": "Organization",
+    "page_only": true,
+    "rule": "Public copy speaks only as the configured page; agents are internal operators."
+  },
+  "defaults": {
+    "status": "PLANNED_BLOCKED",
+    "publication_authorized": false,
+    "permanent_same_account_dedup": true
+  },
+  "accounts": {
+    "threads_main": {
+      "channel": "threads",
+      "policy_channel": "threads",
+      "public_speaker": "เงินเดือนสมองทอง",
+      "entity_type": "Organization",
+      "page_only": true
+    },
+    "facebook_main": {
+      "channel": "facebook",
+      "policy_channel": "facebook",
+      "public_speaker": "เงินเดือนสมองทอง",
+      "entity_type": "Organization",
+      "page_only": true
+    },
+    "facebook_page2": {
+      "channel": "facebook",
+      "policy_channel": "facebook",
+      "public_speaker": "สินเชื่อธนาคารถูกกฎหมาย",
+      "brand_owner": "เงินเดือนสมองทอง",
+      "entity_type": "Organization",
+      "page_only": true
+    },
+    "youtube_main": {
+      "channel": "youtube",
+      "policy_channel": "youtube",
+      "public_speaker": "เงินเดือนสมองทอง",
+      "entity_type": "Organization",
+      "page_only": true
+    },
+    "instagram_main": {
+      "channel": "instagram",
+      "policy_channel": "instagram",
+      "public_speaker": "เงินเดือนสมองทอง",
+      "entity_type": "Organization",
+      "page_only": true
+    },
+    "pinterest_main": {
+      "channel": "pinterest",
+      "policy_channel": "pinterest",
+      "public_speaker": "เงินเดือนสมองทอง",
+      "entity_type": "Organization",
+      "page_only": true
+    },
+    "tiktok_main": {
+      "channel": "tiktok",
+      "policy_channel": "tiktok",
+      "account_handle": "@ngernduangold",
+      "profile_url": "https://www.tiktok.com/@ngernduangold",
+      "target_verified_on": "2026-08-16",
+      "public_speaker": "เงินเดือนสมองทอง",
+      "entity_type": "Organization",
+      "page_only": true
+    }
+  },
+  "cta_catalog": {
+    "bot-app": {
+      "kind": "official_source",
+      "landing": "https://www.bot.or.th/th/bot-mobile-app.html"
+    },
+    "bot-youth": {
+      "kind": "official_source",
+      "landing": "https://www.bot.or.th/th/news-and-media/news/news-20260731-2.html"
+    },
+    "loan-compare": {
+      "kind": "internal_guide",
+      "landing": "/loan-approval-compare"
+    },
+    "salary-budget": {
+      "kind": "internal_tool",
+      "landing": "/salary-budgeting-2026"
+    },
+    "card-payoff": {
+      "kind": "internal_tool",
+      "landing": "/pay-off-credit-card-debt-2026"
+    },
+    "debt-restructure": {
+      "kind": "internal_guide",
+      "landing": "/debt-restructuring-2026"
+    },
+    "close-debt": {
+      "kind": "official_help_first",
+      "landing": "/close-debt-fast-2026",
+      "forbidden_targets": [
+        "letter-kit-199"
+      ]
+    },
+    "legal-loan": {
+      "kind": "internal_safety_guide",
+      "landing": "/loan-online-legal-2026"
+    },
+    "home-refi": {
+      "kind": "internal_guide",
+      "landing": "/refinance-home-2026"
+    },
+    "your-data": {
+      "kind": "official_source",
+      "landing": "https://www.bot.or.th/th/financial-innovation/digital-finance/open-data/Your_Data_Project/utility-data.html"
+    },
+    "sec-check": {
+      "kind": "official_source",
+      "landing": "https://market.sec.or.th/LicenseCheck/Search?language=th"
+    },
+    "card-docs": {
+      "kind": "internal_checklist",
+      "landing": "/credit-card-documents-2026"
+    },
+    "about": {
+      "kind": "trust_page",
+      "landing": "/about"
+    },
+    "car-installment": {
+      "kind": "internal_guide",
+      "landing": "/car-still-installment-loan-2026"
+    },
+    "p2-profile": {
+      "kind": "profile_link",
+      "landing": "/links?utm_source=fb2&utm_medium=bio",
+      "body_url_allowed": false
+    },
+    "quote-profile": {
+      "kind": "profile_tools",
+      "landing": "/links",
+      "body_url_allowed": false
+    },
+    "salary30k": {
+      "kind": "internal_article",
+      "landing": "/credit-card-salary-30000-2026"
+    },
+    "tiktok-no-link": {
+      "kind": "no_link",
+      "landing": null,
+      "body_url_allowed": false,
+      "enabled": false,
+      "until_gate": "LIVE_LANDING_PARITY"
+    }
+  },
+  "content_sets": {
+    "knowledge": {
+      "source_file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+      "ids": [
+        "kn-30",
+        "kn-31",
+        "kn-32",
+        "kn-33",
+        "kn-34",
+        "kn-35",
+        "kn-36",
+        "kn-37",
+        "kn-38",
+        "kn-39",
+        "kn-40",
+        "kn-41",
+        "kn-42",
+        "kn-43",
+        "kn-44"
+      ],
+      "required_accounts": [
+        "threads_main",
+        "facebook_main"
+      ]
+    },
+    "weekly_replacements": {
+      "source_file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+      "ids": [
+        "wk36-sf02",
+        "wk36-sf03",
+        "wk36-sf04",
+        "wk36-sf05"
+      ],
+      "required_accounts": [
+        "threads_main",
+        "facebook_main"
+      ],
+      "selection_mode": "OWNER_AUTHORIZED_LOCAL_PLAN_REPLACEMENT",
+      "supersedes": {
+        "kn-38": "wk36-sf02",
+        "kn-40": "wk36-sf03",
+        "kn-41": "wk36-sf04",
+        "kn-43": "wk36-sf05"
+      },
+      "change_receipt": "automation-log/CONTENT-CALENDAR-CHANGE-RECEIPT_20260824_WK36-SF02.json",
+      "pack_sha256": "0ACD60E0D44F689841C8AAF2C7AF1ADAADA6A5E03CCCAF87C3B626BE84A21A28",
+      "freshness_receipt": {
+        "path": "automation-log/WEEK-CONTENT-FRESHNESS_20260823.json",
+        "sha256": "258D82CD9A6FB7E69F85F899DE83FAB9D33956FE8350447A4F5E0BB87F4E7ED2"
+      },
+      "novelty_receipt": {
+        "path": "automation-log/dedup-evidence/WEEK-CONTENT-R5-NOVELTY-RECEIPT_20260823.json",
+        "sha256": "F648CBBAD16409D7A2A1FDB73939B2ADE225FE064C4BDC5C9A7929AC516B4053"
+      }
+    },
+    "facebook_page2": {
+      "source_file": "automation-log/PAGE2-POSTS-B_20260818-0915.md",
+      "ids": [
+        "p2-09",
+        "p2-10",
+        "p2-11",
+        "p2-12",
+        "p2-13",
+        "p2-14",
+        "p2-15",
+        "p2-16"
+      ],
+      "required_accounts": [
+        "facebook_page2"
+      ]
+    },
+    "held_quotes": {
+      "source_file": "automation-log/QUOTE-CARDS_20260723-0822.md",
+      "ids": [
+        "qt-12",
+        "qt-13",
+        "qt-14"
+      ],
+      "required_accounts": [
+        "facebook_main",
+        "instagram_main",
+        "pinterest_main"
+      ]
+    },
+    "held_video": {
+      "source_file": "automation-log/BATCH4-PILOT_20260816.md",
+      "ids": [
+        "b4-p01"
+      ],
+      "required_accounts": [
+        "youtube_main",
+        "threads_main",
+        "facebook_main",
+        "instagram_main"
+      ]
+    },
+    "tiktok_reactivation": {
+      "source_file": "automation-log/TIKTOK-REACTIVATION-PLAN_20260817-30.md",
+      "ids": [
+        "b4-p01",
+        "b3-05",
+        "b3-06",
+        "b3-01",
+        "b3-02",
+        "b3-03",
+        "b3-04",
+        "tt-r14-08",
+        "tt-r14-09",
+        "tt-r14-10",
+        "tt-r14-11",
+        "tt-r14-12",
+        "tt-r14-13",
+        "tt-r14-14"
+      ],
+      "required_accounts": [
+        "tiktok_main"
+      ],
+      "reservation_only": true,
+      "excluded_ids": {
+        "b3-07": "semantic overlay mismatch"
+      },
+      "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY"
+    },
+    "tiktok_week_replacements": {
+      "source_file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+      "ids": [
+        "wk36-sf01",
+        "wk36-sf02",
+        "qt-12",
+        "wk36-sf03",
+        "wk36-sf04",
+        "qt-13",
+        "wk36-sf05"
+      ],
+      "required_accounts": [
+        "tiktok_main"
+      ],
+      "selection_mode": "OWNER_AUTHORIZED_LOCAL_PLAN_REPLACEMENT",
+      "supersedes": {
+        "tt-r14-08": "wk36-sf01",
+        "tt-r14-09": "wk36-sf02",
+        "tt-r14-10": "qt-12",
+        "tt-r14-11": "wk36-sf03",
+        "tt-r14-12": "wk36-sf04",
+        "tt-r14-13": "qt-13",
+        "tt-r14-14": "wk36-sf05"
+      },
+      "change_receipt": "automation-log/TIKTOK-WEEK-REPLACEMENT-RECEIPT_20260824_R5.json",
+      "pack_sha256": "0ACD60E0D44F689841C8AAF2C7AF1ADAADA6A5E03CCCAF87C3B626BE84A21A28",
+      "reservation_only": true,
+      "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY"
+    }
+  },
+  "placements": [
+    {
+      "placement_id": "kn-30__threads_main",
+      "content_id": "kn-30",
+      "topic": "ใช้แอป ธปท. หาเรื่องการเงินจากต้นทาง",
+      "date": "2026-08-17",
+      "time": "12:40",
+      "account": "threads_main",
+      "source": {
+        "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+        "row_id": "kn-30",
+        "field": "threads_text"
+      },
+      "adaptation": "short_text_no_body_url_reply_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "bot-app",
+      "source_ids": [
+        "bot-mobile-app",
+        "bot-mobile-app-launch"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "kn-30__facebook_main",
+      "content_id": "kn-30",
+      "topic": "ใช้แอป ธปท. หาเรื่องการเงินจากต้นทาง",
+      "date": "2026-08-17",
+      "time": "12:50",
+      "account": "facebook_main",
+      "source": {
+        "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+        "row_id": "kn-30",
+        "field": "fb_text"
+      },
+      "adaptation": "long_text_first_comment_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "bot-app",
+      "source_ids": [
+        "bot-mobile-app",
+        "bot-mobile-app-launch"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "kn-31__threads_main",
+      "content_id": "kn-31",
+      "topic": "บัญชีเยาวชนกับขีดจำกัดการโอน",
+      "date": "2026-08-18",
+      "time": "12:40",
+      "account": "threads_main",
+      "source": {
+        "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+        "row_id": "kn-31",
+        "field": "threads_text"
+      },
+      "adaptation": "short_text_no_body_url_reply_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "bot-youth",
+      "source_ids": [
+        "bot-youth-transfer-controls"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "kn-31__facebook_main",
+      "content_id": "kn-31",
+      "topic": "บัญชีเยาวชนกับขีดจำกัดการโอน",
+      "date": "2026-08-18",
+      "time": "12:50",
+      "account": "facebook_main",
+      "source": {
+        "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+        "row_id": "kn-31",
+        "field": "fb_text"
+      },
+      "adaptation": "long_text_first_comment_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "bot-youth",
+      "source_ids": [
+        "bot-youth-transfer-controls"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "kn-32__threads_main",
+      "content_id": "kn-32",
+      "topic": "อ่านรายงานภาวะสินเชื่อให้เป็น",
+      "date": "2026-08-19",
+      "time": "12:40",
+      "account": "threads_main",
+      "source": {
+        "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+        "row_id": "kn-32",
+        "field": "threads_text"
+      },
+      "adaptation": "short_text_no_body_url_reply_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "loan-compare",
+      "source_ids": [
+        "bot-loan-survey-q2-2026"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "kn-32__facebook_main",
+      "content_id": "kn-32",
+      "topic": "อ่านรายงานภาวะสินเชื่อให้เป็น",
+      "date": "2026-08-19",
+      "time": "12:50",
+      "account": "facebook_main",
+      "source": {
+        "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+        "row_id": "kn-32",
+        "field": "fb_text"
+      },
+      "adaptation": "long_text_first_comment_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "loan-compare",
+      "source_ids": [
+        "bot-loan-survey-q2-2026"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "kn-33__threads_main",
+      "content_id": "kn-33",
+      "topic": "ข่าวเศรษฐกิจเกี่ยวกับงบส่วนตัวอย่างไร",
+      "date": "2026-08-20",
+      "time": "12:40",
+      "account": "threads_main",
+      "source": {
+        "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+        "row_id": "kn-33",
+        "field": "threads_text"
+      },
+      "adaptation": "short_text_no_body_url_reply_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "salary-budget",
+      "source_ids": [
+        "bot-economy-q2-2026"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "kn-33__facebook_main",
+      "content_id": "kn-33",
+      "topic": "ข่าวเศรษฐกิจเกี่ยวกับงบส่วนตัวอย่างไร",
+      "date": "2026-08-20",
+      "time": "12:50",
+      "account": "facebook_main",
+      "source": {
+        "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+        "row_id": "kn-33",
+        "field": "fb_text"
+      },
+      "adaptation": "long_text_first_comment_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "salary-budget",
+      "source_ids": [
+        "bot-economy-q2-2026"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "kn-34__threads_main",
+      "content_id": "kn-34",
+      "topic": "จ่ายขั้นต่ำบัตรแล้วหนี้ลดแค่ไหน",
+      "date": "2026-08-21",
+      "time": "12:40",
+      "account": "threads_main",
+      "source": {
+        "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+        "row_id": "kn-34",
+        "field": "threads_text"
+      },
+      "adaptation": "short_text_no_body_url_reply_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "card-payoff",
+      "source_ids": [
+        "bot-card-minimum-2026",
+        "bot-happy-debtor"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "kn-34__facebook_main",
+      "content_id": "kn-34",
+      "topic": "จ่ายขั้นต่ำบัตรแล้วหนี้ลดแค่ไหน",
+      "date": "2026-08-21",
+      "time": "12:50",
+      "account": "facebook_main",
+      "source": {
+        "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+        "row_id": "kn-34",
+        "field": "fb_text"
+      },
+      "adaptation": "long_text_first_comment_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "card-payoff",
+      "source_ids": [
+        "bot-card-minimum-2026",
+        "bot-happy-debtor"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "kn-35__threads_main",
+      "content_id": "kn-35",
+      "topic": "ปรับโครงสร้างหนี้ต่างจากรีไฟแนนซ์",
+      "date": "2026-08-22",
+      "time": "12:40",
+      "account": "threads_main",
+      "source": {
+        "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+        "row_id": "kn-35",
+        "field": "threads_text"
+      },
+      "adaptation": "short_text_no_body_url_reply_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "debt-restructure",
+      "source_ids": [
+        "bot-consumer-loan-restructuring"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "kn-35__facebook_main",
+      "content_id": "kn-35",
+      "topic": "ปรับโครงสร้างหนี้ต่างจากรีไฟแนนซ์",
+      "date": "2026-08-22",
+      "time": "12:50",
+      "account": "facebook_main",
+      "source": {
+        "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+        "row_id": "kn-35",
+        "field": "fb_text"
+      },
+      "adaptation": "long_text_first_comment_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "debt-restructure",
+      "source_ids": [
+        "bot-consumer-loan-restructuring"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "kn-36__threads_main",
+      "content_id": "kn-36",
+      "topic": "เช็กสิทธิ์โครงการปิดหนี้ไวจากต้นทาง",
+      "date": "2026-08-23",
+      "time": "12:40",
+      "account": "threads_main",
+      "source": {
+        "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+        "row_id": "kn-36",
+        "field": "threads_text"
+      },
+      "adaptation": "short_text_no_body_url_reply_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "close-debt",
+      "source_ids": [
+        "bot-clear-debt-news",
+        "bot-clear-debt"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "kn-36__facebook_main",
+      "content_id": "kn-36",
+      "topic": "เช็กสิทธิ์โครงการปิดหนี้ไวจากต้นทาง",
+      "date": "2026-08-23",
+      "time": "12:50",
+      "account": "facebook_main",
+      "source": {
+        "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+        "row_id": "kn-36",
+        "field": "fb_text"
+      },
+      "adaptation": "long_text_first_comment_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "close-debt",
+      "source_ids": [
+        "bot-clear-debt-news",
+        "bot-clear-debt"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "kn-37__threads_main",
+      "content_id": "kn-37",
+      "topic": "ตรวจแอปเงินกู้และใบอนุญาต",
+      "date": "2026-08-24",
+      "time": "12:40",
+      "account": "threads_main",
+      "source": {
+        "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+        "row_id": "kn-37",
+        "field": "threads_text"
+      },
+      "adaptation": "short_text_no_body_url_reply_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "legal-loan",
+      "source_ids": [
+        "bot-license-check",
+        "bot-license-loan"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "kn-37__facebook_main",
+      "content_id": "kn-37",
+      "topic": "ตรวจแอปเงินกู้และใบอนุญาต",
+      "date": "2026-08-24",
+      "time": "12:50",
+      "account": "facebook_main",
+      "source": {
+        "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+        "row_id": "kn-37",
+        "field": "fb_text"
+      },
+      "adaptation": "long_text_first_comment_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "legal-loan",
+      "source_ids": [
+        "bot-license-check",
+        "bot-license-loan"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "wk36-sf02__threads_main",
+      "content_id": "wk36-sf02",
+      "topic": "\u0e1e\u0e31\u0e01\u0e01\u0e32\u0e23\u0e15\u0e31\u0e14\u0e2a\u0e34\u0e19\u0e43\u0e08\u0e2b\u0e19\u0e36\u0e48\u0e07\u0e04\u0e37\u0e19",
+      "date": "2026-08-25",
+      "time": "12:40",
+      "account": "threads_main",
+      "source": {
+        "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+        "row_id": "wk36-sf02",
+        "field": "threads_text"
+      },
+      "adaptation": "short_text_no_body_url_profile_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "quote-profile",
+      "source_ids": [],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "permanent_dedup_coverage"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "NOT_REQUIRED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS",
+        "evergreen_exact_copy": "PASS",
+        "candidate_novelty": "PASS_PER_ITEM",
+        "global_permanent_dedup": "BLOCKED"
+      },
+      "replacement_provenance": {
+        "supersedes_placement_id": "kn-38__threads_main",
+        "supersedes_content_id": "kn-38",
+        "candidate_id": "wk36-sf02",
+        "change_receipt": "automation-log/CONTENT-CALENDAR-CHANGE-RECEIPT_20260824_WK36-SF02.json"
+      }
+    },
+    {
+      "placement_id": "wk36-sf02__facebook_main",
+      "content_id": "wk36-sf02",
+      "topic": "\u0e1e\u0e31\u0e01\u0e01\u0e32\u0e23\u0e15\u0e31\u0e14\u0e2a\u0e34\u0e19\u0e43\u0e08\u0e2b\u0e19\u0e36\u0e48\u0e07\u0e04\u0e37\u0e19",
+      "date": "2026-08-25",
+      "time": "12:50",
+      "account": "facebook_main",
+      "source": {
+        "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+        "row_id": "wk36-sf02",
+        "field": "facebook_text"
+      },
+      "adaptation": "long_text_no_body_url_profile_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "quote-profile",
+      "source_ids": [],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "permanent_dedup_coverage"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "NOT_REQUIRED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS",
+        "evergreen_exact_copy": "PASS",
+        "candidate_novelty": "PASS_PER_ITEM",
+        "global_permanent_dedup": "BLOCKED"
+      },
+      "replacement_provenance": {
+        "supersedes_placement_id": "kn-38__facebook_main",
+        "supersedes_content_id": "kn-38",
+        "candidate_id": "wk36-sf02",
+        "change_receipt": "automation-log/CONTENT-CALENDAR-CHANGE-RECEIPT_20260824_WK36-SF02.json"
+      }
+    },
+    {
+      "placement_id": "kn-39__threads_main",
+      "content_id": "kn-39",
+      "topic": "Your Data และสิทธิ์ควบคุมข้อมูลของเรา",
+      "date": "2026-08-26",
+      "time": "12:40",
+      "account": "threads_main",
+      "source": {
+        "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+        "row_id": "kn-39",
+        "field": "threads_text"
+      },
+      "adaptation": "short_text_no_body_url_reply_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "your-data",
+      "source_ids": [
+        "bot-utility-data",
+        "bot-your-data-rules",
+        "bot-your-data-criteria"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "kn-39__facebook_main",
+      "content_id": "kn-39",
+      "topic": "Your Data และสิทธิ์ควบคุมข้อมูลของเรา",
+      "date": "2026-08-26",
+      "time": "12:50",
+      "account": "facebook_main",
+      "source": {
+        "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+        "row_id": "kn-39",
+        "field": "fb_text"
+      },
+      "adaptation": "long_text_first_comment_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "your-data",
+      "source_ids": [
+        "bot-utility-data",
+        "bot-your-data-rules",
+        "bot-your-data-criteria"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "wk36-sf03__threads_main",
+      "content_id": "wk36-sf03",
+      "topic": "ทบทวนคุณค่าของรายจ่าย",
+      "date": "2026-08-27",
+      "time": "12:40",
+      "account": "threads_main",
+      "source": {
+        "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+        "row_id": "wk36-sf03",
+        "field": "threads_text"
+      },
+      "adaptation": "short_text_no_body_url_profile_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "quote-profile",
+      "source_ids": [],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "permanent_dedup_coverage"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "NOT_REQUIRED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS",
+        "evergreen_exact_copy": "PASS",
+        "candidate_novelty": "PASS_PER_ITEM",
+        "global_permanent_dedup": "BLOCKED"
+      },
+      "replacement_provenance": {
+        "supersedes_placement_id": "kn-40__threads_main",
+        "supersedes_content_id": "kn-40",
+        "candidate_id": "wk36-sf03",
+        "change_receipt": "automation-log/CONTENT-CALENDAR-CHANGE-RECEIPT_20260824_WK36-SF02.json"
+      }
+    },
+    {
+      "placement_id": "wk36-sf03__facebook_main",
+      "content_id": "wk36-sf03",
+      "topic": "ทบทวนคุณค่าของรายจ่าย",
+      "date": "2026-08-27",
+      "time": "12:50",
+      "account": "facebook_main",
+      "source": {
+        "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+        "row_id": "wk36-sf03",
+        "field": "facebook_text"
+      },
+      "adaptation": "long_text_no_body_url_profile_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "quote-profile",
+      "source_ids": [],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "permanent_dedup_coverage"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "NOT_REQUIRED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS",
+        "evergreen_exact_copy": "PASS",
+        "candidate_novelty": "PASS_PER_ITEM",
+        "global_permanent_dedup": "BLOCKED"
+      },
+      "replacement_provenance": {
+        "supersedes_placement_id": "kn-40__facebook_main",
+        "supersedes_content_id": "kn-40",
+        "candidate_id": "wk36-sf03",
+        "change_receipt": "automation-log/CONTENT-CALENDAR-CHANGE-RECEIPT_20260824_WK36-SF02.json"
+      }
+    },
+    {
+      "placement_id": "wk36-sf04__threads_main",
+      "content_id": "wk36-sf04",
+      "topic": "จดรายจ่ายโดยไม่ตัดสินตัวเอง",
+      "date": "2026-08-28",
+      "time": "12:40",
+      "account": "threads_main",
+      "source": {
+        "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+        "row_id": "wk36-sf04",
+        "field": "threads_text"
+      },
+      "adaptation": "short_text_no_body_url_profile_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "quote-profile",
+      "source_ids": [],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "permanent_dedup_coverage"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "NOT_REQUIRED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS",
+        "evergreen_exact_copy": "PASS",
+        "candidate_novelty": "PASS_PER_ITEM",
+        "global_permanent_dedup": "BLOCKED"
+      },
+      "replacement_provenance": {
+        "supersedes_placement_id": "kn-41__threads_main",
+        "supersedes_content_id": "kn-41",
+        "candidate_id": "wk36-sf04",
+        "change_receipt": "automation-log/CONTENT-CALENDAR-CHANGE-RECEIPT_20260824_WK36-SF02.json"
+      }
+    },
+    {
+      "placement_id": "wk36-sf04__facebook_main",
+      "content_id": "wk36-sf04",
+      "topic": "จดรายจ่ายโดยไม่ตัดสินตัวเอง",
+      "date": "2026-08-28",
+      "time": "12:50",
+      "account": "facebook_main",
+      "source": {
+        "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+        "row_id": "wk36-sf04",
+        "field": "facebook_text"
+      },
+      "adaptation": "long_text_no_body_url_profile_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "quote-profile",
+      "source_ids": [],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "permanent_dedup_coverage"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "NOT_REQUIRED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS",
+        "evergreen_exact_copy": "PASS",
+        "candidate_novelty": "PASS_PER_ITEM",
+        "global_permanent_dedup": "BLOCKED"
+      },
+      "replacement_provenance": {
+        "supersedes_placement_id": "kn-41__facebook_main",
+        "supersedes_content_id": "kn-41",
+        "candidate_id": "wk36-sf04",
+        "change_receipt": "automation-log/CONTENT-CALENDAR-CHANGE-RECEIPT_20260824_WK36-SF02.json"
+      }
+    },
+    {
+      "placement_id": "kn-42__threads_main",
+      "content_id": "kn-42",
+      "topic": "อ่านโฆษณาสินเชื่อแบบไม่หลงคำเร่ง",
+      "date": "2026-08-29",
+      "time": "12:40",
+      "account": "threads_main",
+      "source": {
+        "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+        "row_id": "kn-42",
+        "field": "threads_text"
+      },
+      "adaptation": "short_text_no_body_url_reply_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "loan-compare",
+      "source_ids": [
+        "bot-responsible-lending-pdf"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "kn-42__facebook_main",
+      "content_id": "kn-42",
+      "topic": "อ่านโฆษณาสินเชื่อแบบไม่หลงคำเร่ง",
+      "date": "2026-08-29",
+      "time": "12:50",
+      "account": "facebook_main",
+      "source": {
+        "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+        "row_id": "kn-42",
+        "field": "fb_text"
+      },
+      "adaptation": "long_text_first_comment_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "loan-compare",
+      "source_ids": [
+        "bot-responsible-lending-pdf"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "wk36-sf05__threads_main",
+      "content_id": "wk36-sf05",
+      "topic": "วางแผนสามการตัดสินใจสำหรับสัปดาห์หน้า",
+      "date": "2026-08-30",
+      "time": "12:40",
+      "account": "threads_main",
+      "source": {
+        "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+        "row_id": "wk36-sf05",
+        "field": "threads_text"
+      },
+      "adaptation": "short_text_no_body_url_profile_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "quote-profile",
+      "source_ids": [],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "permanent_dedup_coverage"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "NOT_REQUIRED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS",
+        "evergreen_exact_copy": "PASS",
+        "candidate_novelty": "PASS_PER_ITEM",
+        "global_permanent_dedup": "BLOCKED"
+      },
+      "replacement_provenance": {
+        "supersedes_placement_id": "kn-43__threads_main",
+        "supersedes_content_id": "kn-43",
+        "candidate_id": "wk36-sf05",
+        "change_receipt": "automation-log/CONTENT-CALENDAR-CHANGE-RECEIPT_20260824_WK36-SF02.json"
+      }
+    },
+    {
+      "placement_id": "wk36-sf05__facebook_main",
+      "content_id": "wk36-sf05",
+      "topic": "วางแผนสามการตัดสินใจสำหรับสัปดาห์หน้า",
+      "date": "2026-08-30",
+      "time": "12:50",
+      "account": "facebook_main",
+      "source": {
+        "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+        "row_id": "wk36-sf05",
+        "field": "facebook_text"
+      },
+      "adaptation": "long_text_no_body_url_profile_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "quote-profile",
+      "source_ids": [],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "permanent_dedup_coverage"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "NOT_REQUIRED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS",
+        "evergreen_exact_copy": "PASS",
+        "candidate_novelty": "PASS_PER_ITEM",
+        "global_permanent_dedup": "BLOCKED"
+      },
+      "replacement_provenance": {
+        "supersedes_placement_id": "kn-43__facebook_main",
+        "supersedes_content_id": "kn-43",
+        "candidate_id": "wk36-sf05",
+        "change_receipt": "automation-log/CONTENT-CALENDAR-CHANGE-RECEIPT_20260824_WK36-SF02.json"
+      }
+    },
+    {
+      "placement_id": "kn-44__threads_main",
+      "content_id": "kn-44",
+      "topic": "รถยังผ่อนไม่หมดกับทางเลือกใช้รถหาเงินก้อน",
+      "date": "2026-08-31",
+      "time": "12:40",
+      "account": "threads_main",
+      "source": {
+        "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+        "row_id": "kn-44",
+        "field": "threads_text"
+      },
+      "adaptation": "short_text_no_body_url_reply_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "car-installment",
+      "source_ids": [
+        "bot-auto-loan-restructuring",
+        "bot-debt-management-basics",
+        "bot-hire-purchase-leasing",
+        "bot-license-loan",
+        "bot-secured-loan"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "kn-44__facebook_main",
+      "content_id": "kn-44",
+      "topic": "รถยังผ่อนไม่หมดกับทางเลือกใช้รถหาเงินก้อน",
+      "date": "2026-08-31",
+      "time": "12:50",
+      "account": "facebook_main",
+      "source": {
+        "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+        "row_id": "kn-44",
+        "field": "fb_text"
+      },
+      "adaptation": "long_text_first_comment_link_only",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "car-installment",
+      "source_ids": [
+        "bot-auto-loan-restructuring",
+        "bot-debt-management-basics",
+        "bot-hire-purchase-leasing",
+        "bot-license-loan",
+        "bot-secured-loan"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "p2-09__facebook_page2",
+      "content_id": "p2-09",
+      "topic": "รีไฟแนนซ์บ้านดูอะไรบ้างก่อนตัดสินใจย้าย",
+      "date": "2026-08-18",
+      "time": "15:50",
+      "account": "facebook_page2",
+      "source": {
+        "file": "automation-log/PAGE2-POSTS-B_20260818-0915.md",
+        "row_id": "p2-09",
+        "field": "fb_text"
+      },
+      "adaptation": "page2_search_intent_long_text_no_body_url",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "p2-profile",
+      "source_ids": [
+        "bot-before-loan",
+        "bot-secured-loan"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review",
+        "live_registry"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "p2-10__facebook_page2",
+      "content_id": "p2-10",
+      "topic": "สินเชื่อสวัสดิการต่างกับสินเชื่อทั่วไปยังไง",
+      "date": "2026-08-21",
+      "time": "15:50",
+      "account": "facebook_page2",
+      "source": {
+        "file": "automation-log/PAGE2-POSTS-B_20260818-0915.md",
+        "row_id": "p2-10",
+        "field": "fb_text"
+      },
+      "adaptation": "page2_search_intent_long_text_no_body_url",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "p2-profile",
+      "source_ids": [
+        "bot-before-loan",
+        "bot-responsible-lending-pdf"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review",
+        "live_registry"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "p2-11__facebook_page2",
+      "content_id": "p2-11",
+      "topic": "ค้ำประกันสินเชื่อให้คนอื่นเสี่ยงอะไรบ้าง",
+      "date": "2026-08-25",
+      "time": "15:50",
+      "account": "facebook_page2",
+      "source": {
+        "file": "automation-log/PAGE2-POSTS-B_20260818-0915.md",
+        "row_id": "p2-11",
+        "field": "fb_text"
+      },
+      "adaptation": "page2_search_intent_long_text_no_body_url",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "p2-profile",
+      "source_ids": [
+        "bot-before-loan",
+        "bot-responsible-lending-pdf"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review",
+        "live_registry"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "p2-12__facebook_page2",
+      "content_id": "p2-12",
+      "topic": "ขอสินเชื่อครั้งแรกเตรียมตัวยังไงให้พร้อม",
+      "date": "2026-08-28",
+      "time": "15:50",
+      "account": "facebook_page2",
+      "source": {
+        "file": "automation-log/PAGE2-POSTS-B_20260818-0915.md",
+        "row_id": "p2-12",
+        "field": "fb_text"
+      },
+      "adaptation": "page2_search_intent_long_text_no_body_url",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "p2-profile",
+      "source_ids": [
+        "bot-before-loan",
+        "bot-responsible-lending-pdf"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review",
+        "live_registry"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "p2-13__facebook_page2",
+      "content_id": "p2-13",
+      "topic": "เครดิตบูโรกระทบการขอสินเชื่อยังไง",
+      "date": "2026-09-01",
+      "time": "13:10",
+      "account": "facebook_page2",
+      "source": {
+        "file": "automation-log/PAGE2-POSTS-B_20260818-0915.md",
+        "row_id": "p2-13",
+        "field": "fb_text"
+      },
+      "adaptation": "page2_search_intent_long_text_no_body_url",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "p2-profile",
+      "source_ids": [
+        "bot-before-loan",
+        "bot-debt-management-basics"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review",
+        "live_registry"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "p2-14__facebook_page2",
+      "content_id": "p2-14",
+      "topic": "สินเชื่อนอกระบบสังเกตอันตรายยังไง",
+      "date": "2026-09-04",
+      "time": "13:10",
+      "account": "facebook_page2",
+      "source": {
+        "file": "automation-log/PAGE2-POSTS-B_20260818-0915.md",
+        "row_id": "p2-14",
+        "field": "fb_text"
+      },
+      "adaptation": "page2_search_intent_long_text_no_body_url",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "p2-profile",
+      "source_ids": [
+        "bot-license-loan",
+        "bot-license-check",
+        "bot-debt-management-basics"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review",
+        "live_registry"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "p2-15__facebook_page2",
+      "content_id": "p2-15",
+      "topic": "ปิดหนี้ก่อนกำหนดมีค่าปรับไหม ควรถามอะไร",
+      "date": "2026-09-08",
+      "time": "13:10",
+      "account": "facebook_page2",
+      "source": {
+        "file": "automation-log/PAGE2-POSTS-B_20260818-0915.md",
+        "row_id": "p2-15",
+        "field": "fb_text"
+      },
+      "adaptation": "page2_search_intent_long_text_no_body_url",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "p2-profile",
+      "source_ids": [
+        "bot-consumer-loan-restructuring",
+        "bot-responsible-lending-pdf"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review",
+        "live_registry"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "p2-16__facebook_page2",
+      "content_id": "p2-16",
+      "topic": "ผ่อนสั้น vs ผ่อนยาว เลือกแบบไหนเหมาะกับเรา",
+      "date": "2026-09-11",
+      "time": "13:10",
+      "account": "facebook_page2",
+      "source": {
+        "file": "automation-log/PAGE2-POSTS-B_20260818-0915.md",
+        "row_id": "p2-16",
+        "field": "fb_text"
+      },
+      "adaptation": "page2_search_intent_long_text_no_body_url",
+      "format": "text",
+      "media": null,
+      "media_receipt": null,
+      "cta_id": "p2-profile",
+      "source_ids": [
+        "bot-before-loan",
+        "bot-responsible-lending-pdf"
+      ],
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review",
+        "live_registry"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "NOT_REQUIRED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "qt-12__facebook_main",
+      "content_id": "qt-12",
+      "topic": "อย่าเอาสถานะการเงินของเราไปเทียบกับภาพชีวิตของคนอื่น เพราะเราไม่เห็นภาพการเงินทั้งหมดของเขา",
+      "date": "2026-08-26",
+      "time": "16:00",
+      "account": "facebook_main",
+      "source": {
+        "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+        "row_id": "qt-12",
+        "field": "facebook_text"
+      },
+      "adaptation": "platform_native_image_exact_pack_caption",
+      "format": "image",
+      "media": "media/quotes/week-20260824-30-r5/qt-12_fb-ig_4x5.jpg",
+      "media_receipt": "automation-log/media-qa/qt-12-fb-ig-image-r5.json",
+      "media_content_id": "qt-12-4x5-r5",
+      "cta_id": "quote-profile",
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "RESERVED_BLOCKED",
+      "blockers": [
+        "publication_authority"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "NOT_REQUIRED",
+        "media": "PASS",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "qt-12__instagram_main",
+      "content_id": "qt-12",
+      "topic": "อย่าเอาสถานะการเงินของเราไปเทียบกับภาพชีวิตของคนอื่น เพราะเราไม่เห็นภาพการเงินทั้งหมดของเขา",
+      "date": "2026-08-27",
+      "time": "19:00",
+      "account": "instagram_main",
+      "source": {
+        "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+        "row_id": "qt-12",
+        "field": "threads_text"
+      },
+      "adaptation": "platform_native_image_exact_pack_caption",
+      "format": "image",
+      "media": "media/quotes/week-20260824-30-r5/qt-12_fb-ig_4x5.jpg",
+      "media_receipt": "automation-log/media-qa/qt-12-fb-ig-image-r5.json",
+      "media_content_id": "qt-12-4x5-r5",
+      "cta_id": "quote-profile",
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "RESERVED_BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "channel_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "NOT_REQUIRED",
+        "media": "PASS",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "qt-12__pinterest_main",
+      "content_id": "qt-12",
+      "topic": "อย่าเอาสถานะการเงินของเราไปเทียบกับภาพชีวิตของคนอื่น เพราะเราไม่เห็นภาพการเงินทั้งหมดของเขา",
+      "date": "2026-08-30",
+      "time": "10:00",
+      "account": "pinterest_main",
+      "source": {
+        "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+        "row_id": "qt-12",
+        "field": "threads_text"
+      },
+      "adaptation": "two_by_three_pin_exact_pack_caption_profile_link_only",
+      "format": "image",
+      "media": "media/quotes/week-20260824-30-r5/qt-12_pinterest_2x3.jpg",
+      "media_receipt": "automation-log/media-qa/qt-12-pinterest-image-r5.json",
+      "media_content_id": "qt-12-2x3-r5",
+      "cta_id": "quote-profile",
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "RESERVED_BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "channel_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "NOT_REQUIRED",
+        "media": "PASS",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "qt-13__facebook_main",
+      "content_id": "qt-13",
+      "topic": "ต้นไม้ใหญ่ไม่ได้โตในวันเดียว เงินก้อนแรกก็เช่นกัน แค่ดูแลมันทุกเดือน",
+      "date": "2026-08-29",
+      "time": "16:00",
+      "account": "facebook_main",
+      "source": {
+        "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+        "row_id": "qt-13",
+        "field": "facebook_text"
+      },
+      "adaptation": "platform_native_image_exact_pack_caption",
+      "format": "image",
+      "media": "media/quotes/week-20260824-30-r5/qt-13_fb-ig_4x5.jpg",
+      "media_receipt": "automation-log/media-qa/qt-13-fb-ig-image-r5.json",
+      "media_content_id": "qt-13-4x5-r5",
+      "cta_id": "quote-profile",
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "RESERVED_BLOCKED",
+      "blockers": [
+        "publication_authority"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "NOT_REQUIRED",
+        "media": "PASS",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "qt-13__instagram_main",
+      "content_id": "qt-13",
+      "topic": "ต้นไม้ใหญ่ไม่ได้โตในวันเดียว เงินก้อนแรกก็เช่นกัน แค่ดูแลมันทุกเดือน",
+      "date": "2026-08-31",
+      "time": "19:00",
+      "account": "instagram_main",
+      "source": {
+        "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+        "row_id": "qt-13",
+        "field": "threads_text"
+      },
+      "adaptation": "platform_native_image_exact_pack_caption",
+      "format": "image",
+      "media": "media/quotes/week-20260824-30-r5/qt-13_fb-ig_4x5.jpg",
+      "media_receipt": "automation-log/media-qa/qt-13-fb-ig-image-r5.json",
+      "media_content_id": "qt-13-4x5-r5",
+      "cta_id": "quote-profile",
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "RESERVED_BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "channel_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "NOT_REQUIRED",
+        "media": "PASS",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "qt-13__pinterest_main",
+      "content_id": "qt-13",
+      "topic": "ต้นไม้ใหญ่ไม่ได้โตในวันเดียว เงินก้อนแรกก็เช่นกัน แค่ดูแลมันทุกเดือน",
+      "date": "2026-09-02",
+      "time": "10:00",
+      "account": "pinterest_main",
+      "source": {
+        "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+        "row_id": "qt-13",
+        "field": "threads_text"
+      },
+      "adaptation": "two_by_three_pin_exact_pack_caption_profile_link_only",
+      "format": "image",
+      "media": "media/quotes/week-20260824-30-r5/qt-13_pinterest_2x3.jpg",
+      "media_receipt": "automation-log/media-qa/qt-13-pinterest-image-r5.json",
+      "media_content_id": "qt-13-2x3-r5",
+      "cta_id": "quote-profile",
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "RESERVED_BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "channel_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "NOT_REQUIRED",
+        "media": "PASS",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "qt-14__facebook_main",
+      "content_id": "qt-14",
+      "topic": "อิสรภาพทางการเงินไม่ใช่การมีเงินไม่จำกัด",
+      "date": "2026-09-02",
+      "time": "16:00",
+      "account": "facebook_main",
+      "source": {
+        "file": "automation-log/QUOTE-CARDS_20260723-0822.md",
+        "row_id": "qt-14",
+        "field": "caption"
+      },
+      "adaptation": "source_exact_image_caption_profile_link_only",
+      "format": "image",
+      "media": "media/quotes/week-20260824-30-r5/qt-14_fb-ig_4x5.jpg",
+      "media_receipt": "automation-log/media-qa/qt-14-fb-ig-image-r5.json",
+      "media_content_id": "qt-14-4x5-r5",
+      "media_binding_receipt": "automation-log/QT14-MEDIA-BINDING-RECEIPT_20260830.json",
+      "cta_id": "quote-profile",
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "RESERVED_BLOCKED",
+      "blockers": [
+        "publication_authority"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "NOT_REQUIRED",
+        "media": "PASS",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "qt-14__instagram_main",
+      "content_id": "qt-14",
+      "topic": "อิสรภาพทางการเงินไม่ใช่การมีเงินไม่จำกัด",
+      "date": "2026-09-03",
+      "time": "19:00",
+      "account": "instagram_main",
+      "source": {
+        "file": "automation-log/QUOTE-CARDS_20260723-0822.md",
+        "row_id": "qt-14",
+        "field": "caption"
+      },
+      "adaptation": "source_exact_image_caption_profile_link_only",
+      "format": "image",
+      "media": "media/quotes/week-20260824-30-r5/qt-14_fb-ig_4x5.jpg",
+      "media_receipt": "automation-log/media-qa/qt-14-fb-ig-image-r5.json",
+      "media_content_id": "qt-14-4x5-r5",
+      "media_binding_receipt": "automation-log/QT14-MEDIA-BINDING-RECEIPT_20260830.json",
+      "cta_id": "quote-profile",
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "RESERVED_BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "channel_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "NOT_REQUIRED",
+        "media": "PASS",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "qt-14__pinterest_main",
+      "content_id": "qt-14",
+      "topic": "อิสรภาพทางการเงินไม่ใช่การมีเงินไม่จำกัด",
+      "date": "2026-09-06",
+      "time": "10:00",
+      "account": "pinterest_main",
+      "source": {
+        "file": "automation-log/QUOTE-CARDS_20260723-0822.md",
+        "row_id": "qt-14",
+        "field": "caption"
+      },
+      "adaptation": "two_by_three_pin_exact_source_caption_profile_link_only",
+      "format": "image",
+      "media": "media/quotes/week-20260824-30-r5/qt-14_pinterest_2x3.jpg",
+      "media_receipt": "automation-log/media-qa/qt-14-pinterest-image-r5.json",
+      "media_content_id": "qt-14-2x3-r5",
+      "media_binding_receipt": "automation-log/QT14-MEDIA-BINDING-RECEIPT_20260830.json",
+      "cta_id": "quote-profile",
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "RESERVED_BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "channel_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "NOT_REQUIRED",
+        "media": "PASS",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "b4-p01__youtube_main",
+      "content_id": "b4-p01",
+      "topic": "เงินเดือนถึงเกณฑ์แล้ว เลือกบัตรเครดิตใบแรกจากอะไร",
+      "date": "2026-08-27",
+      "time": "19:00",
+      "account": "youtube_main",
+      "source": {
+        "file": "automation-log/BATCH4-PILOT_20260816.md",
+        "row_id": "b4-p01",
+        "field": "youtube_package"
+      },
+      "source_ids": [
+        "bot-credit-card-guidance",
+        "bot-responsible-lending-pdf"
+      ],
+      "adaptation": "youtube_package_description_own_domain_only",
+      "format": "video",
+      "media": "reels/2026-08-16_b4-p01.mp4",
+      "media_receipt": "automation-log/media-qa/b4-p01-video.json",
+      "cta_id": "salary30k",
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "RESERVED_BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review",
+        "manifest_registration",
+        "future_schedule_registration"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "PASS",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "b4-p01__threads_main",
+      "content_id": "b4-p01",
+      "topic": "เงินเดือนถึงเกณฑ์แล้ว เลือกบัตรเครดิตใบแรกจากอะไร",
+      "date": "2026-08-29",
+      "time": "19:00",
+      "account": "threads_main",
+      "source": {
+        "file": "automation-log/BATCH4-PILOT_20260816.md",
+        "row_id": "b4-p01",
+        "field": "social_caption"
+      },
+      "source_ids": [
+        "bot-credit-card-guidance",
+        "bot-responsible-lending-pdf"
+      ],
+      "adaptation": "short_video_caption_no_body_url",
+      "format": "video",
+      "media": "reels/2026-08-16_b4-p01.mp4",
+      "media_receipt": "automation-log/media-qa/b4-p01-video.json",
+      "cta_id": "salary30k",
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "RESERVED_BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review",
+        "manifest_registration",
+        "future_schedule_registration"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "PASS",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "b4-p01__facebook_main",
+      "content_id": "b4-p01",
+      "topic": "เงินเดือนถึงเกณฑ์แล้ว เลือกบัตรเครดิตใบแรกจากอะไร",
+      "date": "2026-08-31",
+      "time": "19:00",
+      "account": "facebook_main",
+      "source": {
+        "file": "automation-log/BATCH4-PILOT_20260816.md",
+        "row_id": "b4-p01",
+        "field": "social_caption"
+      },
+      "source_ids": [
+        "bot-credit-card-guidance",
+        "bot-responsible-lending-pdf"
+      ],
+      "adaptation": "reel_caption_first_comment_link",
+      "format": "video",
+      "media": "reels/2026-08-16_b4-p01.mp4",
+      "media_receipt": "automation-log/media-qa/b4-p01-video.json",
+      "cta_id": "salary30k",
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "RESERVED_BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review",
+        "manifest_registration",
+        "future_schedule_registration"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "PASS",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "b4-p01__instagram_main",
+      "content_id": "b4-p01",
+      "topic": "เงินเดือนถึงเกณฑ์แล้ว เลือกบัตรเครดิตใบแรกจากอะไร",
+      "date": "2026-09-02",
+      "time": "19:00",
+      "account": "instagram_main",
+      "source": {
+        "file": "automation-log/BATCH4-PILOT_20260816.md",
+        "row_id": "b4-p01",
+        "field": "social_caption"
+      },
+      "source_ids": [
+        "bot-credit-card-guidance",
+        "bot-responsible-lending-pdf"
+      ],
+      "adaptation": "reel_caption_link_in_bio_max_five_hashtags",
+      "format": "video",
+      "media": "reels/2026-08-16_b4-p01.mp4",
+      "media_receipt": "automation-log/media-qa/b4-p01-video.json",
+      "cta_id": "salary30k",
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "RESERVED_BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "official_source_review",
+        "manifest_registration",
+        "future_schedule_registration",
+        "channel_review"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "PASS",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS"
+      }
+    },
+    {
+      "placement_id": "b4-p01__tiktok_main",
+      "content_id": "b4-p01",
+      "topic": "เงินเดือนถึงเกณฑ์แล้ว เลือกบัตรเครดิตใบแรกจากอะไร",
+      "date": "2026-08-17",
+      "time": "19:00",
+      "account": "tiktok_main",
+      "source": {
+        "file": "automation-log/TIKTOK-REACTIVATION-PLAN_20260817-30.md",
+        "row_id": "b4-p01",
+        "field": "caption_no_link"
+      },
+      "source_ids": [
+        "bot-credit-card-guidance",
+        "bot-responsible-lending-pdf"
+      ],
+      "adaptation": "tiktok_full_length_no_link_reactivation_pilot",
+      "format": "video",
+      "media": "reels/2026-08-16_b4-p01.mp4",
+      "media_receipt": "automation-log/media-qa/b4-p01-video.json",
+      "cta_id": "tiktok-no-link",
+      "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY",
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "RESERVED_BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "channel_review",
+        "per_piece_owner_confirmation",
+        "official_source_review",
+        "live_tiktok_history_dedup",
+        "live_landing_parity",
+        "bio_route_parity"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "PASS",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS",
+        "owner_confirmation": "BLOCKED",
+        "live_history_dedup": "BLOCKED",
+        "landing_parity": "BLOCKED"
+      }
+    },
+    {
+      "placement_id": "b3-05__tiktok_main",
+      "content_id": "b3-05",
+      "topic": "เงินเดือนสามหมื่น วงเงินบัตรเครดิตดูอย่างไร",
+      "date": "2026-08-18",
+      "time": "19:00",
+      "account": "tiktok_main",
+      "source": {
+        "file": "automation-log/TIKTOK-REACTIVATION-PLAN_20260817-30.md",
+        "row_id": "b3-05",
+        "field": "caption_no_link"
+      },
+      "source_ids": [
+        "bot-credit-card-guidance",
+        "bot-responsible-lending-pdf"
+      ],
+      "adaptation": "tiktok_full_length_no_link_reactivation_candidate",
+      "format": "video",
+      "media": "reels/2026-07-31_b3-05.mp4",
+      "media_receipt": null,
+      "media_qa_report": "automation-log/video-production/b3-05_qa.json",
+      "cta_id": "tiktok-no-link",
+      "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY",
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "RESERVED_BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "channel_review",
+        "per_piece_owner_confirmation",
+        "official_source_review",
+        "live_tiktok_history_dedup",
+        "live_landing_parity",
+        "bio_route_parity",
+        "semantic_parity_failed",
+        "unsubstantiated_provider_license_claim",
+        "per_piece_hash_bound_media_receipt"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "BLOCKED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS",
+        "owner_confirmation": "BLOCKED",
+        "live_history_dedup": "BLOCKED",
+        "landing_parity": "BLOCKED"
+      }
+    },
+    {
+      "placement_id": "b3-06__tiktok_main",
+      "content_id": "b3-06",
+      "topic": "บัตรเครดิตเงินเดือนสามหมื่น เลือกแบบไหนก่อนสมัคร",
+      "date": "2026-08-19",
+      "time": "19:00",
+      "account": "tiktok_main",
+      "source": {
+        "file": "automation-log/TIKTOK-REACTIVATION-PLAN_20260817-30.md",
+        "row_id": "b3-06",
+        "field": "caption_no_link"
+      },
+      "source_ids": [
+        "bot-credit-card-guidance",
+        "bot-responsible-lending-pdf"
+      ],
+      "adaptation": "tiktok_full_length_no_link_reactivation_candidate",
+      "format": "video",
+      "media": "reels/2026-08-01_b3-06.mp4",
+      "media_receipt": null,
+      "media_qa_report": "automation-log/video-production/b3-06_qa.json",
+      "cta_id": "tiktok-no-link",
+      "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY",
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "RESERVED_BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "channel_review",
+        "per_piece_owner_confirmation",
+        "official_source_review",
+        "live_tiktok_history_dedup",
+        "live_landing_parity",
+        "bio_route_parity",
+        "semantic_parity_failed",
+        "unsubstantiated_provider_license_claim",
+        "per_piece_hash_bound_media_receipt"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "BLOCKED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS",
+        "owner_confirmation": "BLOCKED",
+        "live_history_dedup": "BLOCKED",
+        "landing_parity": "BLOCKED"
+      }
+    },
+    {
+      "placement_id": "b3-01__tiktok_main",
+      "content_id": "b3-01",
+      "topic": "รถยังผ่อนไม่หมดจำนำได้ไหม",
+      "date": "2026-08-20",
+      "time": "19:00",
+      "account": "tiktok_main",
+      "source": {
+        "file": "automation-log/TIKTOK-REACTIVATION-PLAN_20260817-30.md",
+        "row_id": "b3-01",
+        "field": "caption_no_link"
+      },
+      "source_ids": [
+        "bot-debt-management-basics",
+        "bot-license-loan",
+        "bot-auto-loan-restructuring",
+        "bot-secured-loan",
+        "bot-hire-purchase-leasing"
+      ],
+      "adaptation": "tiktok_full_length_no_link_reactivation_candidate",
+      "format": "video",
+      "media": "reels/2026-07-27_b3-01.mp4",
+      "media_receipt": null,
+      "media_qa_report": "automation-log/video-production/b3-01_qa.json",
+      "cta_id": "tiktok-no-link",
+      "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY",
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "RESERVED_BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "channel_review",
+        "per_piece_owner_confirmation",
+        "official_source_review",
+        "live_tiktok_history_dedup",
+        "live_landing_parity",
+        "bio_route_parity",
+        "semantic_parity_failed",
+        "unsubstantiated_provider_license_claim",
+        "per_piece_hash_bound_media_receipt"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "BLOCKED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS",
+        "owner_confirmation": "BLOCKED",
+        "live_history_dedup": "BLOCKED",
+        "landing_parity": "BLOCKED"
+      }
+    },
+    {
+      "placement_id": "b3-02__tiktok_main",
+      "content_id": "b3-02",
+      "topic": "รถเกินยี่สิบปีเข้าไฟแนนซ์ได้ไหม",
+      "date": "2026-08-21",
+      "time": "19:00",
+      "account": "tiktok_main",
+      "source": {
+        "file": "automation-log/TIKTOK-REACTIVATION-PLAN_20260817-30.md",
+        "row_id": "b3-02",
+        "field": "caption_no_link"
+      },
+      "source_ids": [
+        "bot-debt-management-basics",
+        "bot-license-loan",
+        "bot-auto-loan-restructuring",
+        "bot-secured-loan",
+        "bot-hire-purchase-leasing"
+      ],
+      "adaptation": "tiktok_full_length_no_link_reactivation_candidate",
+      "format": "video",
+      "media": "reels/2026-07-28_b3-02.mp4",
+      "media_receipt": null,
+      "media_qa_report": "automation-log/video-production/b3-02_qa.json",
+      "cta_id": "tiktok-no-link",
+      "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY",
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "RESERVED_BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "channel_review",
+        "per_piece_owner_confirmation",
+        "official_source_review",
+        "live_tiktok_history_dedup",
+        "live_landing_parity",
+        "bio_route_parity",
+        "semantic_parity_failed",
+        "unsubstantiated_provider_license_claim",
+        "per_piece_hash_bound_media_receipt"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "BLOCKED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS",
+        "owner_confirmation": "BLOCKED",
+        "live_history_dedup": "BLOCKED",
+        "landing_parity": "BLOCKED"
+      }
+    },
+    {
+      "placement_id": "b3-03__tiktok_main",
+      "content_id": "b3-03",
+      "topic": "รถเกินยี่สิบห้าปีเข้าไฟแนนซ์ได้ไหม",
+      "date": "2026-08-22",
+      "time": "19:00",
+      "account": "tiktok_main",
+      "source": {
+        "file": "automation-log/TIKTOK-REACTIVATION-PLAN_20260817-30.md",
+        "row_id": "b3-03",
+        "field": "caption_no_link"
+      },
+      "source_ids": [
+        "bot-debt-management-basics",
+        "bot-license-loan",
+        "bot-auto-loan-restructuring",
+        "bot-secured-loan",
+        "bot-hire-purchase-leasing"
+      ],
+      "adaptation": "tiktok_full_length_no_link_reactivation_candidate",
+      "format": "video",
+      "media": "reels/2026-07-29_b3-03.mp4",
+      "media_receipt": null,
+      "media_qa_report": "automation-log/video-production/b3-03_qa.json",
+      "cta_id": "tiktok-no-link",
+      "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY",
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "RESERVED_BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "channel_review",
+        "per_piece_owner_confirmation",
+        "official_source_review",
+        "live_tiktok_history_dedup",
+        "live_landing_parity",
+        "bio_route_parity",
+        "semantic_parity_failed",
+        "unsubstantiated_provider_license_claim",
+        "per_piece_hash_bound_media_receipt"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "BLOCKED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS",
+        "owner_confirmation": "BLOCKED",
+        "live_history_dedup": "BLOCKED",
+        "landing_parity": "BLOCKED"
+      }
+    },
+    {
+      "placement_id": "b3-04__tiktok_main",
+      "content_id": "b3-04",
+      "topic": "รถอายุสิบห้าปีจัดไฟแนนซ์ได้ไหม",
+      "date": "2026-08-23",
+      "time": "19:00",
+      "account": "tiktok_main",
+      "source": {
+        "file": "automation-log/TIKTOK-REACTIVATION-PLAN_20260817-30.md",
+        "row_id": "b3-04",
+        "field": "caption_no_link"
+      },
+      "source_ids": [
+        "bot-debt-management-basics",
+        "bot-license-loan",
+        "bot-auto-loan-restructuring",
+        "bot-secured-loan",
+        "bot-hire-purchase-leasing"
+      ],
+      "adaptation": "tiktok_full_length_no_link_reactivation_candidate",
+      "format": "video",
+      "media": "reels/2026-07-30_b3-04.mp4",
+      "media_receipt": null,
+      "media_qa_report": "automation-log/video-production/b3-04_qa.json",
+      "cta_id": "tiktok-no-link",
+      "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY",
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "RESERVED_BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "channel_review",
+        "per_piece_owner_confirmation",
+        "official_source_review",
+        "live_tiktok_history_dedup",
+        "live_landing_parity",
+        "bio_route_parity",
+        "semantic_parity_failed",
+        "unsubstantiated_provider_license_claim",
+        "per_piece_hash_bound_media_receipt"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "BLOCKED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS",
+        "owner_confirmation": "BLOCKED",
+        "live_history_dedup": "BLOCKED",
+        "landing_parity": "BLOCKED"
+      }
+    },
+    {
+      "placement_id": "wk36-sf01__tiktok_main",
+      "content_id": "wk36-sf01",
+      "topic": "เริ่มเห็นภาพเงินด้วยสามช่อง",
+      "date": "2026-08-24",
+      "time": "19:00",
+      "account": "tiktok_main",
+      "source": {
+        "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+        "row_id": "wk36-sf01",
+        "field": "threads_text"
+      },
+      "source_ids": [],
+      "adaptation": "tiktok_exact_week_pack_video_no_link",
+      "format": "video",
+      "media": "reels/week-20260824-30-r5/2026-08-24_wk36-sf01.mp4",
+      "media_receipt": "automation-log/media-qa/wk36-sf01-tiktok-video-r5.json",
+      "media_content_id": "wk36-sf01",
+      "cta_id": "tiktok-no-link",
+      "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY",
+      "replacement_provenance": {
+        "supersedes_placement_id": "tt-r14-08__tiktok_main",
+        "supersedes_content_id": "tt-r14-08",
+        "candidate_id": "wk36-sf01",
+        "change_receipt": "automation-log/TIKTOK-WEEK-REPLACEMENT-RECEIPT_20260824_R5.json"
+      },
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "RESERVED_BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "channel_review",
+        "per_piece_owner_confirmation",
+        "official_source_review",
+        "live_tiktok_history_dedup",
+        "live_landing_parity",
+        "bio_route_parity",
+        "human_listening_not_run"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "BLOCKED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS",
+        "owner_confirmation": "BLOCKED",
+        "live_history_dedup": "BLOCKED",
+        "landing_parity": "BLOCKED"
+      }
+    },
+    {
+      "placement_id": "wk36-sf02__tiktok_main",
+      "content_id": "wk36-sf02",
+      "topic": "พักการตัดสินใจหนึ่งคืน",
+      "date": "2026-08-25",
+      "time": "19:00",
+      "account": "tiktok_main",
+      "source": {
+        "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+        "row_id": "wk36-sf02",
+        "field": "threads_text"
+      },
+      "source_ids": [],
+      "adaptation": "tiktok_exact_week_pack_video_no_link",
+      "format": "video",
+      "media": "reels/week-20260824-30-r5/2026-08-25_wk36-sf02.mp4",
+      "media_receipt": "automation-log/media-qa/wk36-sf02-tiktok-video-r5.json",
+      "media_content_id": "wk36-sf02",
+      "cta_id": "tiktok-no-link",
+      "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY",
+      "replacement_provenance": {
+        "supersedes_placement_id": "tt-r14-09__tiktok_main",
+        "supersedes_content_id": "tt-r14-09",
+        "candidate_id": "wk36-sf02",
+        "change_receipt": "automation-log/TIKTOK-WEEK-REPLACEMENT-RECEIPT_20260824_R5.json"
+      },
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "RESERVED_BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "channel_review",
+        "per_piece_owner_confirmation",
+        "official_source_review",
+        "live_tiktok_history_dedup",
+        "live_landing_parity",
+        "bio_route_parity",
+        "human_listening_not_run"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "BLOCKED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS",
+        "owner_confirmation": "BLOCKED",
+        "live_history_dedup": "BLOCKED",
+        "landing_parity": "BLOCKED"
+      }
+    },
+    {
+      "placement_id": "qt-12__tiktok_main",
+      "content_id": "qt-12",
+      "topic": "ไม่เปรียบเทียบสถานะการเงิน",
+      "date": "2026-08-26",
+      "time": "19:00",
+      "account": "tiktok_main",
+      "source": {
+        "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+        "row_id": "qt-12",
+        "field": "threads_text"
+      },
+      "source_ids": [],
+      "adaptation": "tiktok_exact_week_pack_video_no_link",
+      "format": "video",
+      "media": "reels/week-20260824-30-r5/2026-08-26_qt-12.mp4",
+      "media_receipt": "automation-log/media-qa/qt-12-tiktok-video-r5.json",
+      "media_content_id": "qt-12",
+      "cta_id": "tiktok-no-link",
+      "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY",
+      "replacement_provenance": {
+        "supersedes_placement_id": "tt-r14-10__tiktok_main",
+        "supersedes_content_id": "tt-r14-10",
+        "candidate_id": "qt-12",
+        "change_receipt": "automation-log/TIKTOK-WEEK-REPLACEMENT-RECEIPT_20260824_R5.json"
+      },
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "RESERVED_BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "channel_review",
+        "per_piece_owner_confirmation",
+        "official_source_review",
+        "live_tiktok_history_dedup",
+        "live_landing_parity",
+        "bio_route_parity",
+        "human_listening_not_run"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "BLOCKED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS",
+        "owner_confirmation": "BLOCKED",
+        "live_history_dedup": "BLOCKED",
+        "landing_parity": "BLOCKED"
+      }
+    },
+    {
+      "placement_id": "wk36-sf03__tiktok_main",
+      "content_id": "wk36-sf03",
+      "topic": "ทบทวนคุณค่าของรายจ่าย",
+      "date": "2026-08-27",
+      "time": "19:00",
+      "account": "tiktok_main",
+      "source": {
+        "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+        "row_id": "wk36-sf03",
+        "field": "threads_text"
+      },
+      "source_ids": [],
+      "adaptation": "tiktok_exact_week_pack_video_no_link",
+      "format": "video",
+      "media": "reels/week-20260824-30-r5/2026-08-27_wk36-sf03.mp4",
+      "media_receipt": "automation-log/media-qa/wk36-sf03-tiktok-video-r5.json",
+      "media_content_id": "wk36-sf03",
+      "cta_id": "tiktok-no-link",
+      "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY",
+      "replacement_provenance": {
+        "supersedes_placement_id": "tt-r14-11__tiktok_main",
+        "supersedes_content_id": "tt-r14-11",
+        "candidate_id": "wk36-sf03",
+        "change_receipt": "automation-log/TIKTOK-WEEK-REPLACEMENT-RECEIPT_20260824_R5.json"
+      },
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "RESERVED_BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "channel_review",
+        "per_piece_owner_confirmation",
+        "official_source_review",
+        "live_tiktok_history_dedup",
+        "live_landing_parity",
+        "bio_route_parity",
+        "human_listening_not_run"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "BLOCKED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS",
+        "owner_confirmation": "BLOCKED",
+        "live_history_dedup": "BLOCKED",
+        "landing_parity": "BLOCKED"
+      }
+    },
+    {
+      "placement_id": "wk36-sf04__tiktok_main",
+      "content_id": "wk36-sf04",
+      "topic": "จดรายจ่ายโดยไม่ตัดสินตัวเอง",
+      "date": "2026-08-28",
+      "time": "19:00",
+      "account": "tiktok_main",
+      "source": {
+        "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+        "row_id": "wk36-sf04",
+        "field": "threads_text"
+      },
+      "source_ids": [],
+      "adaptation": "tiktok_exact_week_pack_video_no_link",
+      "format": "video",
+      "media": "reels/week-20260824-30-r5/2026-08-28_wk36-sf04.mp4",
+      "media_receipt": "automation-log/media-qa/wk36-sf04-tiktok-video-r5.json",
+      "media_content_id": "wk36-sf04",
+      "cta_id": "tiktok-no-link",
+      "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY",
+      "replacement_provenance": {
+        "supersedes_placement_id": "tt-r14-12__tiktok_main",
+        "supersedes_content_id": "tt-r14-12",
+        "candidate_id": "wk36-sf04",
+        "change_receipt": "automation-log/TIKTOK-WEEK-REPLACEMENT-RECEIPT_20260824_R5.json"
+      },
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "RESERVED_BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "channel_review",
+        "per_piece_owner_confirmation",
+        "official_source_review",
+        "live_tiktok_history_dedup",
+        "live_landing_parity",
+        "bio_route_parity",
+        "human_listening_not_run"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "BLOCKED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS",
+        "owner_confirmation": "BLOCKED",
+        "live_history_dedup": "BLOCKED",
+        "landing_parity": "BLOCKED"
+      }
+    },
+    {
+      "placement_id": "qt-13__tiktok_main",
+      "content_id": "qt-13",
+      "topic": "เติบโตจากความสม่ำเสมอ",
+      "date": "2026-08-29",
+      "time": "19:00",
+      "account": "tiktok_main",
+      "source": {
+        "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+        "row_id": "qt-13",
+        "field": "threads_text"
+      },
+      "source_ids": [],
+      "adaptation": "tiktok_exact_week_pack_video_no_link",
+      "format": "video",
+      "media": "reels/week-20260824-30-r5/2026-08-29_qt-13.mp4",
+      "media_receipt": "automation-log/media-qa/qt-13-tiktok-video-r5.json",
+      "media_content_id": "qt-13",
+      "cta_id": "tiktok-no-link",
+      "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY",
+      "replacement_provenance": {
+        "supersedes_placement_id": "tt-r14-13__tiktok_main",
+        "supersedes_content_id": "tt-r14-13",
+        "candidate_id": "qt-13",
+        "change_receipt": "automation-log/TIKTOK-WEEK-REPLACEMENT-RECEIPT_20260824_R5.json"
+      },
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "RESERVED_BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "channel_review",
+        "per_piece_owner_confirmation",
+        "official_source_review",
+        "live_tiktok_history_dedup",
+        "live_landing_parity",
+        "bio_route_parity",
+        "human_listening_not_run"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "BLOCKED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS",
+        "owner_confirmation": "BLOCKED",
+        "live_history_dedup": "BLOCKED",
+        "landing_parity": "BLOCKED"
+      }
+    },
+    {
+      "placement_id": "wk36-sf05__tiktok_main",
+      "content_id": "wk36-sf05",
+      "topic": "วางแผนสามการตัดสินใจสำหรับสัปดาห์หน้า",
+      "date": "2026-08-30",
+      "time": "19:00",
+      "account": "tiktok_main",
+      "source": {
+        "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+        "row_id": "wk36-sf05",
+        "field": "threads_text"
+      },
+      "source_ids": [],
+      "adaptation": "tiktok_exact_week_pack_video_no_link",
+      "format": "video",
+      "media": "reels/week-20260824-30-r5/2026-08-30_wk36-sf05.mp4",
+      "media_receipt": "automation-log/media-qa/wk36-sf05-tiktok-video-r5.json",
+      "media_content_id": "wk36-sf05",
+      "cta_id": "tiktok-no-link",
+      "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY",
+      "replacement_provenance": {
+        "supersedes_placement_id": "tt-r14-14__tiktok_main",
+        "supersedes_content_id": "tt-r14-14",
+        "candidate_id": "wk36-sf05",
+        "change_receipt": "automation-log/TIKTOK-WEEK-REPLACEMENT-RECEIPT_20260824_R5.json"
+      },
+      "status": "PLANNED_BLOCKED",
+      "slot_state": "RESERVED_BLOCKED",
+      "blockers": [
+        "publication_authority",
+        "channel_review",
+        "per_piece_owner_confirmation",
+        "official_source_review",
+        "live_tiktok_history_dedup",
+        "live_landing_parity",
+        "bio_route_parity",
+        "human_listening_not_run"
+      ],
+      "gates": {
+        "publication_authority": "BLOCKED",
+        "source_review": "BLOCKED",
+        "media": "BLOCKED",
+        "dedup": "REQUIRED",
+        "page_identity": "PASS",
+        "owner_confirmation": "BLOCKED",
+        "live_history_dedup": "BLOCKED",
+        "landing_parity": "BLOCKED"
+      }
+    }
+  ]
+}

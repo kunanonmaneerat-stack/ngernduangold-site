@@ -51,7 +51,14 @@ def create(key, topic, extra=""):
               "(ฮุก/ชื่อกระทู้/แคปชัน) เขียนเต็มจบพร้อมโพสต์")
     t, m = free_llm.generate(prompt, system=PERSONA.format(name=name),
                              max_tokens=1100, temperature=0.5)
-    fixed, ok, issues = comply_gate.gate(t or "")
+    if not isinstance(t, str) or not t.strip():
+        return {'platform': name, 'key': key, 'model': m, 'ok': False,
+                'issues': ['generation unavailable or empty'], 'content': ''}
+    fixed, ok, issues = comply_gate.gate(t)
+    if not isinstance(fixed, str) or not fixed.strip():
+        ok = False
+        issues = list(issues) + ['generation result became empty during compliance review']
+        fixed = ''
     return {'platform': name, 'key': key, 'model': m, 'ok': ok,
             'issues': issues, 'content': fixed}
 

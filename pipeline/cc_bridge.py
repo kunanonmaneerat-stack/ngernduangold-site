@@ -1,11 +1,13 @@
-"""cc_bridge.py — agent สะพานคุยกับ Claude Code (CC).
+"""cc_bridge.py — local file bridge for Claude Code (CC).
 
-send(title, body) : เขียน work order ที่ cc-inbox/order-<ts>.md ให้ CC execute (+ ping Telegram)
+send(title, body) : เขียน work order ที่ cc-inbox/order-<ts>.md ให้ CC execute
 collect()         : อ่านผลที่ CC เขียนไว้ cc-outbox/*.md, ย้ายเข้า cc-archive, คืน list ผล
 
-เป็น "กล่องจดหมายไฟล์" — CC คือคนรัน (มีเจ้าของคุม) ไม่โพสต์/commit/deploy เอง.
+Scheduled/local callers never send Telegram, Slack, email, or browser messages.
+An actor string or command-line flag is not owner-authentication, so the old
+Hermes subprocess sink is deliberately absent from this bridge.
 """
-import os, glob, shutil, datetime, subprocess
+import os, glob, shutil, datetime
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -13,17 +15,12 @@ LOG = os.path.join(ROOT, 'automation-log')
 INBOX = os.path.join(LOG, 'cc-inbox')
 OUTBOX = os.path.join(LOG, 'cc-outbox')
 ARCH = os.path.join(LOG, 'cc-archive')
-HERMES_HOME = r'C:\Users\nL_ku\AppData\Local\hermes'
-HERMES_PY = os.path.join(HERMES_HOME, 'hermes-agent', 'venv', 'Scripts', 'python.exe')
 
 
 def ping(msg):
-    try:
-        env = dict(os.environ); env['HERMES_HOME'] = HERMES_HOME
-        subprocess.run([HERMES_PY, '-m', 'hermes_cli.main', 'send', '--to', 'telegram', msg],
-                       cwd=os.path.join(HERMES_HOME, 'hermes-agent'), timeout=90, env=env)
-    except Exception as e:
-        print('ping skip:', str(e)[:60])
+    """Compatibility no-op: retain local workflows without external mutation."""
+    print('notification local-only: ' + str(msg)[:120])
+    return False
 
 
 def send(title, body):
@@ -42,6 +39,8 @@ def collect():
     out = []
     for f in sorted(glob.glob(os.path.join(OUTBOX, '*.md'))):
         name = os.path.basename(f)
-        out.append({'file': name, 'text': open(f, encoding='utf-8').read()})
+        with open(f, encoding='utf-8') as handle:
+            text = handle.read()
+        out.append({'file': name, 'text': text})
         shutil.move(f, os.path.join(ARCH, name))
     return out

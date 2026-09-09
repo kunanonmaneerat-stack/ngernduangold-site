@@ -1,0 +1,48 @@
+{
+  "file": "_vidout/staging-b4/b4-p01_final.mp4",
+  "sha256": "D0A07323742B42FCCF147A067A4654A1438418C7404CD8E4C56F3F76F88A8DAC",
+  "qa_scope": "automated_media_only",
+  "manual_checks_required": [
+    "semantic_frame_review",
+    "landing_page_qa"
+  ],
+  "duration_seconds": 21.5,
+  "size_bytes": 2766824,
+  "video": {
+    "codec": "h264",
+    "width": 1080,
+    "height": 1920,
+    "fps": "24/1",
+    "pixel_format": "yuv420p"
+  },
+  "audio": {
+    "codec": "aac",
+    "sample_rate": "48000",
+    "channels": 1
+  },
+  "full_decode": "PASS",
+  "faststart": {
+    "status": "PASS",
+    "moov_offset": 32,
+    "mdat_offset": 12217
+  },
+  "loudness": {
+    "status": "PASS",
+    "non_silent": "PASS",
+    "integrated_lufs": -17.27,
+    "true_peak_dbfs": -1.28,
+    "loudness_range_lu": 7.4,
+    "guard": {
+      "integrated_lufs_min": -18.0,
+      "integrated_lufs_max": -14.0,
+      "true_peak_dbfs_max": -1.0
+    }
+  },
+  "watermark": {
+    "verdict": "PASS",
+    "frames": 65,
+    "track_frames": 0,
+    "track_frac": 0.0,
+    "fps": 3.0
+  }
+}

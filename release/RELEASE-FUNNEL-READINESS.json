@@ -1,0 +1,87 @@
+{
+  "assessment_scope": "release_funnel_contract_only",
+  "categories": {
+    "attribution": {
+      "findings": [],
+      "status": "PASS",
+      "weight": 20
+    },
+    "bounded_pilot": {
+      "contract_valid": true,
+      "findings": [
+        "analytics TRUSTED evidence is not verified by this release-only guard",
+        "publishable placement receipt is not supplied or verified",
+        "separate owner execution authority is not granted by this report"
+      ],
+      "measurement_contract_supported": true,
+      "semantics": "design_contract_only_not_operational_authority",
+      "status": "BLOCKED",
+      "weight": 20
+    },
+    "exact_release": {
+      "findings": [],
+      "status": "PASS",
+      "weight": 20
+    },
+    "inventory": {
+      "findings": [],
+      "status": "PASS",
+      "weight": 20
+    },
+    "offer_safety": {
+      "findings": [],
+      "status": "PASS",
+      "weight": 20
+    }
+  },
+  "conditions_for_80_plus": [
+    "80 points requires all four hard-blocker categories to pass; no aggregate score can waive any one",
+    "inventory: every sitemap page fetches and has one unique self-canonical HTTPS URL",
+    "exact_release: production canonical set, normalized HTML, aggregate tree, source/gate hashes, and pilot hash exactly match the audited local release",
+    "attribution: every live page carries the scoped event taxonomy and every affiliate CTA has exact rel, provider, content, position, and sub-id metadata",
+    "offer_safety: merchant/content fit passes and no unauthorized, unbound, or undeliverable own-product purchase path is live",
+    "bounded_pilot remains BLOCKED until the producer/schema support session-scoped operands and trusted analytics, placement receipt, and separate owner authority are verified"
+  ],
+  "evaluated_at": "2026-08-25T08:08:24+00:00",
+  "external_action_authorization_requested": false,
+  "external_action_authorized": false,
+  "hard_blocked": false,
+  "hard_blockers": [],
+  "mode": "local",
+  "operational_pilot_eligibility": {
+    "eligibility_is_authorization": false,
+    "reasons": [
+      "analytics TRUSTED evidence is not verified by this release-only guard",
+      "publishable placement receipt is not supplied or verified",
+      "separate owner execution authority is not granted by this report"
+    ],
+    "status": "BLOCKED"
+  },
+  "pilot": {
+    "design_contract_valid": true,
+    "external_action_authorization_requested": false,
+    "external_action_authorized": false,
+    "measurement_contract_supported": true,
+    "operational_eligibility": "BLOCKED",
+    "pilot_id": "salary30k-ktccard-context-v1",
+    "release_category_prerequisites_met": true,
+    "state": "planned_blocked"
+  },
+  "publication": {
+    "authority_granted": false,
+    "calendar_publishable_count_evaluated": false,
+    "publishable_placement_receipt_verified": false,
+    "status": "NOT_AUTHORIZED"
+  },
+  "publication_authority_granted": false,
+  "release": {
+    "live_release_id": null,
+    "local_manifest_schema": 2,
+    "local_release_id": "sha256:c84f4d10be940850979fca5622b5c6544371fadb0f0c36362f31d6289c1a7f59"
+  },
+  "release_contract_status": "PASS",
+  "schema_version": 1,
+  "score_descriptive": 80,
+  "score_is_authorization": false,
+  "score_max": 100
+}

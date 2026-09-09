@@ -2,12 +2,13 @@
 # Netlify runs `command` on each push, then publishes `publish/`.
 # build_site.py uses only the Python stdlib (no pip install needed).
 [build]
-  command = "python3 build_site.py && python3 tools/postdeploy_smoke.py --src site"
+  command = "python3 build_site.py && python3 tools/write_release_manifest.py --src site && python3 tools/postdeploy_smoke.py --src site && python3 tools/release_funnel_readiness.py --src site --require-local-ready"
   publish = "site"
   # Skip rebuilds when a commit only touches non-site folders (automation/scraping/video/social/control-plane).
   # Exit 0 => Netlify ignores the build. Any change to build_site.py, *.html, media/, reels/, assets,
-  # or this file still rebuilds. tools/ is excluded as a TRIGGER only — the build command still runs the
-  # checked-out tools/postdeploy_smoke.py at build time (WO decision D3, 2026-07-12). Saves build minutes.
+  # or this file still rebuilds. Most tools/control-plane files are excluded as triggers,
+  # but the exact policy and build-gate inputs below force a build. Otherwise a newly
+  # paused product or stricter gate could be skipped while stale purchase controls stay live.
   # Compare against the last SUCCESSFULLY BUILT commit ($CACHED_COMMIT_REF), not HEAD^.
   # Why (incident 26 Jul 2026): site commits were pushed in a batch whose LAST commit only
   # touched an excluded path, and cron runlog commits landed after them. HEAD^..HEAD saw
@@ -15,7 +16,7 @@
   # never reached production even though every commit was on origin/main.
   # Fail-safe: if CACHED_COMMIT_REF is empty/unknown (first build, cleared cache, force push)
   # git diff errors -> non-zero exit -> Netlify builds. Never silently skips.
-  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- . ':(exclude)automation-log' ':(exclude)pipeline' ':(exclude)tiktok-pipeline' ':(exclude).system_control' ':(exclude)social-autopost' ':(exclude)tools' ':(exclude)data'"
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- .system_control/policy.json .system_control/merchant_offers.json .system_control/content_manifest.json release/funnel_pilot.json pipeline/ga4_pull.py pipeline/ga4_schema.py tools/comply_gate_stitch.py tools/merchant_offer_gate.py tools/postdeploy_smoke.py tools/release_contract.py tools/release_funnel_readiness.py tools/write_release_manifest.py || exit 1; git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- . ':(exclude)automation-log' ':(exclude)pipeline' ':(exclude)tiktok-pipeline' ':(exclude).system_control' ':(exclude)social-autopost' ':(exclude)tools' ':(exclude)data'"
 
 [build.environment]
   SITE_BASE = "https://ngernduangold.com"

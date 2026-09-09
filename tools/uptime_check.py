@@ -44,6 +44,8 @@ must actually render.
 """
 import io, os, sys, time, json, argparse, datetime
 
+from private_runtime import HOST_STATE_FILE
+
 # Same reason as preflight.py: run_daily.cmd sets PYTHONIOENCODING=utf-8 but a hand-run
 # from a Thai Windows console (cp874) does not, and the alert path prints a URL and a
 # reason that may contain anything the page returned.
@@ -68,8 +70,8 @@ URL = "https://ngernduangold.com/"
 # --- host public IP -------------------------------------------------------
 # Why this lives in the uptime check and not somewhere tidier: GA4's internal
 # traffic rule can only match on IP, and on 1 Aug 2026 the rule was found still
-# pinned to 184.22.17.215 while this machine had long since been rotated to
-# 27.130.5.93 by the ISP. The rule existed, the Data Filter was Active, and the
+# pinned to an earlier address while this machine had already been rotated by
+# the ISP. The rule existed, the Data Filter was Active, and the
 # whole arrangement had been silently matching nothing - so every automated
 # page view we generated was being counted as a real reader (~79% of sessions).
 #
@@ -79,7 +81,7 @@ URL = "https://ngernduangold.com/"
 # observe the fact. It records; preflight compares. Recording must never be able
 # to change the uptime verdict - an IP lookup failing says nothing about the site.
 IP_URL = "https://api.ipify.org?format=json"
-HOST_IP_FILE = os.path.join(REPO, ".system_control", "host_ip.json")
+HOST_IP_FILE = str(HOST_STATE_FILE)
 IP_TIMEOUT = 8
 TIMEOUT = 20
 
@@ -149,7 +151,7 @@ def parse_ip_payload(raw):
 
 
 def record_host_ip():
-    """Best-effort: write this machine's public IP to .system_control/host_ip.json.
+    """Best-effort: write this machine's public IP to ignored private state.
 
     Returns the ip on success, None otherwise. Never raises, never affects exit code.
     """
@@ -167,12 +169,16 @@ def record_host_ip():
             os.makedirs(d)
         try:
             import platform
-            node = platform.node() or "?"
+            node = platform.node()
         except Exception:
-            node = "?"
+            node = ""
+        if not isinstance(node, str) or not node.strip():
+            # An address without a machine identity cannot prove which host
+            # produced it, so do not create ambiguous trust evidence.
+            return None
         payload = {
             "ip": ip,
-            "checked_at": datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+            "checked_at": datetime.datetime.now().astimezone().isoformat(timespec="seconds"),
             "source": "api.ipify.org",
             # Which box observed it. The Linux sandbox and the Windows host go out on
             # DIFFERENT public IPs, and only the Windows one matches what Chrome (and
@@ -181,7 +187,7 @@ def record_host_ip():
             # bug this whole file exists to prevent.
             "host": node,
             "_why": "preflight/check_ga4_internal_ip compares this against the CIDRs "
-                    "pinned in policy.json ga4.internal_traffic.ips. If they diverge, "
+                    "stored in the private GA4 runtime policy. If they diverge, "
                     "the GA4 internal-traffic rule has stopped matching and the traffic "
                     "numbers include our own automation.",
         }
@@ -285,13 +291,13 @@ def selftest():
     # preflight, so a confident wrong answer is the expensive failure. Prove it says
     # None for every shape that is not an IP.
     print("\n  parse_ip_payload")
+    valid = ".".join(("203", "0", "113", "17"))
     ip_cases = [
-        ('{"ip":"27.130.5.93"}',            "27.130.5.93"),
-        ('{"ip":" 27.130.5.93 "}',          "27.130.5.93"),
-        ('{"ip":"184.22.17.215"}',          "184.22.17.215"),
+        (json.dumps({"ip": valid}),             valid),
+        (json.dumps({"ip": " " + valid + " "}), valid),
         ('{"ip":"999.1.1.1"}',              None),
-        ('{"ip":"27.130.5"}',               None),
-        ('{"ip":"27.130.5.93.7"}',          None),
+        ('{"ip":"203.0.113"}',              None),
+        ('{"ip":"203.0.113.17.7"}',         None),
         ('{"ip":"01.2.3.4"}',               None),   # leading zero = not a dotted quad
         ('{"ip":"2001:db8::1"}',            None),   # v6: rule below is v4-only, say so
         ('{"ip":null}',                     None),
@@ -300,13 +306,11 @@ def selftest():
         ('',                                None),
         (None,                              None),
     ]
-    for raw, want in ip_cases:
+    for index, (raw, want) in enumerate(ip_cases, start=1):
         got = parse_ip_payload(raw)
         ok = got == want
         bad += 0 if ok else 1
-        shown = (raw if raw is not None else "None")
-        print("    %-34s %-14s (want %-14s) %s"
-              % (shown[:34], got, want, "OK" if ok else "*** FAIL"))
+        print("    parser case %02d  %s" % (index, "OK" if ok else "*** FAIL"))
     print("\n%d cases, %d failed" % (len(cases) + len(ip_cases), bad))
     return 1 if bad else 0
 
@@ -348,11 +352,14 @@ def main():
     # reach into the exit code. See the HOST_IP_FILE comment at the top of the file.
     ip = record_host_ip()
     if not args.quiet:
-        print("hostip  %s" % (ip if ip else "unknown (not recorded; preflight will say so)"))
+        print("hostip  %s" % (
+            "RECORDED (private; value suppressed)"
+            if ip else "UNKNOWN (not recorded; preflight will say so)"
+        ))
 
     if args.json:
         print(json.dumps({"verdict": verdict, "http": status, "reason": reason,
-                          "host_ip": ip}, ensure_ascii=False))
+                          "host_ip_recorded": ip is not None}, ensure_ascii=False))
     return code
 
 

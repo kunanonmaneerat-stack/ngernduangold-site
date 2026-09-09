@@ -1,0 +1,210 @@
+{
+  "schema_version": 1,
+  "asset": "reels/week-20260824-30-r4/2026-08-26_qt-12.mp4",
+  "sha256": "D1146EEBB713BBCE6EA55165F5F9134A403017C10388EED5F1405722D3C4A8AE",
+  "media_type": "video",
+  "reviewed_at": "2026-08-23T18:25:32+07:00",
+  "source_binding": {
+    "weekly_pack": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+    "candidate_id": "qt-12",
+    "content_payload_sha256": "275A7D12D3D511E76597D97AFB0D7E860BECB442977D40B2F9EF921A49C5B675",
+    "exact_visible_copy": [
+      "เราเห็นวิถีชีวิตของคนอื่น แต่ไม่เห็นภาระทั้งหมด",
+      "เห็นวิถีชีวิต",
+      "ไม่เห็นภาระทั้งหมด",
+      "กลับมาดูเป้าหมายเรา",
+      "ข้อมูลเพื่อการศึกษา · ผลิตด้วย AI"
+    ],
+    "visual_mode": "deterministic local HTML/SVG plus centered kinetic zoom",
+    "narration": {
+      "engine": "Windows.Media.SpeechSynthesis local runtime",
+      "voice": "Microsoft Pattara",
+      "language": "th-TH",
+      "speaking_rate": 0.95,
+      "source_text_sha256": "3C0309A4924AB7C4944B5BA4513EA4DF040BC4714F9A18569156D88AD30EC30C",
+      "source_text_exact_match": "PASS",
+      "audio_duration_seconds": 8.797,
+      "human_listening_status": "NOT_PERFORMED"
+    },
+    "ambient_bed": {
+      "status": "PASS",
+      "origin": "DETERMINISTIC_PROCEDURAL_LOCAL_NO_EXTERNAL_ASSET",
+      "generator": "ffmpeg aevalsrc mathematical sine pad",
+      "root_frequency_hz": 130.81,
+      "chord_frequencies_hz": [
+        130.81,
+        163.5125,
+        196.215
+      ],
+      "amplitude_lfo_hz": [
+        0.071,
+        0.037
+      ],
+      "highpass_hz": 70,
+      "lowpass_hz": 850,
+      "edge_fade_milliseconds": 400,
+      "formula_sha256": "CB8D183336141402E217F6A51CED0E70AA75B251D87903DBD4AF59819484DD26",
+      "duration_seconds": 18.0,
+      "copyright_or_external_source": "NONE",
+      "ducking": {
+        "status": "PASS_TECHNICAL_SIDECHAIN_APPLIED",
+        "filter": "sidechaincompress",
+        "threshold_linear": 0.02,
+        "ratio": 12.0,
+        "attack_ms": 20.0,
+        "release_ms": 500.0,
+        "post_duck_mix_weight": 0.42,
+        "voice_pre_mix_loudnorm_target_lufs": -16.0,
+        "uncompressed_bed_post_weight_peak_bound_dbfs": -36.11,
+        "conservative_voice_target_to_bed_peak_margin_db": 20.11,
+        "dialogue_intelligibility_basis": "voice weight 1.0; bed weight 0.42; sidechain reduces bed whenever the exact narration exceeds threshold",
+        "speech_source": "exact local Thai TTS narration",
+        "human_listening_status": "NOT_PERFORMED"
+      }
+    }
+  },
+  "technical_qa": {
+    "file": "reels/week-20260824-30-r4/2026-08-26_qt-12.mp4",
+    "sha256": "D1146EEBB713BBCE6EA55165F5F9134A403017C10388EED5F1405722D3C4A8AE",
+    "qa_scope": "automated_media_only",
+    "manual_checks_required": [
+      "semantic_frame_review",
+      "landing_page_qa"
+    ],
+    "duration_seconds": 18.0,
+    "size_bytes": 3923270,
+    "video": {
+      "codec": "h264",
+      "width": 1080,
+      "height": 1920,
+      "fps": "24/1",
+      "pixel_format": "yuv420p"
+    },
+    "audio": {
+      "codec": "aac",
+      "sample_rate": "48000",
+      "channels": 1
+    },
+    "full_decode": "PASS",
+    "faststart": {
+      "status": "PASS",
+      "moov_offset": 32,
+      "mdat_offset": 13970
+    },
+    "loudness": {
+      "status": "PASS",
+      "non_silent": "PASS",
+      "integrated_lufs": -16.47,
+      "true_peak_dbfs": -1.33,
+      "loudness_range_lu": 1.7,
+      "guard": {
+        "integrated_lufs_min": -18.0,
+        "integrated_lufs_max": -14.0,
+        "true_peak_dbfs_max": -1.0
+      }
+    },
+    "watermark": {
+      "verdict": "PASS",
+      "frames": 54,
+      "track_frames": 0,
+      "track_frac": 0.0,
+      "fps": 3.0
+    },
+    "ambient_bed": {
+      "status": "PASS",
+      "origin": "DETERMINISTIC_PROCEDURAL_LOCAL_NO_EXTERNAL_ASSET",
+      "generator": "ffmpeg aevalsrc mathematical sine pad",
+      "root_frequency_hz": 130.81,
+      "chord_frequencies_hz": [
+        130.81,
+        163.5125,
+        196.215
+      ],
+      "amplitude_lfo_hz": [
+        0.071,
+        0.037
+      ],
+      "highpass_hz": 70,
+      "lowpass_hz": 850,
+      "edge_fade_milliseconds": 400,
+      "formula_sha256": "CB8D183336141402E217F6A51CED0E70AA75B251D87903DBD4AF59819484DD26",
+      "duration_seconds": 18.0,
+      "copyright_or_external_source": "NONE",
+      "ducking": {
+        "status": "PASS_TECHNICAL_SIDECHAIN_APPLIED",
+        "filter": "sidechaincompress",
+        "threshold_linear": 0.02,
+        "ratio": 12.0,
+        "attack_ms": 20.0,
+        "release_ms": 500.0,
+        "post_duck_mix_weight": 0.42,
+        "voice_pre_mix_loudnorm_target_lufs": -16.0,
+        "uncompressed_bed_post_weight_peak_bound_dbfs": -36.11,
+        "conservative_voice_target_to_bed_peak_margin_db": 20.11,
+        "dialogue_intelligibility_basis": "voice weight 1.0; bed weight 0.42; sidechain reduces bed whenever the exact narration exceeds threshold",
+        "speech_source": "exact local Thai TTS narration",
+        "human_listening_status": "NOT_PERFORMED"
+      }
+    },
+    "continuous_silence_audit": {
+      "status": "PASS",
+      "sample_rate": 48000,
+      "decoded_samples": 863232,
+      "longest_exact_zero_run_seconds": 0.0015,
+      "maximum_allowed_continuous_silence_seconds": 1.5,
+      "nonzero_sample_fraction": 0.998706,
+      "threshold_dbfs": -50.0,
+      "threshold_silence_events_at_or_above_limit": 0,
+      "coverage_block_milliseconds": 100,
+      "edge_fade_exclusion_milliseconds": 500,
+      "minimum_interior_coverage_block_rms_dbfs": -57.1,
+      "minimum_all_blocks_rms_dbfs": -59.72,
+      "post_narration_ambient_tail": {
+        "status": "PASS",
+        "starts_after_narration_and_release_seconds": 9.297,
+        "reviewed_tail_duration_seconds": 8.1,
+        "minimum_100ms_rms_dbfs": -43.74,
+        "mean_100ms_rms_dbfs": -41.04,
+        "maximum_100ms_rms_dbfs": -38.96
+      }
+    }
+  },
+  "manual_check_resolution": {
+    "semantic_frame_review": "PASS_FULL_RESOLUTION_SOURCE_AND_ENCODED_SAMPLES",
+    "landing_page_qa": "NOT_APPLICABLE_NO_OUTBOUND_URL_OR_LINK_CTA",
+    "audio_listening": "NOT_PERFORMED_RECORDED_AS_LIMITATION",
+    "audio_mix": "PASS_TECHNICAL_SIDECHAIN_DUCKING_AND_CONTINUOUS_SILENCE_AUDIT"
+  },
+  "novelty_review": {
+    "status": "PASS",
+    "content_id": "qt-12",
+    "reviewer": "Codex deterministic hash and source-bound creative comparison",
+    "corpus_fingerprint": "AC1AB9B513986D3D4E5F702171CAFF31E449DB1C01FA6C7323DF41239B6646E4",
+    "compared_assets": 27,
+    "scope": "Current manifest and published-media corpus; exact SHA-256 is unique; candidate uses an original local vector composition and exact weekly-pack copy"
+  },
+  "watermark": {
+    "visual_review": {
+      "status": "PASS",
+      "reviewer": "Codex r4 full-resolution source frames plus encoded MP4 sample-frame review",
+      "scope": "All full-resolution scene frames and contact sheet reviewed; no provider/platform watermark, page logo, account handle, URL, tracking mark, affiliate CTA, or hidden footer identity",
+      "evidence": [
+        "automation-log/media-qa/evidence/week-20260824-30-r4/qt-12/contact-sheet.png",
+        "automation-log/media-qa/evidence/week-20260824-30-r4/qt-12/encoded-contact-sheet.jpg",
+        "automation-log/media-qa/evidence/week-20260824-30-r4/qt-12/scene-01.png",
+        "automation-log/media-qa/evidence/week-20260824-30-r4/qt-12/scene-02.png",
+        "automation-log/media-qa/evidence/week-20260824-30-r4/qt-12/scene-03.png",
+        "automation-log/media-qa/evidence/week-20260824-30-r4/qt-12/scene-04.png",
+        "automation-log/media-qa/evidence/week-20260824-30-r4/qt-12/scene-05.png"
+      ]
+    },
+    "automated_scan": {
+      "status": "PASS",
+      "detector": "tiktok-pipeline/src/qa_watermark.py",
+      "fps": 3.0,
+      "frames": 54,
+      "track_frames": 0,
+      "track_frac": 0.0
+    }
+  }
+}

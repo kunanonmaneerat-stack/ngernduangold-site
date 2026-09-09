@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-08-16T05:21:40+07:00",
+  "items": [
+    {
+      "content_id": "qt-01-source",
+      "asset": "media/quotes/qt-01.png",
+      "sha256": "388B5521983ADAF87E56DE78CCC2BF8B753387B89F9EFAFEC65BA8193B72672B",
+      "status": "historical_source"
+    },
+    {
+      "content_id": "qt-01",
+      "asset": "media/quotes/qt-01_post.jpg",
+      "sha256": "D16E296D436082F46ED0B305B71E076D2EE7BB9E684CE7F50ABA2D89816EEADE",
+      "status": "published",
+      "channels": ["facebook", "instagram"],
+      "published_date": "2026-07-23"
+    },
+    {
+      "content_id": "qt-02-source",
+      "asset": "media/quarantine/watermarked/stills/qt-02.png",
+      "sha256": "7FB515A6D4C3D7ABBD840AF3AFC1C6852EE6E897FD1B5494EF16A7085DEB6FDF",
+      "status": "quarantined_watermarked"
+    },
+    {
+      "content_id": "qt-02",
+      "asset": "media/quarantine/watermarked/stills/qt-02_post.jpg",
+      "sha256": "2F3E200B6DDB53E1E97342BBEA450A712200F59906B03A0025EEE7D23772DDFB",
+      "status": "published_then_quarantined_watermarked",
+      "channels": ["facebook", "instagram"],
+      "published_date": "2026-07-25"
+    }
+  ]
+}

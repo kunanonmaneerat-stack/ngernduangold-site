@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "library": "PAGE2-POSTS-B_20260818-0915.md",
+  "binding_state": "PROVISIONAL_REVIEW_REQUIRED",
+  "last_human_review": null,
+  "freshness_hours": 24,
+  "items": {
+    "p2-09": {
+      "claim_scope": "home-loan refinance comparison, total cost, contract conditions, and affordability",
+      "source_ids": ["bot-before-loan", "bot-secured-loan"],
+      "official_urls": [
+        "https://www.bot.or.th/th/satang-story/managing-debt/before-loan.html",
+        "https://www.bot.or.th/th/satang-story/managing-debt/secured-loan.html"
+      ],
+      "manual_evidence_required": "the current home-loan contract, payoff statement, and provider fee schedule"
+    },
+    "p2-10": {
+      "claim_scope": "welfare-loan versus general-loan affordability and contract comparison",
+      "source_ids": ["bot-before-loan", "bot-responsible-lending-pdf"],
+      "official_urls": [
+        "https://www.bot.or.th/th/satang-story/managing-debt/before-loan.html",
+        "https://www.bot.or.th/content/dam/bot/fipcs/documents/FPG/2568/ThaiPDF/25680030.pdf"
+      ],
+      "manual_evidence_required": "the employer welfare agreement and current provider terms"
+    },
+    "p2-11": {
+      "claim_scope": "loan-guarantee affordability and contract risk",
+      "source_ids": ["bot-before-loan", "bot-responsible-lending-pdf"],
+      "official_urls": [
+        "https://www.bot.or.th/th/satang-story/managing-debt/before-loan.html",
+        "https://www.bot.or.th/content/dam/bot/fipcs/documents/FPG/2568/ThaiPDF/25680030.pdf"
+      ],
+      "manual_evidence_required": "the actual guarantee contract and current applicable Thai guarantee-law review"
+    },
+    "p2-12": {
+      "claim_scope": "first-loan preparation, affordability, and responsible application",
+      "source_ids": ["bot-before-loan", "bot-responsible-lending-pdf"],
+      "official_urls": [
+        "https://www.bot.or.th/th/satang-story/managing-debt/before-loan.html",
+        "https://www.bot.or.th/content/dam/bot/fipcs/documents/FPG/2568/ThaiPDF/25680030.pdf"
+      ]
+    },
+    "p2-13": {
+      "claim_scope": "credit-history effects, self-check rights, and correction workflow",
+      "source_ids": ["bot-before-loan", "bot-debt-management-basics"],
+      "official_urls": [
+        "https://www.bot.or.th/th/satang-story/managing-debt/before-loan.html",
+        "https://www.bot.or.th/th/satang-story/managing-debt/indebtedness.html"
+      ],
+      "manual_evidence_required": "current official NCB/BOT guidance supporting self-check and correction claims"
+    },
+    "p2-14": {
+      "claim_scope": "unlicensed-loan warning signs and official provider verification",
+      "source_ids": ["bot-license-loan", "bot-license-check", "bot-debt-management-basics"],
+      "official_urls": [
+        "https://www.bot.or.th/th/license-loan.html",
+        "https://app.bot.or.th/BOTLicenseCheck",
+        "https://www.bot.or.th/th/satang-story/managing-debt/indebtedness.html"
+      ]
+    },
+    "p2-15": {
+      "claim_scope": "early payoff questions, written payoff evidence, and restructuring context",
+      "source_ids": ["bot-consumer-loan-restructuring", "bot-responsible-lending-pdf"],
+      "official_urls": [
+        "https://www.bot.or.th/th/satang-story/managing-debt/consumer-loan-restructuring.html",
+        "https://www.bot.or.th/content/dam/bot/fipcs/documents/FPG/2568/ThaiPDF/25680030.pdf"
+      ],
+      "manual_evidence_required": "the current loan contract and a dated written payoff quote from the provider"
+    },
+    "p2-16": {
+      "claim_scope": "short-versus-long repayment term affordability and total-cost comparison",
+      "source_ids": ["bot-before-loan", "bot-responsible-lending-pdf"],
+      "official_urls": [
+        "https://www.bot.or.th/th/satang-story/managing-debt/before-loan.html",
+        "https://www.bot.or.th/content/dam/bot/fipcs/documents/FPG/2568/ThaiPDF/25680030.pdf"
+      ]
+    }
+  }
+}

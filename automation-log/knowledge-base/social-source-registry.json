@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "library": "SOCIAL-CONTENT-BINDINGS_20260823",
+  "binding_state": "PROVISIONAL_REVIEW_REQUIRED",
+  "last_human_review": null,
+  "freshness_hours": 24,
+  "source_libraries": [
+    "automation-log/BATCH3-PRODUCTION-KIT.md",
+    "automation-log/BATCH4-PILOT_20260816.md",
+    "automation-log/TIKTOK-REACTIVATION-PLAN_20260817-30.md"
+  ],
+  "items": {
+    "b4-p01": {
+      "source_file": "automation-log/BATCH4-PILOT_20260816.md",
+      "claim_scope": "credit-card selection based on actual spending, fees, and full-repayment affordability",
+      "source_ids": ["bot-credit-card-guidance", "bot-responsible-lending-pdf"],
+      "official_urls": [
+        "https://www.bot.or.th/th/satang-story/digital-fin-lit/creditcard.html",
+        "https://www.bot.or.th/content/dam/bot/fipcs/documents/FPG/2568/ThaiPDF/25680030.pdf"
+      ]
+    },
+    "b3-01": {
+      "source_file": "automation-log/BATCH3-PRODUCTION-KIT.md",
+      "claim_scope": "vehicle finance before title transfer, contract status, debt burden, and licensed-provider checks",
+      "source_ids": ["bot-debt-management-basics", "bot-license-loan", "bot-auto-loan-restructuring", "bot-secured-loan", "bot-hire-purchase-leasing"],
+      "official_urls": [
+        "https://www.bot.or.th/th/satang-story/managing-debt/indebtedness.html",
+        "https://www.bot.or.th/th/license-loan.html",
+        "https://www.bot.or.th/th/satang-story/managing-debt/auto-loan-restructuring.html",
+        "https://www.bot.or.th/th/satang-story/managing-debt/secured-loan.html",
+        "https://www.bot.or.th/th/research-and-publications/articles-and-publications/bot-magazine-issues/phrasiam-68-3/hire-purchase-leasing.html"
+      ],
+      "manual_evidence_required": "the current hire-purchase contract, payoff statement, and provider eligibility terms for a vehicle still under finance"
+    },
+    "b3-02": {
+      "source_file": "automation-log/BATCH3-PRODUCTION-KIT.md",
+      "claim_scope": "older-vehicle finance uncertainty, ownership documents, affordability, and licensed-provider checks",
+      "source_ids": ["bot-debt-management-basics", "bot-license-loan", "bot-auto-loan-restructuring", "bot-secured-loan", "bot-hire-purchase-leasing"],
+      "official_urls": [
+        "https://www.bot.or.th/th/satang-story/managing-debt/indebtedness.html",
+        "https://www.bot.or.th/th/license-loan.html",
+        "https://www.bot.or.th/th/satang-story/managing-debt/auto-loan-restructuring.html",
+        "https://www.bot.or.th/th/satang-story/managing-debt/secured-loan.html",
+        "https://www.bot.or.th/th/research-and-publications/articles-and-publications/bot-magazine-issues/phrasiam-68-3/hire-purchase-leasing.html"
+      ],
+      "manual_evidence_required": "current provider vehicle-age acceptance rules and the case-specific ownership and registration documents"
+    },
+    "b3-03": {
+      "source_file": "automation-log/BATCH3-PRODUCTION-KIT.md",
+      "claim_scope": "older-vehicle finance uncertainty, ownership documents, affordability, and licensed-provider checks",
+      "source_ids": ["bot-debt-management-basics", "bot-license-loan", "bot-auto-loan-restructuring", "bot-secured-loan", "bot-hire-purchase-leasing"],
+      "official_urls": [
+        "https://www.bot.or.th/th/satang-story/managing-debt/indebtedness.html",
+        "https://www.bot.or.th/th/license-loan.html",
+        "https://www.bot.or.th/th/satang-story/managing-debt/auto-loan-restructuring.html",
+        "https://www.bot.or.th/th/satang-story/managing-debt/secured-loan.html",
+        "https://www.bot.or.th/th/research-and-publications/articles-and-publications/bot-magazine-issues/phrasiam-68-3/hire-purchase-leasing.html"
+      ],
+      "manual_evidence_required": "current provider vehicle-age acceptance rules and the case-specific ownership and registration documents"
+    },
+    "b3-04": {
+      "source_file": "automation-log/BATCH3-PRODUCTION-KIT.md",
+      "claim_scope": "older-vehicle finance uncertainty, ownership documents, affordability, and licensed-provider checks",
+      "source_ids": ["bot-debt-management-basics", "bot-license-loan", "bot-auto-loan-restructuring", "bot-secured-loan", "bot-hire-purchase-leasing"],
+      "official_urls": [
+        "https://www.bot.or.th/th/satang-story/managing-debt/indebtedness.html",
+        "https://www.bot.or.th/th/license-loan.html",
+        "https://www.bot.or.th/th/satang-story/managing-debt/auto-loan-restructuring.html",
+        "https://www.bot.or.th/th/satang-story/managing-debt/secured-loan.html",
+        "https://www.bot.or.th/th/research-and-publications/articles-and-publications/bot-magazine-issues/phrasiam-68-3/hire-purchase-leasing.html"
+      ],
+      "manual_evidence_required": "current provider vehicle-age acceptance rules and the case-specific ownership and registration documents"
+    },
+    "b3-05": {
+      "source_file": "automation-log/BATCH3-PRODUCTION-KIT.md",
+      "claim_scope": "credit-limit assessment factors and a self-set repayable spending ceiling",
+      "source_ids": ["bot-credit-card-guidance", "bot-responsible-lending-pdf"],
+      "official_urls": [
+        "https://www.bot.or.th/th/satang-story/digital-fin-lit/creditcard.html",
+        "https://www.bot.or.th/content/dam/bot/fipcs/documents/FPG/2568/ThaiPDF/25680030.pdf"
+      ],
+      "manual_evidence_required": "current issuer underwriting criteria for any provider-specific approval or credit-limit claim"
+    },
+    "b3-06": {
+      "source_file": "automation-log/BATCH3-PRODUCTION-KIT.md",
+      "claim_scope": "first-card selection based on spending patterns, fees, and full-repayment affordability",
+      "source_ids": ["bot-credit-card-guidance", "bot-responsible-lending-pdf"],
+      "official_urls": [
+        "https://www.bot.or.th/th/satang-story/digital-fin-lit/creditcard.html",
+        "https://www.bot.or.th/content/dam/bot/fipcs/documents/FPG/2568/ThaiPDF/25680030.pdf"
+      ]
+    },
+    "tt-r14-08": {
+      "source_file": "automation-log/TIKTOK-REACTIVATION-PLAN_20260817-30.md",
+      "claim_scope": "distinguishing an approved credit limit from a repayable personal spending ceiling",
+      "source_ids": ["bot-credit-card-guidance", "bot-responsible-lending-pdf"],
+      "official_urls": [
+        "https://www.bot.or.th/th/satang-story/digital-fin-lit/creditcard.html",
+        "https://www.bot.or.th/content/dam/bot/fipcs/documents/FPG/2568/ThaiPDF/25680030.pdf"
+      ]
+    },
+    "tt-r14-09": {
+      "source_file": "automation-log/TIKTOK-REACTIVATION-PLAN_20260817-30.md",
+      "claim_scope": "comparing card fees with benefits actually used",
+      "source_ids": ["bot-credit-card-guidance", "bot-responsible-lending-pdf"],
+      "official_urls": [
+        "https://www.bot.or.th/th/satang-story/digital-fin-lit/creditcard.html",
+        "https://www.bot.or.th/content/dam/bot/fipcs/documents/FPG/2568/ThaiPDF/25680030.pdf"
+      ]
+    },
+    "tt-r14-10": {
+      "source_file": "automation-log/TIKTOK-REACTIVATION-PLAN_20260817-30.md",
+      "claim_scope": "pre-application questions about use, full repayment, and affordability risks",
+      "source_ids": ["bot-credit-card-guidance", "bot-responsible-lending-pdf"],
+      "official_urls": [
+        "https://www.bot.or.th/th/satang-story/digital-fin-lit/creditcard.html",
+        "https://www.bot.or.th/content/dam/bot/fipcs/documents/FPG/2568/ThaiPDF/25680030.pdf"
+      ]
+    },
+    "tt-r14-11": {
+      "source_file": "automation-log/TIKTOK-REACTIVATION-PLAN_20260817-30.md",
+      "claim_scope": "2026 credit-card minimum payment and deliberate repayment planning",
+      "source_ids": ["bot-credit-card-guidance", "bot-responsible-lending-pdf", "bot-card-minimum-2026"],
+      "official_urls": [
+        "https://www.bot.or.th/th/satang-story/digital-fin-lit/creditcard.html",
+        "https://www.bot.or.th/content/dam/bot/fipcs/documents/FPG/2568/ThaiPDF/25680030.pdf",
+        "https://www.bot.or.th/content/dam/bot/fipcs/documents/FPG/2568/ThaiPDF/25680245.pdf"
+      ]
+    },
+    "tt-r14-12": {
+      "source_file": "automation-log/TIKTOK-REACTIVATION-PLAN_20260817-30.md",
+      "claim_scope": "using recent actual spending to select relevant card benefits",
+      "source_ids": ["bot-credit-card-guidance", "bot-responsible-lending-pdf"],
+      "official_urls": [
+        "https://www.bot.or.th/th/satang-story/digital-fin-lit/creditcard.html",
+        "https://www.bot.or.th/content/dam/bot/fipcs/documents/FPG/2568/ThaiPDF/25680030.pdf"
+      ]
+    },
+    "tt-r14-13": {
+      "source_file": "automation-log/TIKTOK-REACTIVATION-PLAN_20260817-30.md",
+      "claim_scope": "neutral card comparison using fees, conditions, and benefits actually used",
+      "source_ids": ["bot-credit-card-guidance", "bot-responsible-lending-pdf"],
+      "official_urls": [
+        "https://www.bot.or.th/th/satang-story/digital-fin-lit/creditcard.html",
+        "https://www.bot.or.th/content/dam/bot/fipcs/documents/FPG/2568/ThaiPDF/25680030.pdf"
+      ]
+    },
+    "tt-r14-14": {
+      "source_file": "automation-log/TIKTOK-REACTIVATION-PLAN_20260817-30.md",
+      "claim_scope": "reasons to pause a new card application when existing repayment or income is uncertain",
+      "source_ids": ["bot-credit-card-guidance", "bot-responsible-lending-pdf"],
+      "official_urls": [
+        "https://www.bot.or.th/th/satang-story/digital-fin-lit/creditcard.html",
+        "https://www.bot.or.th/content/dam/bot/fipcs/documents/FPG/2568/ThaiPDF/25680030.pdf"
+      ]
+    }
+  }
+}

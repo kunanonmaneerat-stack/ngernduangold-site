@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "observed_on": "2026-08-23",
+  "network": "AccessTrade",
+  "method": {
+    "campaign_status": "authenticated publisher dashboard",
+    "tracker_binding": "tracker copied from each campaign promotion modal without opening the tracker destination",
+    "tracker_redirect_followed": false,
+    "synthetic_clicks_created": 0
+  },
+  "dashboard_summary": {
+    "approved_campaigns": 67,
+    "paused_campaigns": 7,
+    "pending_campaigns": 10,
+    "rejected_campaigns": 2,
+    "not_applied_campaigns": 57
+  },
+  "registry": [
+    {"provider": "axamotor", "campaign_id": 631, "status": "approved", "tracker": "https://atth.me/0038ag002a0x"},
+    {"provider": "axapa", "campaign_id": 653, "status": "approved", "tracker": "https://atth.me/003ump002a0x", "change": "replaces unregistered legacy go/PhAKgrKX"},
+    {"provider": "carforcash", "campaign_id": 1101, "status": "approved", "tracker": "https://atth.me/00eq00002a0x"},
+    {"provider": "happycash", "campaign_id": 1076, "status": "approved", "tracker": "https://atth.me/00eeae002a0x"},
+    {"provider": "kashjoy", "campaign_id": 808, "status": "approved", "tracker": "https://atth.me/008izv002a0x"},
+    {"provider": "kept", "campaign_id": 955, "status": "paused", "tracker": "https://atth.me/00d9uk002a0x", "local_action": "removed from affiliate placements; direct official fallback only"},
+    {"provider": "ktccard", "campaign_id": 100, "status": "approved", "tracker": "https://atth.me/go/PeCbnOcY"},
+    {"provider": "ktcphboom", "campaign_id": 622, "status": "approved", "tracker": "https://atth.me/0031rk002a0x"},
+    {"provider": "ktcproud", "campaign_id": 588, "status": "approved", "tracker": "https://atth.me/002114002a0x"},
+    {"provider": "msig", "campaign_id": 131, "status": "approved", "tracker": "https://atth.me/000bqk002a0x"},
+    {"provider": "ngernturbo", "campaign_id": 1062, "status": "approved", "tracker": "https://atth.me/00eabp002a0x"},
+    {"provider": "refinance", "campaign_id": 1075, "status": "approved", "tracker": "https://atth.me/00eeac002a0x"},
+    {"provider": "scb", "campaign_id": 962, "status": "approved", "tracker": "https://atth.me/00db8m002a0x"},
+    {"provider": "scbprotect", "campaign_id": 970, "status": "approved", "tracker": "https://atth.me/00dgll002a0x"},
+    {"provider": "srisawad", "campaign_id": 919, "status": "approved", "tracker": "https://atth.me/00c27p002a0x"},
+    {"provider": "tuneprotect", "campaign_id": 890, "status": "paused", "tracker": "https://atth.me/00bofm002a0x", "local_action": "removed from generated placements"}
+  ],
+  "local_generated_site": {
+    "state": "PASS",
+    "active_providers": 14,
+    "affiliate_anchor_placements": 110,
+    "unique_active_trackers_used": 14,
+    "paused_or_legacy_tracker_literals": 0,
+    "kept_direct_official_fallbacks": 25,
+    "go_save": "/kept-savings-2026?utm_source=bio&utm_medium=social&utm_campaign=kept_guide&utm_content=go_save",
+    "merchant_gate_scope": "16 products; 2 promotions; 110 placements; 98 documents"
+  },
+  "public_production": {
+    "state": "BLOCKED_STALE_RELEASE",
+    "checked_on": "2026-08-23",
+    "affected_surfaces": [
+      "https://ngernduangold.com/links",
+      "https://ngernduangold.com/quiz",
+      "https://ngernduangold.com/health-insurance-salary-2026",
+      "https://ngernduangold.com/insurance-compare-2026",
+      "https://ngernduangold.com/kept-savings-2026"
+    ],
+    "danger_trackers": [
+      {"tracker_code": "00d9uk002a0x", "reason": "Kept campaign paused"},
+      {"tracker_code": "00bofm002a0x", "reason": "Tune Protect Health campaign paused"},
+      {"tracker_code": "004brg002a0x", "reason": "FWD Easy E-Life campaign paused"},
+      {"tracker_code": "00dayn002a0x", "reason": "generic Krungsri tracker does not match the current selected registry binding"},
+      {"tracker_code": "go/sdI3wlH5", "reason": "Krungsri Lady Titanium tracker is not bound to the current verified registry"}
+    ],
+    "release_performed": false
+  }
+}

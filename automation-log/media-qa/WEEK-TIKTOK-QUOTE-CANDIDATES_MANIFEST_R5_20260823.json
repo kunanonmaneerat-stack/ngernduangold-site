@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-23T21:20:00+07:00",
+  "status": "TECHNICAL_QA_PASS_HUMAN_LISTENING_NOT_RUN_DRAFT_ONLY",
+  "pack": {
+    "path": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+    "id": "week-content-20260824-30-r5",
+    "sha256": "0ACD60E0D44F689841C8AAF2C7AF1ADAADA6A5E03CCCAF87C3B626BE84A21A28"
+  },
+  "qa_summary": {
+    "path": "automation-log/media-qa/WEEK-TIKTOK-QUOTE-CANDIDATES_QA_R5_20260823.md",
+    "sha256": "D67C96FC687958E98EA2DCDA3EF88FAE944045ACF4685443F17F3F55F5DC9408"
+  },
+  "assets": [
+    {
+      "id": "wk36-sf01",
+      "asset": "reels/week-20260824-30-r5/2026-08-24_wk36-sf01.mp4",
+      "sha256": "ADB59197D732993C69435D15456B9C227F8A8072EF2133E9933D8DE376D88CEC",
+      "receipt": "automation-log/media-qa/wk36-sf01-tiktok-video-r5.json",
+      "receipt_sha256": "7EA8F4A2626A93A3A59E0D4983C5C2324754BCD88E8411DA5B8539B30C6FC9BF"
+    },
+    {
+      "id": "wk36-sf02",
+      "asset": "reels/week-20260824-30-r5/2026-08-25_wk36-sf02.mp4",
+      "sha256": "BF204A23D83820DABF941D62C4D4F93EA79753A42AB24A150D800BAC9790A61B",
+      "receipt": "automation-log/media-qa/wk36-sf02-tiktok-video-r5.json",
+      "receipt_sha256": "1FE8E70CF890292E41B2F798951518D6B1FFEA625D1D900426AD6D2E8A8F7F13"
+    },
+    {
+      "id": "qt-12-tiktok",
+      "asset": "reels/week-20260824-30-r5/2026-08-26_qt-12.mp4",
+      "sha256": "5302D53836218A0F1664F6058B58B73368382E2AF041F00EE98C38D1556DA1FA",
+      "receipt": "automation-log/media-qa/qt-12-tiktok-video-r5.json",
+      "receipt_sha256": "921884BDDD4F23BF6521AAB43FA88840894180782D37468295DA21DC4EE60ECC"
+    },
+    {
+      "id": "qt-12-facebook-instagram",
+      "asset": "media/quotes/week-20260824-30-r5/qt-12_fb-ig_4x5.jpg",
+      "sha256": "01A3FA967DAEF32206C0E11EBC3D6D0A681977F6E13106CCE60A70AB0744E6B0",
+      "receipt": "automation-log/media-qa/qt-12-fb-ig-image-r5.json",
+      "receipt_sha256": "D8F5CE374E07A1BA874C56499E1FFA28ED0ADC961531979768E22E2CAD182D8D"
+    },
+    {
+      "id": "qt-12-pinterest",
+      "asset": "media/quotes/week-20260824-30-r5/qt-12_pinterest_2x3.jpg",
+      "sha256": "337F6A1F0D708DD119F36854B22094888EFB7566555BE520CC85164320F22B49",
+      "receipt": "automation-log/media-qa/qt-12-pinterest-image-r5.json",
+      "receipt_sha256": "A9367B31FAE16604FB8C13B935636BA961242A34F96295BF4655E30B16213A2B"
+    },
+    {
+      "id": "wk36-sf03",
+      "asset": "reels/week-20260824-30-r5/2026-08-27_wk36-sf03.mp4",
+      "sha256": "E8B87B3D1A97A0517068F90FD12237439F97E31EC08AA12E279E52312F3723D0",
+      "receipt": "automation-log/media-qa/wk36-sf03-tiktok-video-r5.json",
+      "receipt_sha256": "B6B035414F7980441B34329BBAFE713CC731502C3E4236EE045DEC90851FC88D"
+    },
+    {
+      "id": "wk36-sf04",
+      "asset": "reels/week-20260824-30-r5/2026-08-28_wk36-sf04.mp4",
+      "sha256": "CEA93EA3E6E7944FE7E4BC9D1E5104121DE250329A5AB33C4FFBFB8C06AEF11C",
+      "receipt": "automation-log/media-qa/wk36-sf04-tiktok-video-r5.json",
+      "receipt_sha256": "B63416F602083C5B138B825EBFF5C0C75C2B1A45133AEE706CD8F620BE063182"
+    },
+    {
+      "id": "qt-13-tiktok",
+      "asset": "reels/week-20260824-30-r5/2026-08-29_qt-13.mp4",
+      "sha256": "01299233BA32AAA1400076C5575D9DEEEE649D287C14EB0589B64972CBDBC12C",
+      "receipt": "automation-log/media-qa/qt-13-tiktok-video-r5.json",
+      "receipt_sha256": "A899C6CBC7E0C64995B3FCA8AFE9601AC6744FFEA71773C878C7DEC3BA3FB24D"
+    },
+    {
+      "id": "qt-13-facebook-instagram",
+      "asset": "media/quotes/week-20260824-30-r5/qt-13_fb-ig_4x5.jpg",
+      "sha256": "F0E64962659977273CC8398638348091A7BF1208CE1A578DAAD92DADB63929AE",
+      "receipt": "automation-log/media-qa/qt-13-fb-ig-image-r5.json",
+      "receipt_sha256": "4E7060CCC4431542B7C35E6F2BF11A3F68B242CCA7AAC5CE1CCB6C669A0557A1"
+    },
+    {
+      "id": "qt-13-pinterest",
+      "asset": "media/quotes/week-20260824-30-r5/qt-13_pinterest_2x3.jpg",
+      "sha256": "9B773CAEF625CA022CEED1B5DDFFABA8C8DD59E9E937DAAC82E08832671BDA1A",
+      "receipt": "automation-log/media-qa/qt-13-pinterest-image-r5.json",
+      "receipt_sha256": "EE7885D9984FDEB24479FE29656E9359FE61D19FDA9CC2B2AB1737B6C47CFC05"
+    },
+    {
+      "id": "wk36-sf05",
+      "asset": "reels/week-20260824-30-r5/2026-08-30_wk36-sf05.mp4",
+      "sha256": "CB733BDA1E5322ED90DE9DC48CF9BDD253417D5167FC547E05402F398940D1B1",
+      "receipt": "automation-log/media-qa/wk36-sf05-tiktok-video-r5.json",
+      "receipt_sha256": "F1736630469EB36E47B26ED4141E7A5ACEBFDC818B98EC7A0F30DD1386872D7D"
+    }
+  ],
+  "release_fences": [
+    "DRAFT_ONLY",
+    "HUMAN_LISTENING_NOT_RUN",
+    "PUBLICATION_AUTHORITY_FALSE",
+    "EXACT_OWNER_APPROVAL_MISSING",
+    "CALENDAR_AND_DEDUP_BLOCKERS_RETAINED"
+  ]
+}

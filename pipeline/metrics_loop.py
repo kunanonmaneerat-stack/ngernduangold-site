@@ -1,9 +1,7 @@
-"""metrics_loop.py — agent วนข้อมูลกลับ (Data-Driven Feedback Loop · Gemini แนะนำ).
+"""Render manual social diagnostics without inferring revenue.
 
-อ่าน automation-log/metrics.csv (source,topic,views,clicks,quiz_start,conversion)
--> จัดอันดับว่าหัวข้อ/ช่องไหนเวิร์กจริง -> feedback ให้ Cowork + เสนอหัวข้อรอบใหม่จากของจริง.
-ยังไม่มีไฟล์ = แจ้งให้ export GA4/แพลตฟอร์ม. ปรับจากข้อมูลจริง ไม่ใช่เดา.
-ใช้:  py pipeline/metrics_loop.py
+The legacy ``conversion`` column is treated as an unverified intent signal.
+This file cannot select a winner or authorize scaling.
 """
 import os, sys, csv, datetime
 try:  # cp874-safe: UTF-8 stdout/stderr so Thai/emoji prints never crash on Windows console (idempotent)
@@ -30,22 +28,28 @@ def main():
         print('ยังไม่มี', SRC)
         print('-> export GA4/แพลตฟอร์มเป็น metrics.csv (คอลัมน์: source,topic,views,clicks,quiz_start,conversion) แล้วรันใหม่')
         return
-    rows = list(csv.DictReader(open(SRC, encoding='utf-8')))
+    with open(SRC, encoding='utf-8') as handle:
+        rows = list(csv.DictReader(handle))
     rank = sorted(rows, key=lambda r: (-_num(r, 'conversion'), -_num(r, 'quiz_start'), -_num(r, 'clicks')))
     ts = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
     p = os.path.join(LOG, 'metrics-feedback-' + ts + '.md')
     with open(p, 'w', encoding='utf-8') as f:
-        f.write('# METRICS FEEDBACK (ข้อมูลจริง -> Cowork) ' + ts + '\n\n')
-        f.write('> Cowork: ดันหัวข้อ/ช่องที่เวิร์กจริง เขียน orders.txt จากของจริง ไม่ใช่เดา\n\n')
-        f.write('| # | source | topic | views | clicks | quiz_start | conversion |\n|--|--|--|--|--|--|--|\n')
+        f.write('# MANUAL METRICS DIAGNOSTIC (not revenue / not scale) ' + ts + '\n\n')
+        f.write('> `metrics.csv` เป็น manual snapshot; คอลัมน์เดิม `conversion` '
+                'ถูกตีความเป็น legacy intent เท่านั้น ไม่ใช่ conversion/รายได้ '
+                'และห้ามเลือก winner หรือ scale จากไฟล์นี้\n\n')
+        f.write('| # | source | topic | views | clicks | quiz_start | legacy_intent |\n|--|--|--|--|--|--|--|\n')
         for i, r in enumerate(rank[:15], 1):
             f.write('| ' + str(i) + ' | ' + str(r.get('source', '')) + ' | ' + str(r.get('topic', ''))[:40] +
                     ' | ' + str(r.get('views', '')) + ' | ' + str(r.get('clicks', '')) +
                     ' | ' + str(r.get('quiz_start', '')) + ' | ' + str(r.get('conversion', '')) + ' |\n')
-        top = [r.get('topic', '') for r in rank[:3] if r.get('topic')]
-        f.write('\n## หัวข้อที่ควรดันต่อ (ป้อน dispatcher)\n' + '\n'.join('- ' + t for t in top) + '\n')
-    cc_bridge.ping('Metrics feedback พร้อม -> metrics-feedback-' + ts + '.md (Cowork ปรับ orders จากของจริง)')
+        f.write('\n## คำตัดสิน\n'
+                '- ใช้เพื่อหาแถวที่ควรตรวจต่อเท่านั้น\n'
+                '- ต้องมี GA4 Decision Trust=TRUSTED และ paid affiliate commission '
+                'ที่ผูกกับ source/content ก่อนพิจารณาเพิ่มน้ำหนัก\n')
+    cc_bridge.ping('Manual metrics diagnostic ready -> metrics-feedback-' + ts + '.md (not revenue / not scale)')
     print('metrics feedback ->', p, '| rows', len(rows))
+    return p
 
 
 if __name__ == '__main__':

@@ -1,31 +1,169 @@
 # -*- coding: utf-8 -*-
 """Generate a static Thai personal-finance affiliate SEO site -> ./site/"""
-# deploy-note: keep any build_site.py change as the LAST commit of a push — the Netlify ignore rule
-# diffs only HEAD^..HEAD, so a site change buried under an automation-log commit gets SKIPPED (2026-07-02).
-import os, html, json, datetime, shutil, re
+# Netlify compares CACHED_COMMIT_REF..COMMIT_REF, so site changes can be batched safely.
+import os, html, json, shutil, re
 
-BASE = os.environ.get("SITE_BASE", "https://example.com")  # patched after deploy
+BASE = os.environ.get("SITE_BASE", "https://ngernduangold.com")
 SITE = "เงินเดือนสมองทอง"
 TAGLINE = "การเงินมนุษย์เงินเดือน · บัตรเครดิต ออมเงิน ลงทุน ย่อยง่าย"
-KRUNGSRI = "https://atth.me/00dayn002a0x"
+KRUNGSRI = "/credit-card-easy-approval-2026"  # generic route paused: former tracker resolves to a specific Lady card
 KEPT = "https://atth.me/00d9uk002a0x"
 KTC_CARD = "https://atth.me/go/PeCbnOcY"
-LADY_TITANIUM = "https://atth.me/go/sdI3wlH5"
+KTC_CARD_OFFICIAL = "https://www.ktc.co.th/credit-card"
+KTC_CARD_OFFER_REVIEWED_ON = "2026-08-16"
+LADY_TITANIUM = "/credit-card-easy-approval-2026"  # keep internal until product/offer is re-verified
 GSC_VERIFY = os.environ.get("SITE_GSC_VERIFY","")  # GSC URL-prefix HTML-tag verification for ngernduangold.com (public token, NOT a secret)
 GSC_META = '<meta name="google-site-verification" content="'+GSC_VERIFY+'">' if GSC_VERIFY else ''
-GA_ID = os.environ.get("SITE_GA","")
+# GA measurement IDs are public page identifiers, not secrets.  Keep the
+# production ID as the local-build default so a missing env var cannot silently
+# ship 78 pages with no attribution; SITE_GA can still override it explicitly.
+GA_ID = os.environ.get("SITE_GA", "G-17PPE0M1B8").strip()
 if GA_ID:
     _g = '<script async src="https://www.googletagmanager.com/gtag/js?id='+GA_ID+'"></script>'
     # data-hygiene: localhost / 127.0.0.1 / ?notrack|?nt|?debug=1 -> GA official opt-out (no hits sent) so dev+QA+Playwright don't pollute the funnel. dataLayer still populates (verification intact). Production hostname w/o flag = unaffected.
     _g += '<script>var _NT=/^(localhost|127\\.0\\.0\\.1|\\[::1\\])$/.test(location.hostname)||/[?&](notrack|nt|debug)=1/.test(location.search);if(_NT){window["ga-disable-'+GA_ID+'"]=true;}window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config","'+GA_ID+'");'
-    _g += 'document.addEventListener("click",function(e){var a=e.target&&e.target.closest?e.target.closest("a"):null;if(!a)return;var rel=a.getAttribute("rel")||"",cl=" "+(a.className||"")+" ";if(/sponsored/.test(rel)||(a.href&&a.href.indexOf("atth.me")>=0)||cl.indexOf(" hubbtn ")>=0||cl.indexOf(" cta ")>=0||cl.indexOf(" go ")>=0){try{gtag("event","affiliate_click",{link_url:a.href,link_text:(a.textContent||"").trim().slice(0,80),page:location.pathname,campaign:((a.href.match(/utm_campaign=([^&]+)/)||[])[1]||""),sub_id:((a.href.match(/utm_content=([^&]+)/)||[])[1]||""),channel:((a.href.match(/utm_source=([^&]+)/)||[])[1]||""),provider:(a.getAttribute("data-provider")||"")})}catch(_){} }else if(cl.indexOf(" shr ")>=0){try{gtag("event","share",{method:(a.getAttribute("data-method")||""),page:location.pathname})}catch(_){} }});</script>'
+    _g += ('var _AQ=new URLSearchParams(location.search);'
+           'function _pageContent(a){var v=a&&a.getAttribute("data-content-id");if(v)return v;return location.pathname.replace(/^\\/+|\\.html$|\\/+$/g,"")||"home"}'
+           'function _acqContent(){return _AQ.get("content_id")||_AQ.get("utm_content")||""}'
+           'function _ctaPos(a){var v=a&&a.getAttribute("data-pos");if(v)return v;if(a.closest("nav"))return"nav";if(a.closest(".cmp"))return"comparison-widget";if(a.closest("table"))return"comparison-table";if(a.closest(".hubsec,.morewrap"))return"hub";if(a.closest("footer"))return"footer";return"article-body"}'
+           'function _subId(a){return((a.href.match(/utm_content=([^&]+)/)||[])[1]||"")}'
+           'function _ctaId(a){var v=a.getAttribute("data-cta-id");if(v)return v;var p=a.getAttribute("data-provider")||"cta",s=_subId(a);return s?p+"-"+s:p+"-"+_pageContent(a)}'
+           'document.addEventListener("click",function(e){var a=e.target&&e.target.closest?e.target.closest("a"):null;if(!a)return;'
+           'var rel=a.getAttribute("rel")||"",cl=" "+(a.className||"")+" ",u;try{u=new URL(a.href,location.href)}catch(_){return}'
+           'var aff=/sponsored/.test(rel)||/(^|\\.)atth\\.me$/.test(u.hostname)||u.origin===location.origin&&/^\\/go(?:\\/|$)/.test(u.pathname);'
+           'var product=!!a.getAttribute("data-buy")||a.hasAttribute("data-note"),cta=cl.indexOf(" hubbtn ")>=0||cl.indexOf(" cta ")>=0||cl.indexOf(" go ")>=0;'
+           'try{if(aff){gtag("event","affiliate_click",{link_url:a.href,link_text:(a.textContent||"").trim().slice(0,80),page:location.pathname,campaign:((a.href.match(/utm_campaign=([^&]+)/)||[])[1]||""),sub_id:_subId(a),channel:((a.href.match(/utm_source=([^&]+)/)||[])[1]||""),provider:(a.getAttribute("data-provider")||""),cta_id:_ctaId(a),position:_ctaPos(a),content_id:_pageContent(a),acquisition_content_id:_acqContent()})}'
+           'else if(product){gtag("event","buy_intent_click",{link_url:a.href,product:(a.getAttribute("data-buy")||a.getAttribute("data-note")||"own-product"),position:(a.getAttribute("data-pos")||""),page:location.pathname})}'
+           'else if(u.hostname==="line.me"){gtag("event","line_lead_click",{link_url:a.href,page:location.pathname})}'
+           'else if(u.origin===location.origin&&cta){gtag("event","internal_cta_click",{link_url:a.href,page:location.pathname,cta_id:_ctaId(a),position:_ctaPos(a),content_id:_pageContent(a),acquisition_content_id:_acqContent()})}'
+           'else if(cl.indexOf(" shr ")>=0){gtag("event","share",{method:(a.getAttribute("data-method")||""),page:location.pathname})}}catch(_){}});'
+           'document.addEventListener("DOMContentLoaded",function(){var n=document.querySelector("[data-answer-id]");if(!n||!("IntersectionObserver" in window))return;var o=new IntersectionObserver(function(es){es.forEach(function(x){if(!x.isIntersecting)return;gtag("event","answer_seen",{answer_id:n.getAttribute("data-answer-id")||"",page:location.pathname,content_id:_pageContent(n),acquisition_content_id:_acqContent()});o.disconnect()})},{threshold:.6});o.observe(n)});'
+           'document.addEventListener("play",function(e){var v=e.target;if(v&&v.matches&&v.matches("video[data-content-id]")){gtag("event","video_start",{content_id:v.getAttribute("data-content-id")||"",page:location.pathname})}},true);</script>')
     GA_SNIPPET=_g
 else:
     GA_SNIPPET=""
 TODAY = "2026-06-14"
-BUILD_DATE = os.environ.get("SITE_BUILD_DATE") or datetime.datetime.now().strftime("%Y-%m-%d")  # sitemap lastmod / dateModified — bumps each deploy
+PAGE_METADATA = {
+    # These dates move only when the page itself is materially edited/reviewed.  A
+    # rebuild or deploy must never make old financial claims look newly reviewed.
+    "bureau-blacklist-loan-2026.html": {"modified_at": "2026-08-16", "scope": "KTC PROUD product taxonomy"},
+    "car-still-installment-loan-2026.html": {"modified_at": "2026-08-16", "scope": "official-source binding and CTA destination clarity"},
+    "cash-card-easy-2026.html": {"modified_at": "2026-08-16", "scope": "separate KTC PROUD cash card from KTC P BERM vehicle loan"},
+    "credit-bureau-check-2026.html": {"modified_at": "2026-08-16", "scope": "KTC PROUD CTA taxonomy"},
+    "credit-card-salary-20000-2026.html": {"modified_at": "2026-08-16", "scope": "BOT credit-card limit and KTC PROUD taxonomy"},
+    "credit-card-salary-30000-2026.html": {"modified_at": "2026-08-16", "scope": "credit-limit sources and attribution pilot"},
+    "loan-cash-2026.html": {"modified_at": "2026-08-16", "scope": "KTC PROUD product taxonomy"},
+    "loan-online-legal-2026.html": {"modified_at": "2026-08-16", "scope": "official-source binding and KTC PROUD taxonomy"},
+    "pay-off-credit-card-debt-2026.html": {"modified_at": "2026-08-16", "scope": "official-source binding"},
+    "personal-loan-2026.html": {"modified_at": "2026-08-16", "scope": "separate term loan from revolving cash card"},
+    "rebuild-credit-after-debt-2026.html": {"modified_at": "2026-08-16", "scope": "responsible CTA removal"},
+    "refinance-home-2026.html": {"modified_at": "2026-08-16", "scope": "official-source binding"},
+}
 OUT = "site"
 os.makedirs(OUT, exist_ok=True)
+
+
+# Product id and fulfillment identity are one contract.  In particular, the
+# Gumroad debt toolkit is an Excel product and must never satisfy the missing
+# letter-kit PDF merely because both are priced at 199 THB.  New products stay
+# fail-closed until their exact deliverable identity is reviewed here.
+OWN_PRODUCT_DELIVERABLE_BINDINGS = {
+    "ebook-59": "automation-log/_ebook_debt-payoff_v1.2.pdf",
+    "debt-toolkit-gumroad": "gumroad:l/debt-toolkit",
+}
+
+
+def load_own_product_policy(policy_path=None, project_root=None):
+    """Load the owner-controlled promotion switch for every own product.
+
+    A deliverable being present is not permission to sell it. Rendering purchase
+    controls while ``promotion_authorized`` is false is a fail-open revenue bug,
+    so malformed or ambiguous policy aborts the build.  Authorization is also
+    insufficient by itself: an authorized item must bind to its exact reviewed,
+    nonempty fulfillment artifact (or the one explicitly hosted Gumroad item).
+    """
+    root = os.path.realpath(
+        project_root or os.path.dirname(os.path.abspath(__file__)))
+    path = (policy_path if policy_path is not None else
+            os.path.join(root, ".system_control", "policy.json"))
+    try:
+        with open(path, encoding="utf-8") as handle:
+            payload = json.load(handle)
+        items = payload["products"]["items"]
+    except Exception as exc:
+        raise SystemExit("BUILD ABORTED: cannot read own-product promotion policy: %s" % exc)
+    if not isinstance(items, list) or not items:
+        raise SystemExit("BUILD ABORTED: own-product promotion policy has no items")
+    products = {}
+    for item in items:
+        if (not isinstance(item, dict) or
+                not isinstance(item.get("id"), str) or
+                not item["id"].strip() or item["id"] != item["id"].strip()):
+            raise SystemExit("BUILD ABORTED: malformed own-product policy item")
+        product_id = item["id"]
+        if product_id in products:
+            raise SystemExit("BUILD ABORTED: duplicate own-product policy id " + product_id)
+        if not isinstance(item.get("promotion_authorized"), bool):
+            raise SystemExit(
+                "BUILD ABORTED: %s has no boolean promotion_authorized" % product_id)
+        if item["promotion_authorized"] is True:
+            if item.get("status") != "DELIVERABLE_READY":
+                raise SystemExit(
+                    "BUILD ABORTED: %s is authorized without DELIVERABLE_READY status"
+                    % product_id)
+            deliverable = item.get("deliverable")
+            if (not isinstance(deliverable, str) or not deliverable.strip() or
+                    deliverable != deliverable.strip()):
+                raise SystemExit(
+                    "BUILD ABORTED: %s is authorized without a deliverable"
+                    % product_id)
+            expected = OWN_PRODUCT_DELIVERABLE_BINDINGS.get(product_id)
+            if expected is None or deliverable != expected:
+                raise SystemExit(
+                    "BUILD ABORTED: %s deliverable identity is not approved"
+                    % product_id)
+
+            if deliverable.startswith("gumroad:"):
+                if (product_id != "debt-toolkit-gumroad" or
+                        deliverable != "gumroad:l/debt-toolkit"):
+                    raise SystemExit(
+                        "BUILD ABORTED: %s has the wrong hosted product identity"
+                        % product_id)
+            else:
+                if os.path.isabs(deliverable):
+                    raise SystemExit(
+                        "BUILD ABORTED: %s local deliverable must be project-relative"
+                        % product_id)
+                artifact = os.path.realpath(os.path.join(root, deliverable))
+                try:
+                    bounded = os.path.commonpath([root, artifact]) == root
+                except (OSError, ValueError):
+                    bounded = False
+                if not bounded:
+                    raise SystemExit(
+                        "BUILD ABORTED: %s local deliverable escapes the project"
+                        % product_id)
+                try:
+                    artifact_ready = (os.path.isfile(artifact) and
+                                      os.path.getsize(artifact) > 0)
+                except OSError:
+                    artifact_ready = False
+                if not artifact_ready:
+                    raise SystemExit(
+                        "BUILD ABORTED: %s local deliverable is missing or empty"
+                        % product_id)
+        products[product_id] = item
+    return products
+
+
+OWN_PRODUCT_POLICY = load_own_product_policy()
+
+
+def promotion_authorized(product_id):
+    item = OWN_PRODUCT_POLICY.get(product_id)
+    if item is None:
+        raise SystemExit("BUILD ABORTED: undeclared own product " + product_id)
+    return item["promotion_authorized"] is True
 
 def gate_stitch():
     """Block the build if any Stitch/AI component under components/stitch has a comply_gate FAIL
@@ -40,6 +178,51 @@ def gate_stitch():
         raise SystemExit("BUILD ABORTED: comply_gate_stitch FAIL in components/stitch "
                          "(turn hardcoded numbers into {{placeholders}}, remove fake reviews)")
 gate_stitch()
+
+
+def gate_merchant_offers(*sources):
+    """Block dated promo copy without disabling a still-available product."""
+    import sys, subprocess
+    here = os.path.dirname(os.path.abspath(__file__))
+    gate = os.path.join(here, "tools", "merchant_offer_gate.py")
+    registry = os.path.join(here, ".system_control", "merchant_offers.json")
+    if not (os.path.exists(gate) and os.path.exists(registry)):
+        raise SystemExit("BUILD ABORTED: merchant offer gate/registry is missing")
+    command = [sys.executable, gate, "--registry", registry]
+    command.extend(os.path.abspath(source) for source in sources)
+    result = subprocess.run(command)
+    if result.returncode != 0:
+        raise SystemExit("BUILD ABORTED: expired or malformed merchant promotion copy")
+
+
+gate_merchant_offers()
+
+
+def load_merchant_offer_policy():
+    """Load the reviewed affiliate-network state used by the renderer.
+
+    The static gate catches stale placements after rendering.  The renderer must
+    also fail closed so a paused network campaign becomes a direct official link
+    instead of leaving a stale tracking URL live until the next manual edit.
+    """
+    path = os.path.join(".system_control", "merchant_offers.json")
+    try:
+        with open(path, encoding="utf-8") as handle:
+            payload = json.load(handle)
+        products = payload["products"]
+    except Exception as exc:
+        raise SystemExit("BUILD ABORTED: cannot read merchant offer policy: %s" % exc)
+    if not isinstance(products, dict) or not products:
+        raise SystemExit("BUILD ABORTED: merchant offer policy has no products")
+    return products
+
+
+MERCHANT_OFFER_POLICY = load_merchant_offer_policy()
+
+
+def affiliate_offer_active(provider):
+    offer = MERCHANT_OFFER_POLICY.get(str(provider).lower())
+    return isinstance(offer, dict) and offer.get("availability") == "active"
 
 for _s,_d in [("cover_banner.png","og-default.png"),("og-letter-kit.png","og-letter-kit.png"),("og-tool-quiz.png","og-tool-quiz.png"),("og-tool-refi.png","og-tool-refi.png"),("og-tool-clock.png","og-tool-clock.png"),("og-workshop-hr.png","og-workshop-hr.png"),("cover_banner_loan.png","og-loan.png"),("logo.png","logo.png"),("insure-hero.svg","insure-hero.svg"),("car-insurance-infographic.html","car-insurance-infographic.html"),("debt-payoff-infographic.html","debt-payoff-infographic.html"),("budget-503020-infographic.html","budget-503020-infographic.html"),("home-land-for-cash-infographic.html","home-land-for-cash-infographic.html"),("motorcycle-title-loan-infographic.html","motorcycle-title-loan-infographic.html"),("car-refinance-infographic.html","car-refinance-infographic.html")]:
     if os.path.exists(_s):
@@ -56,7 +239,7 @@ if os.path.isdir("reels"):
         _rel = os.path.relpath(_rd, ".")
         os.makedirs(f"{OUT}/{_rel}", exist_ok=True)
         for _rf in sorted(_files):
-            if _rf.endswith((".mp4", ".json")):
+            if _rf.endswith((".mp4", ".json", ".vtt", ".png")):
                 shutil.copy2(os.path.join(_rd, _rf), f"{OUT}/{_rel}/{_rf}")
 
 _TOOL_PAGES = [  # standalone tool/landing pages (root file pristine; copy + head-inject like debt-calculator)
@@ -75,8 +258,8 @@ _TOOL_PAGES = [  # standalone tool/landing pages (root file pristine; copy + hea
     ("workshop-hr", "Workshop การเงินสำหรับพนักงาน — สำหรับ HR และองค์กร",
      "เวิร์กช็อปปลดหนี้/เงินสำรอง/วางแผนเงินเดือนสำหรับพนักงาน On-site/Online ไม่ขายผลิตภัณฑ์ในห้อง ขอใบเสนอราคาฟรี",
      "og-workshop-hr.png"),
-    ("debt-letter-kit", "ชุดจดหมายเจรจาหนี้ 5 ฉบับ + สคริปต์โทรแบงก์",
-     "จดหมายพร้อมใช้ 5 ฉบับ (ลดดอก/ปรับโครงสร้าง/พักชำระ/ประนอมหนี้/ปิดบัญชีลดยอด) + สคริปต์โทรแบงก์ — ตัวอย่างฟรี ขอชุดเต็มทาง LINE",
+    ("debt-letter-kit", "ตัวอย่างจดหมายเจรจาหนี้ฟรี (ชุดเต็มอยู่ระหว่างตรวจคุณภาพ)",
+     "อ่านตัวอย่างจดหมายขอลดดอกเบี้ยฟรี พร้อมเครื่องมือประเมินและวางแผนหนี้ ชุดเอกสารฉบับเต็มยังอยู่ระหว่างตรวจคุณภาพและยังไม่เปิดขาย",
      "og-letter-kit.png"),
 ]
 for _tslug, _ttt, _ttd, _tog in _TOOL_PAGES:
@@ -86,7 +269,23 @@ for _tslug, _ttt, _ttd, _tog in _TOOL_PAGES:
         raise SystemExit(f"BUILD ABORTED: tool page {_tslug}.html missing (referenced by sitemap/redirects/footer)")
     if _tog != "og-default.png" and not os.path.exists(_tog):
         raise SystemExit(f"BUILD ABORTED: og image {_tog} missing (referenced by {_tslug})")
+    if _tslug == "debt-letter-kit":
+        _ttd = ("\u0e2d\u0e48\u0e32\u0e19\u0e15\u0e31\u0e27\u0e2d\u0e22\u0e48\u0e32\u0e07\u0e08\u0e14\u0e2b\u0e21\u0e32\u0e22\u0e40\u0e08\u0e23\u0e08\u0e32\u0e2b\u0e19\u0e35\u0e49\u0e1f\u0e23\u0e35 "
+                "\u0e0a\u0e38\u0e14\u0e40\u0e15\u0e47\u0e21\u0e1b\u0e34\u0e14\u0e23\u0e31\u0e1a\u0e04\u0e33\u0e2a\u0e31\u0e48\u0e07\u0e0b\u0e37\u0e49\u0e2d\u0e0a\u0e31\u0e48\u0e27\u0e04\u0e23\u0e32\u0e27\u0e08\u0e19\u0e01\u0e27\u0e48\u0e32\u0e08\u0e30\u0e1c\u0e48\u0e32\u0e19\u0e01\u0e32\u0e23\u0e15\u0e23\u0e27\u0e08\u0e04\u0e38\u0e13\u0e20\u0e32\u0e1e "
+                "\u0e1e\u0e23\u0e49\u0e2d\u0e21\u0e25\u0e34\u0e07\u0e01\u0e4c\u0e40\u0e04\u0e23\u0e37\u0e48\u0e2d\u0e07\u0e21\u0e37\u0e2d\u0e27\u0e32\u0e07\u0e41\u0e1c\u0e19\u0e2b\u0e19\u0e35\u0e49\u0e1f\u0e23\u0e35")
     _dc = open(f"{_tslug}.html", encoding="utf-8").read()
+    if _tslug == "debt-letter-kit":
+        if 'data-offer-status="paused"' not in _dc:
+            raise SystemExit("BUILD ABORTED: letter-kit has no deliverable and must remain paused")
+        def _pause_letter_offer(match):
+            tag = match.group(0).replace('data-buy="letter-kit-199"',
+                                        'data-paused-product="letter-kit-199"')
+            return re.sub(r'href="[^"]+"', 'href="/debt-health-check"', tag, count=1)
+        _dc = re.sub(r'<a\b[^>]*data-buy="letter-kit-199"[^>]*>',
+                     _pause_letter_offer, _dc)
+        _dc = re.sub(r'<meta name="description" content="[^"]*">',
+                     '<meta name="description" content="' + html.escape(_ttd) + '">',
+                     _dc, count=1)
     _dc_inject = (f'<link rel="canonical" href="{BASE}/{_tslug}">'
                   f'<meta property="og:type" content="website">'
                   f'<meta property="og:title" content="{_ttt} | {SITE}">'
@@ -105,9 +304,17 @@ for _tslug, _ttt, _ttd, _tog in _TOOL_PAGES:
 _SEO_STANDALONE = [
     "car-pawn-not-paid-off",
     "old-car-financing-20years",
-    "credit-card-salary-30000",
     "loan-approval-compare",
 ]
+_CANONICAL_ALIASES = {
+    # Keep the old source file as history, but never publish it as a second page.
+    # Both public legacy paths 301 to the richer 2026 article below.
+    "credit-card-salary-30000": "credit-card-salary-30000-2026",
+}
+for _legacy_slug in _CANONICAL_ALIASES:
+    _legacy_output = f"{OUT}/{_legacy_slug}.html"
+    if os.path.isfile(_legacy_output):
+        os.remove(_legacy_output)
 for _sslug in _SEO_STANDALONE:
     _ssrc = f"{_sslug}.html"
     if not os.path.exists(_ssrc):
@@ -120,7 +327,9 @@ for _sslug in _SEO_STANDALONE:
 
 # Canonical lowercase provider codes so GA4 provider/campaign never splits one provider into
 # 'Srisawad' vs 'srisawad' vs 'ศรีสวัสดิ์'. Category aliases collapse to their brand:
-# debt = HappyCash (รวมหนี้) product, personalloan = KTC PROUD product.
+# debt = HappyCash (รวมหนี้) product. ``personalloan`` is retained only as the
+# historical campaign key for KTC PROUD; the public copy must identify the actual
+# product as a revolving cash card, not a fixed-term personal loan.
 PROVIDER_CANON = {
     "krungsri": "krungsri", "kept": "kept",
     "ktccard": "ktccard", "ladytitanium": "ladytitanium",
@@ -149,6 +358,10 @@ def utm(base, merchant, slug, channel="website", medium="article"):
     sep = "&" if "?" in base else "?"
     sub = f"{channel}_{page}_{prov}"  # {channel}_{page}_{provider}
     return f"{base}{sep}utm_source={channel}&utm_medium={medium}&utm_campaign={prov}&utm_content={sub}"
+
+def _is_internal_offer(url):
+    """True for an educational fallback, which must never look/count like an affiliate click."""
+    return str(url or "").startswith("/")
 
 CSS = """
 :root{--bg:#0F172A;--bg-2:#1E293B;--bg-soft:#F8FAFC;--gold:#C5A880;--gold-lt:#D8C29A;--gold-deep:#7A6024;--gold-soft:rgba(197,168,128,.16);--ink:#1E293B;--muted:#64748B;--line:#E2E8F0;--card:#fff;--font-head:'Noto Serif Thai',Georgia,serif;--font-body:'IBM Plex Sans Thai','Sarabun',system-ui,'Segoe UI',sans-serif;--lh:1.85}
@@ -281,20 +494,18 @@ def head(title, desc, slug, jsonld_list, og_type="article", og_image="og-default
 <meta property="og:description" content="{html.escape(desc)}"><meta property="og:url" content="{canon}">
 <meta property="og:site_name" content="{SITE}"><meta name="twitter:card" content="summary_large_image">
 <meta property="og:image" content="{BASE}/{og_image}"><meta property="og:image:width" content="1640"><meta property="og:image:height" content="664"><meta property="og:image:alt" content="{html.escape(SITE)}"><meta name="twitter:image" content="{BASE}/{og_image}">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;700&family=Noto+Serif+Thai:wght@600&display=swap" rel="stylesheet">
 <style>{CSS}</style>{ld}{GA_SNIPPET}</head><body>
 <header class="top"><div class="wrap"><a href="/" style="display:inline-flex;align-items:center;gap:7px;text-decoration:none"><img src="/logo.png" alt="{SITE}" class="logo" width="26" height="26" decoding="async"><b>{SITE}</b></a>
 <nav><a href="/debt-calculator">ปลดหนี้</a><a href="/debt-health-check">เช็กหนี้ 60 วิ</a><a href="/credit-card-easy-approval-2026.html">บัตรเครดิต</a><a href="/high-yield-savings-2026.html">ออมเงิน</a><a href="/loan-cash-2026.html">สินเชื่อ</a><a href="/insurance-compare-2026.html">ประกัน</a><a href="/links">ลิงก์รวม</a><a href="https://line.me/R/ti/p/@804qodya" target="_blank" rel="noopener" style="color:#06C755;font-weight:700">แอด LINE</a></nav></div></header>
 <div class="trustband"><div class="wrap"><span>🗓 <b>อัปเดต 2026</b></span><span>🔗 อ้างอิงหน้าทางการของผู้ให้บริการ</span><span>⚖️ เทียบหลายเจ้าก่อนตัดสินใจ</span></div></div>"""
 
 # global JS on every page: interstitial (card+loan) + micro-conversion events. $0, no-PII (path+channel only).
-SITE_JS = """<div id="interstitial" style="display:none;position:fixed;inset:0;background:rgba(15,15,18,.72);z-index:9999;align-items:center;justify-content:center;padding:18px">
+SITE_JS = """<div id="interstitial" role="dialog" aria-modal="true" aria-labelledby="ist-title" aria-hidden="true" tabindex="-1" style="display:none;position:fixed;inset:0;background:rgba(15,15,18,.72);z-index:9999;align-items:center;justify-content:center;padding:18px">
 <div style="background:#fff;max-width:440px;width:100%;border-radius:16px;padding:22px 20px;box-shadow:0 12px 40px rgba(0,0,0,.3)">
-<div style="font-weight:700;font-size:17px;color:#1a1a1f;margin-bottom:6px">ก่อนไปสมัคร — เช็กให้ชัด 1 นาที ✅</div>
+<div id="ist-title" style="font-weight:700;font-size:17px;color:#1a1a1f;margin-bottom:6px">ก่อนไปสมัคร — เช็กให้ชัด 1 นาที ✅</div>
 <div id="ist-body" style="font-size:14px;color:#3a3a44;line-height:1.7"></div>
-<a id="interstitial-continue" class="interstitial-go go" rel="sponsored noopener nofollow" target="_blank" href="#" style="display:block;background:var(--gold);color:#1a1a1f;font-weight:700;text-align:center;padding:14px;border-radius:12px;text-decoration:none;margin:14px 0 8px;font-size:16px">ไปหน้าสมัครต่อ →</a>
-<a href="javascript:void(0)" onclick="window.__istHide&&window.__istHide()" style="display:block;text-align:center;color:#5b5b66;font-size:13px;text-decoration:none">✕ ปิด / ดูบทความเทียบเพิ่มก่อน</a>
+<a id="interstitial-continue" class="interstitial-go go" rel="noopener nofollow" target="_blank" href="#" style="display:block;background:var(--gold);color:#1a1a1f;font-weight:700;text-align:center;padding:14px;border-radius:12px;text-decoration:none;margin:14px 0 8px;font-size:16px">ไปหน้าสมัครต่อ →</a>
+<button id="interstitial-close" type="button" style="display:block;width:100%;border:0;background:transparent;text-align:center;color:#5b5b66;font-size:13px;text-decoration:none;cursor:pointer">✕ ปิด / ดูบทความเทียบเพิ่มก่อน</button>
 <div style="font-size:11.5px;color:#8a8a95;margin-top:10px;line-height:1.6">* เช็กเงื่อนไข/อนุมัติ/ดอกเบี้ย/ค่าธรรมเนียมล่าสุดที่หน้าสมัคร · ไม่การันตีการอนุมัติ</div>
 </div></div>
 <script>
@@ -304,18 +515,21 @@ var CH=((new URLSearchParams(location.search).get('utm_source'))||'website').rep
 try{var seen=false;var els=document.querySelectorAll('.cmp,.ctable');if(els.length&&'IntersectionObserver' in window){var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting&&!seen){seen=true;gev('scroll_to_compare_table',{path:location.pathname,channel:CH});io.disconnect();}});},{threshold:0.25});els.forEach(function(e){io.observe(e);});}}catch(e){}
 document.addEventListener('click',function(e){var s=e.target.closest&&e.target.closest('details summary');if(s){gev('view_conditions_click',{path:location.pathname,channel:CH});}},false);
 var CARDLOAN={krungsri:1,srisawad:1,carforcash:1,ktcphboom:1,happycash:1,ktcproud:1,refinance:1};
+var lastFocus=null;
 var PROV={
 krungsri:{fit:'อยากได้บัตรเครดิตใบแรก/สะสมเครดิต/รับสิทธิ์',docs:'บัตรประชาชน + เอกสารแสดงรายได้ (สลิปเงินเดือน/เดินบัญชี)',note:'ไม่มีใบไหนการันตีผ่าน เกณฑ์รายได้แล้วแต่บัตร'},
 srisawad:{fit:'มีรถ/มอเตอร์ไซค์ อยากได้เงินก้อนแต่ยังใช้รถได้',docs:'เล่มทะเบียนรถ + บัตรประชาชน + หลักฐานรายได้',note:'วงเงิน/ดอกตามสภาพรถและการพิจารณา'},
 carforcash:{fit:'อยากได้วงเงินจากรถ เทียบหลายเจ้า',docs:'เล่มทะเบียนรถ + บัตรประชาชน',note:'เทียบดอก+ค่าธรรมเนียมก่อนเซ็น'},
-ktcphboom:{fit:'อยากได้สินเชื่อทะเบียนรถ/บัตรกดเงินสด',docs:'บัตรประชาชน + เอกสารรายได้ (+เล่มทะเบียนถ้าใช้รถค้ำ)',note:'เงื่อนไขตามผลิตภัณฑ์'},
+ktcphboom:{fit:'มีรถและกำลังเทียบสินเชื่อที่ใช้ทะเบียนรถ',docs:'บัตรประชาชน + เอกสารรายได้ + เล่มทะเบียนตามเงื่อนไข',note:'เป็นสินเชื่อรถ ไม่ใช่บัตรกดเงินสดทั่วไป'},
 happycash:{fit:'มีหนี้หลายก้อน อยากรวมเหลือก้อนเดียว',docs:'บัตรประชาชน + เอกสารรายได้ + ข้อมูลหนี้เดิม',note:'ดอกรวมต้องต่ำกว่าเดิมถึงคุ้ม'},
-ktcproud:{fit:'อยากได้สินเชื่อส่วนบุคคล ไม่ต้องค้ำ',docs:'บัตรประชาชน + เอกสารแสดงรายได้',note:'วงเงิน/ดอกตามรายได้และการพิจารณา'},
+ktcproud:{fit:'อยากได้บัตรกดเงินสดแบบวงเงินหมุนเวียน ไม่ต้องค้ำ',docs:'บัตรประชาชน + เอกสารแสดงรายได้',note:'คิดดอกเมื่อใช้วงเงิน และชำระเต็มหรือขั้นต่ำตามเงื่อนไขผู้ให้บริการ'},
 refinance:{fit:'ผ่อนบ้านมาเกิน 3 ปี อยากลดดอก/ลดงวด',docs:'เอกสารสินเชื่อบ้านเดิม + รายได้ + ทะเบียนบ้าน',note:'เทียบข้อเสนอหลายธนาคารก่อน'}
 };
-function show(href,prov){var p=PROV[prov]||{};document.getElementById('ist-body').innerHTML='<ul style="margin:6px 0;padding-left:18px"><li><b>เหมาะถ้า:</b> '+(p.fit||'ตรงกับความต้องการของคุณ')+'</li><li><b>เอกสารที่มักต้องเตรียม:</b> '+(p.docs||'บัตรประชาชน + เอกสารรายได้')+'</li><li><b>อนุมัติ:</b> ตามการพิจารณาของผู้ให้บริการ — เช็กระยะเวลา/เงื่อนไขล่าสุดที่หน้าสมัคร</li>'+(p.note?'<li>'+p.note+'</li>':'')+'</ul>';var c=document.getElementById('interstitial-continue');c.href=href;c.setAttribute('data-provider',prov);document.getElementById('interstitial').style.display='flex';gev('interstitial_view',{provider:prov,path:location.pathname,channel:CH});}
-window.__istHide=function(){document.getElementById('interstitial').style.display='none';};
-document.addEventListener('click',function(e){try{var a=e.target.closest&&e.target.closest('a[href*="atth.me"]');if(!a)return;if(a.classList.contains('interstitial-go'))return;var prov=a.getAttribute('data-provider')||'';if(!CARDLOAN[prov])return;e.preventDefault();e.stopPropagation();show(a.href,prov);}catch(err){}},true);
+function show(href,prov,source){var p=PROV[prov]||{},box=document.getElementById('interstitial');lastFocus=document.activeElement;document.getElementById('ist-body').innerHTML='<ul style="margin:6px 0;padding-left:18px"><li><b>เหมาะถ้า:</b> '+(p.fit||'ตรงกับความต้องการของคุณ')+'</li><li><b>เอกสารที่มักต้องเตรียม:</b> '+(p.docs||'บัตรประชาชน + เอกสารรายได้')+'</li><li><b>อนุมัติ:</b> ตามการพิจารณาของผู้ให้บริการ — เช็กระยะเวลา/เงื่อนไขล่าสุดที่หน้าสมัคร</li>'+(p.note?'<li>'+p.note+'</li>':'')+'</ul>';var c=document.getElementById('interstitial-continue');c.href=href;c.rel='sponsored noopener nofollow';c.setAttribute('data-provider',prov);['data-cta-id','data-pos','data-content-id'].forEach(function(k){var v=source&&source.getAttribute(k);if(v)c.setAttribute(k,v);else c.removeAttribute(k);});box.style.display='flex';box.setAttribute('aria-hidden','false');c.focus();gev('interstitial_view',{provider:prov,path:location.pathname,channel:CH});}
+window.__istHide=function(){var c=document.getElementById('interstitial-continue'),box=document.getElementById('interstitial');box.style.display='none';box.setAttribute('aria-hidden','true');if(c){c.href='#';c.rel='noopener nofollow';['data-provider','data-cta-id','data-pos','data-content-id'].forEach(function(k){c.removeAttribute(k);});}if(lastFocus&&lastFocus.focus)lastFocus.focus();};
+var closeBtn=document.getElementById('interstitial-close');if(closeBtn)closeBtn.addEventListener('click',window.__istHide);
+document.addEventListener('keydown',function(e){var box=document.getElementById('interstitial');if(!box||box.getAttribute('aria-hidden')!=='false')return;if(e.key==='Escape'){e.preventDefault();window.__istHide();return;}if(e.key!=='Tab')return;var fs=box.querySelectorAll('a[href],button:not([disabled]),[tabindex]:not([tabindex="-1"])');if(!fs.length)return;var first=fs[0],last=fs[fs.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}});
+document.addEventListener('click',function(e){try{var a=e.target.closest&&e.target.closest('a[href*="atth.me"]');if(!a)return;if(a.classList.contains('interstitial-go'))return;var prov=a.getAttribute('data-provider')||'';if(!CARDLOAN[prov])return;e.preventDefault();e.stopPropagation();show(a.href,prov,a);}catch(err){}},true);
 var cont=document.getElementById('interstitial-continue');if(cont)cont.addEventListener('click',function(){gev('interstitial_continue',{provider:this.getAttribute('data-provider')||'',path:location.pathname,channel:CH});setTimeout(window.__istHide,120);});
 try{var ICON={'บัตรเครดิต':'💳','บัตรกดเงินสด':'💵','ออมเงิน':'🏦','ออม':'🏦','สินเชื่อ':'💵','รีไฟแนนซ์':'🏠','บ้าน':'🏠','ประกัน':'🛡️','ลงทุน':'📈','รวมหนี้':'🧮','หนี้':'🧮','รถ':'🚗'};document.querySelectorAll('.card .tag').forEach(function(t){if(t.getAttribute('data-ic')==='1')return;var k=(t.textContent||'').trim();var e=ICON[k];if(!e){for(var key in ICON){if(k.indexOf(key)>=0){e=ICON[key];break;}}}if(e){t.setAttribute('data-ic','1');t.textContent=e+' '+k;}});}catch(e){}
 })();
@@ -332,14 +546,24 @@ FOOTER = f"""<footer><div class="wrap">
 
 # end-of-article entry to the quiz (internal link; no affiliate, no PII)
 QUIZ_CTA = '<div style="margin:26px 0;padding:15px 18px;background:#fff7e6;border:1px solid #f0d9a0;border-radius:12px;text-align:center"><a href="/quiz" style="color:#6b5b2a;font-weight:700;text-decoration:none;font-size:15px">🧭 ไม่แน่ใจว่าตัวไหนเหมาะกับคุณ? ทำ Quiz 30 วิ หาคำตอบ →</a></div>'
+RESPONSIBLE_BORROWING = "\u0e01\u0e39\u0e49\u0e40\u0e17\u0e48\u0e32\u0e17\u0e35\u0e48\u0e08\u0e33\u0e40\u0e1b\u0e47\u0e19\u0e41\u0e25\u0e30\u0e0a\u0e33\u0e23\u0e30\u0e04\u0e37\u0e19\u0e44\u0e2b\u0e27"
 
-def cta(merchant, url, slug, text, channel="website"):
+def cta(merchant, url, slug, text, channel="website", position="", content_id=""):
     free = (merchant == 'Kept')
     cls = 'cta free' if free else 'cta'
     badge = '<span class="freebadge">สมัครฟรี</span>' if free else ''
     sub = ('ไม่มีค่าใช้จ่าย · ไม่เช็กเครดิต · ดอกสูงกว่าบัญชีออมทรัพย์ทั่วไป' if free
-           else 'กดดูเกณฑ์/ดอกเบี้ยเบื้องต้นได้ฟรี ไม่ผูกมัด · ลิงก์ทางการของผู้ให้บริการ ปลอดภัย · *เงื่อนไข/การอนุมัติเป็นไปตามผู้ให้บริการ')
-    return f'<a class="{cls}" rel="sponsored noopener nofollow" target="_blank" data-provider="{_pcode(merchant)}" href="{utm(url,merchant,slug,channel=channel)}">{badge}{text}<small>{sub}</small></a>'
+           else 'กดดูเกณฑ์/ดอกเบี้ยเบื้องต้นได้ฟรี ไม่ผูกมัด · ลิงก์ผ่านระบบพันธมิตรไปยังหน้าผู้ให้บริการ · *เงื่อนไข/การอนุมัติเป็นไปตามผู้ให้บริการ · ' + RESPONSIBLE_BORROWING)
+    page_content_id = content_id or str(slug).replace(".html", "")
+    placement = position or "article-cta"
+    analytics = (f' data-cta-id="{html.escape(_pcode(merchant) + "-" + slug.replace(".html", ""))}"'
+                 f' data-pos="{html.escape(placement)}" data-content-id="{html.escape(page_content_id)}"')
+    if _is_internal_offer(url):
+        guide = utm(url, merchant, slug, channel=channel)
+        return (f'<a class="cta"{analytics} href="{guide}">'
+                'เทียบเกณฑ์บัตรเครดิตและเตรียมสมัครให้ถูกต้อง →'
+                '<small>อ่านข้อมูลก่อนตัดสินใจ · ยังไม่ส่งต่อไปหน้าสมัครจนกว่าปลายทางจะผ่านการตรวจล่าสุด</small></a>')
+    return f'<a class="{cls}" rel="sponsored noopener nofollow" target="_blank" data-provider="{_pcode(merchant)}"{analytics} href="{utm(url,merchant,slug,channel=channel)}">{badge}{text}<small>{sub}</small></a>'
 
 AFF_DISC = ('<div class="aff-disc" style="margin:12px 0;padding:9px 13px;background:#fff7e6;'
             'border:1px solid #f0d9a0;border-radius:9px;font-size:12.5px;color:#6b5b2a;line-height:1.55">'
@@ -349,6 +573,73 @@ def affil_disclose(htmlstr):
     anchor (idempotent: no-op if no affiliate anchor, or a disclosure already precedes it).
     Anchors on a real <a ... atth.me/ ...> tag, so it never touches the GA4 listener
     substring in <head>."""
+    def neutralize_inactive_offer(match):
+        """Replace a paused/retired tracker with its direct official destination."""
+        block = match.group(0)
+        tag_end = block.find(">")
+        tag = block[:tag_end + 1]
+        provider_match = re.search(
+            r'\bdata-provider=["\']([a-z0-9_-]+)["\']', tag, re.I)
+        if not provider_match:
+            return block  # the generated-site gate will reject this unknown placement
+        provider = provider_match.group(1).lower()
+        offer = MERCHANT_OFFER_POLICY.get(provider)
+        if not isinstance(offer, dict) or offer.get("availability") == "active":
+            return block
+        official_url = str(offer.get("official_url", ""))
+        if not official_url.startswith("https://"):
+            raise SystemExit(
+                "BUILD ABORTED: inactive provider %s has no direct official fallback" % provider)
+        availability = str(offer.get("availability", "paused"))
+        tag = re.sub(r'\s+rel=["\'][^"\']*["\']', "", tag, count=1, flags=re.I)
+        tag = re.sub(r'\s+data-provider=["\'][^"\']*["\']', "", tag,
+                     count=1, flags=re.I)
+        tag = re.sub(r'\s+href=["\'][^"\']*["\']',
+                     ' href="' + html.escape(official_url, quote=True) + '"',
+                     tag, count=1, flags=re.I)
+        tag = (tag[:-1] + ' rel="noopener nofollow"'
+               ' data-paused-provider="' + html.escape(provider, quote=True) + '"'
+               ' data-offer-status="' + html.escape(availability, quote=True) + '">')
+        notice = ('<small>แคมเปญพันธมิตรหยุดชั่วคราว · ลิงก์นี้พาไปข้อมูลทางการโดยตรง'
+                  'และไม่สร้างค่าตอบแทนให้เพจ · โปรดตรวจเงื่อนไขล่าสุด</small>')
+        # Do not preserve promotional wording from a paused campaign.  Even when
+        # the merchant's public product still exists, prior rate/free/approval
+        # copy is not current network evidence and must not survive as a CTA.
+        body = 'ดูข้อมูลผลิตภัณฑ์จากเว็บไซต์ทางการ →' + notice
+        return tag + body + "</a>"
+
+    # A campaign can be paused while its public merchant page remains available.
+    # Remove the tracking URL before disclosure/instrumentation so the page stays
+    # useful without producing a self-click or pretending the affiliate offer is live.
+    htmlstr = re.sub(r'<a\b[^>]*atth\.me/[^>]*>.*?</a>',
+                     neutralize_inactive_offer, htmlstr, flags=re.I | re.S)
+
+    # Attach a stable page identity and a coarse, stable placement class to every
+    # affiliate anchor, including hand-built comparison/hub links that bypass cta().
+    # Exact CTA experiments keep their explicit attributes.  Do not use DOM ordinals:
+    # adding an unrelated earlier link must not rename analytics dimensions.
+    canonical = re.search(r'<link rel="canonical" href="[^"]*/([^"/?#]*)/?">', htmlstr)
+    page_id = ((canonical.group(1) if canonical else "") or "home").removesuffix(".html")
+
+    def instrument(match):
+        tag = match.group(0)
+        class_match = re.search(r'class="([^"]*)"', tag)
+        classes = class_match.group(1).split() if class_match else []
+        if "data-pos=" not in tag:
+            if "hubbtn" in classes or "hubmini" in classes:
+                placement = "hub"
+            elif "go" in classes:
+                placement = "comparison"
+            elif "cta" in classes:
+                placement = "article-cta"
+            else:
+                placement = "article-link"
+            tag = tag[:-1] + ' data-pos="' + placement + '">'
+        if "data-content-id=" not in tag:
+            tag = tag[:-1] + ' data-content-id="' + html.escape(page_id) + '">'
+        return tag
+
+    htmlstr = re.sub(r'<a\b[^>]*atth\.me/[^>]*>', instrument, htmlstr, flags=re.I)
     m = re.search(r'<a\b[^>]*atth\.me/[^>]*>', htmlstr)
     if not m:
         return htmlstr
@@ -368,7 +659,7 @@ EBOOK_PAGES = {"kept-savings-2026.html", "debt-consolidation-2026.html",
                "close-debt-fast-2026.html"}
 def ebook_banner(slug):
     """mini banner ขายคู่มือของเราเอง ท้ายหน้ากลุ่มหนี้/ออมที่แปลงดี (ไม่ใช่ affiliate -> rel=noopener เท่านั้น)"""
-    if slug not in EBOOK_PAGES:
+    if slug not in EBOOK_PAGES or not promotion_authorized("ebook-59"):
         return ""
     return ('<div class="ebkbn" style="margin:22px 0;padding:13px 16px;background:#fff7e6;border:1.5px solid #e0b23c;border-radius:12px;text-align:center">'
             '<a href="' + EBOOK_URL + '" style="color:#6b5b2a;font-weight:700;text-decoration:none">'
@@ -408,7 +699,7 @@ def calc_cta(slug):
 
 
 def kept_next(slug):
-    """next-step contextual link ท้ายบทความ debt-cluster -> winner /kept-savings (GA4 conv ~93%):
+    """next-step contextual link ท้ายบทความ debt-cluster -> internal /kept-savings guide:
     จังหวะ 'ปลดหนี้แล้วกันเงินสำรอง' — internal link ไม่ใช่ raw affiliate"""
     if slug not in CALC_CLUSTER:
         return ""
@@ -453,13 +744,15 @@ def letter_cta(slug):
             '<div style="margin-top:6px;font-size:12.5px;color:#5b6b5f">'
             'ไม่ต้องบอกชื่อ เลขบัตร หรือเลขบัญชี · ตอบอัตโนมัติ 24 ชม. · '
             '<a href="/debt-letter-kit?utm_source=article&utm_medium=nextstep&utm_campaign=letter_kit" '
-            'style="color:#6b5b2a;text-decoration:underline">ดูชุดจดหมายเจรจาหนี้ฉบับเต็ม</a></div></div>')
+            'style="color:#6b5b2a;text-decoration:underline">อ่านตัวอย่างจดหมายฟรี (ชุดเต็มยังไม่เปิดขาย)</a></div></div>')
 
 
 def cta_ls(page, text):
     # lifestyle credit-card CTA -> Krungsri, channel=lifestyle => sub_id lifestyle_{page}_krungsri
     u = utm(KRUNGSRI, "Krungsri", page, channel="lifestyle", medium="article")
-    return f'<a class="cta" rel="sponsored noopener nofollow" target="_blank" data-provider="krungsri" href="{u}">{text}<small>สมัครออนไลน์ตรงกับผู้ให้บริการ · ปลอดภัย · เช็กสิทธิ์/โปร/เงื่อนไขล่าสุดที่หน้าบัตร</small></a>'
+    if _is_internal_offer(KRUNGSRI):
+        return f'<a class="cta" href="{u}">เทียบเกณฑ์บัตรเครดิตตามไลฟ์สไตล์ →<small>อ่านคู่มือก่อนสมัคร · ปลายทางสมัครเดิมพักไว้จนกว่าจะตรวจผลิตภัณฑ์และโปรล่าสุด</small></a>'
+    return f'<a class="cta" rel="sponsored noopener nofollow" target="_blank" data-provider="krungsri" href="{u}">{text}<small>ลิงก์ผ่านระบบพันธมิตรไปยังหน้าผู้ให้บริการ · เช็กสิทธิ์/โปร/เงื่อนไขล่าสุดก่อนสมัคร · {RESPONSIBLE_BORROWING}</small></a>'
 
 # ── INTENT GUARD (25 ก.ค. 2026 — ผลตรวจ CONSULT-ANSWERS_20260725) ────────────
 # ปัญหาที่พบ: 38 หน้ามี affiliate CTA above-the-fold โดยยิงตาม camp อย่างเดียว
@@ -499,6 +792,9 @@ _TOOL_BOX = ('<div style="margin:14px 0 8px;padding:12px 15px;background:#fffdf5
              'style="display:block;margin-top:7px;color:#6b5b2a;font-weight:600;font-size:13.5px;text-decoration:none">'
              '🧮 กรอกยอดหนี้จริง เห็นเดือนที่ปลอดหนี้ + ลำดับที่ควรจ่ายก่อน →</a></div>')
 
+# These search-intent pages must answer the query before showing any offer.
+NO_TOP_OFFER_SLUGS = {"credit-card-salary-30000-2026"}
+
 
 def top_offer(camp, slug):
     """CTA above-the-fold ตาม intent ของบทความ (จาก camp). หมวดที่ไม่มี affiliate ตรง -> ไม่ใส่ (เลี่ยงยัดมั่ว).
@@ -506,6 +802,8 @@ def top_offer(camp, slug):
     c = (camp or "").lower()
     sl = (slug or "").lower()
     _bare = sl.replace(".html", "")
+    if _bare in NO_TOP_OFFER_SLUGS:
+        return ""
     if _bare in CRISIS_SLUGS:
         return _HELP_BOX
     if _bare in INFO_SLUGS:
@@ -535,7 +833,7 @@ def top_offer(camp, slug):
     elif "refi" in c:
         m, u, t = "Refinance", REFI, "เทียบรีไฟแนนซ์บ้าน — ลดดอกก้อนใหญ่"
     elif "personalloan" in c or "loan" in c:
-        m, u, t = "KTC Proud", KTCPROUD, "สินเชื่อส่วนบุคคล ไม่ต้องค้ำ — เช็ก/สมัครออนไลน์"
+        m, u, t = "KTC Proud", KTCPROUD, "บัตรกดเงินสดวงเงินหมุนเวียน ไม่ต้องค้ำ — ดูเงื่อนไขก่อนสมัคร"
     elif "krungsri" in c or "card" in c:
         m, u, t = "Krungsri", KRUNGSRI, "สมัครบัตรเครดิตกรุงศรีออนไลน์"
     else:
@@ -550,18 +848,48 @@ def top_offer(camp, slug):
     return f'<div style="margin:14px 0 8px">{cta(m, u, slug, t, channel=_ch)}</div>'
 
 
-CLIP_SLUGS = {"credit-bureau-check-2026", "debt-consolidation-2026", "emergency-fund-2026",
-             "first-credit-card-student-2026", "refinance-home-2026", "salary-budgeting-2026", "title-loan-2026"}
+LEGACY_WATERMARKED_CLIP_SLUGS = {
+    "credit-bureau-check-2026", "debt-consolidation-2026", "emergency-fund-2026",
+    "first-credit-card-student-2026", "refinance-home-2026", "salary-budgeting-2026",
+    "title-loan-2026",
+}
 def clip_block(slug):
-    """ฝังคลิปสั้น Veo (8 วิ) บนบทความที่ตรงหมวด -> เพิ่ม dwell time/ความน่าสนใจ. หน้าที่ไม่มีคลิป = ไม่ใส่."""
-    s = (slug or "").split("?")[0].replace(".html", "")
-    if s not in CLIP_SLUGS:
+    """Legacy Veo pool is quarantined: every clip contains a provider sparkle.
+
+    A page receives video only through ``article_pilot_clip`` after the canonical
+    file has hash-bound visual and automated QA.  Keeping this function as an
+    explicit no-op prevents an old caller from silently restoring the dirty pool.
+    """
+    return ""
+
+
+ARTICLE_PILOT_CLIPS = {
+    "credit-card-salary-30000-2026": (
+        "/reels/2026-08-16_b4-p01.mp4",
+        "/reels/2026-08-16_b4-p01.th.vtt",
+        "/reels/2026-08-16_b4-p01-poster.png",
+        "b4-p01",
+        "21.5",
+    ),
+}
+
+
+def article_pilot_clip(slug):
+    """Embed only semantically reviewed final renders; never pull from the legacy clip pool."""
+    key = (slug or "").split("?")[0].replace(".html", "")
+    row = ARTICLE_PILOT_CLIPS.get(key)
+    if not row:
         return ""
-    return ('<figure style="margin:16px auto;max-width:300px">'
-            '<video style="width:100%;border-radius:14px;display:block;background:#000" '
-            'autoplay muted loop playsinline controls preload="metadata" src="/clips/' + s + '.mp4"></video>'
+    src, captions, poster, content_id, duration = row
+    return ('<figure style="margin:18px auto;max-width:330px">'
+            '<video data-content-id="' + html.escape(content_id) + '" '
+            'width="1080" height="1920" '
+            'style="width:100%;height:auto;aspect-ratio:9/16;border-radius:14px;display:block;background:#000" '
+            'controls playsinline preload="metadata" poster="' + html.escape(poster) + '" src="' + html.escape(src) + '">'
+            '<track kind="captions" srclang="th" label="คำบรรยายภาษาไทย" default src="' + html.escape(captions) + '">'
+            '</video>'
             '<figcaption style="font-size:11px;color:#8a8a95;text-align:center;margin-top:5px">'
-            '▶ คลิปสรุปสั้น 8 วิ · ปิดเสียงไว้ กดลำโพงเพื่อฟัง</figcaption></figure>')
+            '▶ คลิปสรุป ' + html.escape(duration) + ' วินาที · เสียงไทย · ผ่านการตรวจภาพและเสียง</figcaption></figure>')
 
 
 _CATB = {"cards": ("\U0001F4B3", "บัตรเครดิต"), "savings": ("\U0001F3E6", "ออมเงิน"),
@@ -578,8 +906,6 @@ def _slug_cat(s):
 def hero_banner(slug):
     """SVG hero แบนเนอร์ต่อหมวด (on-brand ทอง-เข้ม) สำหรับบทความที่ไม่มีคลิป -> หน้าตาไม่โล่ง."""
     s = (slug or "").split("?")[0].replace(".html", "")
-    if s in CLIP_SLUGS:
-        return ""
     cat = _slug_cat(s)
     if not cat:
         return ""
@@ -604,11 +930,13 @@ def faq_block(faqs):
     items = "".join(f"<details><summary>{html.escape(q)}</summary><div>{a}</div></details>" for q,a in faqs)
     return f'<div class="faq">{items}</div>'
 
-def article_ld(title, desc, slug, faqs):
+def article_ld(title, desc, slug, faqs, modified_at=None):
     a={"@context":"https://schema.org","@type":"Article","headline":title,"description":desc,
-       "datePublished":TODAY,"dateModified":BUILD_DATE,"inLanguage":"th",
+       "inLanguage":"th",
        "author":{"@type":"Organization","name":SITE},"publisher":{"@type":"Organization","name":SITE},
        "mainEntityOfPage":{"@type":"WebPage","@id":(f"{BASE}/{slug}"[:-5] if slug.endswith(".html") else f"{BASE}/{slug}")}}
+    if modified_at:
+        a["dateModified"] = modified_at
     out=[a]
     if faqs:
         out.append({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
@@ -629,7 +957,10 @@ def cmp_widget(caption, rows, slug, note=""):
         best=r.get("best")
         badge='<span class="cmp-best">⭐ แนะนำ</span>' if best else ''
         if r.get("url"):
-            cta=f'<a class="go" rel="sponsored noopener nofollow" target="_blank" data-provider="{_pcode(r["camp"])}" href="{utm(r["url"],r["camp"],slug)}">เช็ก/สมัคร 👉</a>'
+            if _is_internal_offer(r["url"]):
+                cta=f'<a class="go" href="{utm(r["url"],r["camp"],slug)}">อ่านเกณฑ์ก่อนสมัคร 👉</a>'
+            else:
+                cta=f'<a class="go" rel="sponsored noopener nofollow" target="_blank" data-provider="{_pcode(r["camp"])}" href="{utm(r["url"],r["camp"],slug)}">เช็ก/สมัคร 👉</a>'
         else:
             cta='<span style="color:#9a9aa3;font-size:13px">เทียบเฉยๆ</span>'
         trs+=('<tr class="best">' if best else '<tr>')+f'<td data-l="ผู้ให้บริการ"><b>{r["name"]}</b>{badge}</td><td data-l="ดอกเบี้ย*">{r["rate"]}</td><td data-l="วงเงิน">{r["limit"]}</td><td data-l="อนุมัติ">{r["approve"]}</td><td data-l="จุดเด่น">{r["good"]}</td><td data-l="">{cta}</td></tr>'
@@ -641,7 +972,7 @@ def cmp_widget(caption, rows, slug, note=""):
 INSURANCE = [
     {"type":"travel","provider":"msig","label":"ประกันเดินทาง MSIG Travel Easy Plus — คุ้มครองค่ารักษาสูง/เลื่อนไฟลท์/กระเป๋า","url":"https://atth.me/000bqk002a0x"},
     {"type":"travel","provider":"scb","label":"ประกันเดินทาง SCB protect — ทั้งในและต่างประเทศ","url":"https://atth.me/00db8m002a0x"},
-    {"type":"pa","provider":"axapa","label":"ประกันอุบัติเหตุ AXA (PA) — ค่ารักษา/เงินชดเชยจากอุบัติเหตุ","url":"https://atth.me/go/PhAKgrKX"},
+    {"type":"pa","provider":"axapa","label":"ประกันอุบัติเหตุ AXA (PA) — ค่ารักษา/เงินชดเชยจากอุบัติเหตุ","url":"https://atth.me/003ump002a0x"},
     {"type":"car","provider":"axamotor","label":"ประกันรถยนต์ AXA — เทียบแผน/ซื้อออนไลน์ (ชั้น 1/2+/3)","url":"https://atth.me/0038ag002a0x"},
     {"type":"health","provider":"tuneprotect","label":"ประกันสุขภาพ Tune Protect — เหมาจ่ายค่ารักษา ซื้อออนไลน์","url":"https://atth.me/00bofm002a0x"},
     {"type":"life","provider":"fwd","label":"ประกันชีวิต FWD Easy E-Life — สมัครออนไลน์ ไม่ต้องตรวจสุขภาพ","url":"https://atth.me/004brg002a0x"},
@@ -657,6 +988,12 @@ _INS_ROWS = [
     ("health","ประกันสุขภาพ","ค่ารักษาพยาบาล IPD/OPD/เหมาจ่าย เมื่อเจ็บป่วย","คนอยากเสริมจากประกันสังคม/สวัสดิการ","วงเงินเหมาจ่าย + ความคุ้มครอง OPD/IPD"),
     ("life","ประกันชีวิต","คุ้มครองชีวิต + บางแบบลดหย่อนภาษี/มีเงินคืน","คนมีภาระ/อยากวางแผนภาษี-มรดก","ทุนประกัน + ผลประโยชน์/สิทธิลดหย่อนภาษี"),
 ]
+INSURANCE_DISABLED = ({"fwd"} |  # Confirmed merchant 404 on 2026-08-16.
+                      {o["provider"] for o in INSURANCE
+                       if not affiliate_offer_active(o["provider"])})
+INSURANCE[:] = [o for o in INSURANCE if o["provider"] not in INSURANCE_DISABLED]
+
+
 def ins_compare_table():
     bytype = {}
     for o in INSURANCE:
@@ -685,7 +1022,8 @@ def ins_cta(provider, page, text):
 
 def share_bar(slug, title):
     import urllib.parse as _up
-    eu=_up.quote(f"{BASE}/{slug}", safe=""); et=_up.quote(title, safe="")
+    _slug_c = slug[:-5] if slug.endswith(".html") else slug
+    eu=_up.quote(f"{BASE}/{_slug_c}", safe=""); et=_up.quote(title, safe="")
     fb=f"https://www.facebook.com/sharer/sharer.php?u={eu}"
     th=f"https://www.threads.net/intent/post?text={et}%20{eu}"
     ln=f"https://social-plugins.line.me/lineit/share?url={eu}"
@@ -854,7 +1192,7 @@ body6=f"""<h1 id="top">สมัครบัตรเครดิต Krungsri �
 <h2 id="r6">6. ยื่นสมัครหลายใบพร้อมกัน</h2><p><b>แก้:</b> ยื่นทีละใบ เว้นระยะ เพราะการยื่นถี่ ๆ ปรากฏในบูโรและกระทบการพิจารณา</p>
 <h2 id="r7">7. ข้อมูลติดต่อ/ที่อยู่ไม่อัปเดต</h2><p><b>แก้:</b> ตรวจเบอร์โทร อีเมล ที่อยู่ให้เป็นปัจจุบันและติดต่อได้</p>
 <h2 id="next">เช็กให้ครบแล้วลองยื่นใหม่</h2>
-<p>เมื่อแก้สาเหตุที่ตรงกับกรณีของคุณแล้ว เตรียมเอกสารให้ครบและเลือกบัตรเกณฑ์พอดีตัว โอกาสผ่านจะสูงขึ้น <span class="ilinks">เกี่ยวข้อง: <a href="/credit-card-salary-30000">เงินเดือน 30,000 เลือกบัตรตามการใช้งานและเอกสารที่ต้องเตรียม</a></span></p>
+<p>เมื่อแก้สาเหตุที่ตรงกับกรณีของคุณแล้ว เตรียมเอกสารให้ครบและเลือกบัตรเกณฑ์พอดีตัว โอกาสผ่านจะสูงขึ้น <span class="ilinks">เกี่ยวข้อง: <a href="/credit-card-salary-30000-2026">เงินเดือน 30,000 เลือกบัตรตามการใช้งานและเอกสารที่ต้องเตรียม</a></span></p>
 {cta('Krungsri',KRUNGSRI,'krungsri-rejected','เตรียมพร้อมแล้ว — ยื่นสมัครบัตร Krungsri อีกครั้ง 👉')}
 <h2 id="faq">คำถามที่พบบ่อย</h2>
 """
@@ -1074,8 +1412,8 @@ NGERNTURBO="https://atth.me/00eabp002a0x"; KASHJOY="https://atth.me/008izv002a0x
 loan_rows=[
  ("จำนำทะเบียนรถ","มีรถปลอดภาระ ต้องการเงินด่วน","รถยังใช้ได้ · รู้ผลไว","ศรีสวัสดิ์",SRISAWAD,"tbl-title"),
  ("รถแลกเงิน","มีรถ อยากได้วงเงินตามมูลค่ารถ","วงเงินตามราคารถ","Car4Cash",CAR4CASH,"tbl-car"),
- ("สินเชื่อส่วนบุคคล","ไม่มีหลักประกัน ผ่อนเป็นงวด","เงินก้อน ผ่อนชัดเจน","KTCProud",KTCPROUD,"tbl-personal"),
- ("บัตรกดเงินสด","อยากมีวงเงินสำรองฉุกเฉิน","กดใช้เมื่อจำเป็น","KTCpheboom",KTCPBM,"tbl-cash"),
+ ("บัตรกดเงินสด KTC PROUD","ไม่มีหลักประกัน ต้องการวงเงินหมุนเวียน","ใช้เมื่อจำเป็น · ชำระเต็มหรือขั้นต่ำตามเงื่อนไข","KTCProud",KTCPROUD,"tbl-personal"),
+ ("KTC พี่เบิ้ม รถแลกเงิน","มีรถและต้องการเทียบสินเชื่อทะเบียนรถ","รถยังใช้ได้ตามเงื่อนไข","KTCpheboom",KTCPBM,"tbl-title-ktc"),
  ("รวมหนี้","มีหนี้หลายก้อนดอกสูง","ยุบเหลือก้อนเดียว ดอกต่ำลง","HappyCash",HAPPYDEBT,"tbl-debt"),
  ("รีไฟแนนซ์บ้าน","ผ่อนบ้านเกิน 3 ปี","ลดดอกบ้านระยะยาว","Refinance",REFI,"tbl-refi"),
 ]
@@ -1088,7 +1426,7 @@ body14=f"""<h1 id="top">สินเชื่อเงินด่วน 2026 �
 <div class="meta">อัปเดตล่าสุด: 14 มิ.ย. 2026 · หมวด สินเชื่อ</div>
 <p>ต้องใช้เงินก้อนด่วน หรืออยากลดภาระดอกเบี้ยจากหนี้ที่มี? บทความนี้สรุปทางเลือก "สินเชื่อ" ยอดนิยมของมนุษย์เงินเดือน — จำนำทะเบียนรถ, รวมหนี้, รีไฟแนนซ์บ้าน — ว่าแต่ละแบบเหมาะกับใคร และข้อควรรู้ก่อนตัดสินใจ <i>(กู้เท่าที่จำเป็นและชำระคืนไหว)</i></p> ลองกรอกหนี้ของคุณใน<a href="/debt-calculator" title="เครื่องคำนวณแผนปลดหนี้ ไม่เก็บข้อมูล">วางแผนปลดหนี้ด้วยตัวเลขจริง</a>ดูก่อน — เห็นเดือนปลอดหนี้ชัด ๆ แล้วค่อยตัดสินใจก้าวต่อไป
 <h2>ตารางเทียบสินเชื่อแต่ละแบบ — เลือกให้ตรงความต้องการ</h2>\n{loan_table}\n<p style="margin:10px 0 0;font-size:14px">📖 อ่านเจาะลึกแต่ละแบบ:</p>{loan_cluster}\n{toc([('title','จำนำทะเบียนรถ — ได้เงินไว ไม่ต้องโอนรถ'),('debt','รวมหนี้ — ลดดอกหลายก้อนเหลือก้อนเดียว'),('refi','รีไฟแนนซ์บ้าน — ลดดอกบ้านระยะยาว'),('pick','เลือกแบบไหนดี'),('faq','คำถามที่พบบ่อย')])}
-{cmp_widget("เทียบสินเชื่อแต่ละแบบ — เลือกให้ตรงเป้า 2026",[{"name":"จำนำทะเบียนรถ","rate":"ลดต้นลดดอก (นอนแบงก์/แบงก์)","limit":"ตามราคารถ","approve":"ไวสุด 1–2 วัน","good":"มีรถ ต้องการเงินก้อนเร็ว รถยังใช้ได้","url":SRISAWAD,"camp":"srisawad","best":True},{"name":"รวมหนี้","rate":"ต่ำกว่าดอกบัตร","limit":"ตามหนี้","approve":"ไม่กี่วัน","good":"มีหนี้บัตรหลายใบ อยากยุบเหลือก้อนเดียว","url":HAPPYDEBT,"camp":"debt"},{"name":"รีไฟแนนซ์บ้าน","rate":"ลดดอกบ้านก้อนใหญ่","limit":"ตามยอดบ้าน","approve":"ไม่กี่สัปดาห์","good":"ผ่อนบ้านครบ 3 ปี อยากลดดอก","url":REFI,"camp":"refinance"},{"name":"สินเชื่อบุคคล","rate":"ลดต้นลดดอก","limit":"ตามรายได้","approve":"ออนไลน์ ไว","good":"ไม่มีหลักประกัน ต้องการเงินก้อน","url":KTCPROUD,"camp":"personalloan"}],"loancash-widget","เลือกตามสถานการณ์: มีรถ→จำนำทะเบียน · หนี้บัตร→รวมหนี้ · มีบ้าน→รีไฟแนนซ์")}
+{cmp_widget("เทียบสินเชื่อแต่ละแบบ — เลือกให้ตรงเป้า 2026",[{"name":"จำนำทะเบียนรถ","rate":"ลดต้นลดดอก (นอนแบงก์/แบงก์)","limit":"ตามราคารถ","approve":"ไวสุด 1–2 วัน","good":"มีรถ ต้องการเงินก้อนเร็ว รถยังใช้ได้","url":SRISAWAD,"camp":"srisawad","best":True},{"name":"รวมหนี้","rate":"ต่ำกว่าดอกบัตร","limit":"ตามหนี้","approve":"ไม่กี่วัน","good":"มีหนี้บัตรหลายใบ อยากยุบเหลือก้อนเดียว","url":HAPPYDEBT,"camp":"debt"},{"name":"รีไฟแนนซ์บ้าน","rate":"ลดดอกบ้านก้อนใหญ่","limit":"ตามยอดบ้าน","approve":"ไม่กี่สัปดาห์","good":"ผ่อนบ้านครบ 3 ปี อยากลดดอก","url":REFI,"camp":"refinance"},{"name":"บัตรกดเงินสด KTC PROUD","rate":"คิดดอกเมื่อใช้วงเงิน","limit":"วงเงินหมุนเวียน","approve":"สมัครออนไลน์","good":"ไม่มีหลักประกัน ต้องการวงเงินสำรอง","url":KTCPROUD,"camp":"personalloan"}],"loancash-widget","เลือกตามสถานการณ์: มีรถ→จำนำทะเบียน · หนี้บัตร→รวมหนี้ · มีบ้าน→รีไฟแนนซ์")}
 <h2 id="title">1) สินเชื่อจำนำทะเบียนรถ — ได้เงินไว รถยังใช้ได้</h2>
 <p>ใช้เล่มทะเบียนรถ (เก๋ง/กระบะ/มอเตอร์ไซค์/รถบรรทุก) ค้ำเพื่อขอวงเงิน โดยทั่วไปรถยังใช้ได้ตามปกติ เหมาะกับคนมีรถปลอดภาระและต้องการเงินก้อนเร็ว <span class="ilinks">เกี่ยวข้อง: <a href="/car-still-installment-loan-2026">รถผ่อนไม่หมด จำนำได้ไหม</a></span></p>
 {cta('Srisawad',SRISAWAD,'loan-titleloan','ดูดอกเบี้ย/วงเงิน + สมัครจำนำทะเบียนกับศรีสวัสดิ์ (ลิงก์พันธมิตร) →')}
@@ -1121,7 +1459,7 @@ body15=f"""<h1 id="top">จำนำทะเบียนรถ ที่ไห�
 <div class="meta">อัปเดตล่าสุด: 14 มิ.ย. 2026 · หมวด สินเชื่อ</div>
 <p>“จำนำทะเบียนรถ” เป็นทางเลือกขอเงินก้อนเร็วของมนุษย์เงินเดือนที่มีรถปลอดภาระ จุดเด่นคือใช้แค่เล่มทะเบียนค้ำ รถยังขับใช้งานได้ตามปกติ และมักรู้ผลไว บทความนี้สรุปวิธีเลือกผู้ให้บริการให้คุ้ม ดอกเบี้ยที่ควรเทียบ และข้อควรระวังก่อนเซ็นสัญญา <i>(กู้เท่าที่จำเป็นและชำระคืนไหว)</i></p>
 {toc([('what','จำนำทะเบียนรถคืออะไร'),('who','เหมาะกับใคร'),('pick','เลือกที่ไหนดี — ดูอะไรบ้าง'),('doc','เอกสารที่ต้องใช้'),('faq','คำถามที่พบบ่อย')])}
-{cmp_widget("เทียบเจ้าจำนำทะเบียนรถ / รถแลกเงิน 2026",[{"name":"ศรีสวัสดิ์","rate":"นอนแบงก์ ลดต้นลดดอก ~14–24%/ปี","limit":"ตามราคาประเมินรถ","approve":"ไว 1–2 วัน","good":"สาขาทั่วไทย เอกสารน้อย รู้ผลไว","url":SRISAWAD,"camp":"srisawad","best":True},{"name":"Car4Cash (กรุงศรี)","rate":"แบงก์ ลดต้นลดดอก (ต่ำกว่านอนแบงก์)","limit":"ตามมูลค่ารถ","approve":"1–5 วันทำการ","good":"ดอกเป็นธรรม วงเงินตามราคารถ","url":CAR4CASH,"camp":"carforcash"},{"name":"KTC พี่เบิ้ม","rate":"แบงก์ KTC ลดต้นลดดอก","limit":"ตามรถ","approve":"ไว (เอกสารครบ)","good":"แบงก์น่าเชื่อถือ สมัครออนไลน์","url":KTCPBM,"camp":"ktcphboom"}],"title-loan-widget","รถยังใช้งานได้ระหว่างผ่อน")}
+{cmp_widget("เทียบเจ้าจำนำทะเบียนรถ / รถแลกเงิน 2026",[{"name":"ศรีสวัสดิ์","rate":"นอนแบงก์ ลดต้นลดดอก ~14–24%/ปี","limit":"ตามราคาประเมินรถ","approve":"ไว 1–2 วัน","good":"สาขาทั่วไทย เอกสารน้อย รู้ผลไว","url":SRISAWAD,"camp":"srisawad","best":True},{"name":"Car4Cash (กรุงศรี)","rate":"ลดต้นลดดอกตามเงื่อนไข","limit":"ตามมูลค่ารถ","approve":"ขึ้นกับเอกสารและการพิจารณา","good":"เทียบวงเงินและต้นทุนรวมก่อนสมัคร","url":CAR4CASH,"camp":"carforcash"},{"name":"KTC พี่เบิ้ม","rate":"ลดต้นลดดอกตามเงื่อนไข","limit":"ตามรถและความสามารถชำระ","approve":"ขึ้นกับเอกสารและการพิจารณา","good":"สินเชื่อทะเบียนรถจาก KTC สมัครออนไลน์","url":KTCPBM,"camp":"ktcphboom"}],"title-loan-widget","รถยังใช้งานได้ระหว่างผ่อน")}
 <h2 id="what">จำนำทะเบียนรถคืออะไร</h2>
 <p>คือสินเชื่อที่ใช้ “เล่มทะเบียนรถ” (รถเก๋ง กระบะ มอเตอร์ไซค์ หรือรถบรรทุก) เป็นหลักประกัน เพื่อขอวงเงินสด โดยทั่วไป<b>ไม่ต้องโอนรถ</b>และยังใช้รถได้ตามปกติ วงเงินขึ้นกับราคาประเมินรถและนโยบายของผู้ให้บริการ</p>
 {cta('Srisawad',SRISAWAD,'title-loan','ดูดอกเบี้ย/วงเงินล่าสุด + สมัครจำนำทะเบียนกับศรีสวัสดิ์ (ลิงก์พันธมิตร) →')}
@@ -1129,7 +1467,7 @@ body15=f"""<h1 id="top">จำนำทะเบียนรถ ที่ไห�
 <p>เหมาะกับคนที่<b>มีรถปลอดภาระหรือผ่อนใกล้หมด</b> ต้องการเงินก้อนเร็วโดยไม่อยากขายรถ เช่น ใช้หมุนธุรกิจ จ่ายค่าเทอม ค่ารักษา หรือรวมหนี้ดอกสูงให้เหลือก้อนเดียว ถ้ายังผ่อนรถอยู่หลายงวด ควรเช็กเงื่อนไขเป็นรายกรณี</p>
 <h2 id="pick">เลือกที่ไหนดี — ดูอะไรบ้าง</h2>
 <ul><li><b>อัตราดอกเบี้ยต่อปี (ลดต้นลดดอก)</b> — เทียบหลายเจ้า อย่าดูแค่ค่างวด</li><li><b>ค่าธรรมเนียม/ค่าดำเนินการ</b> — บางที่บวกเพิ่มนอกเหนือดอกเบี้ย</li><li><b>เงื่อนไขปิดก่อนกำหนด</b> — มีค่าปรับไหม</li><li><b>ความเร็วอนุมัติ + สาขาใกล้บ้าน</b> — สำคัญถ้ารีบ</li><li><b>ความน่าเชื่อถือ</b> — เลือกผู้ให้บริการที่จดทะเบียนถูกกฎหมาย มีสัญญาชัดเจน</li></ul>
-{cta('Srisawad',SRISAWAD,'title-loan','เช็กวงเงินจำนำทะเบียน (ฟรี) + สมัครตรงกับผู้ให้บริการ →')}
+{cta('Srisawad',SRISAWAD,'title-loan','เช็กวงเงินจำนำทะเบียนผ่านลิงก์พันธมิตร →')}
 <p style="text-align:center;color:#5b5b66;font-size:14px">ทางเลือกอื่นเทียบดู: <a rel="sponsored noopener nofollow" target="_blank" data-provider="{_pcode('Car4Cash')}" href="{utm(CAR4CASH,'Car4Cash','title-loan')}">Car4Cash รถแลกเงิน</a> · <a rel="sponsored noopener nofollow" target="_blank" data-provider="{_pcode('KTCpheboom')}" href="{utm(KTCPBM,'KTCpheboom','title-loan')}">KTC พี่เบิ้ม รถแลกเงิน</a></p>
 <h2 id="doc">เอกสารที่มักต้องใช้</h2>
 <ul><li>บัตรประชาชน</li><li>เล่มทะเบียนรถ (ชื่อตรงผู้กู้ หรือมีหนังสือยินยอม)</li><li>สำเนาทะเบียนบ้าน</li><li>หลักฐานรายได้ (สลิป/รายการเดินบัญชี) แล้วแต่เงื่อนไข</li></ul>
@@ -1155,7 +1493,7 @@ body16=f"""<h1 id="top">สินเชื่อรวมหนี้ ที่�
 {toc([('what','รวมหนี้คืออะไร'),('worth','คุ้มเมื่อไหร่'),('pick','เลือกยังไง'),('step','ขั้นตอนคร่าวๆ'),('faq','คำถามที่พบบ่อย')])}
 {cmp_widget("เทียบทางเลือกรวมหนี้ 2026",[{"name":"สินเชื่อรวมหนี้ (HappyCash)","rate":"ลดต้นลดดอก ต่ำกว่าดอกบัตร","limit":"ตามคุณสมบัติ/รายได้","approve":"ไม่กี่วันทำการ","good":"ยุบหนี้หลายก้อนเหลือก้อนเดียว จ่ายที่เดียวจบ","url":HAPPYDEBT,"camp":"debt","best":True},{"name":"สินเชื่อหมุนเวียน/Term loan (Kashjoy)","rate":"อัตราตามที่ผู้ให้บริการกำหนด","limit":"ตามคุณสมบัติ","approve":"สมัครออนไลน์","good":"ทางเลือกเทียบกับ HappyCash — เทียบเงื่อนไข/ค่าธรรมเนียมก่อนเลือก","url":KASHJOY,"camp":"kashjoy"},{"name":"จ่ายขั้นต่ำบัตรเดิม","rate":"16–25%/ปี","limit":"—","approve":"—","good":"ดอกสูง ยอดลดช้า (สิ่งที่ควรเลี่ยง)"},{"name":"สินเชื่อรวมหนี้ธนาคาร (ถ้าผ่าน)","rate":"ลดต้นลดดอก ต่ำ","limit":"ตามเครดิต","approve":"พิจารณาเข้มกว่า","good":"ดอกถูกถ้าเครดิตดี/มีหลักประกัน"}],"debt-widget")}
 <h2 id="what">สินเชื่อรวมหนี้คืออะไร</h2>
-<p>คือการขอสินเชื่อก้อนใหม่ดอกเบี้ยต่ำกว่า มาปิดหนี้เดิมหลายก้อนที่ดอกสูง แล้วเหลือผ่อนที่เดียว จุดประสงค์คือ<b>ลดดอกเบี้ยรวมที่ต้องจ่าย</b>และทำให้จัดการง่ายขึ้น (จำวันครบกำหนดที่เดียว) <span class="ilinks">เกี่ยวข้อง: <a href="/debt-letter-kit">ชุดจดหมายเจรจาเจ้าหนี้</a></span></p>
+<p>คือการขอสินเชื่อก้อนใหม่ดอกเบี้ยต่ำกว่า มาปิดหนี้เดิมหลายก้อนที่ดอกสูง แล้วเหลือผ่อนที่เดียว จุดประสงค์คือ<b>ลดดอกเบี้ยรวมที่ต้องจ่าย</b>และทำให้จัดการง่ายขึ้น (จำวันครบกำหนดที่เดียว) <span class="ilinks">เกี่ยวข้อง: <a href="/debt-letter-kit">ตัวอย่างจดหมายเจรจาเจ้าหนี้ฟรี (ชุดเต็มยังไม่เปิดขาย)</a></span></p>
 {cta('HappyCash',HAPPYDEBT,'debt','สินเชื่อรวมหนี้ ลดดอก จ่ายที่เดียวจบ 👉')}
 <h2 id="worth">รวมหนี้คุ้มเมื่อไหร่</h2>
 <ul><li>ดอกเบี้ยก้อนใหม่ <b>ต่ำกว่า</b> ดอกเฉลี่ยของหนี้เดิมอย่างชัดเจน</li><li>คุณมี<b>วินัย</b>ไม่ก่อหนี้ใหม่ทับหลังรวมหนี้</li><li>ค่าธรรมเนียม/ค่าดำเนินการรวมแล้วยังคุ้มเมื่อเทียบดอกที่ประหยัดได้</li></ul>
@@ -1186,12 +1524,12 @@ body17=f"""<h1 id="top">บัตรกดเงินสด อนุมัต�
 {toc([('what','บัตรกดเงินสดคืออะไร'),('who','เหมาะกับใคร'),('pick','เลือกใบไหนดี'),('approve','เพิ่มโอกาสอนุมัติ'),('faq','คำถามที่พบบ่อย')])}
 <h2 id="what">บัตรกดเงินสดคืออะไร</h2>
 <p>คือวงเงินสินเชื่อหมุนเวียนที่ให้<b>กดเงินสด</b>มาใช้ได้ทันทีจากตู้ ATM หรือโอนเข้าบัญชี ต่างจากบัตรเครดิตตรงที่<b>คิดดอกเบี้ยตั้งแต่วันที่กด</b> (ไม่มีช่วงปลอดดอก) จึงควรใช้เฉพาะจำเป็นและรีบคืน</p> ลองกรอกหนี้ของคุณใน<a href="/debt-calculator" title="คำนวณหนี้มนุษย์เงินเดือน เห็นเดือนปลอดหนี้">เครื่องคำนวณแผนปลดหนี้ฟรี</a>ดูก่อน — เห็นเดือนปลอดหนี้ชัด ๆ แล้วค่อยตัดสินใจก้าวต่อไป
-{cta('KTCpheboom',KTCPBM,'cashcard','สมัครบัตรกดเงินสด วงเงินสำรองทันใจ 👉')}
+{cta('KTCproud',KTCPROUD,'cashcard','ดูเงื่อนไขบัตรกดเงินสด KTC PROUD 👉')}
 <h2 id="who">เหมาะกับใคร</h2>
 <p>เหมาะกับคนที่อยากมี<b>วงเงินสำรองฉุกเฉิน</b>ติดไว้ เผื่อเหตุไม่คาดฝัน เช่น ค่ารักษา ของเสียกะทันหัน หรือเงินขาดมือปลายเดือน — แต่ไม่ควรใช้กดมาใช้จ่ายฟุ่มเฟือยเพราะดอกเดินทันที</p>
 <h2 id="pick">เลือกใบไหนดี — ดูอะไร</h2>
 <ul><li><b>อัตราดอกเบี้ย/ค่าธรรมเนียม</b>ต่อปี (เทียบหลายใบ)</li><li><b>เกณฑ์รายได้ขั้นต่ำ</b> — เลือกใบที่เกณฑ์พอดีตัว เพิ่มโอกาสผ่าน</li><li><b>วงเงินที่ให้</b> และความเร็วอนุมัติ</li><li><b>โปรโมชันดอก 0% ช่วงแรก</b> (บางใบมี) ช่วยลดต้นทุนถ้าคืนทัน</li></ul>
-{cta('KTCpheboom',KTCPBM,'cashcard','เช็กคุณสมบัติ + สมัครบัตรกดเงินสด 👉')}
+{cta('KTCproud',KTCPROUD,'cashcard','เช็กคุณสมบัติ KTC PROUD ก่อนสมัคร 👉')}
 <h2 id="approve">เทคนิคเพิ่มโอกาสอนุมัติ</h2>
 <ul><li>กรอกรายได้ตามจริง แนบสลิป/รายการเดินบัญชีให้ครบ</li><li>เลือกใบที่<b>เกณฑ์รายได้พอดีตัว</b> อย่าเล็งใบเกินตัว</li><li>เคลียร์/ลดยอดหนี้บัตรที่ค้างก่อนยื่น (ลด DSR)</li><li>อย่ายื่นหลายใบพร้อมกันในช่วงเวลาใกล้กัน</li></ul>
 <h2 id="faq">คำถามที่พบบ่อย</h2>
@@ -1208,22 +1546,23 @@ ART.append((slug17,"บัตรกดเงินสด อนุมัติ�
  body17,faq17,"cashcard"))
 
 
-# 18) สินเชื่อส่วนบุคคล (KTC Proud - payout 1,100 ยังไม่เคยใช้)
+# 18) สินเชื่อส่วนบุคคล (KTC PROUD appears only as a clearly-labelled cash-card alternative)
 slug18="personal-loan-2026.html"
 KTCPROUD="https://atth.me/002114002a0x"
 body18=f"""<h1 id="top">สินเชื่อส่วนบุคคล อนุมัติง่าย เงินเดือนน้อย 2026 — เลือกที่ไหน เตรียมตัวยังไงให้ผ่าน</h1>
 <div class="meta">อัปเดตล่าสุด: 14 มิ.ย. 2026 · หมวด สินเชื่อ</div>
 <p>“สินเชื่อส่วนบุคคล” คือเงินก้อนที่ขอได้โดย<b>ไม่ต้องมีหลักประกัน</b> ผ่อนเป็นงวดเท่า ๆ กัน เหมาะกับมนุษย์เงินเดือนที่ต้องการเงินก้อนไปใช้จ่ายจำเป็น เช่น ค่ารักษา ซ่อมรถ หรือรวมหนี้ บทความนี้สรุปวิธีเลือกให้คุ้ม เกณฑ์รายได้คร่าว ๆ และเทคนิคเพิ่มโอกาสอนุมัติแม้เงินเดือนไม่สูง <i>(กู้เท่าที่จำเป็นและชำระคืนไหว)</i></p> ลองกรอกหนี้ของคุณใน<a href="/debt-calculator" title="เครื่องคำนวณปลดหนี้ Snowball/Avalanche ฟรี">ลองคำนวณแผนปลดหนี้ของคุณ</a>ดูก่อน — เห็นเดือนปลอดหนี้ชัด ๆ แล้วค่อยตัดสินใจก้าวต่อไป
+<div style="background:#fff8e8;border:1px solid #e8d6a8;border-radius:10px;padding:12px 14px;margin:14px 0"><b>แยกผลิตภัณฑ์ให้ถูกก่อนสมัคร:</b> KTC PROUD ที่ลิงก์จากหน้านี้เป็น<b>บัตรกดเงินสดวงเงินหมุนเวียน</b> ไม่ใช่สินเชื่อเงินก้อน KTC CASH แบบผ่อนเป็นงวดคงที่ จึงต้องเทียบวิธีคิดดอกและวิธีชำระให้ตรงกับสิ่งที่ต้องการ</div>
 {toc([('what','สินเชื่อส่วนบุคคลคืออะไร'),('who','เหมาะกับใคร'),('pick','เลือกที่ไหนดี'),('approve','เพิ่มโอกาสอนุมัติ (เงินเดือนน้อย)'),('faq','คำถามที่พบบ่อย')])}
-{cmp_widget("เทียบสินเชื่อบุคคล vs ทางเลือกอื่น 2026",[{"name":"สินเชื่อบุคคล KTC Proud","rate":"ลดต้นลดดอก (แบงก์ KTC)","limit":"ตามรายได้/เครดิต","approve":"สมัครออนไลน์ รู้ผลไว","good":"ไม่ต้องค้ำ ผ่อนเป็นงวดเท่ากัน","url":KTCPROUD,"camp":"personalloan","best":True},{"name":"บัตรกดเงินสด","rate":"คิดดอกตั้งแต่วันที่กด","limit":"วงเงินหมุนเวียน","approve":"ไว","good":"เหมาะวงเงินสำรอง ไม่เหมาะกู้ก้อนใหญ่"},{"name":"สินเชื่อรวมหนี้","rate":"ลดต้นลดดอก","limit":"ตามหนี้เดิม","approve":"ไม่กี่วัน","good":"ถ้าเป้าหมายคือปิดหนี้เก่า เลือกตัวนี้"}],"ploan-widget","เงินเดือนน้อยมีโปรแกรมเฉพาะ — เลือกเจ้าที่เกณฑ์พอดีตัว")}
+{cmp_widget("เทียบสินเชื่อบุคคล vs ทางเลือกอื่น 2026",[{"name":"บัตรกดเงินสด KTC PROUD","rate":"คิดดอกเมื่อใช้วงเงิน","limit":"วงเงินหมุนเวียน","approve":"สมัครออนไลน์","good":"ไม่ต้องค้ำ ชำระเต็มหรือขั้นต่ำตามเงื่อนไข","url":KTCPROUD,"camp":"personalloan"},{"name":"สินเชื่อบุคคลแบบเงินก้อน","rate":"ลดต้นลดดอก","limit":"ตามรายได้/เครดิต","approve":"ขึ้นกับผู้ให้บริการ","good":"เหมาะเมื่ออยากได้ตารางผ่อนเป็นงวดชัดเจน","best":True},{"name":"สินเชื่อรวมหนี้","rate":"ลดต้นลดดอก","limit":"ตามหนี้เดิม","approve":"ขึ้นกับผู้ให้บริการ","good":"ถ้าเป้าหมายคือปิดหนี้เก่า ให้เทียบต้นทุนรวมก่อน"}],"ploan-widget","เลือกประเภทวงเงินให้ตรงกับวิธีใช้และวิธีชำระ ไม่ดูแค่ว่าไม่ต้องค้ำ")}
 <h2 id="what">สินเชื่อส่วนบุคคลคืออะไร</h2>
 <p>เป็นสินเชื่อแบบ<b>ไม่มีหลักประกัน</b> อนุมัติเป็นวงเงินก้อนแล้วผ่อนคืนเป็นงวดรายเดือนพร้อมดอกเบี้ย ต่างจากบัตรกดเงินสดตรงที่มักได้วงเงินก้อนใหญ่กว่าและมีตารางผ่อนชัดเจน เหมาะกับการใช้จ่ายที่วางแผนล่วงหน้าได้</p>
-{cta('KTCProud',KTCPROUD,'personalloan','สินเชื่อส่วนบุคคล KTC PROUD สมัครออนไลน์ 👉')}
+{cta('KTCProud',KTCPROUD,'personalloan','ดูเงื่อนไขบัตรกดเงินสดวงเงินหมุนเวียน KTC PROUD ก่อนสมัคร 👉')}
 <h2 id="who">เหมาะกับใคร</h2>
 <p>เหมาะกับคนที่ต้องการ<b>เงินก้อนแน่นอน + ผ่อนเป็นงวด</b> เช่น ค่ารักษาพยาบาล ค่าเล่าเรียน ซ่อมบ้าน/รถ หรือนำไปรวมหนี้ดอกสูงให้เหลือก้อนเดียว ผู้มีรายได้ประจำและสลิปเงินเดือนชัดเจนมักได้เปรียบเรื่องอนุมัติ</p> ตัวเลือกทั้งหมดที่เรารีวิวและคัดแล้ว รวมอยู่ที่<a href="/links" title="ลิงก์รวมทางการ ngernduangold">ดูตัวเลือกทั้งหมดที่คัดไว้</a> อัปเดตอยู่เสมอ
 <h2 id="pick">เลือกที่ไหนดี — ดูอะไร</h2>
 <ul><li><b>อัตราดอกเบี้ยต่อปี (ลดต้นลดดอก)</b> — เทียบหลายเจ้า</li><li><b>เกณฑ์รายได้ขั้นต่ำ</b> — เลือกเจ้าที่เกณฑ์พอดีตัว เพิ่มโอกาสผ่าน</li><li><b>วงเงิน + จำนวนงวดผ่อน</b> ที่ไหวต่อเดือน</li><li><b>ค่าธรรมเนียม + เงื่อนไขปิดก่อนกำหนด</b> <span class="ilinks">เกี่ยวข้อง: <a href="/loan-approval-compare">ตารางเทียบเกณฑ์ขอสินเชื่อแต่ละประเภท</a></span></li></ul>
-{cta('KTCProud',KTCPROUD,'personalloan','เช็กวงเงิน + ดอกเบี้ยสินเชื่อบุคคล 👉')}
+{cta('KTCProud',KTCPROUD,'personalloan','เช็กวงเงิน วิธีคิดดอก และวิธีชำระของบัตรกดเงินสด KTC PROUD 👉')}
 <p style="text-align:center;color:#5b5b66;font-size:14px">มีรถปลอดภาระ? อาจได้วงเงินมากกว่า/ดอกถูกกว่าด้วย <a href="/title-loan-2026.html">จำนำทะเบียนรถ</a> · มีหนี้หลายก้อน? ดู <a href="/debt-consolidation-2026.html">สินเชื่อรวมหนี้</a></p>
 <h2 id="approve">เพิ่มโอกาสอนุมัติ (แม้เงินเดือนน้อย)</h2>
 <ul><li>กรอกรายได้ตามจริง แนบสลิป/รายการเดินบัญชีย้อนหลังให้ครบ</li><li>เลือกเจ้าที่<b>เกณฑ์รายได้พอดีตัว</b> อย่ายื่นเจ้าที่ขั้นต่ำสูงเกิน</li><li>ลดยอดหนี้บัตร/สินเชื่อที่ค้างก่อนยื่น เพื่อลดสัดส่วนหนี้ต่อรายได้ (DSR)</li><li>อย่ายื่นหลายเจ้าพร้อมกันในช่วงเวลาใกล้กัน (เห็นในเครดิตบูโร)</li><li>ตรวจเครดิตบูโรตัวเองล่วงหน้า เผื่อมีรายการค้างต้องเคลียร์</li></ul>
@@ -1463,7 +1802,7 @@ ART.append((slug_ls,"บัตรเครดิตสายไลฟ์สไ�
 # Q3 seasonal — travel insurance for vacation (commercial-intent · educational · no fabricated premiums · คปภ.)
 slug_q3="travel-insurance-vacation-2026.html"
 body_q3=f"""<h1 id="top">ลางานไปเที่ยวต่างประเทศ Q3 2026 — เช็กลิสต์ + เลือกประกันเดินทางไม่ให้โดนเทตอนเคลม</h1>
-<div class="meta">อัปเดต: {BUILD_DATE} · หมวด ประกัน · ข้อมูลเพื่อการศึกษา</div>
+<div class="meta">หมวด ประกัน · ข้อมูลเพื่อการศึกษา · โปรดตรวจเงื่อนไขล่าสุดกับผู้ให้บริการ</div>
 <p>ช่วง Q3 มีวันหยุดยาวและเป็นจังหวะดีของมนุษย์เงินเดือนที่จะลาพักร้อนไปเที่ยวต่างประเทศ แต่ค่ารักษาพยาบาลในต่างแดนสูงกว่าบ้านเรามาก หากเจ็บป่วย/อุบัติเหตุขึ้นมาอาจบานปลายเป็นหลักแสน <b>ประกันเดินทาง</b>จึงเป็นตัวช่วยที่ "ซื้อแล้วคุ้มครองตามวันที่ระบุในกรมธรรม์ได้ทันที" ไม่ต้องรออนุมัติหลายวันแบบบัตร/สินเชื่อ บทความนี้รวมเช็กลิสต์ก่อนลางาน + วิธีเลือกประกันเดินทางไม่ให้โดนปฏิเสธเคลม โดย<b>ไม่ระบุตัวเลขเบี้ย</b> (เปลี่ยนตามแผน อายุ และปลายทาง) — ให้กดเทียบที่หน้าผู้ให้บริการ</p>
 {toc([('checklist','เช็กลิสต์ก่อนลางานไปเที่ยว'),('why','ทำไมต้องมีประกันเดินทาง'),('exclude','ข้อยกเว้นที่มักโดนปฏิเสธเคลม'),('howbuy','ซื้อก่อนกี่วัน + เลือกแผนยังไง'),('compare','เทียบแผนประกันเดินทาง'),('faq','คำถามที่พบบ่อย')])}
 <h2 id="checklist">เช็กลิสต์ก่อนลางานไปเที่ยวต่างประเทศ</h2>
@@ -1514,7 +1853,7 @@ body24=f"""<h1 id="top">เครดิตบูโรคืออะไร เ�
 <p>ถ้าเคยถูกปฏิเสธ ลองดูสาเหตุที่พบบ่อยและวิธีแก้ใน <a href="/krungsri-credit-card-rejected-2026.html">สมัครบัตรไม่ผ่าน 7 สาเหตุ + วิธีแก้</a> ก่อนยื่นใหม่</p>
 <h2 id="fix">ติดค้าง/ประวัติไม่ดี แก้ยังไง</h2>
 <ul><li><b>เคลียร์ยอดค้างให้จบ</b>และจ่ายตรงเวลาต่อเนื่อง — ประวัติดีจะค่อย ๆ สะสมกลบของเก่า</li><li>ถ้ามีหนี้หลายก้อนดอกสูง พิจารณา <a href="/debt-consolidation-2026.html">รวมหนี้ให้เหลือก้อนเดียว</a> เพื่อให้ผ่อนไหวและไม่ค้างเพิ่ม</li><li><b>อย่ายื่นสมัครหลายที่พร้อมกัน</b>ในเวลาสั้น ๆ เพราะการถูกดึงข้อมูลถี่ ๆ อาจถูกมองว่าเร่งหาเงิน</li><li>ตั้งหักบัญชีอัตโนมัติ/เตือนวันครบกำหนด เพื่อไม่ให้ลืมจ่าย</li></ul>
-{cta('KTCProud',KTCPROUD,'credit-bureau','ภาระหนี้หลายก้อน? ดูสินเชื่อส่วนบุคคลเพื่อรวมหนี้/ลดงวด 👉')}
+{cta('KTCProud',KTCPROUD,'credit-bureau','กำลังเทียบวงเงินไม่มีหลักประกัน? ดูเงื่อนไขบัตรกดเงินสด KTC PROUD และต้นทุนก่อนใช้ 👉')}
 <h2 id="ready">เตรียมตัวก่อนสมัครบัตร/สินเชื่อ</h2>
 <p>เช็กลิสต์ก่อนยื่น เพื่อเพิ่มโอกาสผ่านโดยไม่เสียประวัติฟรี ๆ:</p>
 <ul><li><b>ตรวจเครดิตบูโรของตัวเองก่อน</b> ดูว่ามีบัญชีค้างที่ลืมไหม ข้อมูลถูกต้องหรือเปล่า</li><li>ลดภาระหนี้/ยอดใช้บัตรให้ต่ำลงก่อนยื่น</li><li>เตรียมเอกสารรายได้ให้ครบ (ดู <a href="/credit-card-documents-2026.html">เอกสารสมัครบัตรเครดิต</a>)</li><li>เลือกผลิตภัณฑ์ที่เงื่อนไขตรงกับโปรไฟล์เรา เช่น <a href="/credit-card-easy-approval-2026.html">บัตรที่เน้นอนุมัติง่าย</a></li></ul>
@@ -1550,19 +1889,19 @@ body25=f"""<h1 id="top">เงินเดือน 20,000 สมัครบั
 <p>ดูค่าธรรมเนียมรายปี เงื่อนไขยกเว้น และสิทธิ์ที่ตรงกับการใช้จริงเป็นหลัก อย่าเลือกที่โปรเปิดบัตรอย่างเดียว</p>
 {cta('Krungsri',KRUNGSRI,'salary20000','ดูบัตรเครดิต Krungsri สมัครออนไลน์ 👉')}
 <h2 id="limit">วงเงินที่เป็นไปได้</h2>
-<p>โดยทั่วไปวงเงินบัตรเครดิตอยู่ที่ราว <b>1.5–2 เท่าของรายได้ต่อเดือน</b>ตามแนวเกณฑ์ของธนาคารแห่งประเทศไทย (ธปท.) — เงินเดือน 20,000 จึงมักได้วงเงินเริ่มต้นประมาณ 30,000–40,000 บาท แต่เป็น<b>ช่วงโดยประมาณ ไม่การันตี</b> ขึ้นกับภาระหนี้เดิมและดุลพินิจผู้ออกบัตร ยิ่งภาระหนี้ต่ำ โอกาสได้วงเงินตามเกณฑ์ยิ่งสูง</p>
+<p>ตามเกณฑ์สาธารณะของธนาคารแห่งประเทศไทย ผู้มีรายได้เฉลี่ยต่อเดือนตั้งแต่ 15,000 บาทแต่น้อยกว่า 30,000 บาท มี<b>เพดานวงเงินบัตรเครดิตไม่เกิน 1.5 เท่าของรายได้เฉลี่ยต่อเดือน</b> — ที่เงินเดือน 20,000 บาท เพดานตามเกณฑ์จึงไม่เกิน 30,000 บาท และไม่ใช่วงเงินที่รับประกันว่าจะอนุมัติ ผู้ออกบัตรอนุมัติจริงต่ำกว่าเพดานได้ตามภาระหนี้ ประวัติเครดิต และการประเมินความสามารถชำระ</p>
 <h2 id="approve">เพิ่มโอกาสอนุมัติ</h2>
 <ul><li><b>เอกสารครบ</b> สลิปเงินเดือน/หนังสือรับรอง + เดินบัญชี (ดู <a href="/credit-card-documents-2026.html">เอกสารสมัครบัตรเครดิต</a>)</li><li><b>ภาระหนี้ต่อรายได้ (DSR) ไม่สูงเกินไป</b> — เคลียร์/ลดหนี้ก้อนเล็กก่อนยื่น</li><li><b>เช็กเครดิตบูโรของตัวเองก่อน</b> ว่าไม่มีค้างที่ลืม (ดู <a href="/credit-bureau-check-2026.html">เช็กเครดิตบูโรออนไลน์ + อ่านผล</a>)</li><li><b>อย่ายื่นหลายใบพร้อมกัน</b> ในเวลาสั้น ๆ</li></ul>
 <h2 id="loan">ถ้าต้องการเงินก้อน</h2>
 <p>ถ้าต้องใช้เงินก้อนไม่ใช่แค่รูดบัตร ที่เงินเดือน 20,000 พิจารณาได้ทั้ง <a href="/personal-loan-2026.html">สินเชื่อส่วนบุคคล (ไม่ต้องค้ำ)</a> และ <a href="/cash-card-easy-2026.html">บัตรกดเงินสด</a> — เทียบดอกเบี้ย วงเงิน และงวดผ่อนให้ไหวกับรายรับ อย่ากู้เกินกำลัง</p>
-{cta('KTCProud',KTCPROUD,'salary20000','ดูสินเชื่อส่วนบุคคล KTC PROUD เทียบวงเงิน/งวด 👉')}
+{cta('KTCProud',KTCPROUD,'salary20000','ดูเงื่อนไขบัตรกดเงินสด KTC PROUD แบบวงเงินหมุนเวียน 👉')}
 <h2 id="plan">แผนเริ่มต้นที่แนะนำ</h2>
 <p>เริ่มจาก<b>บัตรใบเดียวที่ตรงไลฟ์สไตล์</b> ใช้แล้ว<b>จ่ายเต็มทุกเดือน</b>เพื่อสร้างประวัติดี → พอประวัติเข้าที่ค่อยขยับวงเงินหรือเพิ่มใบที่สอง ระหว่างนั้นวางระบบการเงินด้วย <a href="/salary-budgeting-2026.html">แบ่งเงินเดือน 50/30/20</a> และกัน <a href="/emergency-fund-2026.html">เงินสำรองฉุกเฉิน</a> ไว้ด้วย</p> ระหว่างทาง อย่าลืมกันเงินสำรองฉุกเฉินไว้ใน<a href="/kept-savings-2026" title="บัญชีออมดอกสูง เปิดฟรี">ที่พักเงินสำรองแบบถอนได้ทันที</a> — บิลด่วนมาจะได้ไม่ต้องกลับไปกู้
 <p style="text-align:center;color:#5b5b66;font-size:13px">ไม่แน่ใจว่าตัวไหนเหมาะกับโปรไฟล์คุณ ลอง <a href="/quiz">ทำ Quiz 30 วิ</a> ดูคำแนะนำเบื้องต้น</p>
 <h2 id="faq">คำถามที่พบบ่อย</h2>
 """
 faq25=[("เงินเดือน 20,000 สมัครบัตรเครดิตผ่านง่ายไหม?","ผ่านเกณฑ์รายได้ขั้นต่ำของบัตรส่วนใหญ่แล้ว แต่การอนุมัติยังขึ้นกับภาระหนี้ ประวัติเครดิต และดุลพินิจผู้ออกบัตร เตรียมเอกสารครบและลดภาระหนี้ช่วยเพิ่มโอกาส"),
-       ("เงินเดือน 20,000 ได้วงเงินบัตรเท่าไหร่?","โดยทั่วไปราว 1.5–2 เท่าของรายได้ต่อเดือน (ประมาณ 30,000–40,000 บาท) เป็นช่วงโดยประมาณตามแนวเกณฑ์ ธปท. ไม่การันตี ขึ้นกับภาระหนี้เดิมและผู้ออกบัตร"),
+       ("เงินเดือน 20,000 ได้วงเงินบัตรเท่าไหร่?","ตามเกณฑ์สาธารณะของ ธปท. ช่วงรายได้ 15,000 บาทแต่น้อยกว่า 30,000 บาท มีเพดานวงเงินไม่เกิน 1.5 เท่าของรายได้เฉลี่ยต่อเดือน ดังนั้นที่ 20,000 บาท เพดานคือไม่เกิน 30,000 บาท แต่ผู้ออกบัตรอนุมัติจริงต่ำกว่านี้ได้ และไม่รับประกันผล"),
        ("ควรสมัครบัตรกี่ใบดีที่เงินเดือน 20,000?","แนะนำเริ่มใบเดียวที่ตรงไลฟ์สไตล์ ใช้และจ่ายเต็มให้ตรงเวลาเพื่อสร้างประวัติ แล้วค่อยพิจารณาใบที่สอง ไม่ควรยื่นหลายใบพร้อมกัน"),
        ("เงินเดือน 20,000 กู้สินเชื่อส่วนบุคคลได้ไหม?","ได้ โดยทั่วไปผ่านเกณฑ์รายได้ขั้นต่ำ แต่ควรดูภาระหนี้ต่อรายได้ (DSR) และเลือกวงเงิน/งวดที่ผ่อนไหว เทียบหลายเจ้าก่อนตัดสินใจ")]
 body25+=faq_block(faq25)
@@ -1592,7 +1931,7 @@ body26=f"""<h1 id="top">แอปกู้เงินถูกกฎหมา�
 <h2 id="options">ทางเลือกถูกกฎหมาย</h2>
 <p>ก่อนไปหาแอปแปลก ๆ ลองดูทางเลือกที่อยู่ภายใต้การกำกับก่อน:</p>
 <ul><li><a href="/personal-loan-2026.html">สินเชื่อส่วนบุคคล (ไม่ต้องค้ำ)</a> — เงินก้อน ผ่อนเป็นงวด</li><li><a href="/cash-card-easy-2026.html">บัตรกดเงินสด</a> — กดใช้เท่าที่จำเป็น ดอกตามที่ใช้จริง</li><li>มีรถ/บ้าน → <a href="/title-loan-2026.html">จำนำทะเบียนรถ</a> หรือ <a href="/loan-cash-2026.html">เทียบสินเชื่อเงินด่วนทั้งหมด</a> ดอกมักต่ำกว่าไม่มีหลักประกัน</li></ul>
-{cta('KTCProud',KTCPROUD,'loanonline','ดูสินเชื่อส่วนบุคคล KTC PROUD (ผู้ให้บริการมีใบอนุญาต) 👉')}
+{cta('KTCProud',KTCPROUD,'loanonline','ดูรายละเอียดบัตรกดเงินสด KTC PROUD จากผู้ให้บริการก่อนสมัคร 👉')}
 {cta('Srisawad',SRISAWAD,'loanonline','มีรถ/หลักประกัน? ดูสินเชื่อศรีสวัสดิ์ เทียบเงื่อนไข 👉')}
 <h2 id="safe">กู้ยังไงไม่ให้เป็นภาระ</h2>
 <p>กู้เท่าที่จำเป็นและ<b>ผ่อนไหว</b> โดยทั่วไปแนะนำให้ภาระผ่อนหนี้รวมไม่เกินราว 1 ใน 3 ของรายได้ อย่ากู้ที่หนึ่งไปโปะอีกที่จนพอกหนี้ ถ้ามีหนี้หลายก้อนดอกสูงอยู่แล้ว พิจารณา <a href="/debt-consolidation-2026.html">รวมหนี้ให้เหลือก้อนเดียว</a> ดอกต่ำลงแทนการกู้เพิ่ม — ยึดแนวทาง Responsible Lending คือกู้อย่างรับผิดชอบและไหวจริง</p>
@@ -1620,7 +1959,7 @@ body27=f"""<h1 id="top">ดอกเบี้ยบัตรเครดิต�
 <h2 id="how">ดอกเบี้ยบัตรเครดิตคิดยังไง</h2>
 <p>บัตรเครดิตคิดดอกเบี้ย<b>ตามเพดานที่ธนาคารแห่งประเทศไทย (ธปท.) กำหนด</b> (ปัจจุบันเพดานทั่วไปราว 16% ต่อปี — โปรดเช็กอัตราล่าสุดที่หน้าบัตร) จุดสำคัญคือมี<b>ระยะปลอดดอกเบี้ย</b> (ทั่วไปราว 45–55 วัน) — ถ้าคุณ<b>จ่ายเต็มจำนวนภายในกำหนด จะไม่เสียดอกเลย</b> ดอกเบี้ยจะเริ่มเดินก็ต่อเมื่อจ่ายไม่เต็ม (เช่น จ่ายขั้นต่ำ) แล้วมียอดคงค้างยกไป</p>
 <h2 id="minpay">จ่ายขั้นต่ำเสียเท่าไหร่</h2>
-<p>“จ่ายขั้นต่ำ” คือจ่ายแค่ส่วนหนึ่งของยอด (โดยทั่วไปราว 5–10% ของยอด — อาจต่างตามประกาศ/ผู้ออกบัตร) ส่วนที่เหลือกลายเป็น<b>ยอดคงค้างที่ถูกคิดดอกเบี้ย</b> โดยมักคิดเป็น<b>รายวันจากยอดที่ใช้</b> นับตั้งแต่วันที่บันทึกรายการ ไม่ใช่คิดจากยอดที่เหลือหลังหักขั้นต่ำเท่านั้น — ผลคือจ่ายขั้นต่ำไปเรื่อย ๆ ยอดจะลดช้ามากเพราะดอกกินไปส่วนใหญ่</p>
+<p>สำหรับปี 2569 ธปท. กำหนดอัตราชำระขั้นต่ำชั่วคราวที่ <b>8% ของยอดคงค้าง</b> ตั้งแต่ 1 ม.ค.–31 ธ.ค. 2569 (โปรดตรวจใบแจ้งยอดและประกาศล่าสุดของผู้ออกบัตร) ส่วนที่เหลือกลายเป็น<b>ยอดคงค้างที่ถูกคิดดอกเบี้ย</b> โดยมักคิดเป็น<b>รายวันจากยอดที่ใช้</b> นับตั้งแต่วันที่บันทึกรายการ ไม่ใช่คิดจากยอดที่เหลือหลังหักขั้นต่ำเท่านั้น — ผลคือจ่ายขั้นต่ำไปเรื่อย ๆ ยอดจะลดช้ามากเพราะดอกกินไปส่วนใหญ่</p>
 <h2 id="example">ตัวอย่างคำนวณ (กลม ๆ)</h2>
 <p>สมมุติยอดค้าง <b>10,000 บาท</b> ที่อัตราเพดานราว 16% ต่อปี ดอกเบี้ยคร่าว ๆ จะอยู่ราว <b>10,000 × 16% ÷ 12 ≈ 130 บาท/เดือน</b> ถ้าคงยอดไว้ — ยิ่งยอดสูงหรือจ่ายช้า ดอกยิ่งเยอะ ตัวเลขนี้เป็น<b>ตัวอย่างโดยประมาณ</b> วิธีคิดจริงเป็นแบบรายวันและขึ้นกับเงื่อนไขผู้ออกบัตร โปรดดูใบแจ้งยอดจริงประกอบ</p>
 <h2 id="avoid">ใช้ยังไงไม่เสียดอก</h2>
@@ -1660,7 +1999,7 @@ body28=f"""<h1 id="top">วิธีปลดหนี้บัตรเคร�
 <p>ทั้งสองวิธีได้ผล เลือกที่คุณทำต่อเนื่องได้จริง — พอปิดใบหนึ่งได้ ให้ย้ายเงินที่เคยโปะไปอัดใบถัดไป (ก้อนโปะจะใหญ่ขึ้นเรื่อย ๆ)</p>
 <h2 id="lower">ลดดอกระหว่างทาง</h2>
 <p>ยิ่งดอกต่ำ เงินโปะยิ่งไปลดเงินต้นได้มาก ลองทางเหล่านี้:</p>
-<ul><li><b>รวมหนี้หลายใบเป็นก้อนเดียว</b>ดอกต่ำลง ผ่อนเป็นงวดชัดเจน — ดู <a href="/debt-consolidation-2026.html">สินเชื่อรวมหนี้ ที่ไหนดี</a></li><li><b>เจรจากับเจ้าหนี้</b>ขอปรับโครงสร้างหนี้/ลดดอก/ขยายงวด — หลายที่มีโครงการช่วยลูกหนี้ <span class="ilinks">เกี่ยวข้อง: <a href="/debt-letter-kit">ชุดจดหมายเจรจาเจ้าหนี้</a></span></li><li>มีโครงการของรัฐ เช่น<b>คลินิกแก้หนี้</b> สำหรับหนี้บัตร/สินเชื่อส่วนบุคคลที่เป็นหนี้เสีย — เป็นช่องทางทางการที่ควรศึกษา <span class="ilinks">เกี่ยวข้อง: <a href="/close-debt-fast-2026">โครงการปิดหนี้ไว ไปต่อได้ สำหรับหนี้เสียก้อนเล็ก</a></span></li></ul>
+<ul><li><b>รวมหนี้หลายใบเป็นก้อนเดียว</b>ดอกต่ำลง ผ่อนเป็นงวดชัดเจน — ดู <a href="/debt-consolidation-2026.html">สินเชื่อรวมหนี้ ที่ไหนดี</a></li><li><b>เจรจากับเจ้าหนี้</b>ขอปรับโครงสร้างหนี้/ลดดอก/ขยายงวด — หลายที่มีโครงการช่วยลูกหนี้ <span class="ilinks">เกี่ยวข้อง: <a href="/debt-letter-kit">ตัวอย่างจดหมายเจรจาเจ้าหนี้ฟรี (ชุดเต็มยังไม่เปิดขาย)</a></span></li><li>มีโครงการของรัฐ เช่น<b>คลินิกแก้หนี้</b> สำหรับหนี้บัตร/สินเชื่อส่วนบุคคลที่เป็นหนี้เสีย — เป็นช่องทางทางการที่ควรศึกษา <span class="ilinks">เกี่ยวข้อง: <a href="/close-debt-fast-2026">โครงการปิดหนี้ไว ไปต่อได้ สำหรับหนี้เสียก้อนเล็ก</a></span></li></ul>
 {cta('HappyCash',HAPPYDEBT,'payoffdebt','หนี้บัตรหลายใบ? รวมเป็นก้อนเดียวดอกต่ำลง ผ่อนจบเป็นงวด 👉')}
 <h2 id="budget">หาเงินมาโปะหนี้</h2>
 <p>แผนจะเดินได้ต้องมีเงินส่วนเกินไปโปะ — <b>ตัดค่าใช้จ่ายที่ไม่จำเป็น</b>ชั่วคราว, จัดงบด้วยสูตร <a href="/salary-budgeting-2026.html">แบ่งเงินเดือน 50/30/20</a> (เพิ่มสัดส่วนใช้หนี้), เอาเงินก้อนพิเศษ (โบนัส/คืนภาษี) มาโปะ และหา<b>รายได้เสริม</b>ถ้าทำได้ ทุกบาทที่โปะเกินขั้นต่ำคือดอกที่ประหยัดได้</p>
@@ -1739,7 +2078,7 @@ body35=f"""<h1 id="top">คลินิกแก้หนี้ by SAM 2026 ค�
 """
 faq35=[("คลินิกแก้หนี้ by SAM ต่างจากสินเชื่อรวมหนี้ทั่วไปยังไง?","คลินิกแก้หนี้เป็นโครงการทางการสำหรับหนี้เสีย (NPL) ไม่มีหลักประกัน ค้างเกิน 120 วัน ยอดรวมไม่เกิน 2 ล้านบาท ดอกพิเศษ 3–5% ผ่อนได้ถึง 10 ปี ส่วนสินเชื่อรวมหนี้ของธนาคารทั่วไปสำหรับคนที่ยังผ่อนไหว (ยังไม่เป็นหนี้เสีย) วงเงินสูงกว่าได้แต่ดอกตามเกณฑ์ตลาด"),
        ("หนี้เกิน 1 แสนบาท เข้าคลินิกแก้หนี้ได้ไหม?","ได้ — คลินิกแก้หนี้รับยอดหนี้รวมได้ถึง 2 ล้านบาทต่อราย (คนละเกณฑ์กับโครงการ 'ปิดหนี้ไว ไปต่อได้' ที่จำกัดไม่เกิน 1 แสนบาท) ขอแค่เป็นหนี้เสียไม่มีหลักประกันค้างเกิน 120 วัน มีรายได้ และอายุไม่เกิน 70 ปี — เช็กเงื่อนไขล่าสุดที่ช่องทางทางการ"),
-       ("เข้าคลินิกแก้หนี้แล้วเสียประวัติเครดิตบูโรไหม?","การเป็นหนี้เสียมีผลต่อประวัติอยู่แล้ว การเข้าโครงการเพื่อปิดหนี้ให้จบถือเป็นการแก้ที่ต้นเหตุ เมื่อผ่อนจบและสถานะดีขึ้น จะช่วยให้ฟื้นเครดิตได้ง่ายกว่าปล่อยค้างไว้ ดู <a href=/credit-bureau-check-2026.html>วิธีเช็กเครดิตบูโร</a>"),
+       ("เข้าคลินิกแก้หนี้แล้วเสียประวัติเครดิตบูโรไหม?","การเป็นหนี้เสียมีผลต่อประวัติอยู่แล้ว การเข้าโครงการเพื่อปิดหนี้ให้จบถือเป็นการแก้ที่ต้นเหตุ เมื่อผ่อนจบและสถานะดีขึ้น จะช่วยให้ฟื้นเครดิตได้ง่ายกว่าปล่อยค้างไว้ ดู <a href=\"/credit-bureau-check-2026.html\">วิธีเช็กเครดิตบูโร</a>"),
        ("สมัครคลินิกแก้หนี้มีค่าใช้จ่ายไหม?","การสมัครเข้าร่วมโครงการไม่มีค่าใช้จ่าย สมัครเองได้ที่เว็บคลินิกแก้หนี้.com หรือโทร 1443 ระวังมิจฉาชีพที่แอบอ้างชื่อโครงการแล้วเรียกเก็บค่าดำเนินการล่วงหน้า")]
 body35+=faq_block(faq35)
 body35+='<div class="disc">*ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำทางการเงินเฉพาะบุคคล เงื่อนไข ดอกเบี้ย และเกณฑ์คุณสมบัติของคลินิกแก้หนี้ by SAM อาจปรับเปลี่ยนตามรอบโครงการ โปรดยืนยันข้อมูลล่าสุดที่เว็บไซต์คลินิกแก้หนี้.com หรือ Call Center 1443 ส่วนสินเชื่อรวมหนี้/มีหลักประกันขึ้นกับเงื่อนไขและดุลพินิจของผู้ให้บริการ</div>'
@@ -2137,37 +2476,50 @@ ART.append((slugRF,"รีไฟแนนซ์รถ 2026 — ยังผ่�
 
 # 29) เงินเดือน 30,000 สมัครบัตร/สินเชื่อ + บัตรพรีเมียม (ปิดชุดเทียร์ 15k/20k/30k; broaden → ออม/ประกัน)
 slug29="credit-card-salary-30000-2026.html"
-body29=f"""<h1 id="top">เงินเดือน 30000 วงเงินบัตรเครดิตได้เท่าไหร่? เช็กเพดานก่อนสมัคร</h1><h2 id="ceiling">เงินเดือน 30,000 ขอวงเงินได้ประมาณเท่าไหร่</h2><p>วงเงินบัตรเครดิตไม่ใช่จำนวนที่ทุกคนจะได้เท่ากัน เพราะผู้ออกบัตรพิจารณารายได้ที่ยืนยันได้ ภาระหนี้ และนโยบายของตนเองประกอบ สำหรับเกณฑ์สาธารณะที่อ้างอิงได้จาก ธปท. ผู้มีรายได้ต่อเดือนตั้งแต่ 30,000 บาท แต่น้อยกว่า 50,000 บาท มีเพดานวงเงินบัตรเครดิต<b>ไม่เกิน 3 เท่าของรายได้เฉลี่ยต่อเดือน</b> — ที่รายได้ 30,000 บาท เพดานตามเกณฑ์นี้คือไม่เกิน 90,000 บาท ซึ่งเป็น "เพดานตามเกณฑ์" ไม่ใช่วงเงินที่รับประกันว่าจะอนุมัติ แต่ละธนาคารอนุมัติจริงต่ำกว่าเพดานได้ตามการประเมินของเขา (อ้างอิงเกณฑ์ ธปท. — โปรดตรวจประกาศฉบับล่าสุดประกอบ)</p><p>ถ้ามีรายได้หลายทางหรือรายได้ไม่สม่ำเสมอ ให้ถามผู้ออกบัตรว่าใช้เอกสารและนิยามรายได้แบบใดในการคำนวณวงเงิน การรู้เพดานช่วยตั้งความคาดหวังได้ แต่ไม่แทนการประเมินความสามารถในการชำระของแต่ละคน <span class="ilinks">เกี่ยวข้อง: <a href="/credit-card-salary-30000">เงินเดือน 30,000 เลือกบัตรตามการใช้งานและเอกสารที่ต้องเตรียม</a></span></p>
-<div class="meta">อัปเดตล่าสุด: 22 มิ.ย. 2026 · หมวด บัตรเครดิต</div>
-<p>เงินเดือน 30,000 บาทถือว่า<b>ผ่านเกณฑ์บัตรเครดิตเกือบทุกใบ</b>และเริ่มแตะบัตรระดับกลาง-พรีเมียมบางใบได้ บทความนี้สรุปว่าที่เงินเดือนนี้<b>เล็งบัตรแบบไหน วงเงินเท่าไหร่ ถือหลายใบคุ้มไหม</b> และเมื่อเริ่มมีเงินเหลือควร<b>ต่อยอด</b>ยังไง ฉบับมนุษย์เงินเดือนเข้าใจง่าย</p>
-{toc([('canget','เงินเดือน 30,000 สมัครอะไรได้'),('premium','บัตรระดับกลาง-พรีเมียมเล็งอะไร'),('limit','วงเงินที่เป็นไปได้'),('multi','ถือหลายใบคุ้มไหม'),('approve','เพิ่มโอกาสอนุมัติ'),('beyond','มีเงินเหลือ ต่อยอดยังไง'),('faq','คำถามที่พบบ่อย')])}
-<h2 id="canget">เงินเดือน 30,000 สมัครอะไรได้</h2>
-<p>ที่เงินเดือน 30,000 คุณยื่นได้<b>เกือบทุกบัตรทั่วไป</b> รวมถึงบัตรที่เกณฑ์รายได้สูงขึ้นบางใบ และขอ<b>สินเชื่อส่วนบุคคลวงเงินสูงขึ้น</b>ได้ แต่การอนุมัติจริงยังขึ้นกับภาระหนี้และดุลพินิจผู้ให้บริการ ถ้าเงินเดือนน้อยกว่านี้ดูแนวทางที่ <a href="/credit-card-salary-20000-2026.html">เงินเดือน 20,000</a> หรือ <a href="/credit-card-salary-15000-2026.html">เงินเดือน 15,000</a> ได้</p> ลองกรอกหนี้ของคุณใน<a href="/debt-calculator" title="เครื่องคำนวณปลดหนี้ Snowball/Avalanche ฟรี">ลองคำนวณแผนปลดหนี้ของคุณ</a>ดูก่อน — เห็นเดือนปลอดหนี้ชัด ๆ แล้วค่อยตัดสินใจก้าวต่อไป
-<h2 id="premium">บัตรระดับกลาง-พรีเมียมเล็งอะไร</h2>
-<p>เริ่มเลือกบัตรที่ให้สิทธิ์มากขึ้นได้ แต่<b>ดูค่าธรรมเนียมรายปีเทียบกับสิทธิ์ที่ใช้จริง</b>เป็นหลัก:</p>
-<ul><li><b>สายเดินทาง/ไลฟ์สไตล์</b> → สิทธิ์เลานจ์สนามบิน สะสมไมล์/พอยต์ ดู <a href="/lifestyle-credit-card-2026.html">บัตรสายไลฟ์สไตล์</a></li><li><b>ใช้จ่ายเยอะ</b> → <a href="/credit-card-cashback-2026.html">บัตรเงินคืน</a> อัตราคืนสูงคืนเข้ากระเป๋าทุกเดือน</li><li>เลือก<b>สิทธิ์ที่ตรงพฤติกรรมจริง</b> ค่าธรรมเนียมบางใบฟรีปีแรกหรือยกเว้นเมื่อใช้ถึงยอด</li></ul>
-{cta('Krungsri',KRUNGSRI,'salary30000','ดูบัตรเครดิต Krungsri เทียบสิทธิ์/สมัครออนไลน์ 👉')}
-<h2 id="limit">วงเงินที่เป็นไปได้</h2>
-<p>โดยทั่วไปวงเงินบัตรอยู่ที่ราว <b>1.5–2 เท่าของรายได้ต่อเดือน</b>ตามแนวเกณฑ์ ธปท. — เงินเดือน 30,000 จึงมักได้วงเงินเริ่มต้นราว 45,000–60,000 บาท เป็น<b>ช่วงโดยประมาณ ไม่การันตี</b> ขึ้นกับภาระหนี้เดิม จำนวนบัตรที่ถืออยู่ และดุลพินิจผู้ออกบัตร</p>
-<h2 id="multi">ถือหลายใบคุ้มไหม</h2>
-<p>เงินเดือนระดับนี้ถือ <b>2 ใบที่สิทธิ์เสริมกัน</b> (เช่น ใบเงินคืนสำหรับใช้ประจำ + ใบเดินทางสำหรับทริป) ได้คุ้มกว่าใบเดียว — แต่ต้อง<b>คุมการใช้และจ่ายเต็มทุกใบ</b> อย่าให้วงเงินที่เยอะขึ้นกลายเป็นหนี้ ถ้าเริ่มจ่ายไม่ทันให้รีบเบรก ดู <a href="/credit-card-interest-2026.html">ดอกเบี้ย/จ่ายขั้นต่ำ</a> และ <a href="/pay-off-credit-card-debt-2026.html">วิธีปลดหนี้บัตร</a></p>
-<h2 id="approve">เพิ่มโอกาสอนุมัติ</h2>
-<ul><li><b>เอกสารรายได้ครบ</b> (ดู <a href="/credit-card-documents-2026.html">เอกสารสมัครบัตรเครดิต</a>)</li><li><b>ภาระหนี้ต่อรายได้ (DSR) ต่ำ</b> — บัตรพรีเมียมมักดูเข้มขึ้น</li><li><b>เช็กเครดิตบูโรก่อน</b> (ดู <a href="/credit-bureau-check-2026.html">เช็กเครดิตบูโรออนไลน์</a>)</li><li>ไม่ยื่นหลายใบรัว ๆ ในเวลาสั้น</li></ul>
-<h2 id="beyond">มีเงินเหลือ ต่อยอดยังไง</h2>
-<p>เงินเดือน 30,000 มักเริ่ม<b>มีเงินเหลือหลังใช้จ่าย</b> อย่าปล่อยให้นอนเฉย — กัน <a href="/emergency-fund-2026.html">เงินสำรองฉุกเฉิน</a> ก่อน แล้วพักเงินใน <a href="/high-yield-savings-2026.html">บัญชีออมดอกสูง</a> ให้งอกเงยโดยถอนง่าย และพิจารณา <a href="/insurance-compare-2026.html">ประกันที่จำเป็น</a> กันความเสี่ยงที่อาจทำให้แผนการเงินสะดุด</p> ระหว่างทาง อย่าลืมกันเงินสำรองฉุกเฉินไว้ใน<a href="/kept-savings-2026" title="รีวิวบัญชีเงินฝากดอกเบี้ยสูง Kept 2026">บัญชีออมดอกสูงที่ถอนได้ไว</a> — บิลด่วนมาจะได้ไม่ต้องกลับไปกู้
-{cta('Kept',KEPT,'salary30000','พักเงินเหลือให้ได้ดอกสูงกว่าออมทรัพย์ทั่วไป — Kept สมัครฟรี')}
-<p style="text-align:center;color:#5b5b66;font-size:13px">ไม่แน่ใจว่าบัตร/แผนไหนเหมาะ ลอง <a href="/quiz">ทำ Quiz 30 วิ</a> ดูคำแนะนำเบื้องต้น</p>
+body29=f"""<h1 id="top">เงินเดือน 30000 วงเงินบัตรเครดิตได้เท่าไหร่? เช็กเพดานก่อนสมัคร</h1>
+<div class="meta">ตรวจข้อมูลล่าสุด: 16 ส.ค. 2026 · หมวด บัตรเครดิต</div>
+<div data-answer-id="salary30k-credit-limit" data-content-id="salary30k-2026" style="background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:14px 0">
+<p><b>คำตอบสั้น:</b> ตามเกณฑ์สาธารณะของ ธปท. ผู้มีรายได้เฉลี่ยต่อเดือนตั้งแต่ 30,000 บาทแต่น้อยกว่า 50,000 บาท มี<b>เพดานวงเงินไม่เกิน 3 เท่าของรายได้</b> ดังนั้นที่รายได้ 30,000 บาท เพดานคือ 90,000 บาท แต่ตัวเลขนี้เป็นเพียงเพดาน ไม่ใช่วงเงินที่รับประกันว่าจะได้รับ</p>
+<ul><li>ยอดอนุมัติจริงอาจต่ำกว่าเพดานตามรายได้ที่ยืนยันได้ ภาระหนี้ และเกณฑ์ของผู้ออกบัตร</li><li>วงเงินที่มากขึ้นไม่ใช่เป้าหมาย ถ้ายอดใช้เกินกำลังจ่ายคืนเต็ม</li><li>ก่อนสมัครให้ดูรายจ่ายจริง ค่าธรรมเนียม และเงื่อนไขยกเว้นของบัตรแต่ละใบ</li></ul>
+<p style="margin-bottom:0"><a href="#choose">ดูเช็กลิสต์เลือกบัตรใบแรกจากการใช้จริง ↓</a></p></div>
+{article_pilot_clip(slug29)}
+{toc([('choose','เลือกบัตรจากอะไร'),('limit','เพดานกับวงเงินจริงต่างกันยังไง'),('multi','ควรเริ่มกี่ใบ'),('approve','เช็กลิสต์ก่อนสมัคร'),('beyond','ก่อนเพิ่มวงเงินเช็กอะไร'),('faq','คำถามที่พบบ่อย')])}
+<h2 id="choose">เงินเดือน 30,000 เลือกบัตรจากอะไร</h2>
+<p>อย่าเริ่มจากคำว่า “พรีเมียม” หรือจำนวนสิทธิ์ ให้เริ่มจาก<b>รายการใช้จ่ายจริงหนึ่งเดือน</b> แล้วเลือกบัตรที่ตรงกับของที่จ่ายอยู่แล้ว:</p>
+<ul><li><b>หมวดที่ใช้จริง:</b> อาหาร เดินทาง ออนไลน์ หรือค่าใช้จ่ายประจำ</li><li><b>ค่าธรรมเนียมรายปี:</b> เทียบมูลค่าสิทธิ์ที่น่าจะใช้จริงกับค่าใช้จ่ายของบัตร</li><li><b>เงื่อนไขยกเว้น:</b> ต้องใช้ถึงยอดหรือทำรายการแบบใดจึงยกเว้นได้</li><li><b>แผนจ่ายคืน:</b> ตั้งยอดใช้ที่จ่ายเต็มและตรงเวลาได้ ไม่ใช่ยอดที่วงเงินเปิดให้ใช้</li></ul>
+<a class="cta" data-cta-id="salary30000-compare" data-pos="after-options" data-content-id="salary30k-2026" href="/credit-card-easy-approval-2026?content_id=salary30k-2026&amp;entry=salary30000">เปรียบเทียบบัตรจากรายได้ ค่าธรรมเนียม และการใช้จริง →<small>อ่านเกณฑ์หลายทางเลือกก่อนตัดสินใจ · ไม่รับประกันการอนุมัติ</small></a>
+<h2 id="limit">เพดานกับวงเงินจริงต่างกันยังไง</h2>
+<p>เพดานตามเกณฑ์สำหรับรายได้ช่วงนี้คือ<b>ไม่เกิน 3 เท่าของรายได้เฉลี่ยต่อเดือน</b> แต่ผู้ออกบัตรยังประเมินรายได้ที่ยืนยันได้ ภาระหนี้ บัตรที่ถืออยู่ และข้อมูลสมัคร จึงอนุมัติวงเงินจริงต่ำกว่าเพดานได้ ไม่มีตัวเลขช่วงเดียวที่ใช้ฟันธงแทนทุกคนได้ และไม่มีใครบอกยอดอนุมัติแน่นอนได้ก่อนการประเมิน</p>
+<h2 id="multi">ควรเริ่มกี่ใบ</h2>
+<p>ไม่มีจำนวนที่เหมาะกับทุกคน ถ้ายังไม่เคยใช้บัตร ให้เริ่มจาก<b>ใบเดียวที่ตรงกับรายจ่ายหลัก</b>เพื่อดูว่าคุมยอดและจ่ายเต็มได้สม่ำเสมอหรือไม่ ค่อยเพิ่มใบเมื่อมีวัตถุประสงค์ที่ชัดและสิทธิ์ไม่ซ้ำกัน การมีหลายใบไม่คุ้มถ้าทำให้ลืมวันชำระหรือใช้เกินแผน</p>
+<h2 id="approve">เช็กลิสต์ก่อนสมัคร</h2>
+<ul><li>อ่านรายได้ขั้นต่ำของบัตรจากหน้าทางการ ไม่อนุมานจากชื่อระดับบัตร</li><li><b>เตรียมเอกสารรายได้ให้ครบ</b> (ดู <a href="/credit-card-documents-2026.html">เช็กลิสต์เอกสารสมัครบัตรเครดิต</a>)</li><li>รวมภาระหนี้และค่างวดเดิมก่อนเพิ่มวงเงินใหม่</li><li><b>เช็กข้อมูลเครดิตของตัวเอง</b>หากมีข้อสงสัย (ดู <a href="/credit-bureau-check-2026.html">วิธีขอและอ่านรายงานเครดิตบูโร</a>)</li><li>ไม่ยื่นหลายใบพร้อมกันเพียงเพื่อทดลองว่าใบไหนผ่าน</li></ul>
+<h2 id="beyond">ก่อนเพิ่มวงเงิน เช็กอะไร</h2>
+<p>ถามตัวเองก่อนว่าเดือนที่รายจ่ายสูงกว่าปกติยังจ่ายเต็มได้หรือไม่ มี <a href="/emergency-fund-2026.html">เงินสำรองฉุกเฉิน</a> แยกจากวงเงินบัตรหรือยัง และกำลังใช้บัตรเพื่อความสะดวกหรือเพื่ออุดเงินสดที่ขาด หากเริ่มพึ่งจ่ายขั้นต่ำ ให้หยุดเพิ่มวงเงินและกลับมาจัดแผนที่ <a href="/credit-card-interest-2026.html">ดอกเบี้ยบัตร/จ่ายขั้นต่ำ</a> หรือ <a href="/debt-calculator">เครื่องคำนวณแผนปลดหนี้</a> ก่อน</p>
+<p style="text-align:center;color:#5b5b66;font-size:13px">ยังไม่แน่ใจว่าควรเริ่มจากอะไร ลอง <a href="/quiz">ทำ Quiz 30 วิ</a> เพื่อดูแนวทางเบื้องต้น</p>
 <h2 id="faq">คำถามที่พบบ่อย</h2>
 """
-faq29=[("เงินเดือน 30,000 สมัครบัตรพรีเมียมได้ไหม?","เริ่มแตะบัตรระดับกลาง-พรีเมียมบางใบได้ แต่ขึ้นกับเกณฑ์รายได้ของแต่ละบัตร ภาระหนี้ และดุลพินิจผู้ออกบัตร ควรดูค่าธรรมเนียมรายปีเทียบกับสิทธิ์ที่ใช้จริงก่อน"),
-       ("เงินเดือน 30,000 ได้วงเงินบัตรเท่าไหร่?","โดยทั่วไปราว 1.5–2 เท่าของรายได้ (ประมาณ 45,000–60,000 บาท) เป็นช่วงโดยประมาณตามแนวเกณฑ์ ธปท. ไม่การันตี ขึ้นกับภาระหนี้และจำนวนบัตรที่ถืออยู่"),
-       ("เงินเดือน 30,000 ควรถือบัตรกี่ใบ?","ถือ 2 ใบที่สิทธิ์เสริมกันได้คุ้ม (เช่น เงินคืน + เดินทาง) แต่ต้องคุมการใช้และจ่ายเต็มทุกใบ ถ้าเริ่มจ่ายไม่ไหวควรลดจำนวนบัตร"),
-       ("เงินเดือน 30,000 มีเงินเหลือควรทำอะไรก่อน?","กันเงินสำรองฉุกเฉินก่อน แล้วพักในบัญชีออมดอกสูงที่ถอนง่าย จากนั้นค่อยพิจารณาประกันที่จำเป็นและการลงทุนตามเป้าหมาย")]
+faq29=[("เงินเดือน 30,000 ได้วงเงินบัตรเท่าไหร่?","เพดานตามเกณฑ์สาธารณะสำหรับรายได้ตั้งแต่ 30,000 แต่น้อยกว่า 50,000 บาทคือไม่เกิน 3 เท่าของรายได้เฉลี่ยต่อเดือน หรือไม่เกิน 90,000 บาทเมื่อรายได้ 30,000 บาท แต่ยอดอนุมัติจริงอาจต่ำกว่าและไม่รับประกัน"),
+       ("เงินเดือน 30,000 สมัครบัตรพรีเมียมได้ไหม?","ต้องเช็กรายได้ขั้นต่ำและคุณสมบัติของบัตรแต่ละใบจากหน้าทางการ ชื่อระดับบัตรไม่ใช่หลักฐานว่าจะผ่าน การอนุมัติยังขึ้นกับภาระหนี้ ข้อมูลสมัคร และดุลพินิจผู้ออกบัตร"),
+       ("เงินเดือน 30,000 ควรถือบัตรกี่ใบ?","ไม่มีจำนวนที่เหมาะกับทุกคน ผู้เริ่มต้นควรเริ่มจากใบเดียวที่ตรงกับรายจ่ายหลักและพิสูจน์ว่าจ่ายเต็มได้สม่ำเสมอ ก่อนพิจารณาเพิ่มใบที่มีวัตถุประสงค์ชัดเจน"),
+       ("ควรเลือกบัตรใบแรกจากอะไร?","ดูรายจ่ายจริงหนึ่งเดือน เลือกสิทธิ์ที่ตรงกับของที่ซื้ออยู่แล้ว อ่านค่าธรรมเนียมและเงื่อนไขยกเว้น และกำหนดยอดใช้ที่จ่ายคืนเต็มได้")]
 body29+=faq_block(faq29)
+_ktc_salary30k_url = utm(KTC_CARD, "ktccard", "salary30k-lower")
+body29+=(f'<section class="ktc-lower-offer" data-offer-reviewed="{KTC_CARD_OFFER_REVIEWED_ON}" '
+         f'data-offer-source="{KTC_CARD_OFFICIAL}"><h2>ตัวเลือกช่วงท้ายสำหรับเปรียบเทียบ: บัตรเครดิต KTC</h2>'
+         '<p>หน้าทางการ KTC ที่ตรวจล่าสุดระบุว่ายังสมัครบัตรเครดิตออนไลน์ได้ และมีบัตรสำหรับผู้มีรายได้ประจำ'
+         'ที่เริ่มต้น 15,000 บาทต่อเดือน ขณะที่บัตรบางกลุ่มกำหนดรายได้สูงกว่านี้ '
+         'ดังนั้นเงินเดือน 30,000 บาทไม่ได้หมายความว่าสมัครได้ทุกใบและไม่รับประกันการอนุมัติ '
+         f'<a href="{KTC_CARD_OFFICIAL}" target="_blank" rel="noopener">ตรวจรายได้ขั้นต่ำและรายละเอียดบัตรจาก KTC โดยตรง</a></p>'
+         f'<a class="cta" rel="sponsored noopener nofollow" target="_blank" data-provider="ktccard" '
+         'data-cta-id="salary30000-ktc-lower" data-pos="after-faq" data-content-id="salary30k-2026" '
+         f'href="{_ktc_salary30k_url}">ดูรายละเอียด KTC ผ่านลิงก์พันธมิตร →'
+         '<small>เราอาจได้รับค่าตอบแทนโดยไม่มีค่าใช้จ่ายเพิ่มกับคุณ · ลิงก์ผ่านระบบพันธมิตรก่อนเข้าสู่ผู้ให้บริการ '
+         '· เช็กเงื่อนไขล่าสุดและสมัครเท่าที่จำเป็นและจ่ายคืนไหว · ไม่รับประกันการอนุมัติ</small></a></section>')
 body29+='<div class="disc">*ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำทางการเงิน เกณฑ์รายได้ วงเงิน ค่าธรรมเนียม และการอนุมัติเป็นไปตามผู้ให้บริการและดุลพินิจของผู้ออกบัตร ยึดแนวทาง Responsible Lending ของ ธปท. โปรดเช็กล่าสุดก่อนสมัคร</div>'
 body29+='<div class="related"><h2>บทความที่เกี่ยวข้อง</h2><a class="card" href="/credit-card-salary-20000-2026.html"><span class="tag">บัตรเครดิต</span><h3>เงินเดือน 20,000 สมัครอะไรได้</h3><p>เทียร์ก่อนหน้า</p></a><a class="card" href="/lifestyle-credit-card-2026.html"><span class="tag">บัตรเครดิต</span><h3>บัตรสายไลฟ์สไตล์</h3><p>กิน/เที่ยว/บิน/ช้อป</p></a></div>'
 ART.append((slug29,"เงินเดือน 30000 วงเงินบัตรเครดิตได้เท่าไหร่? เช็กเพดานก่อนสมัคร | "+SITE,
- "เงินเดือน 30000 วงเงินบัตรเครดิตได้ประมาณเท่าไหร่? ดูหลักคิดเรื่องเพดานวงเงินตามรายได้และสิ่งที่ธนาคารใช้พิจารณาก่อนสมัคร",
+ "เงินเดือน 30000 วงเงินบัตรเครดิตมีเพดานเท่าไหร่ วงเงินจริงดูจากอะไร และควรเลือกบัตรใบแรกจากรายจ่าย ค่าธรรมเนียม และความสามารถจ่ายคืนอย่างไร",
  body29,faq29,"krungsri"))
 
 
@@ -2345,12 +2697,12 @@ def th_monthyear(d):
 # ---- ultra-long-tail SEO article #1: bureau-blacklist-loan (added 2026-06-27) ----
 slugBL="bureau-blacklist-loan-2026.html"
 bodyBL=('<h1 id="top">ติดเครดิตบูโร / "แบล็คลิสต์" กู้ได้ไหม? ความจริงและทางเลือกที่พอเป็นไปได้</h1>'
- +'<div class="meta">อัปเดตล่าสุด: '+BUILD_DATE+' · หมวด สินเชื่อ</div>'
+ +'<div class="meta">หมวด สินเชื่อ · โปรดตรวจเงื่อนไขล่าสุดกับผู้ให้บริการ</div>'
  +toc([('tldr', 'สรุปสั้น'), ('not-blacklist', 'บูโร ≠ แบล็คลิสต์'), ('can-borrow', 'ยังกู้ได้ไหม'), ('options', 'ทางเลือกที่พอเป็นไปได้'), ('improve', 'ทำให้ประวัติดีขึ้น'), ('scams', 'กับดักที่ต้องระวัง'), ('faq', 'คำถามที่พบบ่อย')])
  +'<h2 id="tldr">สรุปสั้น (อ่าน 15 วินาที)</h2><ul><li>"เครดิตบูโร" คือ "ประวัติ" การชำระหนี้ ไม่ใช่ผู้ตัดสินอนุมัติ — และ <b>ไม่มี "บัญชีดำ/แบล็คลิสต์" อย่างเป็นทางการ</b> (เป็นความเข้าใจผิดที่พบบ่อย)</li><li>ประวัติค้างชำระ "ทำให้ยากขึ้น" แต่ไม่เท่ากับ "กู้ไม่ได้ตลอดไป" สถาบันการเงินแต่ละแห่งพิจารณาต่างกัน (รายได้ ภาระหนี้ หลักประกัน)</li><li>ทางเลือกที่พอเป็นไปได้เน้นไป "สินเชื่อที่ดูหลักประกัน/โปรไฟล์" มากกว่าสกอร์ล้วน — แต่ต้องเทียบดอก/ค่าธรรมเนียมและอ่านเงื่อนไขก่อนเสมอ</li><li>ระวังโฆษณา "ติดบูโรก็กู้ได้ อนุมัติไว ไม่เช็กบูโร" — มักเป็นสัญญาณ กู้นอกระบบ/มิจฉาชีพ</li></ul>'
  +'<h2 id="not-blacklist">เครดิตบูโร ไม่ใช่ "แบล็คลิสต์" (เคลียร์ความเข้าใจผิด)</h2><p>บริษัท ข้อมูลเครดิตแห่งชาติ (NCB หรือ "เครดิตบูโร") ทำหน้าที่เก็บ "ประวัติสินเชื่อ" ของเรา เช่น มีสินเชื่ออะไรบ้าง จ่ายตรง/ค้างกี่งวด ยอดคงเหลือเท่าไร — แล้วส่ง "รายงาน" ให้สถาบันการเงินที่เราไปยื่นขอสินเชื่อใช้ประกอบการพิจารณา NCB <b>ไม่ได้เป็นคนอนุมัติหรือปฏิเสธ</b> และ <b>ไม่มีการขึ้น "บัญชีดำ"</b> ตามที่เข้าใจกัน คำว่า "ติดแบล็คลิสต์" เป็นภาษาพูด ความจริงคือ "มีประวัติค้างชำระ/หนี้เสียแสดงอยู่ในรายงาน" ซึ่งจะค่อย ๆ อัปเดตตามการชำระจริง และข้อมูลถูกเก็บตามระยะเวลาที่กฎหมายกำหนด</p>'
  +'<h2 id="can-borrow">แล้ว "ติดบูโร" ยังกู้ได้ไหม?</h2><p>ขึ้นกับ 2 อย่างหลัก: (1) ประวัติแย่ระดับไหน (ค้างเล็กน้อยที่ปิดแล้ว ต่างจากหนี้เสียที่ยังค้าง) และ (2) ความสามารถชำระปัจจุบัน (รายได้ ภาระหนี้ต่อรายได้ หลักประกัน) สถาบันการเงินแต่ละแห่งมีเกณฑ์ของตัวเอง บางที่เข้มกับประวัติมาก บางที่ให้น้ำหนักหลักประกัน/กระแสเงินสดมากกว่า จึง "ไม่ใช่ทุกที่จะปฏิเสธเหมือนกัน" — แต่ก็ไม่มีที่ไหนบอกล่วงหน้าได้ว่าจะอนุมัติทุกราย ใครที่บอกว่าอนุมัติได้เลยทั้งที่ยังไม่ดูเอกสาร ให้ตั้งข้อสงสัยไว้ก่อน <span class="ilinks">เกี่ยวข้อง: <a href="/loan-approval-compare">ตารางเทียบเกณฑ์ขอสินเชื่อแต่ละประเภท</a></span></p>'
- +cta("KTC Proud",KTCPROUD,"bureau-blacklist-loan",'ทางเลือกสินเชื่อที่พิจารณาหลักประกัน/โปรไฟล์ มากกว่าสกอร์ล้วน — เทียบดอก+ค่าธรรมเนียมก่อนตัดสินใจ (ลิงก์พันธมิตร) →')
+ +cta("KTC Proud",KTCPROUD,"bureau-blacklist-loan",'บัตรกดเงินสดไม่มีหลักประกัน — ผู้ให้บริการพิจารณารายได้ เอกสาร ภาระหนี้ และประวัติของผู้สมัคร โปรดเช็กเงื่อนไขก่อนยื่น (ลิงก์พันธมิตร) →')
  +'<h2 id="options">ทางเลือกที่ "พอเป็นไปได้" (เทียบก่อนเซ็นทุกครั้ง)</h2><ol><li>สินเชื่อที่มีหลักประกัน เช่น สินเชื่อทะเบียนรถ/จำนำเล่ม หรือใช้บ้าน-ที่ดิน — ผู้ให้บริการมักให้น้ำหนัก "หลักประกัน + ความสามารถผ่อน" มากกว่าสกอร์ล้วน จึงเป็นประตูที่ยังพอเปิดสำหรับคนประวัติไม่สวย (แต่ดอก/ค่าธรรมเนียมต่างกันมาก ต้องเทียบ) <span class="ilinks">เกี่ยวข้อง: <a href="/title-loan-2026.html">สินเชื่อทะเบียนรถ</a> · <a href="/car-title-loan-compare-2026.html">เทียบจำนำทะเบียนรถหลายเจ้า</a> · <a href="/home-land-for-cash-2026.html">บ้าน/ที่ดินแลกเงิน</a> · <a href="/car-still-installment-loan-2026.html">รถยังผ่อนอยู่ จำนำได้ไหม</a></span></li><li>ปรับโครงสร้างหนี้/รวมหนี้ ถ้าปัญหาหลักคือ "หนี้หลายก้อน ดอกสูง" การรวมหนี้หรือปรับโครงสร้างอาจช่วยได้มากกว่ากู้ก้อนใหม่ <span class="ilinks">เกี่ยวข้อง: <a href="/debt-consolidation-2026.html">สินเชื่อรวมหนี้</a> · <a href="/debt-restructuring-2026.html">ปรับโครงสร้างหนี้</a> · <a href="/pay-off-credit-card-debt-2026.html">วิธีปลดหนี้บัตรเครดิต</a></span></li><li>คลินิกแก้หนี้ / ช่องทางทางการ ถ้าเป็นหนี้เสียบัตร/สินเชื่อบุคคลกับหลายเจ้า มีโครงการช่วยเหลือที่ออกแบบมาเพื่อกรณีนี้โดยเฉพาะ <span class="ilinks">เกี่ยวข้อง: <a href="/debt-clinic-sam-2026.html">คลินิกแก้หนี้</a> · <a href="/move-informal-debt-2026.html">ย้ายหนี้นอกระบบเข้าในระบบ</a></span></li></ol>'
  +cta("Srisawad",SRISAWAD,"bureau-blacklist-loan",'มีรถปลอดภาระ? สินเชื่อทะเบียนรถเน้นหลักประกัน รถยังใช้ได้ — เทียบดอก+ค่าธรรมเนียมหลายเจ้าก่อนเซ็น →')
  +'<h2 id="improve">วิธีทำให้ "ประวัติ" ดีขึ้น (ระยะ 3-12 เดือน)</h2><ul><li>จ่ายให้ "ตรงเวลา" ต่อเนื่องอย่างน้อย 3-6 เดือน ประวัติใหม่ที่ดีจะค่อย ๆ ทับของเก่า</li><li>ปิด/ลดยอดค้างที่ค้างนานก่อน เพื่อลดภาระหนี้ต่อรายได้ (DSR)</li><li>ขอ "รายงานข้อมูลเครดิต" ของตัวเองมาตรวจว่าถูกต้องไหม (บางครั้งมีข้อมูลผิดที่ขอแก้ไขได้) (<a href="/credit-bureau-check-2026.html">เช็กเครดิตบูโรตัวเอง</a>)</li><li>อย่ายื่นขอสินเชื่อหลายที่รัว ๆ ในเวลาใกล้กัน</li></ul>'
@@ -2359,7 +2711,7 @@ bodyBL=('<h1 id="top">ติดเครดิตบูโร / "แบล็ค
 faqBL=[('ติดบูโรกี่ปีถึงหาย?', 'ข้อมูลในรายงานมีระยะเก็บตามที่กฎหมายกำหนด และอัปเดตตามการชำระจริง ไม่ใช่ "ลบทันทีเมื่อจ่ายหมด" แต่สถานะจะเปลี่ยนเป็นปิดบัญชี/ชำระแล้ว'), ('จ่ายหนี้หมดแล้วทำไมยังขึ้นในบูโร?', 'เพราะรายงานแสดง "ประวัติ" ย้อนหลัง ไม่ใช่แค่สถานะปัจจุบัน — ประวัติที่ปิดแล้วจะแสดงว่าชำระเสร็จ ซึ่งดีกว่าค้างอยู่'), ('ไม่มีประวัติเลย (ไม่เคยกู้) กู้ยากไหม?', 'บางครั้งยากในแบบของมันเอง เพราะไม่มีประวัติให้ดู — เริ่มจากผลิตภัณฑ์เล็ก ๆ ที่จ่ายตรงเพื่อสร้างประวัติ')]
 bodyBL+=faq_block(faqBL)
 bodyBL+='<h2 id="closing">ปิดท้าย (โทนรับผิดชอบ)</h2><p>"ติดบูโร" ไม่ใช่จุดจบ แต่ก็ไม่มีทางลัดวิเศษ ทางที่ยั่งยืนคือทำให้ "ความสามารถชำระ" และ "ประวัติ" ดีขึ้นทีละเดือน ควบคู่กับเลือกผลิตภัณฑ์ให้ตรงกับสถานการณ์จริงและเทียบเงื่อนไขก่อนเซ็นเสมอ</p>'
-bodyBL+='<div class="disc">*ข้อมูลเพื่อการศึกษา อัปเดต ณ '+BUILD_DATE+' โปรดตรวจสอบเงื่อนไข/ค่าธรรมเนียมกับผู้ให้บริการอีกครั้ง ไม่ใช่คำแนะนำทางการเงินเฉพาะบุคคล</div>'
+bodyBL+='<div class="disc">*ข้อมูลเพื่อการศึกษา โปรดตรวจสอบเงื่อนไข/ค่าธรรมเนียมกับผู้ให้บริการอีกครั้ง ไม่ใช่คำแนะนำทางการเงินเฉพาะบุคคล</div>'
 bodyBL+='<div class="related"><h2>บทความที่เกี่ยวข้อง</h2><a class="card" href="/credit-bureau-check-2026.html"><span class="tag">สินเชื่อ</span><h3>เช็กเครดิตบูโรของตัวเอง</h3><p>ขอรายงาน + อ่านผลยังไง</p></a><a class="card" href="/debt-consolidation-2026.html"><span class="tag">สินเชื่อ</span><h3>สินเชื่อรวมหนี้ ที่ไหนดี</h3><p>ยุบหลายก้อนเหลือก้อนเดียว</p></a><a class="card" href="/debt-collection-rights-2026.html"><span class="tag">สิทธิลูกหนี้</span><h3>โดนทวงหนี้โหด/ผิดกฎหมายแบบไหน</h3><p>รู้สิทธิ + ร้องเรียนที่ไหน</p></a><a class="card" href="/wage-garnishment-debt-2026.html"><span class="tag">สิทธิลูกหนี้</span><h3>โดนอายัดเงินเดือน/บังคับคดี ทำยังไง</h3><p>สิทธิมนุษย์เงินเดือน</p></a><a class="card" href="/rebuild-credit-after-debt-2026.html"><span class="tag">ฟื้นเครดิต</span><h3>ฟื้นเครดิตหลังเคยมีปัญหาหนี้</h3><p>สร้างประวัติใหม่ให้กู้ผ่าน</p></a></div>'
 ART.append((slugBL,'ติดเครดิตบูโร / แบล็คลิสต์ กู้ได้ไหม? ความจริง + ทางเลือกจริง 2026 | เงินเดือนสมองทอง','ติดบูโรไม่เท่ากับ "แบล็คลิสต์" และไม่ได้แปลว่ากู้ไม่ได้เสมอไป — สรุปความจริงเรื่องเครดิตบูโร ทางเลือกสินเชื่อที่พอเป็นไปได้ วิธีทำให้ประวัติดีขึ้น และกับดักมิจฉาชีพที่ต้องระวัง (อัปเดต 2026)',bodyBL,faqBL,"loan-cash"))
 
@@ -2370,20 +2722,21 @@ bodyBL=('<h1 id="top">รถผ่อนไม่หมด จำนำได้
  +'<h2 id="quick">รถผ่อนไม่หมด จำนำ/จัดไฟแนนซ์ได้ไหม — คำตอบสั้น</h2>'
  +'<p><b>ได้ในบางกรณี</b> ผ่านสินเชื่อจำนำเล่มแบบโอนเล่มที่ไม่ต้องปิดยอดเดิมก่อน หรือผ่านการรีไฟแนนซ์ โดยผู้ให้กู้จะดูยอดคงเหลือ มูลค่ารถ เงื่อนไขสัญญาเดิม และความสามารถในการผ่อนของผู้ขอก่อนเสมอ</p>'
  +'<p>การอนุมัติไม่ได้เกิดขึ้นอัตโนมัติ — ควรขอรายละเอียดเรื่องการโอนเล่ม ภาระสัญญาเดิม และเอกสารที่ต้องใช้จากผู้ให้กู้แต่ละรายก่อนตัดสินใจ <span class="ilinks">เกี่ยวข้อง: <a href="/car-pawn-not-paid-off">สิทธิ์ตามสัญญาเช่าซื้อเมื่อรถยังผ่อนไม่หมด</a></span></p>'
- +'<div class="meta">อัปเดตล่าสุด: '+BUILD_DATE+' · หมวด สินเชื่อ</div>'
+ +'<div class="meta">หมวด สินเชื่อ · โปรดตรวจเงื่อนไขล่าสุดกับผู้ให้บริการ</div>'
  +toc([('tldr', 'สรุปสั้น'), ('why-not', 'ทำไมจำนำตรง ๆ ไม่ได้'), ('options', 'ทางเลือกถ้ายังผ่อนอยู่'), ('checklist', 'ต้องดูอะไร'), ('scams', 'กับดักที่ต้องระวัง'), ('faq', 'คำถามที่พบบ่อย')])
  +'<h2 id="tldr">สรุปสั้น (อ่าน 15 วินาที)</h2><ul><li>จำนำทะเบียนรถ "แบบปกติ" ต้องใช้ <b>เล่มทะเบียน + กรรมสิทธิ์เป็นของเรา</b> ดังนั้นรถที่ยังผ่อนไฟแนนซ์อยู่ (เล่มอยู่กับไฟแนนซ์) มักจำนำตรง ๆ ไม่ได้</li><li>แต่ "ยังผ่อนอยู่" ไม่ได้แปลว่าหมดทาง — ทางเลือกที่พบคือ <b>รีไฟแนนซ์รถ</b> (ปิดไฟแนนซ์เดิมแล้วทำสัญญาใหม่ บางเจ้าให้เงินเพิ่มถ้ามูลค่ารถสูงกว่ายอดหนี้) หรือผู้ให้บริการบางรายที่ "รับช่วงต่อ/รีไฟแนนซ์รถที่ยังผ่อน"</li><li>ได้หรือไม่/ได้เท่าไร ขึ้นกับ มูลค่ารถปัจจุบัน vs ยอดหนี้คงเหลือ + ความสามารถผ่อน — ต้องเทียบดอก/ค่าธรรมเนียมหลายเจ้าก่อนเซ็น</li><li>ระวังโฆษณา "รถผ่อนอยู่ก็จำนำได้ อนุมัติไว ไม่เช็กอะไร" — เสี่ยงดอกโหด/มิจฉาชีพ</li></ul>'
  +'<h2 id="why-not">ทำไมรถยังผ่อนอยู่ถึงจำนำทะเบียนตรง ๆ ไม่ได้</h2><p>สินเชื่อจำนำทะเบียนใช้ "เล่มทะเบียนรถ" เป็นหลักประกัน ผู้ให้บริการต้องการความมั่นใจว่าผู้ขอมี "กรรมสิทธิ์" ในรถ แต่ถ้ารถยังผ่อนไฟแนนซ์ไม่หมด เล่มและกรรมสิทธิ์ยังอยู่กับบริษัทไฟแนนซ์จนกว่าจะปิดบัญชี จึงนำเล่มไปจำนำซ้ำไม่ได้ตามปกติ</p>'
- +cta("Refinance",REFI,"car-still-installment-loan",'ผ่อนรถมาได้ระยะ + รถยังมีมูลค่า? เช็กรีไฟแนนซ์รถ — ปิดไฟแนนซ์เดิม อาจได้เงินส่วนต่าง เทียบดอก+ค่าธรรมเนียมก่อนตัดสินใจ →')
+ +'<a class="cta" href="/car-refinance-2026?utm_source=article&amp;utm_medium=mid&amp;utm_campaign=car_refi_guide">อ่านคู่มือรีไฟแนนซ์รถและเช็กรายการค่าใช้จ่ายก่อนตัดสินใจ →<small>ลิงก์เดิมเป็นผลิตภัณฑ์รีไฟแนนซ์บ้าน จึงปิดไว้เพื่อไม่ส่งคุณผิดปลายทาง</small></a>'
  +'<h2 id="options">ถ้ารถยังผ่อนอยู่ มีทางเลือกไหนบ้าง</h2><ol><li>รีไฟแนนซ์รถ (Auto Refinance) — ผู้ให้บริการรายใหม่ปิดยอดไฟแนนซ์เดิมให้ แล้วทำสัญญาสินเชื่อใหม่กับเรา ถ้ามูลค่ารถสูงกว่ายอดหนี้เดิม บางเจ้าอาจให้ "เงินส่วนต่าง" เพิ่ม (cash-out) — เหมาะถ้าผ่อนมาได้ระยะหนึ่งแล้วและรถยังมีมูลค่า เกี่ยวข้อง: <a href="/car-refinance-2026.html">รีไฟแนนซ์รถ</a>, <a href="/car-for-cash-2026.html">รถแลกเงิน</a></li><li>ผู้ให้บริการที่รับ "รถผ่อนอยู่" — บางรายมีผลิตภัณฑ์รับช่วงต่อ/รีไฟแนนซ์รถที่ยังผ่อน เงื่อนไขและดอกต่างกันมาก ต้องเทียบ เกี่ยวข้อง: <a href="/title-loan-2026.html">สินเชื่อทะเบียนรถ</a>, <a href="/car-title-loan-compare-2026.html">เทียบจำนำทะเบียนหลายเจ้า</a></li><li>ผ่อนให้ใกล้/ครบก่อนแล้วค่อยจำนำเล่ม — ถ้าไม่รีบและเหลืออีกไม่กี่งวด การปิดเล่มก่อนจะทำให้จำนำทะเบียนแบบปกติได้ดอกถูกกว่า</li></ol>'
- +cta("Srisawad",SRISAWAD,"car-still-installment-loan",'เทียบผู้ให้บริการสินเชื่อโดยใช้รถหลายเจ้า — ขึ้นกับกรรมสิทธิ์เล่ม+มูลค่ารถ เทียบดอกก่อนเซ็น →')
+ +cta("Srisawad",SRISAWAD,"car-still-installment-loan",'ดูรายละเอียดสินเชื่อที่ใช้รถกับศรีสวัสดิ์ — ขึ้นกับกรรมสิทธิ์เล่ม มูลค่ารถ และการพิจารณา เช็กดอกและค่าธรรมเนียมก่อนสมัคร →')
+ +'<p style="text-align:center;color:#5b5b66;font-size:14px">ต้องการเทียบหลายแนวทางก่อนเลือก? อ่าน <a href="/car-title-loan-compare-2026.html">ตารางเปรียบเทียบสินเชื่อทะเบียนรถและรถแลกเงิน</a> ซึ่งเป็นหน้าข้อมูลภายในก่อนออกไปยังผู้ให้บริการ</p>'
  +'<h2 id="checklist">ต้องดูอะไรก่อนตัดสินใจ</h2><ul><li>มูลค่ารถปัจจุบัน เทียบ ยอดหนี้คงเหลือ — ส่วนต่างคือสิ่งที่กำหนดว่าจะได้เงินเพิ่มไหม</li><li>ดอกเบี้ย + ค่าธรรมเนียมรวม (ไม่ใช่ดูแค่ค่างวด) — เทียบหลายเจ้า อ่านสัญญาให้ครบ</li><li>ค่างวดใหม่ไหวไหมเมื่อรวมภาระทั้งหมด (อย่าให้ DSR สูงเกินจนผ่อนไม่ไหว)</li><li>ติดเครดิตบูโรอยู่ด้วยไหม — สินเชื่อมีหลักประกันมักยืดหยุ่นเรื่องประวัติกว่าแบบไม่มีหลักประกัน เกี่ยวข้อง: <a href="/bureau-blacklist-loan-2026.html">ติดบูโรกู้ได้ไหม</a></li></ul>'
  +'<h2 id="scams">กับดักที่ต้องระวัง</h2><p>"รถผ่อนอยู่ก็จำนำได้ อนุมัติไว ไม่ต้องใช้เล่ม โอนก่อนได้เงิน" — สัญญาณอันตราย ผู้ให้บริการถูกกฎหมายจะตรวจกรรมสิทธิ์/เอกสารและไม่เก็บเงินก่อนอนุมัติ อย่าโอน "ค่ามัดจำ/ค่าดำเนินการ" ให้ใครก่อนได้รับสินเชื่อจริง</p>'
  +'<h2 id="faq">คำถามที่พบบ่อย (FAQ)</h2>')
 faqBL=[('ผ่อนรถเหลือไม่กี่งวดจำนำได้เลยไหม?', 'ปกติยังไม่ได้จนกว่าจะปิดบัญชีและได้เล่มมา แต่บางเจ้าทำรีไฟแนนซ์ให้ — สอบถามเงื่อนไขเป็นรายเจ้า'), ('รถผ่อนอยู่ที่ไฟแนนซ์ A ไปรีไฟแนนซ์ที่ B ได้ไหม?', 'โดยหลักได้ ถ้า B รับปิดยอดที่ A และเรามีคุณสมบัติผ่านเกณฑ์ของ B'), ('ได้เงินเพิ่ม (cash-out) ทุกกรณีไหม?', 'ไม่ — ขึ้นกับมูลค่ารถเทียบยอดหนี้ ถ้าหนี้ยังสูงกว่ามูลค่าอาจไม่มีส่วนต่างให้'), ('รถผ่อนไม่หมดจำนำได้ไหม?', 'ได้ในบางกรณี หากผู้ให้กู้มีผลิตภัณฑ์ที่รับพิจารณารถติดภาระและผู้ขอผ่านเกณฑ์ของเขา แต่ต้องตรวจยอดหนี้เดิม เงื่อนไขการโอนเล่ม และภาระผ่อนรวมก่อน'), ('รถเกิน 20 ปีเข้าไฟแนนซ์ได้ไหม?', 'เป็นไปได้หรือไม่ได้ขึ้นกับนโยบายของแต่ละสถาบันการเงิน รุ่นรถ สภาพรถ และอายุรถเมื่อรวมกับระยะผ่อนแล้ว มักต้องไม่เกินเกณฑ์ของผู้ให้กู้'), ('รถเกิน 25 ปีเข้าไฟแนนซ์ได้ไหม?', 'รถอายุมากมีตัวเลือกน้อยลงและบางแห่งอาจไม่รับพิจารณา ควรถามเกณฑ์อายุรถสูงสุดและระยะผ่อนที่เหลือของผู้ให้กู้โดยตรง'), ('รถ 15 ปีจัดไฟแนนซ์ได้ไหม?', 'รถอายุ 15 ปีอาจยังอยู่ในเกณฑ์ของผู้ให้กู้บางราย แต่ต้องดูทั้งอายุรถ รุ่น มูลค่าประเมิน และอายุรถรวมระยะผ่อน ไม่ควรตีความว่าอนุมัติแน่นอน')]
 bodyBL+=faq_block(faqBL)
 bodyBL+='<h2 id="closing">ปิดท้าย (โทนรับผิดชอบ)</h2><p>รถยังผ่อนอยู่ไม่ได้แปลว่ากู้ด้วยรถไม่ได้เลย แต่ "ทางที่ใช่" มักเป็นรีไฟแนนซ์มากกว่าจำนำเล่มตรง ๆ และคุ้มหรือไม่ขึ้นกับมูลค่ารถ ยอดหนี้ และดอกที่เทียบมาแล้ว — อ่านเงื่อนไขและเทียบหลายเจ้าก่อนเซ็นเสมอ</p>'
-bodyBL+='<div class="disc">*ข้อมูลเพื่อการศึกษา อัปเดต ณ '+BUILD_DATE+' โปรดตรวจสอบเงื่อนไข/ค่าธรรมเนียมกับผู้ให้บริการอีกครั้ง ไม่ใช่คำแนะนำทางการเงินเฉพาะบุคคล</div>'
+bodyBL+='<div class="disc">*ข้อมูลเพื่อการศึกษา โปรดตรวจสอบเงื่อนไข/ค่าธรรมเนียมกับผู้ให้บริการอีกครั้ง ไม่ใช่คำแนะนำทางการเงินเฉพาะบุคคล</div>'
 bodyBL+='<div class="related"><h2>บทความที่เกี่ยวข้อง</h2><a class="card" href="/car-refinance-2026.html"><span class="tag">สินเชื่อ</span><h3>รีไฟแนนซ์รถ ลดภาระต่อเดือน</h3><p>ปิดไฟแนนซ์เดิม ทำสัญญาใหม่</p></a><a class="card" href="/motorcycle-title-loan-2026.html"><span class="tag">สินเชื่อ</span><h3>จำนำทะเบียนมอเตอร์ไซค์</h3><p>ยังขับได้ เช็กเงื่อนไข/ดอก</p></a></div>'
 ART.append((slugBL,'รถผ่อนไม่หมด จำนำได้ไหม? ทางเลือกโอนเล่มและรีไฟแนนซ์ที่ควรรู้ | เงินเดือนสมองทอง','รถผ่อนไม่หมด จำนำได้ไหม? ทำความเข้าใจทางเลือกจำนำเล่มแบบโอนเล่มและรีไฟแนนซ์ รวมถึงเรื่องอายุรถ 15, 20 และ 25 ปีที่ควรถามผู้ให้กู้ก่อนสมัคร',bodyBL,faqBL,"car-for-cash"))
 
@@ -2410,7 +2763,7 @@ bodyDC=f"""<h1 id="top">โดนทวงหนี้โหด / ผิดก�
 faqDC=[('เจ้าหนี้โทรไปที่ทำงานหรือหาญาติได้ไหม?','การเปิดเผยความเป็นหนี้ต่อบุคคลอื่นที่ไม่เกี่ยวข้องเป็นสิ่งที่กฎหมายห้าม การติดต่อบุคคลอื่นทำได้เพียงเพื่อสอบถามช่องทางติดต่อตัวลูกหนี้เท่านั้น ไม่ใช่การประจานยอดหนี้'),('โดนข่มขู่ทางแชตเอาผิดได้ไหม?','ได้ ถ้าเก็บหลักฐานชัดเจน สามารถใช้ร้องเรียนหรือดำเนินคดีตามกฎหมายได้'),('ไม่จ่ายหนี้ติดคุกไหม?','หนี้ทางแพ่งทั่วไปไม่ใช่คดีอาญา (ยกเว้นกรณีฉ้อโกงหรือความผิดเกี่ยวกับเช็ค) แต่เจ้าหนี้สามารถฟ้องแพ่งและบังคับคดีได้ จึงควรเจรจามากกว่าหนีหนี้')]
 bodyDC+=faq_block(faqDC)
 bodyDC+='<h2 id="closing">ปิดท้าย (โทนรับผิดชอบ)</h2><p>การเป็นหนี้ไม่ได้ทำให้เราหมดสิทธิที่จะถูกปฏิบัติอย่างเป็นธรรม รู้สิทธิของตัวเอง เก็บหลักฐานไว้เสมอ และถ้าหนี้ล้นจริงให้เดินเข้าหาทางออกที่ถูกกฎหมาย จะปลอดภัยกว่าการกลัวแล้วรีบโอน หรือกู้นอกระบบมาโปะ</p>'
-bodyDC+='<div class="disc">*ข้อมูลเพื่อการศึกษาและความรู้กฎหมายทั่วไป ไม่ใช่คำปรึกษากฎหมายเฉพาะบุคคล อัปเดต ณ '+BUILD_DATE+' โปรดตรวจสอบฉบับกฎหมาย/ประกาศล่าสุด หรือปรึกษาผู้เชี่ยวชาญสำหรับกรณีของท่าน</div>'
+bodyDC+='<div class="disc">*ข้อมูลเพื่อการศึกษาและความรู้กฎหมายทั่วไป ไม่ใช่คำปรึกษากฎหมายเฉพาะบุคคล โปรดตรวจสอบฉบับกฎหมาย/ประกาศล่าสุด หรือปรึกษาผู้เชี่ยวชาญสำหรับกรณีของท่าน</div>'
 bodyDC+='<div class="related"><h2>บทความที่เกี่ยวข้อง</h2><a class="card" href="/debt-clinic-sam-2026.html"><span class="tag">หนี้</span><h3>คลินิกแก้หนี้คืออะไร</h3><p>ช่องทางทางการแก้หนี้เสีย</p></a><a class="card" href="/debt-consolidation-2026.html"><span class="tag">สินเชื่อ</span><h3>สินเชื่อรวมหนี้</h3><p>ยุบหลายก้อนเหลือก้อนเดียว</p></a><a class="card" href="/bureau-blacklist-loan-2026.html"><span class="tag">สินเชื่อ</span><h3>ติดบูโรกู้ได้ไหม</h3><p>ความจริง + ทางเลือก</p></a></div>'
 ART.append((slugDC,'โดนทวงหนี้โหด / ผิดกฎหมายแบบไหน? สิทธิลูกหนี้ + ทำยังไงเมื่อโดนทวงเกินเหตุ 2026 | เงินเดือนสมองทอง','เจ้าหนี้/บริษัทตามหนี้ทวงแบบไหนผิดกฎหมายตาม พ.ร.บ.การทวงถามหนี้ — ห้ามประจาน ห้ามข่มขู่ ห้ามทวงนอกเวลา และลูกหนี้มีสิทธิอะไร ร้องเรียนที่ไหน พร้อมทางออกถ้าหนี้ล้นจริง (อัปเดต 2026)',bodyDC,faqDC,"debt"))
 
@@ -2435,7 +2788,7 @@ bodyWG=f"""<h1 id="top">โดนอายัดเงินเดือน / �
 faqWG=[('เงินเดือนน้อยถูกอายัดไหม?','สำหรับลูกจ้างเอกชน เงินเดือนส่วนที่ไม่เกิน 20,000 บาทต่อเดือนได้รับการคุ้มครอง ถ้าเงินเดือนไม่ถึง 20,000 บาทจะถูกอายัดไม่ได้ อายัดได้เฉพาะส่วนที่เกินและต้องคงเหลือให้ไม่น้อยกว่า 20,000 บาท แต่การคุ้มครองนี้เป็นการคุ้มครองเงินเดือนเฉพาะส่วน ไม่ได้แปลว่าทรัพย์สินอื่นจะถูกบังคับคดีไม่ได้'),('อายัดเงินเดือนแล้วยังเจรจาได้อีกไหม?','ได้ การชำระหรือตกลงกับเจ้าหนี้ทำได้แม้อยู่ในชั้นบังคับคดี'),('เจ้าหนี้อายัดทั้งเงินเดือนได้เลยไหม?','ไม่ได้ — อายัดได้เฉพาะส่วนเกินตามสัดส่วนที่กฎหมายกำหนด ไม่ใช่ทั้งก้อน')]
 bodyWG+=faq_block(faqWG)
 bodyWG+='<h2 id="closing">ปิดท้าย (โทนรับผิดชอบ)</h2><p>อายัดเงินเดือนเป็นปลายทางของหนี้ที่ไม่ได้จัดการ ไม่ใช่สิ่งที่เกิดในชั่วข้ามคืน ถ้ารู้สิทธิ ไม่เพิกเฉยหมายศาล และเจรจาแต่เนิ่น ๆ ส่วนใหญ่หาทางลงที่รับได้ทั้งสองฝ่ายได้ และถ้าหนี้เกินกำลังจริง ทางออกที่ถูกกฎหมายปลอดภัยกว่าการหนีเสมอ</p>'
-bodyWG+='<div class="disc">*ข้อมูลเพื่อการศึกษาและความรู้กฎหมายทั่วไป ไม่ใช่คำปรึกษากฎหมายเฉพาะบุคคล อัปเดต ณ '+BUILD_DATE+' โปรดตรวจสอบฉบับกฎหมาย/ประกาศล่าสุด หรือปรึกษาผู้เชี่ยวชาญสำหรับกรณีของท่าน</div>'
+bodyWG+='<div class="disc">*ข้อมูลเพื่อการศึกษาและความรู้กฎหมายทั่วไป ไม่ใช่คำปรึกษากฎหมายเฉพาะบุคคล โปรดตรวจสอบฉบับกฎหมาย/ประกาศล่าสุด หรือปรึกษาผู้เชี่ยวชาญสำหรับกรณีของท่าน</div>'
 bodyWG+='<div class="related"><h2>บทความที่เกี่ยวข้อง</h2><a class="card" href="/credit-card-debt-lawsuit-2026.html"><span class="tag">หนี้</span><h3>ถูกฟ้องหนี้บัตร/อายุความ</h3><p>ก่อนถึงชั้นบังคับคดี</p></a><a class="card" href="/debt-collection-rights-2026.html"><span class="tag">สิทธิลูกหนี้</span><h3>โดนทวงหนี้แบบไหนผิดกฎหมาย</h3><p>รู้สิทธิ + ร้องเรียน</p></a><a class="card" href="/debt-clinic-sam-2026.html"><span class="tag">หนี้</span><h3>คลินิกแก้หนี้คืออะไร</h3><p>ช่องทางทางการแก้หนี้เสีย</p></a></div>'
 ART.append((slugWG,'โดนอายัดเงินเดือน / บังคับคดี หลังถูกฟ้องหนี้ ทำยังไง? สิทธิมนุษย์เงินเดือนที่ต้องรู้ 2026 | เงินเดือนสมองทอง','อายัดเงินเดือนเกิดได้ต่อเมื่อมีคำพิพากษาและหมายบังคับคดีแล้ว — และกฎหมายคุ้มครองเงินเดือนส่วนหนึ่งไว้เพื่อการยังชีพ สรุปว่าถูกอายัดได้แค่ไหน สิทธิลูกหนี้ในชั้นบังคับคดี และทำยังไงเมื่อใกล้โดน (2026)',bodyWG,faqWG,"debt"))
 
@@ -2458,7 +2811,7 @@ bodyRC=f"""<h1 id="top">ฟื้นเครดิตหลังเคยม�
 <ol start="5"><li>ถ้ายังมีหนี้หลายก้อน จัดการให้ผ่อนไหวก่อน เกี่ยวข้อง: <a href="/debt-consolidation-2026.html">สินเชื่อรวมหนี้</a></li></ol>
 <h2 id="bigloan">อีกกี่เดือน/ปีถึงกู้ก้อนใหญ่ได้ (บ้าน/รถ)</h2>
 <p>ไม่มีตัวเลขตายตัว เพราะแต่ละสถาบันการเงินมีเกณฑ์ต่างกัน แต่โดยหลักยิ่งมี "ประวัติจ่ายตรงต่อเนื่อง" ยาวและ DSR ต่ำ โอกาสยิ่งดีขึ้น สำหรับสินเชื่อมีหลักประกัน (บ้าน/รถ) ตัวหลักประกัน เงินดาวน์ และความสามารถผ่อนมีน้ำหนักมาก การเตรียมเอกสารรายได้และลดหนี้อื่นก่อนยื่นจึงช่วยได้ และถ้าจำเป็นต้องใช้สินเชื่อระหว่างฟื้นตัว ควรเริ่มจากวงเงินเล็กที่จ่ายไหวและจ่ายให้ตรงเพื่อสะสมประวัติที่ดี</p>
-{cta('KTC Proud',KTCPROUD,'rebuild-credit-after-debt','ถ้าจำเป็นต้องใช้เงินก้อนระหว่างฟื้นเครดิต เริ่มจากวงเงินเล็กที่จ่ายไหว — เช็กคุณสมบัติสินเชื่อบุคคล KTC Proud ออนไลน์ (ลิงก์พันธมิตร) เริ่มเล็ก จ่ายตรง →')}
+<p style="background:#fff8e8;border:1px solid #e8d6a8;border-radius:10px;padding:12px 14px"><b>ระหว่างฟื้นเครดิต ไม่ควรรีบเปิดวงเงินใหม่เพื่อสร้างประวัติ</b> ให้แก้ยอดค้างและทำกระแสเงินสดให้มั่นคงก่อน หากจำเป็นต้องขอสินเชื่อจริง อ่าน <a href="/cash-card-vs-credit-card-2026.html">ความต่างของบัตรกดเงินสดกับบัตรเครดิต</a> และเทียบต้นทุนรวมก่อนยื่น</p>
 <h2 id="avoid">สิ่งที่ "ไม่ควรทำ" ตอนฟื้นฟูประวัติ</h2>
 <ul><li>อย่ายื่นขอสินเชื่อหรือบัตรหลายที่รัว ๆ ในเวลาใกล้กัน</li><li>อย่าปิดบัญชีเก่าที่ประวัติดีทิ้งทั้งหมดโดยไม่จำเป็น (ประวัติยาวมีส่วนช่วย)</li><li>อย่าหลงเชื่อบริการล้างบูโร หรือโฆษณาเกินจริงที่รับปากผลการกู้ล่วงหน้า</li></ul>
 <h2 id="faq">คำถามที่พบบ่อย (FAQ)</h2>
@@ -2466,7 +2819,7 @@ bodyRC=f"""<h1 id="top">ฟื้นเครดิตหลังเคยม�
 faqRC=[('จ่ายหนี้หมดแล้วประวัติหายเลยไหม?','ไม่หายทันที เมื่อปิดบัญชีสถานะจะเปลี่ยนเป็นปิดบัญชีหรือยอดเป็นศูนย์ ซึ่งดีกว่าค้างอยู่ แล้วข้อมูลจะทยอยหายเองเมื่อครบกำหนด โดยทั่วไปประวัติแสดงย้อนหลังไม่เกิน 3 ปี นับจากวันที่บริษัทข้อมูลเครดิตได้รับข้อมูล การชำระหนี้จึงช่วยให้สถานะดีขึ้น ไม่ใช่การลบประวัติทันที'),('มีหนี้เสียอยู่ กู้บ้านได้ไหม?','ยากขึ้นแต่ไม่เสมอไป ขึ้นกับการจัดการหนี้ปัจจุบัน เอกสารรายได้ และเกณฑ์ของแต่ละสถาบันการเงิน'),('เริ่มสร้างเครดิตจากศูนย์ทำยังไง?','เริ่มจากผลิตภัณฑ์เล็กที่จ่ายตรงได้จริง แล้วสร้างประวัติทีละเดือนอย่างสม่ำเสมอ')]
 bodyRC+=faq_block(faqRC)
 bodyRC+='<h2 id="closing">ปิดท้าย (โทนรับผิดชอบ)</h2><p>เครดิตที่เคยเสียฟื้นได้ด้วย "เวลา + พฤติกรรมจ่ายที่ดี" ไม่ใช่ทางลัดหรือบริการล้างบูโร ค่อย ๆ สร้างประวัติใหม่ คุมหนี้ให้ผ่อนไหว แล้วโอกาสกู้ในอนาคตจะกลับมาเอง</p>'
-bodyRC+='<div class="disc">*ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำทางการเงินเฉพาะบุคคล อัปเดต ณ '+BUILD_DATE+' เงื่อนไข/ดอกเบี้ย/ค่าธรรมเนียมของผลิตภัณฑ์เป็นไปตามผู้ให้บริการ โปรดตรวจสอบก่อนตัดสินใจ</div>'
+bodyRC+='<div class="disc">*ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำทางการเงินเฉพาะบุคคล เงื่อนไข/ดอกเบี้ย/ค่าธรรมเนียมของผลิตภัณฑ์เป็นไปตามผู้ให้บริการ โปรดตรวจสอบก่อนตัดสินใจ</div>'
 bodyRC+='<div class="related"><h2>บทความที่เกี่ยวข้อง</h2><a class="card" href="/bureau-blacklist-loan-2026.html"><span class="tag">สินเชื่อ</span><h3>ติดบูโรกู้ได้ไหม</h3><p>ความจริง + ทางเลือก</p></a><a class="card" href="/credit-bureau-check-2026.html"><span class="tag">บูโร</span><h3>เช็กบูโรตัวเอง</h3><p>ช่องทาง + วิธีอ่าน</p></a><a class="card" href="/first-credit-card-student-2026.html"><span class="tag">บัตร</span><h3>บัตรใบแรกสำหรับมือใหม่</h3><p>เริ่มสร้างประวัติ</p></a></div>'
 ART.append((slugRC,'ฟื้นเครดิตหลังเคยมีปัญหาหนี้ — อีกกี่เดือนกู้ได้ + วิธีสร้างประวัติใหม่ 2026 | เงินเดือนสมองทอง','เคยค้างชำระ/เป็นหนี้เสียแล้วอยากกู้บ้าน-รถ-บัตรอีกครั้ง ต้องรอนานแค่ไหนและทำยังไงให้ประวัติดีขึ้น — สรุปวิธีสร้างเครดิตใหม่อย่างถูกวิธี และเตือนกับดัก "รับจ้างล้างบูโร" ที่ไม่มีจริง (2026)',bodyRC,faqRC,"debt"))
 
@@ -2494,24 +2847,105 @@ bodyCF=f"""<h1 id="top">"ปิดหนี้ไว ไปต่อได้" 2
 faqCF=[('เสียเงินไหม?','ไม่เสีย — ลงทะเบียนและเข้าร่วมฟรีทุกขั้นตอนผ่านช่องทางทางการของ ธปท. ใครเรียกเก็บเงินคือมิจฉาชีพ'),('เข้าโครงการแล้วประวัติเครดิตดีขึ้นเลยไหม?','ไม่ทันที — แต่การปิดจบหนี้เสียคือก้าวแรกที่จำเป็น หลังจากนั้นประวัติจะค่อย ๆ ฟื้นตามเวลาและวินัยการจ่ายใหม่'),('หนี้หลายเจ้ารวมกันเกินเกณฑ์เล็กน้อยทำไง?','โครงการนี้ยึดยอดรวมทุกเจ้าตามเกณฑ์ — ถ้าเกิน ลองคลินิกแก้หนี้ซึ่งรองรับยอดสูงกว่า หรือเจรจาปรับโครงสร้างกับเจ้าหนี้โดยตรง')]
 bodyCF+=faq_block(faqCF)
 bodyCF+='<h2 id="closing">ปิดท้าย (โทนรับผิดชอบ)</h2><p>หนี้เสียก้อนเล็กที่ค้างมานานไม่ใช่เรื่องน่าอาย และตอนนี้มีทางปิดจบที่รัฐออกแบบมาให้โดยเฉพาะ — เช็กสิทธิ์ฟรี ทำเองได้ ไม่ต้องผ่านนายหน้า ถ้าปิดก้อนนี้จบ ค่อยเริ่มสร้างวินัยและประวัติใหม่ทีละเดือน</p>'
-bodyCF+='<div class="disc">*ข้อมูลเพื่อการศึกษา อัปเดต ณ '+BUILD_DATE+' อ้างอิงประกาศ ธปท./SAM — เงื่อนไขโครงการอาจเปลี่ยน โปรดตรวจสอบกับ bot.or.th ล่าสุดก่อนตัดสินใจ ไม่ใช่คำแนะนำทางการเงินเฉพาะบุคคล</div>'
+bodyCF+='<div class="disc">*ข้อมูลเพื่อการศึกษา อ้างอิงประกาศ ธปท./SAM — เงื่อนไขโครงการอาจเปลี่ยน โปรดตรวจสอบกับ bot.or.th ล่าสุดก่อนตัดสินใจ ไม่ใช่คำแนะนำทางการเงินเฉพาะบุคคล</div>'
 bodyCF+='<div class="related"><h2>บทความที่เกี่ยวข้อง</h2><a class="card" href="/debt-clinic-sam-2026.html"><span class="tag">หนี้</span><h3>คลินิกแก้หนี้ by SAM</h3><p>หนี้เสียก้อนใหญ่กว่าเกณฑ์</p></a><a class="card" href="/debt-collection-rights-2026.html"><span class="tag">สิทธิลูกหนี้</span><h3>โดนทวงหนี้แบบไหนผิดกฎหมาย</h3><p>รู้สิทธิระหว่างจัดการหนี้</p></a><a class="card" href="/rebuild-credit-after-debt-2026.html"><span class="tag">ฟื้นตัว</span><h3>ฟื้นเครดิตให้กลับมากู้ได้อีกครั้ง</h3><p>สร้างประวัติใหม่ให้กู้ผ่าน</p></a></div>'
 ART.append((slugCF,'ปิดหนี้ไว ไปต่อได้ 2569 — เช็กสิทธิ์ปิดหนี้เสียก้อนเล็ก ผ่อนต่อไม่มีดอกเบี้ย | เงินเดือนสมองทอง','โครงการรัฐ "ปิดหนี้ไว ไปต่อได้" เปิดลงทะเบียนแล้ว — หนี้เสียก้อนเล็กยอดรวมไม่เกินหนึ่งแสนบาท เลือกจ่ายบางส่วนปิดจบทันที หรือผ่อนต่อแบบไม่มีดอกเบี้ย สรุปเกณฑ์ วิธีลงทะเบียนฟรีที่ bot.or.th และกับดักมิจฉาชีพ (อัปเดต ก.ค. 2569)',bodyCF,faqCF,"debt"))
 
-_ASOF = f'<div class="asof">📌 ข้อมูล/เงื่อนไข ณ {th_monthyear(BUILD_DATE)} · อ้างอิงจากผู้ให้บริการ — โปรดเช็กล่าสุดที่หน้าสมัคร<br>มีลิงก์พันธมิตร · <b>เราไม่รับเงินเพื่อจัดอันดับ</b> · ข้อมูลเพื่อการศึกษา ไม่การันตีการอนุมัติ/เคลม · <a href="/about.html">ดูเกณฑ์รีวิวของเรา</a></div>'
+def page_asof(slug):
+    meta = PAGE_METADATA.get(slug)
+    stamp = ("แก้ไขหน้าเมื่อ " + meta["modified_at"] + " · ขอบเขต: " + meta["scope"] + " · "
+             if meta else "")
+    return (f'<div class="asof">📌 {html.escape(stamp)}ไม่ประทับวันอัปเดตจากวัน build อัตโนมัติ '
+            '· โปรดเช็กเงื่อนไขล่าสุดที่หน้าผู้ให้บริการ<br>มีลิงก์พันธมิตร · '
+            '<b>เราไม่รับเงินเพื่อจัดอันดับ</b> · ข้อมูลเพื่อการศึกษา ไม่การันตีการอนุมัติ/เคลม '
+            '· <a href="/about.html">ดูเกณฑ์รีวิวของเรา</a></div>')
+
+
+OFFICIAL_SOURCES = {
+    "close-debt-fast-2026.html": [
+        ("Bank of Thailand: Clear Debt program", "https://www.bot.or.th/th/cleardebt.html")],
+    "credit-card-interest-2026.html": [
+        ("Bank of Thailand: 2026 credit-card minimum-payment rules (PDF)",
+         "https://www.bot.or.th/content/dam/bot/fipcs/documents/FPG/2568/ThaiPDF/25680245.pdf")],
+    "pay-off-credit-card-debt-2026.html": [
+        ("ธนาคารแห่งประเทศไทย: หลักเกณฑ์ยอดชำระขั้นต่ำบัตรเครดิตปี 2569 (PDF)",
+         "https://www.bot.or.th/content/dam/bot/fipcs/documents/FPG/2568/ThaiPDF/25680245.pdf"),
+        ("ธนาคารแห่งประเทศไทย: แนวทางจัดการหนี้บัตรอย่างรับผิดชอบ",
+         "https://www.bot.or.th/th/research-and-publications/articles-and-publications/bot-magazine-issues/Phrasiam-67-2/256702-FinWis-HappyDebtor.html")],
+    "loan-online-legal-2026.html": [
+        ("ธนาคารแห่งประเทศไทย: เช็กผู้ให้บริการสินเชื่อที่ได้รับอนุญาต",
+         "https://www.bot.or.th/th/license-loan.html"),
+        ("ธนาคารแห่งประเทศไทย: ระบบตรวจสอบใบอนุญาต",
+         "https://app.bot.or.th/BOTLicenseCheck")],
+    "car-still-installment-loan-2026.html": [
+        ("ธนาคารแห่งประเทศไทย: ความรู้เรื่องภาระหนี้และความสามารถชำระ",
+         "https://www.bot.or.th/th/satang-story/managing-debt/indebtedness.html"),
+        ("ธนาคารแห่งประเทศไทย: เช็กผู้ให้บริการสินเชื่อที่ได้รับอนุญาต",
+         "https://www.bot.or.th/th/license-loan.html"),
+        ("ธนาคารแห่งประเทศไทย: แนวทางปรับโครงสร้างสินเชื่อรถ",
+         "https://www.bot.or.th/th/satang-story/managing-debt/auto-loan-restructuring.html"),
+        ("ธนาคารแห่งประเทศไทย: ข้อควรรู้สินเชื่อมีหลักประกัน",
+         "https://www.bot.or.th/th/satang-story/managing-debt/secured-loan.html"),
+        ("ธนาคารแห่งประเทศไทย: เช่าซื้อและลีสซิ่งรถ",
+         "https://www.bot.or.th/th/research-and-publications/articles-and-publications/bot-magazine-issues/phrasiam-68-3/hire-purchase-leasing.html")],
+    "refinance-home-2026.html": [
+        ("Bank of Thailand: LTV measures through 30 June 2027",
+         "https://www.bot.or.th/th/news-and-media/news/news-20260514.html"),
+        ("ธนาคารแห่งประเทศไทย: สิ่งที่ควรเช็กก่อนขอสินเชื่อ",
+         "https://www.bot.or.th/th/satang-story/managing-debt/before-loan.html")],
+    "debt-restructuring-2026.html": [
+        ("Bank of Thailand: Responsible Lending criteria (PDF)",
+         "https://www.bot.or.th/content/dam/bot/fipcs/documents/FPG/2568/ThaiPDF/25680030.pdf")],
+    "loan-cash-2026.html": [
+        ("Bank of Thailand: Responsible Lending criteria (PDF)",
+         "https://www.bot.or.th/content/dam/bot/fipcs/documents/FPG/2568/ThaiPDF/25680030.pdf")],
+    "personal-loan-2026.html": [
+        ("Bank of Thailand: Responsible Lending criteria (PDF)",
+         "https://www.bot.or.th/content/dam/bot/fipcs/documents/FPG/2568/ThaiPDF/25680030.pdf")],
+    "credit-card-salary-30000-2026.html": [
+        ("ธนาคารแห่งประเทศไทย: ความรู้เรื่องบัตรเครดิต",
+         "https://www.bot.or.th/th/satang-story/digital-fin-lit/creditcard.html"),
+        ("ธนาคารแห่งประเทศไทย: เปรียบเทียบผลิตภัณฑ์บัตรเครดิต",
+         "https://app.bot.or.th/1213/MCPD/ProductApp/Credit/"),
+        ("KTC: หน้ารวมบัตรเครดิตและคุณสมบัติผู้สมัคร",
+         KTC_CARD_OFFICIAL)],
+    "credit-card-salary-20000-2026.html": [
+        ("ธนาคารแห่งประเทศไทย: เกณฑ์วงเงินบัตรเครดิตตามช่วงรายได้",
+         "https://www.bot.or.th/th/satang-story/digital-fin-lit/creditcard.html"),
+        ("ธนาคารแห่งประเทศไทย: เปรียบเทียบผลิตภัณฑ์บัตรเครดิต",
+         "https://app.bot.or.th/1213/MCPD/ProductApp/Credit/")],
+}
+
+
+def official_sources(slug):
+    rows = OFFICIAL_SOURCES.get(slug, [])
+    if not rows:
+        return ""
+    title = "\u0e41\u0e2b\u0e25\u0e48\u0e07\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e17\u0e32\u0e07\u0e01\u0e32\u0e23"
+    links = "".join('<li><a target="_blank" rel="noopener" href="%s">%s</a></li>'
+                    % (html.escape(url), html.escape(label)) for label, url in rows)
+    checked = PAGE_METADATA.get(slug, {}).get("modified_at")
+    note = ('<p style="font-size:12.5px;color:#64748b">ตรวจการเชื่อมโยงแหล่งข้อมูลเมื่อ %s; '
+            'วันดังกล่าวไม่ใช่การรับรองว่าทุกเงื่อนไขยังไม่เปลี่ยน โปรดเปิดต้นทางก่อนตัดสินใจ</p>'
+            % html.escape(checked)) if checked else ""
+    return '<section class="official-sources"><h2>%s</h2>%s<ul>%s</ul></section>' % (title, note, links)
+
+
 for slug,title,desc,body,faqs,camp in ART:
     _name=title.split(" | ")[0]
-    ld=article_ld(_name,desc,slug,faqs)
+    ld=article_ld(_name,desc,slug,faqs,
+                  PAGE_METADATA.get(slug, {}).get("modified_at"))
     ld.append({"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
         {"@type":"ListItem","position":1,"name":"หน้าแรก","item":BASE+"/"},
-        {"@type":"ListItem","position":2,"name":_name,"item":f"{BASE}/{slug}"}]})
+        {"@type":"ListItem","position":2,"name":_name,
+         "item":f"{BASE}/{slug[:-5] if slug.endswith('.html') else slug}"}]})
     _il=[(s,t) for s,t in [("loan-cash-2026.html","💸 เทียบสินเชื่อทั้งหมด (จำนำทะเบียน/รวมหนี้/รีไฟแนนซ์)"),("links","🔗 ลิงก์รวม สมัครบัตร/สินเชื่อ/ออมเงิน"),("quiz","🧭 ทำ Quiz หาบัตร/สินเชื่อที่เหมาะ (30 วิ)"),("","🏠 หน้าแรก เงินเดือนสมองทอง")] if s!=slug]
     _nav='<div class="related"><h2>อ่านต่อ / ลิงก์ที่เกี่ยวข้อง</h2><div class="cluster">'+"".join(f'<a href="/{s}">{t}</a>' for s,t in _il)+'</div></div>'
     _sl=_SIBOF.get(slug,[])
     _sib=('<div class="related"><h2>เรื่องอื่นในหมวด'+(TAGS.get(slug) or '')+'</h2><div class="cluster">'+''.join(f'<a href="/{_s2}">{_t2}</a>' for _s2,_t2 in _sl)+'</div></div>') if len(_sl)>=2 else ''
     _ogimg="og-loan.png" if slug in {"loan-cash-2026.html","title-loan-2026.html","debt-consolidation-2026.html","car-for-cash-2026.html","personal-loan-2026.html","cash-card-easy-2026.html","refinance-home-2026.html","car-title-loan-compare-2026.html","home-land-for-cash-2026.html","motorcycle-title-loan-2026.html","car-refinance-2026.html","freelance-loan-2026.html","loan-online-legal-2026.html","bureau-blacklist-loan-2026.html","car-still-installment-loan-2026.html"} else "og-default.png"
     _info = (f'<figure style="margin:18px 0"><img class="artinfo" loading="lazy" src="{ARTICLE_HERO_IMG[slug]}" alt="ภาพประกอบ {_name}" width="800" height="420"><figcaption style="font-size:10.5px;color:#8a8a95;text-align:right;margin:2px 4px 0">ภาพประกอบ</figcaption></figure>' if slug in ARTICLE_HERO_IMG else "")
-    open(f"{OUT}/{slug}","w",encoding="utf-8").write(affil_disclose(head(title,desc,slug,ld,og_image=_ogimg)+f'<main class="wrap">{top_offer(camp,slug)}{calc_cta(slug)}{clip_block(slug)}{hero_banner(slug)}{body}{_info}{_ASOF}{kept_next(slug)}{letter_cta(slug)}{ebook_banner(slug)}{share_bar(slug,_name)}{QUIZ_CTA}{_sib}{_nav}</main>'+FOOTER))
+    open(f"{OUT}/{slug}","w",encoding="utf-8").write(affil_disclose(head(title,desc,slug,ld,og_image=_ogimg)+f'<main class="wrap">{top_offer(camp,slug)}{calc_cta(slug)}{clip_block(slug)}{hero_banner(slug)}{body}{_info}{official_sources(slug)}{page_asof(slug)}{kept_next(slug)}{letter_cta(slug)}{ebook_banner(slug)}{share_bar(slug,_name)}{QUIZ_CTA}{_sib}{_nav}</main>'+FOOTER))
 
 # homepage
 CTX={"credit-card-salary-15000-2026.html":"เงินเดือนน้อย","first-credit-card-student-2026.html":"เด็กจบใหม่","credit-card-easy-approval-2026.html":"อนุมัติง่าย","credit-card-freelance-2026.html":"ฟรีแลนซ์","krungsri-credit-card-rejected-2026.html":"เคยไม่ผ่าน","credit-card-installment-0-2026.html":"ผ่อน 0%","credit-card-cashback-2026.html":"เงินคืน","kept-savings-2026.html":"ออมดอกสูง","kept-interest-rate-2026.html":"ออมดอกสูง","high-yield-savings-2026.html":"ออมดอกสูง","emergency-fund-2026.html":"เงินสำรอง","how-to-save-money-2026.html":"เริ่มออม","salary-budgeting-2026.html":"แบ่งเงินเดือน","title-loan-2026.html":"มีรถ","car-for-cash-2026.html":"มีรถ","debt-consolidation-2026.html":"ปลดหนี้","loan-cash-2026.html":"เงินด่วน","personal-loan-2026.html":"ไม่ต้องค้ำ","cash-card-easy-2026.html":"บัตรกดเงินสด","refinance-home-2026.html":"มีบ้าน","travel-insurance-vacation-2026.html":"ก่อนเที่ยว","insurance-compare-2026.html":"เทียบประกัน","lifestyle-credit-card-2026.html":"สายไลฟ์สไตล์","credit-bureau-check-2026.html":"เช็กเครดิต","credit-card-salary-20000-2026.html":"เงินเดือน 20,000","loan-online-legal-2026.html":"กู้ออนไลน์","credit-card-interest-2026.html":"ดอกเบี้ยบัตร","pay-off-credit-card-debt-2026.html":"ปลดหนี้บัตร","credit-card-salary-30000-2026.html":"เงินเดือน 30,000","tax-deduction-salary-2026.html":"ลดหย่อนภาษี","health-insurance-salary-2026.html":"ประกันสุขภาพ","mutual-fund-beginner-2026.html":"เริ่มลงทุน","retirement-planning-salary-2026.html":"วางแผนเกษียณ"}
@@ -2562,6 +2996,9 @@ disc_body="""<h1>นโยบายความเป็นส่วนตัว
 <h2>ข้อจำกัดความรับผิด</h2>
 <p>เนื้อหาทั้งหมดจัดทำเพื่อให้ข้อมูลทั่วไปเท่านั้น ไม่ใช่คำแนะนำทางการเงิน การลงทุน หรือสินเชื่อ การตัดสินใจสมัครผลิตภัณฑ์ใด ๆ เป็นความรับผิดชอบของผู้อ่าน โปรดศึกษาเงื่อนไข ดอกเบี้ย และค่าธรรมเนียมจากผู้ให้บริการอย่างเป็นทางการก่อนตัดสินใจเสมอ</p>
 <h2>ติดต่อ</h2><p>สอบถามเพิ่มเติมได้ที่ <a href="/contact.html">หน้าติดต่อเรา</a></p>"""
+disc_body += ("<h2>\u0e01\u0e32\u0e23\u0e27\u0e34\u0e40\u0e04\u0e23\u0e32\u0e30\u0e2b\u0e4c\u0e01\u0e32\u0e23\u0e43\u0e0a\u0e49\u0e07\u0e32\u0e19\u0e41\u0e25\u0e30\u0e04\u0e38\u0e01\u0e01\u0e35\u0e49</h2>"
+              "<p>\u0e40\u0e27\u0e47\u0e1a\u0e44\u0e0b\u0e15\u0e4c\u0e43\u0e0a\u0e49 Google Analytics 4 \u0e40\u0e1e\u0e37\u0e48\u0e2d\u0e27\u0e31\u0e14\u0e08\u0e33\u0e19\u0e27\u0e19\u0e1c\u0e39\u0e49\u0e40\u0e02\u0e49\u0e32\u0e0a\u0e21 \u0e41\u0e2b\u0e25\u0e48\u0e07\u0e17\u0e35\u0e48\u0e21\u0e32 \u0e2b\u0e19\u0e49\u0e32\u0e17\u0e35\u0e48\u0e40\u0e1b\u0e34\u0e14 \u0e41\u0e25\u0e30\u0e40\u0e2b\u0e15\u0e38\u0e01\u0e32\u0e23\u0e13\u0e4c\u0e01\u0e32\u0e23\u0e04\u0e25\u0e34\u0e01 \u0e42\u0e14\u0e22\u0e2d\u0e32\u0e08\u0e43\u0e0a\u0e49\u0e04\u0e38\u0e01\u0e01\u0e35\u0e49\u0e41\u0e25\u0e30\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e2d\u0e38\u0e1b\u0e01\u0e23\u0e13\u0e4c \u0e40\u0e23\u0e32\u0e44\u0e21\u0e48\u0e2a\u0e48\u0e07\u0e0a\u0e37\u0e48\u0e2d \u0e40\u0e25\u0e02\u0e1a\u0e31\u0e15\u0e23 \u0e40\u0e25\u0e02\u0e1a\u0e31\u0e0d\u0e0a\u0e35 \u0e2b\u0e23\u0e37\u0e2d\u0e02\u0e49\u0e2d\u0e04\u0e27\u0e32\u0e21\u0e17\u0e35\u0e48\u0e04\u0e38\u0e13\u0e01\u0e23\u0e2d\u0e01\u0e43\u0e19\u0e40\u0e04\u0e23\u0e37\u0e48\u0e2d\u0e07\u0e04\u0e33\u0e19\u0e27\u0e13\u0e44\u0e1b\u0e22\u0e31\u0e07\u0e23\u0e30\u0e1a\u0e1a\u0e27\u0e34\u0e40\u0e04\u0e23\u0e32\u0e30\u0e2b\u0e4c \u0e04\u0e38\u0e13\u0e2a\u0e32\u0e21\u0e32\u0e23\u0e16\u0e1a\u0e25\u0e47\u0e2d\u0e01\u0e04\u0e38\u0e01\u0e01\u0e35\u0e49\u0e2b\u0e23\u0e37\u0e2d JavaScript \u0e43\u0e19\u0e40\u0e1a\u0e23\u0e32\u0e27\u0e4c\u0e40\u0e0b\u0e2d\u0e23\u0e4c\u0e44\u0e14\u0e49</p>"
+              "<p>\u0e23\u0e30\u0e22\u0e30\u0e40\u0e27\u0e25\u0e32\u0e01\u0e32\u0e23\u0e40\u0e01\u0e47\u0e1a\u0e41\u0e25\u0e30\u0e01\u0e32\u0e23\u0e1b\u0e23\u0e30\u0e21\u0e27\u0e25\u0e1c\u0e25\u0e40\u0e1b\u0e47\u0e19\u0e44\u0e1b\u0e15\u0e32\u0e21\u0e01\u0e32\u0e23\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32 Google Analytics \u0e41\u0e25\u0e30\u0e19\u0e42\u0e22\u0e1a\u0e32\u0e22\u0e04\u0e27\u0e32\u0e21\u0e40\u0e1b\u0e47\u0e19\u0e2a\u0e48\u0e27\u0e19\u0e15\u0e31\u0e27\u0e02\u0e2d\u0e07 Google: <a target=\"_blank\" rel=\"noopener\" href=\"https://policies.google.com/privacy?hl=th\">Google Privacy Policy</a></p>")
 open(f"{OUT}/disclaimer.html","w",encoding="utf-8").write(head("นโยบาย & การเปิดเผยข้อมูล | "+SITE,"นโยบายความเป็นส่วนตัวและการเปิดเผยลิงก์พันธมิตรของ "+SITE,"disclaimer.html",[])+f'<main class="wrap">{disc_body}</main>'+FOOTER)
 
 # about page (EEAT/trust)
@@ -2569,7 +3006,7 @@ about_body="""<h1>เกี่ยวกับ เงินเดือนสม�
 <p><b>ปลดหนี้ด้วยตัวเลขจริง ไม่ขายฝัน</b> — เราเชื่อว่าการปลดหนี้เริ่มจากเห็นตัวเลขจริงของตัวเอง ไม่ใช่คำสัญญา ลองได้ที่ <a href="/debt-calculator">เครื่องคำนวณแผนปลดหนี้ฟรี</a></p>
 <p>เงินเดือนสมองทอง เป็นเว็บไซต์ให้ความรู้การเงินส่วนบุคคลสำหรับมนุษย์เงินเดือนและคนรุ่นใหม่ เรารวบรวมและย่อยเรื่องบัตรเครดิต การออมเงิน และการวางแผนการเงินให้เข้าใจง่าย เพื่อช่วยให้คุณตัดสินใจได้ด้วยตัวเอง</p>
 <h2>ผู้จัดทำ</h2>
-<p>เว็บไซต์นี้ดูแลโดยผู้จัดทำที่เป็นมนุษย์เงินเดือนเอง ซึ่งเคยผ่านการสมัครบัตรเครดิต ขอสินเชื่อ และใช้เครื่องมือออมเงินจริง จึงเขียนจากมุมคนใช้งานจริง จุดยืนของเราคือ &ldquo;เทียบให้ก่อนตัดสินใจ ไม่เชียร์ให้ก่อหนี้เกินตัว&rdquo; และพยายามอัปเดตข้อมูลให้ทันปี 2026 อยู่เสมอ</p>
+<p>เนื้อหาทั้งหมดจัดทำในนามเพจ <b>เงินเดือนสมองทอง</b> ผ่านกระบวนการของเพจ: รวบรวมข้อมูลจากแหล่งทางการ เปรียบเทียบเงื่อนไข ตรวจทานก่อนเผยแพร่ และระบุวันที่อัปเดต เราอาจใช้ AI ช่วยค้นและเรียบเรียง แต่ไม่อ้างประสบการณ์ส่วนบุคคลหรือผลลัพธ์แทนผู้อ่าน จุดยืนของเพจคือ &ldquo;เทียบให้ก่อนตัดสินใจ ไม่เชียร์ให้ก่อหนี้เกินตัว&rdquo;</p>
 <h2>แนวทางการนำเสนอ</h2>
 <p>เราพยายามนำเสนอข้อมูลตามจริง อ้างอิงเงื่อนไขจากผู้ให้บริการ และหลีกเลี่ยงคำโฆษณาเกินจริงหรือการรับประกันผล ทุกบทความจัดทำเพื่อให้ข้อมูลทั่วไป ไม่ใช่คำแนะนำทางการเงิน การลงทุน หรือสินเชื่อ โปรดศึกษาเงื่อนไขล่าสุดจากผู้ให้บริการก่อนตัดสินใจเสมอ</p>
 <h2>จุดยืน & เกณฑ์รีวิวของเรา (Financial Review Checklist)</h2>
@@ -2607,33 +3044,32 @@ open(f"{OUT}/contact.html","w",encoding="utf-8").write(head("ติดต่อ�
 # sitemap + robots
 urls=[("",("1.0")),("links","0.9"),("quiz","0.9"),("debt-calculator","0.8"),("debt-health-check","0.9"),("refinance-savings-calculator","0.8"),("debt-freedom-clock","0.8"),("workshop-hr","0.5"),("debt-letter-kit","0.8"),("about.html","0.4"),("contact.html","0.4"),("disclaimer.html","0.3")]+[(_s,"0.8") for _s in _SEO_STANDALONE]+[(s,"0.9" if s in {"debt-consolidation-2026.html","pay-off-credit-card-debt-2026.html","title-loan-2026.html"} else "0.8") for s,*_ in ART]
 sm='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-_LASTMOD_MIN = {"car-still-installment-loan-2026": "2026-07-18", "credit-card-salary-30000-2026": "2026-07-18"}  # SEO-strike recrawl hint; BUILD_DATE overtakes on later deploys
 for u,pr in urls:
     _u = u[:-5] if u.endswith(".html") else u   # URL-CONSISTENCY: sitemap = canonical form only
-    _lm = max(BUILD_DATE, _LASTMOD_MIN.get(_u, BUILD_DATE))
-    sm+=f"<url><loc>{BASE}/{_u}</loc><lastmod>{_lm}</lastmod><priority>{pr}</priority></url>\n"
+    _meta_key = u if u.endswith(".html") else (u + ".html" if u else "")
+    _lm = PAGE_METADATA.get(_meta_key, {}).get("modified_at")
+    _lastmod = f"<lastmod>{_lm}</lastmod>" if _lm else ""
+    sm+=f"<url><loc>{BASE}/{_u}</loc>{_lastmod}<priority>{pr}</priority></url>\n"
 sm+="</urlset>\n"
 open(f"{OUT}/sitemap.xml","w",encoding="utf-8").write(sm)
 open(f"{OUT}/robots.txt","w",encoding="utf-8").write(f"User-agent: *\nAllow: /\nDisallow: /reels/\nSitemap: {BASE}/sitemap.xml\n")
 open(f"{OUT}/google068178fb9e4f38c9.html","w",encoding="utf-8").write("google-site-verification: google068178fb9e4f38c9.html")  # GSC ownership - keep on every rebuild
 # ---- branded /go/ short links (Netlify redirects) for bio/social: protect link reach + AccessTrade channel attribution ----
 _GO = {
-  "card":  KRUNGSRI + "?utm_source=bio&utm_medium=social&utm_campaign=krungsri&utm_content=go_card",
-  "save":  KEPT     + "?utm_source=bio&utm_medium=social&utm_campaign=kept&utm_content=go_save",
+  "card":  "/credit-card-easy-approval-2026?utm_source=bio&utm_medium=social&utm_campaign=card_guide&utm_content=go_card",
+  "save":  (KEPT + "?utm_source=bio&utm_medium=social&utm_campaign=kept&utm_content=go_save"
+            if affiliate_offer_active("kept") else
+            "/kept-savings-2026?utm_source=bio&utm_medium=social&utm_campaign=kept_guide&utm_content=go_save"),
   "loan":  SRISAWAD + "?utm_source=bio&utm_medium=social&utm_campaign=srisawad&utm_content=go_loan",
   "debt":  HAPPYDEBT + "?utm_source=bio&utm_medium=social&utm_campaign=happydebt&utm_content=go_debt",
   "title": CAR4CASH + "?utm_source=bio&utm_medium=social&utm_campaign=car4cash&utm_content=go_title",
 }
 # URL-CONSISTENCY block moved to END of script (links/quiz/debt-calculator are written after this point)
   # canonical dedup: .html twin -> declared pretty canonical
-import shutil as _sh
-_mc = os.path.join(os.path.dirname(os.path.abspath(__file__)), "media", "clips-web")
-if os.path.isdir(_mc):
-    os.makedirs(f"{OUT}/clips", exist_ok=True)
-    for _f in os.listdir(_mc):
-        if _f.endswith(".mp4"):
-            _sh.copy(os.path.join(_mc, _f), f"{OUT}/clips/{_f}")
-    print("copied clips ->", len([x for x in os.listdir(_mc) if x.endswith(".mp4")]))
+# The legacy media/clips-web pool was audited on 16 Aug 2026: 7/7 files contain
+# the drifting Veo sparkle. Never copy it into the public build. Reviewed videos
+# are copied individually by their own article-pilot contract above.
+print("legacy watermarked web clips -> disabled")
 print("built site/ ->", sorted(os.listdir(OUT)))
 
 # ---- links hub (link-in-bio) ----
@@ -2642,10 +3078,14 @@ def bcta(url, merchant, text, sub):
     # default channel=website; the /links page JS rewrites utm_source/utm_content to the
     # incoming channel (e.g. ?utm_source=pantip) so hub clicks are attributed per channel.
     u = utm(url, merchant, "links", channel="website", medium="linkhub")
+    if _is_internal_offer(url):
+        return f'<a class="hubbtn" href="{u}">💳 เทียบเกณฑ์บัตรเครดิตก่อนสมัคร<small>ปลายทางสมัครเดิมพักไว้ระหว่างตรวจผลิตภัณฑ์และโปรล่าสุด</small></a>'
     return f'<a class="hubbtn" rel="sponsored noopener nofollow" target="_blank" data-provider="{_pcode(merchant)}" href="{u}">{text}<small>{sub}</small></a>'
 def bmini(url, merchant, text):
     # compact affiliate button (alt providers in a row); class hubmini also rewritten by LINKS_CHANNEL_JS
     u = utm(url, merchant, "links", channel="website", medium="linkhub")
+    if _is_internal_offer(url):
+        return f'<a class="hubmini" href="{u}">อ่านเกณฑ์ก่อนสมัคร</a>'
     return f'<a class="hubmini" rel="sponsored noopener nofollow" target="_blank" data-provider="{_pcode(merchant)}" href="{u}">{text}</a>'
 hub_style = """<style>
 body{background:var(--bg)}
@@ -2713,16 +3153,31 @@ def ins_group():
     # affiliate buttons only (the section header + educational article link always show in links_body)
     return "".join(bins(o) for o in INSURANCE)
 
+
+_own_product_hub = []
+if promotion_authorized("ebook-59"):
+    _own_product_hub.extend([
+        '<a class="hubbtn" href="https://line.me/R/ti/p/@804qodya" target="_blank" rel="noopener" data-buy="ebook-59" data-pos="links-primary" style="background:linear-gradient(180deg,#c8941a,#a87a12);color:#1a1305">📘 สั่งคู่มือ+Worksheet ปลดหนี้ 59฿ (ทางไลน์ · พร้อมเพย์) ⭐แนะนำ<small style="color:#3a2c08">e-book 35 หน้า + Excel กรอกได้ · อัปเดต ก.ค. 69 (มาตรการรัฐล่าสุด) · ทักไลน์ โอนบาท รับไฟล์ทันที</small></a>',
+        '<a class="paysec" data-buy="ebook-59" data-pos="links-gumroad" href="https://ngernduangold.gumroad.com/l/debt-payoff-planner?utm_source=links&utm_medium=secondary&utm_campaign=guide59_card" target="_blank" rel="noopener">หรือจ่ายด้วยบัตร/ต่างประเทศ (Gumroad · คิดเป็น USD) →</a>',
+    ])
+if promotion_authorized("debt-toolkit-gumroad"):
+    _own_product_hub.append(
+        '<a class="hubbtn alt" data-buy="debt-toolkit-gumroad" data-pos="links-primary" href="https://ngernduangold.gumroad.com/l/debt-toolkit?utm_source=links&utm_medium=primary&utm_campaign=toolkit199_card" target="_blank" rel="noopener">🧰 ชุดเครื่องมือปลดหนี้ 199฿ (ชำระและรับไฟล์บน Gumroad)<small>tracker + ตารางโปะ + งบรายเดือน · ตรวจรายละเอียดไฟล์และสกุลเงินที่หน้าชำระก่อนยืนยัน</small></a>')
+if _own_product_hub:
+    _own_product_hub.append(
+        '<a class="paysec" href="https://line.me/R/ti/p/@804qodya" target="_blank" rel="noopener">มีคำถามเกี่ยวกับชุดเครื่องมือ? สอบถามทาง LINE ก่อนซื้อ →</a>')
+else:
+    _own_product_hub.append(
+        '<section class="inventory-hold" data-offer-status="paused" role="status" style="padding:13px 16px;border:1px solid #5b5b66;border-radius:12px;color:#c8c8d0">คู่มือและชุดเครื่องมือของเพจยังไม่เปิดรับคำสั่งซื้อ ขณะนี้ใช้เครื่องคำนวณและบทความฟรีได้ตามปกติ</section>')
+OWN_PRODUCT_HUB = "\n".join(_own_product_hub)
+
 links_body = hub_style + f'''<div class="hub">
 <img class="logo" src="/logo.png" alt="{SITE}" width="88" height="88" decoding="async">
 <h1>{SITE}</h1>
 <p class="tag">บัตรเครดิต • สินเชื่อ • ออมเงิน ฉบับมนุษย์เงินเดือน — เทียบของจริง ก่อนตัดสินใจ สมัครออนไลน์<br><b style="color:var(--gold-lt)">เลือกตามสถานการณ์คุณ 👇</b></p>
 <a class="hubbtn" href="https://line.me/R/ti/p/@804qodya" target="_blank" rel="noopener" style="background:linear-gradient(180deg,#06C755,#049a43);color:#fff">💬 แอด LINE (ฟรี) — รับเครื่องคำนวณปลดหนี้ + ปรึกษาต่อ<small style="color:#dfffe9">ฟรี ไม่มีเงื่อนไข · เครื่องคำนวณ Snowball/Avalanche + ถามต่อได้</small></a>
 <p class="hublbl" id="buy" style="text-align:center;color:#c8c8d0;margin-top:14px">คู่มือของเราเอง (ไม่ใช่ลิงก์พันธมิตร) 👇</p>
-<a class="hubbtn" href="https://line.me/R/ti/p/@804qodya" target="_blank" rel="noopener" data-note="สั่งทางไลน์ โอนพร้อมเพย์ 59฿ ส่งไฟล์ทันที" style="background:linear-gradient(180deg,#c8941a,#a87a12);color:#1a1305">📘 สั่งคู่มือ+Worksheet ปลดหนี้ 59฿ (ทางไลน์ · พร้อมเพย์) ⭐แนะนำ<small style="color:#3a2c08">e-book 35 หน้า + Excel กรอกได้ · อัปเดต ก.ค. 69 (มาตรการรัฐล่าสุด) · ทักไลน์ โอนบาท รับไฟล์ทันที</small></a>
-<a class="paysec" href="https://ngernduangold.gumroad.com/l/debt-payoff-planner?utm_source=links&utm_medium=secondary&utm_campaign=guide59_card" target="_blank" rel="noopener">หรือจ่ายด้วยบัตร/ต่างประเทศ (Gumroad · คิดเป็น USD) →</a>
-<a class="hubbtn alt" href="https://line.me/R/ti/p/@804qodya" target="_blank" rel="noopener" data-note="สั่งทางไลน์ โอนพร้อมเพย์ 199฿ ส่งไฟล์ทันที">🧰 สั่งชุดเครื่องมือปลดหนี้ 199฿ (ทางไลน์ · พร้อมเพย์)<small>สำหรับคนอยากคุมแผนเอง · tracker + ตารางโปะ + งบรายเดือน ครบชุด</small></a>
-<a class="paysec" href="https://ngernduangold.gumroad.com/l/debt-toolkit?utm_source=links&utm_medium=secondary&utm_campaign=toolkit199_card" target="_blank" rel="noopener">หรือจ่ายด้วยบัตร/ต่างประเทศ (Gumroad · คิดเป็น USD) →</a>
+{OWN_PRODUCT_HUB}
 <a class="hubbtn" href="/quiz" style="background:linear-gradient(180deg,#3a3a44,#2a2a32);color:var(--gold-lt)">🧭 ไม่รู้เริ่มตรงไหน? ทำ Quiz 30 วิ →<small style="color:#c8c8d0">ตอบ 2 คำถาม จับคู่บัตร/สินเชื่อ/ออม ที่เหมาะกับคุณ</small></a>
 <p class="hublbl" style="text-align:center;color:#c8c8d0;margin-top:18px">ทางเลือกการเงินจากพันธมิตรของเรา (ลิงก์พันธมิตร) 👇</p>
 {bcta(KEPT,"kept","🏦 ออมดอกสูง Kept — สมัครฟรี","หน้าแปลงดีสุดของเรา · ไม่เช็คเครดิต ดอกสูงกว่าออมทรัพย์ เช็กเงื่อนไขที่แอป")}
@@ -2756,7 +3211,7 @@ links_body = hub_style + f'''<div class="hub">
 {bcta(HAPPYDEBT,"happycash","🔗 รวมหนี้ก้อนเดียว ดอกถูกลง","รวมบัตร/สินเชื่อหลายใบ เหลือจ่ายที่เดียว")}
 <button class="morebtn" data-basket="loans" data-label="ดูสินเชื่อทั้งหมด (KTC PROUD/รถแลกเงิน/บัตรกดเงินสด) ▾">ดูสินเชื่อทั้งหมด (KTC PROUD/รถแลกเงิน/บัตรกดเงินสด) ▾</button>
 <div class="morewrap" data-basket="loans">
-{bcta(KTCPROUD,"ktcproud","💵 สินเชื่อส่วนบุคคล KTC PROUD","วงเงินก้อน ไม่ต้องค้ำ · ผ่อนรายเดือน")}
+{bcta(KTCPROUD,"ktcproud","💵 บัตรกดเงินสด KTC PROUD","วงเงินหมุนเวียน ไม่ต้องค้ำ · คิดดอกเมื่อใช้วงเงิน")}
 <p class="hublbl">เทียบเจ้าอื่น (จำนำทะเบียน / บัตรกดเงินสด):</p>
 <div class="hubrow">
 {bmini(CAR4CASH,"car4cash","🚗 รถแลกเงิน Car4Cash")}
@@ -2851,11 +3306,20 @@ quiz_html = """<main class="wrap quizwrap">
 <div id="q2" class="qbox" style="display:none"></div>
 <div id="quiz-result" class="qbox" style="display:none"></div>
 <button id="quiz-restart" style="display:none">&#8634; เริ่มใหม่</button>
-<p class="quizdisc">เลือกจากข้อมูลที่คุณกรอกในเบราว์เซอร์เท่านั้น · ไม่การันตีการอนุมัติหรืออัตราดอกเบี้ย เงื่อนไขเป็นไปตามผู้ให้บริการ · <b>ข้อมูลไม่ถูกบันทึกหรือส่งออก</b> · หน้านี้มีลิงก์พันธมิตร (affiliate) เราอาจได้รับค่าตอบแทนเมื่อสมัครผ่านลิงก์ โดยไม่มีค่าใช้จ่ายเพิ่มกับคุณ · <a href="/disclaimer.html">นโยบาย</a></p>
+<p class="quizdisc">เลือกจากข้อมูลที่คุณกรอกในเบราว์เซอร์เท่านั้น · ไม่การันตีการอนุมัติหรืออัตราดอกเบี้ย เงื่อนไขเป็นไปตามผู้ให้บริการ · <b>ข้อมูลไม่ถูกบันทึกหรือส่งออก</b> · ผลลัพธ์พาไปยังคู่มือภายในก่อนเสมอ บางคู่มือมีลิงก์พันธมิตรและระบุการเปิดเผยไว้ชัดเจน · <a href="/disclaimer.html">นโยบาย</a></p>
 </main>"""
+quiz_html = quiz_html.replace(
+    "\u0e41\u0e25\u0e49\u0e27\u0e44\u0e14\u0e49\u0e15\u0e31\u0e27\u0e40\u0e1b\u0e23\u0e35\u0e22\u0e1a\u0e40\u0e17\u0e35\u0e22\u0e1a\u0e17\u0e35\u0e48\u0e40\u0e2b\u0e21\u0e32\u0e30\u0e01\u0e31\u0e1a\u0e2a\u0e16\u0e32\u0e19\u0e01\u0e32\u0e23\u0e13\u0e4c\u0e04\u0e38\u0e13",
+    "\u0e41\u0e25\u0e49\u0e27\u0e44\u0e14\u0e49\u0e04\u0e33\u0e41\u0e19\u0e30\u0e19\u0e33\u0e41\u0e25\u0e30\u0e17\u0e32\u0e07\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e17\u0e35\u0e48\u0e15\u0e23\u0e07\u0e01\u0e31\u0e1a\u0e2a\u0e16\u0e32\u0e19\u0e01\u0e32\u0e23\u0e13\u0e4c\u0e04\u0e38\u0e13")
+quiz_html = quiz_html.replace(
+    "\u0e40\u0e23\u0e32\u0e08\u0e31\u0e14\u0e2d\u0e31\u0e19\u0e14\u0e31\u0e1a\u0e15\u0e32\u0e21",
+    "\u0e40\u0e23\u0e32\u0e40\u0e23\u0e35\u0e22\u0e07\u0e04\u0e33\u0e41\u0e19\u0e30\u0e19\u0e33\u0e15\u0e32\u0e21")
 quiz_js = """<script>
 (function(){
-var AFF={krungsri:"https://atth.me/00dayn002a0x",srisawad:"https://atth.me/00c27p002a0x",carforcash:"https://atth.me/00eq00002a0x",happycash:"https://atth.me/00eeae002a0x",refinance:"https://atth.me/00eeac002a0x",ktcproud:"https://atth.me/002114002a0x",kept:"https://atth.me/00d9uk002a0x"};
+/* Runtime recommendations are guide-first. Direct affiliate destinations are
+   forbidden here until an explicit provider+content+tracker placement contract
+   exists; reviewed article pages own the eventual merchant CTA. */
+var AFF={krungsri:"/credit-card-easy-approval-2026",srisawad:"/title-loan-2026",carforcash:"/car-for-cash-2026",happycash:"/debt-consolidation-2026",refinance:"/refinance-home-2026",ktcproud:"/personal-loan-2026",kept:"/kept-savings-2026"};
 function aff(p,pg){return AFF[p]+"?utm_source=quiz&utm_medium=quiz&utm_campaign="+p+"&utm_content=quiz_"+pg+"_"+p;}
 var CH=((new URLSearchParams(location.search).get("utm_source"))||"quiz").replace(/[^a-z0-9]/gi,"").toLowerCase().slice(0,20)||"quiz";
 var started=false;
@@ -2871,8 +3335,8 @@ var R={
 "card|rejected":{reason:"เคยไม่ผ่านไม่ได้แปลว่าหมดสิทธิ์ — เช็กเครดิตบูโร ลดภาระหนี้เดิม แล้วเลือกใบเกณฑ์ไม่สูง ยื่นใหม่",opt:[{p:"krungsri",pg:"rejected",l:"เตรียมยื่นใหม่ — บัตร Krungsri"}],read:[["krungsri-credit-card-rejected-2026.html","7 สาเหตุไม่ผ่าน + วิธีแก้"],["credit-card-documents-2026.html","เตรียมเอกสารให้ครบ"]]},
 "card|install":{reason:"อยากผ่อน 0% — ใช้บัตรที่มีโปรผ่อน 0% และจ่ายให้ตรงทุกงวด (ขาดงวดอาจคิดดอกย้อนหลัง)",opt:[{p:"krungsri",pg:"install0",l:"บัตร Krungsri (มีโปรผ่อน 0%)"}],read:[["credit-card-installment-0-2026.html","ผ่อน 0% ใช้ยังไงให้คุ้ม"]]},
 "urgent|car":{reason:"มีรถปลอดภาระ = จำนำทะเบียนได้วงเงินตามสภาพรถ ยังใช้รถได้ — เทียบดอก + ค่าธรรมเนียมหลายเจ้าก่อนเซ็น",opt:[{p:"srisawad",pg:"title-loan",l:"จำนำทะเบียนรถ ศรีสวัสดิ์"},{p:"carforcash",pg:"title-loan",l:"รถแลกเงิน Car4Cash (เทียบอีกเจ้า)"}],read:[["title-loan-2026.html","สินเชื่อทะเบียนรถ"],["car-for-cash-2026.html","รถแลกเงิน vs จำนำทะเบียน"]]},
-"urgent|debts":{reason:"หนี้หลายก้อน = รวมหนี้ก้อนเดียวจัดการง่ายขึ้น (บางเคสดอกลดตามโปรไฟล์) หรือใช้สินเชื่อบุคคลปิดยอด — เทียบก่อนตัดสินใจ",opt:[{p:"happycash",pg:"debt",l:"รวมหนี้ก้อนเดียว HappyCash"},{p:"ktcproud",pg:"personalloan",l:"สินเชื่อบุคคล KTC PROUD (เทียบ)"}],read:[["debt-consolidation-2026.html","รวมหนี้ลดดอก"],["personal-loan-2026.html","สินเชื่อส่วนบุคคล"]]},
-"urgent|nocol":{reason:"ไม่มีหลักประกัน = สินเชื่อส่วนบุคคลแบบไม่ต้องค้ำ วงเงินก้อนผ่อนรายเดือน พิจารณาตามรายได้/ภาระหนี้",opt:[{p:"ktcproud",pg:"personalloan",l:"สินเชื่อส่วนบุคคล KTC PROUD"}],read:[["personal-loan-2026.html","สินเชื่อส่วนบุคคล ไม่ต้องค้ำ"]]},
+"urgent|debts":{reason:"หนี้หลายก้อนควรเริ่มจากเทียบทางเลือกที่ออกแบบมาเพื่อรวมหนี้และดูต้นทุนรวม ไม่ใช้บัตรกดเงินสดวงเงินหมุนเวียนแทนสินเชื่อรวมหนี้โดยอัตโนมัติ",opt:[{p:"happycash",pg:"debt",l:"ดูทางเลือกรวมหนี้ก้อนเดียว HappyCash"}],read:[["debt-consolidation-2026.html","รวมหนี้ลดดอก"],["personal-loan-2026.html","สินเชื่อส่วนบุคคล"]]},
+"urgent|nocol":{reason:"ไม่มีหลักประกันและต้องการวงเงินสำรอง = บัตรกดเงินสดวงเงินหมุนเวียน คิดดอกเมื่อใช้ และชำระเต็มหรือขั้นต่ำตามเงื่อนไข ควรเทียบกับสินเชื่อเงินก้อนก่อนเลือก",opt:[{p:"ktcproud",pg:"personalloan",l:"บัตรกดเงินสด KTC PROUD"}],read:[["personal-loan-2026.html","สินเชื่อไม่มีหลักประกัน: แยกเงินก้อนกับวงเงินหมุนเวียน"]]},
 "save|hi":{reason:"อยากได้ดอกสูงกว่าบัญชีออมทรัพย์ทั่วไป + สมัครฟรี ไม่เช็กเครดิต — เหมาะพักเงินสำรอง",opt:[{p:"kept",pg:"savings",l:"ออมเงินดอกสูง Kept by Krungsri"}],read:[["kept-savings-2026.html","Kept คุ้มไหม"],["high-yield-savings-2026.html","บัญชีออมดอกสูง (เทียบ)"]]},
 "save|home":{reason:"ผ่อนบ้านมาเกิน 3 ปีมักรีไฟแนนซ์เพื่อลดดอก/ลดงวดได้ — เทียบข้อเสนอหลายธนาคารก่อนตัดสินใจ",opt:[{p:"refinance",pg:"refinance",l:"รีไฟแนนซ์บ้าน ลดดอกเบี้ย"}],read:[["refinance-home-2026.html","รีไฟแนนซ์บ้าน คุ้มไหม"]]}
 };
@@ -2883,15 +3347,66 @@ var st={q1:null};
 function showQ1(){el('q2').style.display='none';el('quiz-result').style.display='none';el('quiz-restart').style.display='none';el('q1').innerHTML='<h2>1. ตอนนี้คุณกำลังมองหาอะไร?</h2>'+btns(Q1,'data-q1');}
 function showQ2(k){if(!started){started=true;gev("quiz_start",{quiz_channel:CH});}st.q1=k;var b=el('q2');b.style.display='block';b.innerHTML='<h2>2. ข้อไหนตรงกับคุณที่สุด?</h2>'+btns(Q2[k],'data-q2');b.scrollIntoView({behavior:'smooth',block:'center'});}
 function qlabel(arr,k){for(var i=0;i<(arr||[]).length;i++){if(arr[i].k===k)return arr[i].t;}return "";}
-function rcard(o,hero,pline){var rc=(window.__RECO||{})[o.p]||{};var ins=(o.pg||'').indexOf('insurance')===0;var url=o.url||aff(o.p,o.pg);var h='<div class="rcard'+(hero?' hero':'')+'">';if(hero)h+='<div class="rbadge">⭐ เหมาะกับคุณที่สุด</div>';if(hero&&pline)h+='<div class="rpline">'+pline+'</div>';h+='<div class="rname">'+o.l+'</div>';if(rc.fit)h+='<div class="rfit">เหมาะกับคุณเพราะ: '+rc.fit+'</div>';h+='<a class="go" rel="sponsored noopener nofollow" target="_blank" data-provider="'+o.p+'" href="'+url+'">ดูเงื่อนไขล่าสุด + สมัครที่ผู้ให้บริการ →</a>';if(hero)h+='<div class="rexp">คลิกแล้วไปหน้าผู้ให้บริการโดยตรง · กรอกข้อมูลออนไลน์ ~5-10 นาที · เช็กเงื่อนไขให้ครบก่อนยืนยัน</div>';if(hero&&rc.why)h+='<div class="rwhy"><b>ทำไมแนะนำตัวนี้</b><br>'+rc.why+'</div>';if(rc.watch)h+='<div class="rwatch"><b>สิ่งที่ต้องดู:</b> '+rc.watch+'</div>';if(hero&&!ins)h+='<div class="rprep"><b>เตรียมก่อนสมัคร:</b> บัตรประชาชน · สลิป/รายการเดินบัญชีเงินเดือน · เบอร์ที่ทำงานติดต่อได้</div>';h+='<div class="rtrust">'+(ins?'🛡️ บริษัทได้รับอนุญาตจาก คปภ. · ไม่การันตีการอนุมัติ/ผลตอบแทน — ':'')+'เช็กเงื่อนไข/ดอกล่าสุดที่หน้าผู้ให้บริการก่อนตัดสินใจ · มีลิงก์พันธมิตร</div></div>';return h;}
-function showRes(a,bk){var r=R[a+'|'+bk];if(!r)return;gev("quiz_complete",{quiz_path:a+"_"+bk,quiz_channel:CH});var top=r.opt[0]||{};gev("recommendation_view",{quiz_path:a+"_"+bk,top_provider:(top.p||""),n_options:r.opt.length,quiz_channel:CH});var n=r.opt.length;var proof=(n>1?'เทียบ '+n+' ตัวเลือกให้แล้ว':'คัดตัวเลือกที่เหมาะกับคุณให้แล้ว')+' · อัปเดต '+(window.__ASOF||'')+' · หัวข้อนี้คนถามบ่อยในพันทิป';var s2=qlabel(Q2[a],bk);var pline='จากที่คุณเลือก: '+qlabel(Q1,a)+(s2?' · '+s2:'');var h='<div class="rbanner">เราจัดอันดับตาม<b>ความเหมาะกับคุณ</b> ไม่ใช่ค่าคอมมิชชัน · มีลิงก์พันธมิตร · ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำเฉพาะบุคคล</div><div class="rproof">✓ '+proof+'</div><h2>🎯 ตัวเลือกที่เหมาะกับคุณ</h2><div class="rreason">'+r.reason+'</div>';h+=rcard(r.opt[0],true,pline);if(n>1){h+='<p class="ralt">ทางเลือกอื่นที่เทียบได้:</p>';for(var i=1;i<n&&i<3;i++){h+=rcard(r.opt[i],false,null);}}if(r.read&&r.read.length){h+='<p class="rread">อ่านให้ลึกก่อนตัดสินใจ (เพิ่มความมั่นใจ):</p><div class="rreadlinks">'+r.read.map(function(x){return '<a href="/'+x[0]+'">'+x[1]+'</a>';}).join('')+'</div>';}h+='<a class="rmore" href="/links">▸ ดูตัวเลือกอื่นทั้งหมดในหน้า ลิงก์รวม</a>';h+='<a class="rmore" style="border-style:solid" href="/links?utm_source=quiz&utm_medium=result&utm_campaign=guide59#buy">📘 อยากปลดหนี้เป็นระบบ? คู่มือ + Worksheet 59฿ — คู่มือของเราเอง</a>';h+='<div class="rasof">📌 อัปเดตล่าสุด '+(window.__ASOF||'')+' · <b>เราไม่ขายฝัน</b> — ไม่การันตีอนุมัติ/ดอก/เคลม เงื่อนไขเป็นไปตามผู้ให้บริการ</div>';var surl=top.url||aff(top.p,top.pg);h+='<div class="qsticky"><a class="go" rel="sponsored noopener nofollow" target="_blank" data-provider="'+(top.p||'')+'" href="'+surl+'">ดูเงื่อนไข + สมัคร →</a></div>';var rr=el('quiz-result');rr.innerHTML=h;rr.style.display='block';el('quiz-restart').style.display='inline-block';rr.scrollIntoView({behavior:'smooth',block:'start'});}
+function rcard(o,hero,pline){var rc=(window.__RECO||{})[o.p]||{};var url=o.url||aff(o.p,o.pg);var h='<div class="rcard'+(hero?' hero':'')+'">';if(hero)h+='<div class="rbadge">⭐ เหมาะกับคำตอบของคุณ</div>';if(hero&&pline)h+='<div class="rpline">'+pline+'</div>';h+='<div class="rname">'+o.l+'</div>';if(rc.fit)h+='<div class="rfit">สอดคล้องกับคำตอบเพราะ: '+rc.fit+'</div>';h+='<a class="go" href="'+url+'">อ่านเกณฑ์และเปรียบเทียบก่อนตัดสินใจ →</a>';if(hero)h+='<div class="rexp">เปิดคู่มือภายในที่ผ่านการตรวจบริบทก่อนเข้าสู่หน้าผู้ให้บริการ</div>';if(hero&&rc.why)h+='<div class="rwhy"><b>เหตุผลที่ระบบจับคู่</b><br>'+rc.why+'</div>';if(rc.watch)h+='<div class="rwatch"><b>สิ่งที่ต้องดู:</b> '+rc.watch+'</div>';h+='<div class="rtrust">ข้อมูลเพื่อเตรียมตัดสินใจ · ปุ่มนี้ไม่มีลิงก์พันธมิตรโดยตรง</div></div>';return h;}
+function showRes(a,bk){
+  var r=R[a+'|'+bk];if(!r)return;
+  gev("quiz_complete",{quiz_path:a+"_"+bk,quiz_channel:CH});
+  var top=r.opt[0]||{},n=r.opt.length;
+  gev("recommendation_view",{quiz_path:a+"_"+bk,top_provider:(top.p||""),n_options:n,quiz_channel:CH});
+  var proof=(n>1?'แสดง '+n+' ตัวเลือกจากกติกาการจับคู่':'แสดงตัวเลือกจากกติกาการจับคู่')+' · ตรวจเงื่อนไขจริงกับผู้ให้บริการก่อนสมัคร';
+  var s2=qlabel(Q2[a],bk),pline='จากที่คุณเลือก: '+qlabel(Q1,a)+(s2?' · '+s2:'');
+  var h='<div class="rbanner">คำแนะนำเรียงตาม<b>ความเหมาะกับคำตอบของคุณ</b> · ผลลัพธ์พาไปคู่มือภายในก่อน ไม่มีลิงก์พันธมิตรโดยตรง · ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำเฉพาะบุคคล</div><div class="rproof">✓ '+proof+'</div><h2>🎯 ตัวเลือกที่เหมาะกับคุณ</h2><div class="rreason">'+r.reason+'</div>';
+  h+=rcard(r.opt[0],true,pline);
+  if(n>1){h+='<p class="ralt">ทางเลือกอื่นที่เทียบได้:</p>';for(var i=1;i<n&&i<3;i++){h+=rcard(r.opt[i],false,null);}}
+  if(r.read&&r.read.length){h+='<p class="rread">อ่านให้ลึกก่อนตัดสินใจ (เพิ่มความมั่นใจ):</p><div class="rreadlinks">'+r.read.map(function(x){return '<a href="/'+x[0]+'">'+x[1]+'</a>';}).join('')+'</div>';}
+  h+='<a class="rmore" href="/links">▸ ดูตัวเลือกอื่นทั้งหมดในหน้า ลิงก์รวม</a>';
+  h+='<a class="rmore" style="border-style:solid" href="/links?utm_source=quiz&utm_medium=result&utm_campaign=guide59#buy">📘 อยากปลดหนี้เป็นระบบ? คู่มือ + Worksheet 59฿ — คู่มือของเราเอง</a>';
+  h+='<div class="rasof">📌 วัน build ไม่ใช่วันตรวจเงื่อนไข · <b>ระบบไม่การันตีผล</b> — โปรดเช็กดอก ค่าธรรมเนียม การอนุมัติ และความคุ้มครองที่ต้นทาง</div>';
+  var surl=top.url||aff(top.p,top.pg);
+  h+='<div class="qsticky"><a class="go" href="'+surl+'">อ่านเกณฑ์ก่อนตัดสินใจ →</a></div>';
+  var rr=el('quiz-result');rr.innerHTML=h;rr.style.display='block';el('quiz-restart').style.display='inline-block';rr.scrollIntoView({behavior:'smooth',block:'start'});
+}
 document.addEventListener('click',function(e){var b=e.target.closest?e.target.closest('button'):null;if(!b)return;if(b.hasAttribute('data-q1'))showQ2(b.getAttribute('data-q1'));else if(b.hasAttribute('data-q2'))showRes(st.q1,b.getAttribute('data-q2'));else if(b.id==='quiz-restart'){st.q1=null;showQ1();el('q1').scrollIntoView({behavior:'smooth',block:'center'});}});
 showQ1();
 })();
 </script>"""
+if not promotion_authorized("ebook-59"):
+    quiz_js = quiz_js.replace(
+        "  h+='<a class=\"rmore\" style=\"border-style:solid\" href=\"/links?utm_source=quiz&utm_medium=result&utm_campaign=guide59#buy\">📘 อยากปลดหนี้เป็นระบบ? คู่มือ + Worksheet 59฿ — คู่มือของเราเอง</a>';\n",
+        "")
+quiz_js = quiz_js.replace(
+    "\u0e40\u0e23\u0e32\u0e08\u0e31\u0e14\u0e2d\u0e31\u0e19\u0e14\u0e31\u0e1a\u0e15\u0e32\u0e21\u0e04\u0e27\u0e32\u0e21\u0e40\u0e2b\u0e21\u0e32\u0e30\u0e01\u0e31\u0e1a\u0e04\u0e38\u0e13 \u0e44\u0e21\u0e48\u0e43\u0e0a\u0e48\u0e04\u0e48\u0e32\u0e04\u0e2d\u0e21\u0e21\u0e34\u0e0a\u0e0a\u0e31\u0e19",
+    "\u0e04\u0e33\u0e41\u0e19\u0e30\u0e19\u0e33\u0e2d\u0e34\u0e07\u0e08\u0e32\u0e01\u0e04\u0e33\u0e15\u0e2d\u0e1a\u0e02\u0e2d\u0e07\u0e04\u0e38\u0e13 \u0e44\u0e21\u0e48\u0e43\u0e0a\u0e48\u0e04\u0e48\u0e32\u0e04\u0e2d\u0e21\u0e21\u0e34\u0e0a\u0e0a\u0e31\u0e19")
 quiz_ld=[{"@context":"https://schema.org","@type":"WebPage","name":SITE+" — Quiz เลือกบัตร/สินเชื่อ/ออม","url":BASE+"/quiz","inLanguage":"th"}]
-open(f"{OUT}/quiz.html","w",encoding="utf-8").write(head("Quiz: บัตร/สินเชื่อ/ออม ตัวไหนเหมาะกับคุณ — "+SITE,"ตอบ 2 คำถาม ~30 วิ จับคู่บัตรเครดิต/สินเชื่อ/บัญชีออมที่เหมาะกับคุณ · ข้อมูลไม่ถูกบันทึก ไม่มี PII","quiz",quiz_ld,"website")+quiz_style+quiz_html+("<script>window.__QUIZ_INS="+json.dumps([{"type":o["type"],"provider":_pcode(o["provider"]),"label":o["label"],"u":o["url"]} for o in INSURANCE],ensure_ascii=False)+";window.__RECO="+json.dumps(RECO_MAP,ensure_ascii=False)+";window.__ASOF="+json.dumps(th_monthyear(BUILD_DATE),ensure_ascii=False)+"</script>")+quiz_js+FOOTER)
+quiz_insurance_guides = {
+    "travel": "/travel-insurance-vacation-2026",
+    "car": "/car-insurance-2026",
+    "ci": "/critical-illness-insurance-2026",
+}
+open(f"{OUT}/quiz.html","w",encoding="utf-8").write(head("Quiz: บัตร/สินเชื่อ/ออม ตัวไหนเหมาะกับคุณ — "+SITE,"ตอบ 2 คำถาม ~30 วิ จับคู่บัตรเครดิต/สินเชื่อ/บัญชีออมที่เหมาะกับคุณ · ข้อมูลไม่ถูกบันทึก ไม่มี PII","quiz",quiz_ld,"website")+quiz_style+quiz_html+("<script>window.__QUIZ_INS="+json.dumps([{"type":o["type"],"provider":_pcode(o["provider"]),"label":o["label"],"u":quiz_insurance_guides.get(o["type"], "/insurance-compare-2026")} for o in INSURANCE],ensure_ascii=False)+";window.__RECO="+json.dumps(RECO_MAP,ensure_ascii=False)+"</script>")+quiz_js+FOOTER)
 print("quiz.html written")
+
+# PUBLIC IDENTITY FINAL PASS: every public HTML page names the page as its sole
+# author/site identity. Standalone tools and infographics enter the build through
+# several copy paths, so one final pass is safer than relying on every producer.
+# Google verification files are protocol payloads, not public content pages.
+_identity_author_meta = f'<meta name="author" content="{SITE}">'
+_identity_site_meta = f'<meta property="og:site_name" content="{SITE}">'
+for _fn in sorted(os.listdir(OUT)):
+    if not _fn.endswith(".html") or _fn.startswith("google"):
+        continue
+    _p = os.path.join(OUT, _fn)
+    _h = open(_p, encoding="utf-8").read()
+    if "</head>" not in _h:
+        continue
+    _identity_meta = ""
+    if not re.search(r'<meta\s+[^>]*name=["\']author["\']', _h, re.I):
+        _identity_meta += _identity_author_meta
+    if not re.search(r'<meta\s+[^>]*property=["\']og:site_name["\']', _h, re.I):
+        _identity_meta += _identity_site_meta
+    if _identity_meta:
+        open(_p, "w", encoding="utf-8").write(
+            _h.replace("</head>", _identity_meta + "</head>", 1))
 
 # ---- URL-CONSISTENCY final pass (must run AFTER every page write) ----
 # URL-CONSISTENCY: normalize INTERNAL hrefs to extensionless canonical across every built page
@@ -2909,6 +3424,9 @@ for _fn in sorted(os.listdir(OUT)):
 # URL-CONSISTENCY: every page 301s its .html twin -> extensionless canonical (google-verify excluded).
 _rl = "".join(f"/go/{k}  {v}  301!\n" for k,v in _GO.items())
 _rl += "/index.html  /  301!" + chr(10)
+for _legacy_slug, _canonical_slug in sorted(_CANONICAL_ALIASES.items()):
+    _rl += f"/{_legacy_slug}  /{_canonical_slug}  301!" + chr(10)
+    _rl += f"/{_legacy_slug}.html  /{_canonical_slug}  301!" + chr(10)
 for _fn in sorted(os.listdir(OUT)):
     if _fn.endswith(".html") and _fn != "index.html" and not _fn.startswith("google"):
         _rl += f"/{_fn}  /{_fn[:-5]}  301!" + chr(10)
@@ -2920,5 +3438,17 @@ _rl += "/workshop-hr    /workshop-hr.html    200" + chr(10)
 _rl += "/debt-letter-kit    /debt-letter-kit.html    200" + chr(10)
 open(f"{OUT}/_redirects","w",encoding="utf-8").write(_rl)
 # CORS สำหรับ /reels/*: asset สาธารณะสำหรับ API/automation (IG Graph ดึงได้อยู่แล้ว; เปิดให้ browser fetch ได้ด้วย)
-open(f"{OUT}/_headers","w",encoding="utf-8").write("/reels/*" + chr(10) + "  Access-Control-Allow-Origin: *" + chr(10))
+_headers = ("/*\n"
+            "  Strict-Transport-Security: max-age=31536000; includeSubDomains\n"
+            "  X-Content-Type-Options: nosniff\n"
+            "  Referrer-Policy: strict-origin-when-cross-origin\n"
+            "  X-Frame-Options: DENY\n"
+            "  Permissions-Policy: camera=(), microphone=(), geolocation=()\n"
+            "/reels/*\n"
+            "  Access-Control-Allow-Origin: *\n")
+open(f"{OUT}/_headers","w",encoding="utf-8").write(_headers)
+# The source gate above covers canonical root inputs and future content libraries.
+# Scan final generated HTML too so dynamic quiz/recommendation copy and build-time
+# transformations cannot create an unreviewed or out-of-window promotional claim.
+gate_merchant_offers(OUT)
 print("url-consistency: hrefs normalized + per-page 301s written")

@@ -1,55 +1,19 @@
-# FB Page daily feed post — 15:00 Asia/Bangkok (08:00 UTC) · order 2026-07-11
-# Channel-isolated จาก ig-reels/tiktok · dormant (soft-skip) จนกว่ามี secrets FB_PAGE_ID + FB_PAGE_TOKEN
-name: fb-feed
+# RETIRED 2026-08-16: Facebook is manual-only in policy.json.
+# Historical publisher scripts remain for audit, but this workflow cannot publish or push.
+name: fb-feed-retired
 on:
-  schedule:
-    - cron: "0 8 * * *"
-  workflow_dispatch:
-    inputs:
-      date:
-        description: "Override date YYYY-MM-DD"
-        required: false
-        default: ""
-      dry_run:
-        description: "true = validate only"
-        required: false
-        default: "true"
+  workflow_dispatch: {}
 
 concurrency:
   group: fb-feed
   cancel-in-progress: false
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  post:
+  retired:
+    if: ${{ false }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - name: Post today's FB feed entry
-        env:
-          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
-          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
-          OVERRIDE_DATE: ${{ github.event.inputs.date }}
-          DRY_RUN: ${{ (github.event_name == 'schedule' || github.event.inputs.dry_run == 'false') && '0' || '1' }}
-        run: python social-autopost/publish_fb.py
-      # standing order (16 ก.ค.): พอเจ้าของใส่ FB token = ตั้งเวลา batch2 21-26 เองในรอบถัดไป ไม่ต้องสั่ง
-      # dup-guard 3 ชั้นในสคริปต์ (day-20 hard-excluded, manifest posted, GET scheduled_posts) + past-date GAP skip
-      - name: Auto-schedule batch2 videos 21-26 when token present
-        if: always()
-        env:
-          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
-          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
-          DRY_RUN: ${{ secrets.FB_PAGE_TOKEN != '' && '0' || '1' }}
-        run: python social-autopost/schedule_fb_batch2.py
-      - name: Commit log (Netlify ignore-rule skips automation-log/.system_control)
-        if: always()
-        run: |
-          git config user.name "fb-feed-bot"
-          git config user.email "actions@github.com"
-          git add automation-log/fb-feed automation-log/cowork-inbox/FB-PUBLISH-FAIL.md automation-log/cowork-inbox/FB-PUBLISH-SKIP.md .system_control/content_manifest.json 2>/dev/null || true
-          git diff --cached --quiet || (git commit -m "chore(fb-feed): log $(date -u +%F)" && git pull --rebase && git push)
+      - run: echo "Retired — Facebook publishing is manual-only"

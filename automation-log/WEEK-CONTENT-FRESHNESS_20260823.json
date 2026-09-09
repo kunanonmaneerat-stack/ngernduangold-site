@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "receipt_id": "week-content-freshness-20260823-r1",
+  "checked_at": "2026-08-23T20:14:30+07:00",
+  "pack": {
+    "path": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+    "pack_id": "week-content-20260824-30-r5",
+    "state": "DRAFT_ONLY",
+    "sha256": "0ACD60E0D44F689841C8AAF2C7AF1ADAADA6A5E03CCCAF87C3B626BE84A21A28"
+  },
+  "scope": {
+    "classification": "EVERGREEN_BEHAVIORAL_EXACT_COPY",
+    "official_source_ids": [],
+    "source_rule": "NOT_REQUIRED_ONLY_WHILE_EXACT_COPY_HASH_MATCHES",
+    "scan_version": "week-evergreen-risk-v1",
+    "valid_through": "2026-08-30T23:59:59+07:00"
+  },
+  "candidates": [
+    {
+      "date": "2026-08-24",
+      "candidate_id": "wk36-sf01",
+      "source_ids": [],
+      "source_review_recorded": "NOT_REQUIRED_IF_TEXT_REMAINS_EXACT",
+      "source_decision": "NOT_REQUIRED_ONLY_WHILE_EXACT_COPY_HASH_MATCHES",
+      "public_copy_sha256": "3FFEF01E0ABF4625FFB36B32EC01B1167FF3DB46E473CF4B1222597857FF8B6D",
+      "semantic_payload_sha256": "9EAF923F7DC4AFD0ACD43C08F1A2CEFC04F5E14EC0D43A11B35607D11344F650",
+      "high_risk_findings": []
+    },
+    {
+      "date": "2026-08-25",
+      "candidate_id": "wk36-sf02",
+      "source_ids": [],
+      "source_review_recorded": "NOT_REQUIRED_IF_TEXT_REMAINS_EXACT",
+      "source_decision": "NOT_REQUIRED_ONLY_WHILE_EXACT_COPY_HASH_MATCHES",
+      "public_copy_sha256": "4DE2C3E5E588FE05F17876A9E881F4B5D98780AC8F52260B40F7AEF6204612F7",
+      "semantic_payload_sha256": "9D6EF29BD8C1641E43AFB59D2715F32FF497B873B96F160E37252D0B9491CC8A",
+      "high_risk_findings": []
+    },
+    {
+      "date": "2026-08-26",
+      "candidate_id": "qt-12",
+      "source_ids": [],
+      "source_review_recorded": "NOT_REQUIRED",
+      "source_decision": "NOT_REQUIRED_ONLY_WHILE_EXACT_COPY_HASH_MATCHES",
+      "public_copy_sha256": "8ADC7724293B5B5132113451274531A633F575F3853C7662DEE608755283A47A",
+      "semantic_payload_sha256": "657BD35E6EE05E573C15E6A82A35E0CCB4798FB6F2D4EB021F2F8057FA59BD47",
+      "high_risk_findings": []
+    },
+    {
+      "date": "2026-08-27",
+      "candidate_id": "wk36-sf03",
+      "source_ids": [],
+      "source_review_recorded": "NOT_REQUIRED_IF_TEXT_REMAINS_EXACT",
+      "source_decision": "NOT_REQUIRED_ONLY_WHILE_EXACT_COPY_HASH_MATCHES",
+      "public_copy_sha256": "543247F1D2946B48CBDD9AE77CE910D7815EDFB375E50CAAA7761B02CCBD52EC",
+      "semantic_payload_sha256": "37C561E8D9A265DC69ADEADC79D450ECF1ED49E47CB20C26AA152B6649D0C5D0",
+      "high_risk_findings": []
+    },
+    {
+      "date": "2026-08-28",
+      "candidate_id": "wk36-sf04",
+      "source_ids": [],
+      "source_review_recorded": "NOT_REQUIRED_IF_TEXT_REMAINS_EXACT",
+      "source_decision": "NOT_REQUIRED_ONLY_WHILE_EXACT_COPY_HASH_MATCHES",
+      "public_copy_sha256": "4072B13C72F6B8C4B8C85A3B4420A42E130574FBB59D1F67E1A0B19111685EE7",
+      "semantic_payload_sha256": "D20E0D94C5ADC804E5830B99CC1A3EC17BFC6CF9A9A932D14CF20B4CD898A0B5",
+      "high_risk_findings": []
+    },
+    {
+      "date": "2026-08-29",
+      "candidate_id": "qt-13",
+      "source_ids": [],
+      "source_review_recorded": "NOT_REQUIRED",
+      "source_decision": "NOT_REQUIRED_ONLY_WHILE_EXACT_COPY_HASH_MATCHES",
+      "public_copy_sha256": "367D50792B6DE34F8EE7066DDF48715C710D1F090E29EDCC80FD5116F57B198A",
+      "semantic_payload_sha256": "94ABA7851E0FF7C95ABCF5CF3AB6D0F37D824A34B190F627A734BF7AD71D665C",
+      "high_risk_findings": []
+    },
+    {
+      "date": "2026-08-30",
+      "candidate_id": "wk36-sf05",
+      "source_ids": [],
+      "source_review_recorded": "NOT_REQUIRED_IF_TEXT_REMAINS_EXACT",
+      "source_decision": "NOT_REQUIRED_ONLY_WHILE_EXACT_COPY_HASH_MATCHES",
+      "public_copy_sha256": "D2EDCDC8DE03E4ABCB39C01B7AA5ED7F973147B158DFDFDFFE57BFB2B274B42D",
+      "semantic_payload_sha256": "999C88B5D56A0073D61B5632BA328D72AF06BC7CED34A8F73FF776EEF5B56A40",
+      "high_risk_findings": []
+    }
+  ],
+  "binding_check": {
+    "content_calendar_sha256": {
+      "recorded_sha256": "855977B20C18CE027AC3CA469446FC35DBDA58775C7313DAF560643EEA6D7E53",
+      "observed_sha256": "855977B20C18CE027AC3CA469446FC35DBDA58775C7313DAF560643EEA6D7E53",
+      "match": true
+    },
+    "policy_sha256": {
+      "recorded_sha256": "BAFEA518C3FEFBA956987BF81EDE0DA146E1309F495554FE2F2A3CD35FD4814B",
+      "observed_sha256": "BAFEA518C3FEFBA956987BF81EDE0DA146E1309F495554FE2F2A3CD35FD4814B",
+      "match": true
+    },
+    "post_ledger_sha256": {
+      "recorded_sha256": "416C768E3F6740C531C0F45F98AE1745B88C23C93D35E404F92708E43BC6909E",
+      "observed_sha256": "416C768E3F6740C531C0F45F98AE1745B88C23C93D35E404F92708E43BC6909E",
+      "match": true
+    },
+    "official_news_snapshot_sha256": {
+      "recorded_sha256": "E27E6D1A9912CC1D11A53F7901C1A7CDB8B590133676D50855CB108EE7525920",
+      "observed_sha256": "BB0A8D76A1460DBED0F42D9595367D6B61EA3A3D8DFB36248882823C362C73B3",
+      "match": false
+    }
+  },
+  "official_news_snapshot": {
+    "pack_recorded_sha256": "E27E6D1A9912CC1D11A53F7901C1A7CDB8B590133676D50855CB108EE7525920",
+    "observed_sha256": "BB0A8D76A1460DBED0F42D9595367D6B61EA3A3D8DFB36248882823C362C73B3",
+    "binding_status": "STALE_NOT_AUTO_REFRESHED",
+    "required_source_ids": [],
+    "checked_at": "2026-08-23T12:17:59+00:00",
+    "summary": {
+      "configured_sources": 31,
+      "successful_sources": 30,
+      "changed_this_run": 13,
+      "current_errors": 1,
+      "pending_owner_reviews": 31,
+      "network_probe": "PARTIAL",
+      "freshness_state": "ERROR"
+    }
+  },
+  "assessment": {
+    "freshness_verdict": "PASS_EVERGREEN_EXACT_COPY",
+    "publication_ready": false,
+    "process_state": "COMPLETED_BLOCKED",
+    "authoring_findings": [],
+    "blockers": [
+      "stale_global_official_news_binding_not_refreshed",
+      "receipt_is_authoring_evidence_not_publication_authority",
+      "pack_remains_draft_only_with_existing_global_blockers"
+    ]
+  },
+  "external_actions": {
+    "posts": 0,
+    "schedules": 0,
+    "source_acknowledgements": 0,
+    "tracker_clicks": 0,
+    "commits": 0,
+    "pushes": 0,
+    "deploys": 0
+  }
+}

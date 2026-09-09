@@ -10,6 +10,14 @@
       py pipeline/sakana_optimize.py --topn 3 --variants 2
 """
 import os, sys, csv, json, time, urllib.request, urllib.error, datetime
+try:
+    from ga4_schema import affiliate_click
+except ImportError:
+    from pipeline.ga4_schema import affiliate_click
+try:
+    import improvement_loop
+except ImportError:
+    from pipeline import improvement_loop
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -64,31 +72,46 @@ def fugu(key, user, tries=4):
     raise last
 
 
-def main():
-    args = sys.argv[1:]
+def main(argv=None):
+    args = list(sys.argv[1:] if argv is None else argv)
     def opt(n, dv):
         return args[args.index(n) + 1] if n in args else dv
     topn = int(opt("--topn", 3)); variants = int(opt("--variants", 2))
+    try:
+        readiness = improvement_loop.collect_decision_readiness(
+            target_channel="threads"
+        )
+    except Exception as exc:
+        print("[BLOCKED] decision readiness unavailable (%s)" % type(exc).__name__)
+        return 2
+    if (
+        readiness.get("status") != "READY"
+        or readiness.get("growth_ready") is not True
+        or readiness.get("publication_ready") is not True
+        or readiness.get("blockers")
+    ):
+        blockers = readiness.get("blockers")
+        blockers = blockers if isinstance(blockers, list) else ["invalid_readiness_evidence"]
+        print("[BLOCKED] Sakana winner/growth decision: %s" % ", ".join(blockers))
+        return 2
     key = get_key()
     if not key:
-        print("[!] ไม่มี Sakana key (secrets/sakana-key.txt หรือ env SAKANA_API_KEY)"); return
+        print("[!] ไม่มี Sakana key (secrets/sakana-key.txt หรือ env SAKANA_API_KEY)"); return 2
     if not os.path.exists(PAGES):
-        print("[!] ยังไม่มี ga4-pages.csv — รัน ga4_pull.py ก่อน (run_weekly)"); return
+        print("[!] ยังไม่มี ga4-pages.csv — รัน ga4_pull.py ก่อน (run_weekly)"); return 2
 
-    rows = list(csv.DictReader(open(PAGES, encoding="utf-8")))
+    with open(PAGES, encoding="utf-8", newline="") as pages_handle:
+        rows = list(csv.DictReader(pages_handle))
     winners = []
     for r in rows:
         p = (r.get("page") or "").split("?")[0]
-        try:
-            conv = int(float(r.get("conversion", 0) or 0))
-        except Exception:
-            conv = 0
+        conv = affiliate_click(r)
         if conv > 0 and p not in UTILITY and p not in ("/",):
             winners.append((p, conv))
     winners.sort(key=lambda x: -x[1])
     winners = winners[:topn]
     if not winners:
-        print("[i] ยังไม่มีหน้า winner (conversion>0) — รอ traffic/loop เก็บข้อมูลก่อน"); return
+        print("[i] ยังไม่มีหน้า winner (conversion>0) — รอ traffic/loop เก็บข้อมูลก่อน"); return 0
 
     posts = []
     for slug, conv in winners:
@@ -117,10 +140,18 @@ def main():
 
     cfg = {"channel": "threads", "hour_ict": 15, "per_day": 1,
            "note": "Sakana Fugu optimizer — variants ของหน้า winner (double-down). รีวิวก่อน --go",
-           "generated": datetime.datetime.now().isoformat(timespec="seconds"), "posts": posts}
-    json.dump(cfg, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+           "generated": datetime.datetime.now().isoformat(timespec="seconds"),
+           "decision_readiness": {
+               "status": readiness["status"],
+               "target_channel": readiness.get("target_channel"),
+               "checks": readiness.get("checks", {}),
+           },
+           "posts": posts}
+    with open(OUT, "w", encoding="utf-8") as output_handle:
+        json.dump(cfg, output_handle, ensure_ascii=False, indent=2)
     print("เขียน %s | %d โพสต์ จาก %d winner (model=%s)" % (OUT, len(posts), len(winners), MODEL))
     print("ตั้งคิว: py pipeline\\postiz_article_scheduler.py --file pipeline\\article-posts-sakana.json --go")
+    return 0
 
 
 if __name__ == "__main__":
@@ -128,4 +159,4 @@ if __name__ == "__main__":
         sys.stdout.reconfigure(encoding="utf-8")
     except Exception:
         pass
-    main()
+    raise SystemExit(main())

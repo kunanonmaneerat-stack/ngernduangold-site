@@ -1,0 +1,193 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "ตรวจระบบเงินเดือนสมองทอง — 23 สิงหาคม 2026",
+    "description": "รายงานตรวจความพร้อมของระบบ affiliate, publication, measurement และ evidence controls",
+    "generatedAt": "2026-08-23T14:55:31+07:00",
+    "sources": [
+      {
+        "id": "audit_evidence",
+        "label": "Machine-readable audit evidence",
+        "path": "reports/system-audit-20260823-r2/evidence.json"
+      },
+      {
+        "id": "improvement_r6",
+        "label": "Validated improvement-loop bundle r6",
+        "path": ".local-private/runtime/improvement-runs/comprehensive-audit-20260823-r6/run.json"
+      },
+      {
+        "id": "calendar",
+        "label": "Content calendar control",
+        "path": ".system_control/content_calendar.json"
+      },
+      {
+        "id": "source_notes",
+        "label": "Source notes and limitations",
+        "path": "reports/system-audit-20260823-r2/source-notes.md"
+      }
+    ],
+    "charts": [
+      {
+        "id": "maturity_dimensions",
+        "title": "คะแนนความพร้อมตามมิติ",
+        "subtitle": "ได้ 40/100; คะแนนที่ขาดมาจาก revenue, analytics และ publication inputs",
+        "type": "bar",
+        "dataset": "score_dimensions",
+        "sourceId": "improvement_r6",
+        "source": {
+          "id": "improvement_r6",
+          "label": "Validated maturity score dimensions",
+          "path": ".local-private/runtime/improvement-runs/comprehensive-audit-20260823-r6/maturity-scorecard.json",
+          "query": {
+            "engine": "SQLite-compatible inline evidence",
+            "language": "SQL",
+            "description": "Reconstruct the seven validated score dimensions in scorecard order.",
+            "sql": "SELECT 1 AS rank, 'Evidence' AS dimension, 10 AS awarded, 10 AS maximum, 'PASS' AS status UNION ALL SELECT 2, 'Guardrails', 20, 20, 'PASS' UNION ALL SELECT 3, 'Revenue ledger', 0, 15, 'BLOCKED' UNION ALL SELECT 4, 'Analytics', 0, 15, 'BLOCKED' UNION ALL SELECT 5, 'Content sources', 10, 10, 'PASS_FAIL_CLOSED' UNION ALL SELECT 6, 'Publication inputs', 0, 20, 'BLOCKED' UNION ALL SELECT 7, 'Revenue learning', 0, 10, 'BLOCKED' ORDER BY rank",
+            "tables_used": ["artifact_snapshot.score_dimensions"],
+            "metric_definitions": ["awarded = points granted by maturity-scorecard criterion", "maximum = criterion weight", "total awarded = 40 of 100"]
+          }
+        },
+        "encodings": {
+          "x": {
+            "field": "dimension",
+            "type": "nominal",
+            "label": "มิติ"
+          },
+          "y": {
+            "field": "awarded",
+            "type": "quantitative",
+            "label": "คะแนนที่ได้"
+          },
+          "tooltip": [
+            {"field": "maximum", "type": "quantitative", "label": "คะแนนเต็ม"},
+            {"field": "status", "type": "text", "label": "สถานะ"}
+          ]
+        },
+        "layout": "full",
+        "maxRows": 10
+      }
+    ],
+    "tables": [
+      {
+        "id": "workflow_states",
+        "title": "สถานะการปฏิบัติงานปัจจุบัน",
+        "subtitle": "แยก blocker, historical blocked slot และ runner state โดยไม่สรุปเกิน receipt",
+        "dataset": "state_counts",
+        "sourceId": "audit_evidence",
+        "source": {
+          "id": "audit_evidence",
+          "label": "Validated workflow state counts",
+          "path": "reports/system-audit-20260823-r2/evidence.json",
+          "query": {
+            "engine": "SQLite-compatible inline evidence",
+            "language": "SQL",
+            "description": "Reconstruct the mutually labelled current workflow state counts in report order.",
+            "sql": "SELECT 1 AS rank, 'READY_FOR_OWNER_APPROVAL' AS state, 0 AS count, 'No item passed every gate' AS interpretation UNION ALL SELECT 2, 'BLOCKED_NEXT_48H', 7, 'Every row remains PLANNED_BLOCKED' UNION ALL SELECT 3, 'COMPLETED_BLOCKED', 22, 'Historical blocked slots; no backfill' UNION ALL SELECT 4, 'RUNNER_FAILED_PROVEN', 0, 'No receipt proves runner failure' UNION ALL SELECT 5, 'MISSED_ELIGIBLE', 0, 'No eligible slot was missed' UNION ALL SELECT 6, 'SKIP_CONDITIONS', 2, 'Pantip expired; Instagram paused' ORDER BY rank",
+            "tables_used": ["artifact_snapshot.state_counts"],
+            "metric_definitions": ["count = number of records or explicit conditions at the stated state grain"]
+          }
+        },
+        "defaultSort": {"field": "rank", "direction": "asc"},
+        "density": "dense",
+        "layout": "full",
+        "columns": [
+          {"field": "rank", "label": "ลำดับ", "type": "number"},
+          {"field": "state", "label": "สถานะ", "type": "text"},
+          {"field": "count", "label": "จำนวน", "type": "number"},
+          {"field": "interpretation", "label": "คำอธิบาย", "type": "text"}
+        ]
+      }
+    ],
+    "blocks": [
+      {
+        "id": "report_title",
+        "type": "markdown",
+        "body": "# ตรวจระบบเงินเดือนสมองทอง — 23 สิงหาคม 2026",
+        "layout": "full"
+      },
+      {
+        "id": "executive_summary",
+        "type": "markdown",
+        "body": "## Executive Summary\nระบบควบคุมผ่าน validation และไม่พบ regression ใหม่ แต่ยังไม่พร้อมโพสต์หรือเพิ่มสเกล คะแนน 40/100 ระดับ instrumented: guardrails และ content-scoped source enforcement ทำงานแล้ว ขณะที่ GA4, GSC, revenue ledger, official-source acknowledgement, permanent dedup และ live/local parity ยังไม่ผ่าน จึงมี READY_FOR_OWNER_APPROVAL = 0",
+        "layout": "full"
+      },
+      {
+        "id": "score_chart",
+        "type": "chart",
+        "chartId": "maturity_dimensions",
+        "layout": "full",
+        "sourceId": "improvement_r6"
+      },
+      {
+        "id": "state_context",
+        "type": "markdown",
+        "body": "## State Classification\nภายใน 48 ชั่วโมงมี 7 placements และทุกชิ้นยัง PLANNED_BLOCKED; historical blocked slots 22 ไม่ใช่ missed post. Windows daily/weekly tasks อยู่ Ready และ missed=0 แต่ receipt รุ่นใหม่ยังไม่มีรอบหลังเริ่ม instrumentation จึงไม่อ้าง last result 2 ว่าเป็น runner failure",
+        "layout": "full"
+      },
+      {
+        "id": "state_table",
+        "type": "table",
+        "tableId": "workflow_states",
+        "layout": "full",
+        "sourceId": "audit_evidence"
+      },
+      {
+        "id": "verified_findings",
+        "type": "markdown",
+        "body": "## Verified Findings\nLocal build ผ่าน 70/70 pages และ merchant structure 140 placements; media 24 videos + 1 image, privacy และ public identity ผ่าน. Calendar structural finding = 0 แต่ source content allowed = 0/37 และ permanent dedup ครบเพียง 44/125. Production parity ผ่าน 0/72 pages. Paid affiliate revenue เป็น unavailable ไม่ใช่ zero เพราะ coverage stale และ ledger unreconciled",
+        "layout": "full"
+      },
+      {
+        "id": "next_actions",
+        "type": "markdown",
+        "body": "## Prioritized Actions\n1. ยืนยัน GA4 private egress ownership แล้ว repull GA4/GSC แบบ hash-bound\n2. Reconcile AccessTrade ด้วย owner-provided schema-5 export และ transaction IDs\n3. สร้าง owner-controlled source acknowledgement verifier\n4. เติม permanent dedup 81 รายการและปิด duplicate group\n5. ปิด live/local release parity ภายใต้ deploy authority แยกต่างหาก\n6. ขอ owner approval ทีละชิ้นเมื่อทุก gate ผ่านเท่านั้น",
+        "layout": "full"
+      },
+      {
+        "id": "caveats",
+        "type": "markdown",
+        "body": "## Caveats and Fences\nไม่มีการโพสต์ ตั้งเวลา ตอบคอมเมนต์ เปิด tracker สร้าง test traffic acknowledge source ใช้ paid API/LLM deploy commit push หรือแก้ Windows task. Raw HTML drift ถูกส่ง review แบบ conservative จึงอาจมี false-positive; นี่เป็น liveness tradeoff ที่ไม่เปิดทางให้ claim เปลี่ยนแล้วหลุดเป็น current",
+        "layout": "full",
+        "sourceId": "source_notes"
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-08-23T14:55:31+07:00",
+    "status": "blocked",
+    "datasets": {
+      "score_dimensions": [
+        {"rank": 1, "dimension": "Evidence", "awarded": 10, "maximum": 10, "status": "PASS"},
+        {"rank": 2, "dimension": "Guardrails", "awarded": 20, "maximum": 20, "status": "PASS"},
+        {"rank": 3, "dimension": "Revenue ledger", "awarded": 0, "maximum": 15, "status": "BLOCKED"},
+        {"rank": 4, "dimension": "Analytics", "awarded": 0, "maximum": 15, "status": "BLOCKED"},
+        {"rank": 5, "dimension": "Content sources", "awarded": 10, "maximum": 10, "status": "PASS_FAIL_CLOSED"},
+        {"rank": 6, "dimension": "Publication inputs", "awarded": 0, "maximum": 20, "status": "BLOCKED"},
+        {"rank": 7, "dimension": "Revenue learning", "awarded": 0, "maximum": 10, "status": "BLOCKED"}
+      ],
+      "state_counts": [
+        {"rank": 1, "state": "READY_FOR_OWNER_APPROVAL", "count": 0, "interpretation": "ยังไม่มีชิ้นใดผ่านทุก gate"},
+        {"rank": 2, "state": "BLOCKED_NEXT_48H", "count": 7, "interpretation": "ทุกแถวยังคง PLANNED_BLOCKED"},
+        {"rank": 3, "state": "COMPLETED_BLOCKED", "count": 22, "interpretation": "historical blocked slots; ไม่ backfill"},
+        {"rank": 4, "state": "RUNNER_FAILED_PROVEN", "count": 0, "interpretation": "ไม่มี receipt ที่พิสูจน์ runner failure"},
+        {"rank": 5, "state": "MISSED_ELIGIBLE", "count": 0, "interpretation": "ไม่มี eligible slot ที่ถูกพลาด"},
+        {"rank": 6, "state": "SKIP_CONDITIONS", "count": 2, "interpretation": "Pantip monitor expired; Instagram paused"}
+      ]
+    },
+    "accessIssues": [
+      {"id": "ga4_untrusted", "scope": "measurement", "sourceId": "improvement_r6", "message": "GA4 is UNTRUSTED with INVALID_METADATA; observed values cannot drive decisions."},
+      {"id": "gsc_stale", "scope": "measurement", "sourceId": "improvement_r6", "message": "GSC bundle is STALE_WINDOW and must be repulled."},
+      {"id": "revenue_unreconciled", "scope": "revenue", "sourceId": "improvement_r6", "message": "Paid and verified affiliate revenue are unavailable because coverage is stale and unreconciled."},
+      {"id": "official_sources_invalid", "scope": "publication", "sourceId": "calendar", "message": "Official-source snapshot is invalid/pending and no owner-controlled acknowledgement verifier exists."}
+    ]
+  },
+  "sources": [
+    {"id": "audit_evidence", "label": "Machine-readable audit evidence", "path": "reports/system-audit-20260823-r2/evidence.json"},
+    {"id": "improvement_r6", "label": "Validated improvement-loop bundle r6", "path": ".local-private/runtime/improvement-runs/comprehensive-audit-20260823-r6/run.json"},
+    {"id": "calendar", "label": "Content calendar control", "path": ".system_control/content_calendar.json"},
+    {"id": "source_notes", "label": "Source notes and limitations", "path": "reports/system-audit-20260823-r2/source-notes.md"}
+  ]
+}
