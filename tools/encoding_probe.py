@@ -15,6 +15,10 @@ them corruption sends the next reader chasing nothing:
   - cp874/tis-620 bytes that never were UTF-8 (recoverable - do not "fix" by
     re-saving, that destroys the original)
 
+It also catches the failure the U+FFFD check cannot see: Thai encoded out through
+a codepage with no Thai glyphs, which lands as plain '?'. That is valid UTF-8, so
+a replacement-character scan calls the file clean while the sentence is gone.
+
 USAGE
   python tools/encoding_probe.py                     # scan the default set
   python tools/encoding_probe.py <path> [<path>...]  # scan specific files or dirs
@@ -51,6 +55,38 @@ def files_under(target):
                 yield os.path.join(root, n)
 
 
+THAI_LO, THAI_HI = "\u0e00", "\u0e7f"
+MIN_QMARKS = 6
+
+
+def flattened_lines(text):
+    """Lines whose Thai was replaced by literal '?' on the way OUT.
+
+    U+FFFD is what you get when bytes are DECODED wrongly. This is the other
+    direction: Thai ENCODED through a codepage that has no glyph for it comes
+    back as plain '?', which is perfectly valid UTF-8 - so the replacement-char
+    check above reports the file clean while the sentence is already gone.
+
+    Seen for real 9 Sep 2026: a Codex report whose own closing line read
+    "UTF-8 strict decode ok, no U+FFFD" was itself entirely '?'. The check
+    passed and the text it was checking no longer existed.
+
+    Narrow on purpose - only fires on a line with no Thai left, inside a file
+    that is otherwise Thai. Pure English or pure code is never flagged, so
+    regexes, ternaries and query strings stay quiet.
+    """
+    if not any(THAI_LO <= c <= THAI_HI for c in text):
+        return []
+    hits = []
+    for i, line in enumerate(text.splitlines(), 1):
+        if line.count("?") < MIN_QMARKS:
+            continue
+        if any(THAI_LO <= c <= THAI_HI for c in line):
+            continue
+        hits.append((i, line.strip()[:60]))
+    return hits
+
+
 def probe(path):
     """-> (verdict, note). verdict in {ok, corrupt, bom, legacy, unreadable}."""
     try:
@@ -83,6 +119,11 @@ def probe(path):
         line = text[:i].count("\n") + 1
         ctx = text[max(0, i - 30):i + 30].replace("\n", " ")
         return "corrupt", "%d replacement char(s), first at line %d: ...%s..." % (n, line, ctx)
+    flat = flattened_lines(text)
+    if flat:
+        line, ctx = flat[0]
+        return "flattened", ("%d Thai line(s) flattened to '?', first at line %d: ...%s..."
+                             % (len(flat), line, ctx))
     if bom:
         return "bom", "UTF-8 BOM present - content is intact"
     return "ok", ""
@@ -90,7 +131,8 @@ def probe(path):
 
 def main():
     targets = sys.argv[1:] or DEFAULT_TARGETS
-    seen, buckets = 0, {"corrupt": [], "legacy": [], "bom": [], "unreadable": []}
+    seen, buckets = 0, {"corrupt": [], "flattened": [], "legacy": [], "bom": [],
+                        "unreadable": []}
     for t in targets:
         if not os.path.exists(t):
             continue
@@ -105,6 +147,7 @@ def main():
         return 2
 
     for kind, label in (("corrupt", "ALREADY DAMAGED - the original characters are gone"),
+                        ("flattened", "ALREADY DAMAGED - Thai flattened to '?' (valid UTF-8, so the U+FFFD check says clean)"),
                         ("legacy", "not UTF-8 but recoverable"),
                         ("unreadable", "could not be read"),
                         ("bom", "BOM only - content intact, safe to ignore")):
@@ -115,7 +158,8 @@ def main():
         for f, note in rows:
             print("  %s\n      %s" % (os.path.relpath(f, HOME), note))
 
-    bad = len(buckets["corrupt"]) + len(buckets["legacy"]) + len(buckets["unreadable"])
+    bad = (len(buckets["corrupt"]) + len(buckets["flattened"])
+           + len(buckets["legacy"]) + len(buckets["unreadable"]))
     print("\nencoding_probe: %d file(s) scanned, %d need a human, %d BOM-only"
           % (seen, bad, len(buckets["bom"])))
     return 1 if bad else 0

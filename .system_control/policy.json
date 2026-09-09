@@ -17,6 +17,7 @@
     "authority_rule": "Publishing requires publication_authorized=true plus every applicable dated gate and per-piece owner approval. A missing or false value must fail closed.",
     "false_capability_note": "automation_capable=false means no currently verified automation route is recorded here; it is not a permanent claim about the channel.",
     "_lifted_20260909": {
+      "date": "2026-09-09",
       "by": "owner, direct instruction, 9 Sep 2026",
       "scope": "every channel: youtube, facebook, threads, tiktok, instagram, pinterest, pantip",
       "reason": "Owner is putting a Grok bot in as the publishing operator and instructed that all channels be authorized.",
@@ -43,7 +44,8 @@
       "claude",
       "cowork",
       "chatgpt",
-      "gemini"
+      "gemini",
+      "grok"
     ],
     "forbidden_personal_claim_patterns": [
       "(?<![ก-๙])(?:ผม|ฉัน|ดิฉัน)(?![ก-๙])",
