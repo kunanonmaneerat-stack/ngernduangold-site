@@ -1,0 +1,76 @@
+{
+  "_what_this_is": "Suites known to be red on the date below. This is a debt list, not permission. A suite listed here still protects nothing.",
+  "_rule": "Adding an entry needs a reason. Removing one happens the moment it goes green - test_sweep fails until you do, so the list cannot quietly grow into an excuse.",
+  "recorded_on": "2026-09-10",
+  "suites_total": 116,
+  "known_red": {
+    "pipeline/test_improvement_loop.py": {
+      "state": "fail",
+      "note": "improvement loop: FAILED_VALIDATION | priorities=1 owner_actions=0 | private-run"
+    },
+    "tools/test_content_calendar_guard.py": {
+      "state": "fail",
+      "note": "content calendar guard tests: 89/102 PASS"
+    },
+    "tools/test_content_novelty_p1.py": {
+      "state": "cannot_run",
+      "note": "ModuleNotFoundError: No module named 'tools.test_content_novelty_queue'"
+    },
+    "tools/test_content_novelty_queue.py": {
+      "state": "fail",
+      "note": "[daily_content] local request -> C:\\Users\\nL_ku\\AppData\\Local\\Temp\\tmphso1mtv_\\automation-log\\cowork-inbox\\dai"
+    },
+    "tools/test_editorial_draft_gate.py": {
+      "state": "cannot_run",
+      "note": "ImportError: cannot import name 'editorial_draft_gate' from 'tools' (C:\\Users\\nL_ku\\AppData\\Local\\hermes\\herme"
+    },
+    "tools/test_external_notification_safety.py": {
+      "state": "cannot_run",
+      "note": "ModuleNotFoundError: No module named 'tools.test_content_novelty_queue'"
+    },
+    "tools/test_live_domain_observation.py": {
+      "state": "cannot_run",
+      "note": "ImportError: cannot import name 'live_domain_observation' from 'tools' (C:\\Users\\nL_ku\\AppData\\Local\\hermes\\he"
+    },
+    "tools/test_local_content_pack_20260825_v2.py": {
+      "state": "cannot_run",
+      "note": "ImportError: cannot import name 'week_content_r5_novelty_guard' from 'tools' (C:\\Users\\nL_ku\\AppData\\Local\\her"
+    },
+    "tools/test_local_control_fallback.py": {
+      "state": "cannot_run",
+      "note": "ImportError: cannot import name 'local_control_fallback' from 'tools' (C:\\Users\\nL_ku\\AppData\\Local\\hermes\\her"
+    },
+    "tools/test_pantip_eligibility.py": {
+      "state": "fail",
+      "note": "FAIL publication authority is part of Pantip eligibility"
+    },
+    "tools/test_pantip_manual_pilot_contract.py": {
+      "state": "fail",
+      "note": "el[\"publication_authorized\"] is False\r\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\nAssertionError"
+    },
+    "tools/test_predeploy_acceptance.py": {
+      "state": "fail",
+      "note": "predeploy_acceptance.AcceptanceError: predeploy acceptance policy binding is stale: acceptance_policy_sha256"
+    },
+    "tools/test_render_week_quote_cards.py": {
+      "state": "cannot_run",
+      "note": "ImportError: cannot import name 'render_week_quote_cards' from 'tools' (C:\\Users\\nL_ku\\AppData\\Local\\hermes\\he"
+    },
+    "tools/test_request_retirement.py": {
+      "state": "fail",
+      "note": "publication_authority: NONE"
+    },
+    "tools/test_scheduled_llm_safety.py": {
+      "state": "cannot_run",
+      "note": "ModuleNotFoundError: No module named 'tools.test_content_novelty_queue'"
+    },
+    "tools/test_week_content_r5_novelty_guard.py": {
+      "state": "cannot_run",
+      "note": "ModuleNotFoundError: No module named 'numpy'"
+    },
+    "tools/test_week_tiktok_r5_guard.py": {
+      "state": "cannot_run",
+      "note": "ImportError: cannot import name 'week_tiktok_r5_guard' from 'tools' (C:\\Users\\nL_ku\\AppData\\Local\\hermes\\herme"
+    }
+  }
+}
