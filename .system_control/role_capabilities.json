@@ -18,6 +18,18 @@
       "public_identity_ref": ".system_control/policy.json#/public_identity",
       "public_speaker": false,
       "unattended_external_mutation": false
+    },
+    "grok": {
+      "authorized_by": "owner",
+      "authorized_on": "2026-09-09",
+      "role": "external_publishing_operator",
+      "scope": "Presses publish on approved job cards. Does not write content, does not edit the repo, does not decide what goes out.",
+      "capabilities_ref": "#/actors/grok",
+      "public_identity_ref": ".system_control/policy.json#/public_identity",
+      "public_speaker": false,
+      "unattended_external_mutation": false,
+      "_what_social_publish_true_does_not_mean": "capability_semantics above still governs: this is a maximum role capability, not authorization for any specific post. tools/publication_authority.py authorize_live_publication() remains the only thing that lets a post out, and it still demands the dated gates, the calendar slot and per-piece owner approval. Before 10 Sep 2026 an actor named grok did not exist here at all, so every call was refused by default=deny and the refusal looked like a channel problem. Adding the actor makes the real remaining blockers visible.",
+      "_known_gaps_on_the_day_it_was_added": "publication_authority does not implement direct publication for pinterest or pantip. Nobody has yet tested what the Grok bot can actually reach per channel - that is a test to run, not a fact to assume in either direction."
     }
   },
   "actors": {
@@ -81,6 +93,20 @@
       "local_write": false,
       "web_research": false,
       "social_publish": false,
+      "git_commit": false,
+      "git_push": false,
+      "deploy": false,
+      "financial_transaction": false,
+      "source_acknowledge": false,
+      "external_notify": false,
+      "external_storage_write": false,
+      "package_install": false,
+      "scheduler_mutation": false
+    },
+    "grok": {
+      "local_write": false,
+      "web_research": true,
+      "social_publish": true,
       "git_commit": false,
       "git_push": false,
       "deploy": false,
