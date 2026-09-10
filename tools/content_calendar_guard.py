@@ -50,11 +50,23 @@ PROCESS_COMPLETED_BLOCKED = "COMPLETED_BLOCKED"
 PROCESS_BLOCKED = "BLOCKED"
 PROCESS_STRUCTURAL_FINDINGS = "STRUCTURAL_FINDINGS"
 PROCESS_RUNNER_FAILED = "RUNNER_FAILED"
+# Exit 3 belongs to RUNNER_FAILED alone. pipeline/run_daily.cmd:122 and
+# run_weekly.cmd:84 say so in their own words ("exit 3 is reserved for runner
+# failure") and abort the whole run on >=3. Structural findings are a closed
+# safety state - the calendar needs owner review, nothing publishes - which is
+# exactly what exit 2 already means to every consumer ("safety findings retained;
+# no publication; monitoring continues").
+#
+# 10 Sep 2026: the first morning after the owner's channel lift, 65
+# AUTHORITY_STATE_CHANGED findings made this return 3, run_daily aborted at step
+# 11 of 26, and the receipt recorded execution_valid=false for a guard that had
+# executed perfectly. The JSON process_state keeps STRUCTURAL_FINDINGS distinct;
+# the exit code only has to tell the runner "closed, keep going".
 EXIT_CODES = {
     PROCESS_PASS: 0,
     PROCESS_COMPLETED_BLOCKED: 1,
     PROCESS_BLOCKED: 2,
-    PROCESS_STRUCTURAL_FINDINGS: 3,
+    PROCESS_STRUCTURAL_FINDINGS: 2,
     PROCESS_RUNNER_FAILED: 3,
 }
 

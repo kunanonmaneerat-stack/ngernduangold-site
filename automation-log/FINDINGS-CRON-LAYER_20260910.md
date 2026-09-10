@@ -19,24 +19,38 @@
 
 ตามธรรมนูญของรีโปนี้ **rc=3 = `RUNNER_FAILED`** ⇒ งานรายวันจบด้วย "ตัวรันพัง" ทุกวัน
 
-## 2. `automation-log/weekly.log` หยุดเขียนตั้งแต่ 10 ส.ค.
+## 2. แก้ข้อสรุปเดิมของข้อนี้ — อ่าน receipt แล้ว การอนุมานผิดครึ่งหนึ่ง
 
-บรรทัดสุดท้ายในไฟล์คือ `[Mon 08/10/2026 9:09:45.43] run_weekly end exit=0` — วันนั้นจบสวย
-แต่ scheduler บอกว่างานรายสัปดาห์ยังรันอยู่ (ล่าสุด 6 ก.ย.) ⇒ **รันแล้วแต่ไม่ถึงบรรทัดปิดท้าย**
+**ฉบับแรกของไฟล์นี้เขียนว่า** รอบรายสัปดาห์ abort ที่ calendar guard ทุกครั้ง และ `weekly.log` ที่หยุด 10 ส.ค. คือหลักฐาน
+ระบุไว้ว่าเป็นการอนุมาน — และเมื่อเปิด receipt จริง (`.local-private/runtime/task-runs/`) มันผิด:
 
-**กลไกที่น่าจะเป็น — ระบุว่าเป็นการอนุมาน ไม่ใช่ข้อสรุป:**
-`pipeline/run_weekly.cmd:91-92`
-```
-if !CALENDAR_RC! GEQ 3 echo ... content calendar RUNNER_FAILED - evidence tail cannot trust guard execution
-if !CALENDAR_RC! GEQ 3 goto :abort
-```
-`content_calendar_guard` คืน exit 3 เมื่อเจอ structural findings — ซึ่งเป็น**สภาพปกติของปฏิทินนี้** (65 รายการวันนี้)
-⇒ รอบรายสัปดาห์ abort ที่ขั้นที่ 3 ทุกครั้ง ไม่เคยไปถึง `ga4_pull` · `gsc_pull` · `weekly_growth_review` · `improvement_loop`
+| | receipt บอกอะไร |
+|---|---|
+| รายสัปดาห์ 6 ก.ย. | **ครบ 10 ขั้น จบปกติ** rc=2 · calendar=BLOCKED(2) · ga4_pull=BLOCKED(2) · gsc=PASS · growth_review=PASS · improvement_loop=BLOCKED(2) |
+| `weekly.log` ที่หยุด 10 ส.ค. | **แค่ย้ายที่** — `log_path` ใน receipt ชี้ไป `.local-private/runtime/weekly.log` ไม่ใช่ความล้มเหลว |
+| รายวัน 7 · 8 · 9 ก.ย. | ครบ 26 ขั้น จบปกติ rc=2 |
+| **รายวัน 10 ก.ย.** | **abort ที่ขั้น 11/26** · `content_calendar_guard raw_rc=3 semantic_state=RUNNER_FAILED execution_valid=false` |
 
-**เรื่องนี้คือบั๊กเดียวกับที่เพิ่งแก้วันนี้ แค่คนละชั้น** — Codex แยก `STRUCTURAL_FINDINGS` ออกจาก `RUNNER_FAILED` แล้วในตัว guard และ preflight
-แต่ตั้งใจไม่แตะผู้บริโภคที่จำแนกด้วย **เลข exit อย่างเดียว** ซึ่งมี 4 ตัว:
-`pipeline/run_daily.cmd:129` · `pipeline/run_weekly.cmd:91` · `pipeline/task_run_receipt.py:91` · `tools/local_control_fallback.py:144`
-⇒ ทั้งสี่ตัวยังอ่าน 3 แล้วแปลว่า "ตัวรันพัง" เหมือนเดิม **การแก้เมื่อเช้าจึงยังไม่ถึงชั้นที่เจ็บจริง**
+⇒ **การ abort เพิ่งเกิดวันนี้เป็นวันแรก** และสาเหตุคือ **การยกสิทธิ์ 9 ก.ย. ของผมเอง**:
+ยกสิทธิ์ → guard สร้าง `AUTHORITY_STATE_CHANGED` 65 รายการ (structural) → exit 3 → `run_daily.cmd:130` abort
+ทุกอย่างหลังขั้น 11 ไม่ได้รันเช้านี้: dispatcher · ga4_pull · preflight tests · runway guard · ledger guards
+และ receipt บันทึกว่า `execution_valid=false` ให้ guard ที่รันสำเร็จสมบูรณ์
+
+**บทเรียนที่แพงกว่าบั๊ก:** ผมเขียนข้อสรุปจาก log ที่หยุดเขียน แทนที่จะเปิด receipt ซึ่งอยู่ห่างไปสามโฟลเดอร์
+"log เงียบ" กับ "งานล้ม" เป็นคนละเรื่อง — คลาสเดียวกับ `lastRunAt` ที่หลอกระบบนี้ 12 วัน
+
+### แก้แล้ว 10 ก.ย.
+
+สเปกที่ผมส่ง Codex เมื่อเช้าสั่งให้ **คง exit 3** สำหรับ `STRUCTURAL_FINDINGS` — สเปกนั้นผิดตั้งแต่ต้น
+เพราะตัว runner เขียนสัญญาไว้ชัดในไฟล์ตัวเอง (`run_daily.cmd:122`): *"exit 3 is reserved for runner failure"*
+structural findings = ปฏิทินต้องให้เจ้าของทบทวน ไม่มีอะไรออก = สถานะปิดเพื่อความปลอดภัย = **exit 2** ตามนิยามเดิมของ runner ทุกตัว
+
+- `content_calendar_guard.EXIT_CODES[STRUCTURAL_FINDINGS]` 3 → **2** · `RUNNER_FAILED` ยังเป็น 3 คนเดียว
+- `preflight.py` · `improvement_loop.py` ตามไป
+- เทสต์ใหม่ `test_structural_findings_never_share_the_runner_failure_exit` — ตรวจว่ารหัสของ structural ต่ำกว่ารหัส runner failure **และ** ตาราง `calendar-v1` ใน `task_run_receipt.py` รู้จักรหัสนั้นโดยตรง (รหัสที่ตารางไม่รู้จักตกไปเป็น RUNNER_FAILED)
+- ผลจริง: `content_calendar_guard --json` คืน **2** · พรุ่งนี้ 07:00 `run_daily.cmd:128` จะเขียน "BLOCKED - monitoring continues" แล้วเดินต่อ
+
+ผู้บริโภค 4 ตัวที่จำแนกด้วยเลข exit (`run_daily.cmd` · `run_weekly.cmd` · `task_run_receipt.py` · `local_control_fallback.py`) **ไม่ต้องแก้แล้ว** — เมื่อเลขถูก ตัวอ่านเลขก็ถูกตาม
 
 ## 3. GA4 ตายมาหลายวัน — คนละเรื่อง คนละสาเหตุ
 

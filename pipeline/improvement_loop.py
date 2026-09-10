@@ -157,7 +157,7 @@ CALENDAR_PROCESS_EXIT = {
     "PASS": 0,
     "COMPLETED_BLOCKED": 1,
     "BLOCKED": 2,
-    "STRUCTURAL_FINDINGS": 3,
+    "STRUCTURAL_FINDINGS": 2,   # exit 3 is runner failure only - see content_calendar_guard.EXIT_CODES
     "RUNNER_FAILED": 3,
 }
 RUNTIME_CONTRACT_PATHS = (

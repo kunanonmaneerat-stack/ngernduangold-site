@@ -1160,7 +1160,7 @@ def check_content_calendar_contract():
         "PASS": (0, "PASS"),
         "COMPLETED_BLOCKED": (1, "COMPLETED_BLOCKED"),
         "BLOCKED": (2, "FAIL"),
-        "STRUCTURAL_FINDINGS": (3, "FAIL"),
+        "STRUCTURAL_FINDINGS": (2, "FAIL"),   # exit 3 is runner failure only
         "RUNNER_FAILED": (3, "FAIL"),
     }
     expected = exit_contract.get(process_state)

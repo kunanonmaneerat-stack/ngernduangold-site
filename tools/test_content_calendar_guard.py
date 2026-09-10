@@ -83,12 +83,16 @@ class CalendarGuardFixTests(unittest.TestCase):
         self.assertIn("STATUS_NOT_BLOCKED", {f["code"] for f in result["findings"]})
         self.assertGreater(result["counts"]["structural_findings"], 0)
         self.assertEqual(result["counts"]["publishable"], 0)
-        self.assertEqual(guard.exit_code_for_result(result), 3)
+        # Exit 2, not 3: the batch runners abort the whole day on >=3 and record
+        # execution_valid=false. Structural findings are a closed safety state.
+        self.assertEqual(guard.exit_code_for_result(result), 2)
+        self.assertNotEqual(guard.exit_code_for_result(result),
+                            guard.EXIT_CODES[guard.PROCESS_RUNNER_FAILED])
         for args in ([], ["--json"]):
             with self.subTest(args=args), patch.object(guard, "evaluate", return_value=result):
                 output = io.StringIO()
                 with contextlib.redirect_stdout(output):
-                    self.assertEqual(guard.main(args), 3)
+                    self.assertEqual(guard.main(args), 2)
                 self.assertIn("STRUCTURAL_FINDINGS", output.getvalue())
                 self.assertNotIn("RUNNER_FAILED", output.getvalue())
 
@@ -149,9 +153,9 @@ class CalendarGuardFixTests(unittest.TestCase):
         import preflight
         sys.path.insert(0, str(ROOT / "pipeline"))
         import improvement_loop as loop
-        for state, execution, blocker in (
-            ("STRUCTURAL_FINDINGS", True, "content_calendar_structural_findings"),
-            ("RUNNER_FAILED", False, "content_calendar_guard_failed"),
+        for state, rc, execution, blocker in (
+            ("STRUCTURAL_FINDINGS", 2, True, "content_calendar_structural_findings"),
+            ("RUNNER_FAILED", 3, False, "content_calendar_guard_failed"),
         ):
             with self.subTest(state=state):
                 payload = {"verdict": "FAIL", "process_state": state,
@@ -160,14 +164,14 @@ class CalendarGuardFixTests(unittest.TestCase):
                                       "source_content_evaluated": 0, "source_content_allowed": 0,
                                       "source_content_blocked": 0, "source_failure_reasons": 0}}
                 with patch.object(preflight.subprocess, "run", return_value=SimpleNamespace(
-                    returncode=3, stdout=json.dumps(payload)
+                    returncode=rc, stdout=json.dumps(payload)
                 )), patch.object(preflight, "add") as add:
                     preflight.check_content_calendar_contract()
                 self.assertEqual(add.call_args_list[0].args[:2], ("calendar structure", "FAIL"))
                 self.assertIn("control=" + state, add.call_args_list[0].args[2])
                 self.assertEqual(add.call_args_list[1].args[:2], ("publish readiness", "FAIL"))
                 readiness = loop.evaluate_decision_readiness(
-                    {}, {}, {"exit_code": 3, "payload": payload, "summary": "test"}, {},
+                    {}, {}, {"exit_code": rc, "payload": payload, "summary": "test"}, {},
                 )
                 check = readiness["checks"]["content_calendar"]
                 self.assertEqual(check["execution_valid"], execution)
@@ -183,11 +187,27 @@ class CalendarGuardFixTests(unittest.TestCase):
                               "source_content_allowed": 0, "source_content_blocked": 0,
                               "source_failure_reasons": 0}}
         with patch.object(preflight.subprocess, "run", return_value=SimpleNamespace(
-            returncode=3, stdout=json.dumps(payload)
+            returncode=2, stdout=json.dumps(payload)
         )), patch.object(preflight, "add") as add:
             preflight.check_content_calendar_contract()
         self.assertEqual(add.call_args_list[0].args[:2], ("calendar structure", "FAIL"))
         self.assertEqual(add.call_args_list[1].args[:2], ("publish readiness", "FAIL"))
+
+    def test_structural_findings_never_share_the_runner_failure_exit(self):
+        """The batch runners abort the whole day on exit >= 3 and mark the guard
+        execution_valid=false. That happened for real on 10 Sep 2026. Structural
+        findings must therefore never map onto the runner-failure code, and the
+        receipt contract must classify their code as a closed state, not a crash."""
+        self.assertLess(guard.EXIT_CODES[guard.PROCESS_STRUCTURAL_FINDINGS],
+                        guard.EXIT_CODES[guard.PROCESS_RUNNER_FAILED])
+        code = str(guard.EXIT_CODES[guard.PROCESS_STRUCTURAL_FINDINGS])
+        source = (ROOT / "pipeline/task_run_receipt.py").read_text(encoding="utf-8")
+        self.assertIn('"calendar-v1"', source)
+        # The calendar-v1 table must name this exit code explicitly; anything it
+        # does not name falls through to RUNNER_FAILED.
+        table_start = source.index('"calendar-v1"')
+        table = source[table_start:table_start + 200]
+        self.assertIn('"%s":' % code, table)
 
 
 if __name__ == "__main__" and "--calendar-guard-fix-only" in sys.argv:
@@ -640,7 +660,10 @@ check(
     and stale_status_result.get("process_state") == "STRUCTURAL_FINDINGS"
     and stale_status_result["counts"].get("blocking_findings", 0) > 0
     and "STATUS_NOT_BLOCKED" in _codes(stale_status_result)
-    and guard.exit_code_for_result(stale_status_result) == 3,
+    # "never downgrades" means it must not fall to 0 or 1. It is NOT allowed to
+    # be 3 either: 3 is runner failure, and on 10 Sep 2026 that number aborted
+    # run_daily at step 11 for a guard that had executed perfectly.
+    and guard.exit_code_for_result(stale_status_result) == 2,
 )
 
 observed_source_times = []
