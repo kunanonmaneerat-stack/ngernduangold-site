@@ -1900,6 +1900,50 @@ _news_malformed = write("official_malformed.json", {
 check("malformed and duplicate global state lists never pass", run_check(
       "check_official_source_freshness", OFFICIAL_NEWS_SNAPSHOT=_news_malformed), "WARN")
 
+print("\nPROJECT BOUNDARY  (a trading-bot reminder must not live in a web-project report)")
+
+
+_boundary_n = [0]
+
+
+def make_boundary(files):
+    """files: {relative-path: text}. Builds a throwaway repo root with automation-log/."""
+    _boundary_n[0] += 1
+    root = os.path.join(TMPDIR, "boundary_%03d" % _boundary_n[0])
+    os.makedirs(os.path.join(root, "automation-log"))
+    for rel, text in files.items():
+        p = os.path.join(root, rel)
+        d = os.path.dirname(p)
+        if not os.path.isdir(d):
+            os.makedirs(d)
+        io.open(p, "w", encoding="utf-8", newline="\n").write(text)
+    return root
+
+
+def run_boundary(files):
+    return run_check("check_project_boundary", REPO=make_boundary(files))
+
+
+check("clean current report stays quiet", run_boundary({
+      "automation-log/SYSTEM-POSTING_20260910.md": "# posting\n\nthreads ready\n"}), "PASS")
+check("bybit in a current report fires", run_boundary({
+      "automation-log/FINDINGS_20260910.md": "# x\n\nBybit key expires today\n"}), "FAIL")
+check("case does not matter", run_boundary({
+      "automation-log/NOTE_20260911.md": "GROQ_BYBIT_BOT folder\n"}), "FAIL")
+check("the boundaries file itself may name every project", run_boundary({
+      "PROJECT-BOUNDARIES.md": "## A. bybit cascade-fade\n## B. airbnb tm30\n"}), "PASS")
+check("historical report before the guard existed is left alone", run_boundary({
+      "automation-log/RESUME-CHECKLIST_20260905.md": "Bybit API key expires 10 Sep\n"}), "PASS")
+check("undated file is not judged (no date, no era)", run_boundary({
+      "automation-log/latest.md": "bybit\n"}), "PASS")
+check("non-markdown is out of scope", run_boundary({
+      "automation-log/2026-09_20260910.jsonl": '{"note":"bybit"}\n'}), "PASS")
+check("detail names the file and the term", "SYSTEM-POSTING_20260910.md: bybit" in run_check_detail(
+      "check_project_boundary",
+      REPO=make_boundary({"automation-log/SYSTEM-POSTING_20260910.md": "bybit\n"})), True)
+check("root-level markdown is covered too", run_boundary({
+      "WEEK-PLAN_20260912.md": "airbnb bookkeeping\n"}), "FAIL")
+
 print("\nMETA  (no check may exist without proof it can both fire and stay quiet)")
 importlib.reload(P)
 _all = sorted(n for n in dir(P) if n.startswith("check_") and callable(getattr(P, n)))

@@ -24,7 +24,8 @@
       "what_this_does_NOT_change": "authority_rule still stands in full. publication_authorized is one of THREE conditions - the dated gates and per-piece owner approval are untouched. Lifting this flag does not authorize unattended posting; it removes the blanket block, nothing more.",
       "state_when_lifted": "Every Cowork scheduled task was disabled on 5 Sep, so nothing publishes as a side effect of this change. It is a permission edit, not an action.",
       "cowork_dissent_on_record": "Cowork flagged pantip specifically and was overruled. Recording it rather than re-arguing it: pantip is state=limited under a FINAL WARNING where a repeat offence is a permanent ban, and it is simultaneously the highest-value channel in the system (4 affiliate clicks from 14 sessions, the only channel producing any conversion event at all). It is the one channel where a mistake cannot be undone. The owner owns this call; this note exists so that if it ever goes wrong the reasoning is legible rather than reconstructed.",
-      "cowork_error_on_record": "Cowork also claimed Grok could not publish to FB/Threads because the Meta token was revoked. That reasoning was faulty: the revocation applies to THIS project's app, not to a separate platform with its own integrations. Capability of an unexamined tool was inferred from facts about our own account. The correct move was to test what the bot can actually reach, not to assert a limit."
+      "cowork_error_on_record": "Cowork also claimed Grok could not publish to FB/Threads because the Meta token was revoked. That reasoning was faulty: the revocation applies to THIS project's app, not to a separate platform with its own integrations. Capability of an unexamined tool was inferred from facts about our own account. The correct move was to test what the bot can actually reach, not to assert a limit.",
+      "_amended_20260910": "pantip re-closed 10 Sep - see channels.pantip._reclosed_20260910. Scope is now six channels, not seven."
     }
   },
   "public_identity": {
@@ -209,7 +210,7 @@
       "state": "limited",
       "auto": false,
       "automation_capable": false,
-      "publication_authorized": true,
+      "publication_authorized": false,
       "weekly_quota": 1,
       "reason": "One owner-confirmed manual reply was published 2026-08-16 and its one-time authorization is consumed. The pilot is observing for 48 hours with channel-level publication locked; FINAL WARNING remains.",
       "account": "9373300",
@@ -245,6 +246,13 @@
         "first_content_id": "pantip-reply-44197340-v1",
         "first_placement_id": "pantip-reply-44197340-v1__pantip_main",
         "first_post_status": "published_confirmed"
+      },
+      "_reclosed_20260910": {
+        "by": "owner, 10 Sep 2026 ('handle it'), on Cowork's recommendation",
+        "from": "true (9 Sep blanket lift)",
+        "to": "false",
+        "why": "tools/test_pantip_manual_pilot_contract.py has held this at false since the manual pilot, tied to the 18 Aug 48h review (gates[14]) which is still OPEN. The 9 Sep lift broke that contract and nothing said so because the suite had no scheduled runner. state=limited already stops every post, so re-closing costs nothing operationally and restores the contract on the one channel where a repeat offence is a permanent ban.",
+        "reopen_when": "gates[14] records a decision. Then set this true deliberately, in its own commit, not as part of a blanket change."
       }
     }
   },

@@ -60,8 +60,14 @@ def run_one(rel, timeout):
     """-> (state, rc, seconds, note). state in {pass, fail, timeout, error}."""
     started = time.time()
     env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1", PYTHONIOENCODING="utf-8")
+    # Run as a module (python -m tools.test_x) from the repo root, NOT by path.
+    # By path, sys.path[0] becomes tools/, and "from tools import x" then
+    # resolves to whatever package named `tools` is installed on this machine -
+    # on 10 Sep 2026 that was hermes-agent's, and it turned seven healthy suites
+    # into "cannot_run" in the first sweep. Six of them were green all along.
+    module = rel[:-3].replace("/", ".")
     try:
-        r = subprocess.run([sys.executable, "-X", "utf8", "-B", rel],
+        r = subprocess.run([sys.executable, "-X", "utf8", "-B", "-m", module],
                            cwd=REPO, capture_output=True, timeout=timeout, env=env)
     except subprocess.TimeoutExpired:
         return "timeout", None, time.time() - started, "exceeded %ss" % timeout

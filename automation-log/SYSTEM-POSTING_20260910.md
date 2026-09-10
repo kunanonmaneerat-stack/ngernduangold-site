@@ -86,7 +86,6 @@ python tools/channel_readiness.py --json            # ให้เครื่�
 
 ## 7. ต้องรอเจ้าของ
 
-- 🔴 **Bybit API key หมดอายุวันนี้ 10 ก.ย.** — เงินจริง · `C:\groq_bybit_bot` · agent ห้ามแตะทั้งหมด
 - gate 25 ส.ค. เรื่อง instagram / pinterest **ยังไม่มีผลบันทึก** — วันผ่านไปไม่เท่ากับเปิดช่องกลับ
 - Pantip review 18 ส.ค. ยัง `OPEN` · โควตา ≤1/สัปดาห์ · FINAL WARNING
 - `products.letter-kit-199` = `PROMISED-BUT-MISSING` — ห้าม CTA 199฿ จนกว่าจะมีของส่ง

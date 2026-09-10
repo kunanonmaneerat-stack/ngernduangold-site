@@ -2448,6 +2448,62 @@ def check_content_cliff():
         "and more while production runs" % (what, when, last, gap + 1))
 
 
+# Words that belong to another project. Any of them in a CURRENT ngernduangold
+# report means a reminder has leaked across the boundary again.
+#   PROJECT-BOUNDARIES.md is the one file allowed to name them - that is its job.
+#   Files dated before the guard existed are history and are left alone.
+BOUNDARY_TERMS = ("bybit", "groq_bybit_bot", "cascade-fade", "cascade_fade",
+                  "airbnb", "feedflow", "tm30", "pnd90", "pnd94")
+BOUNDARY_ALLOW = {"PROJECT-BOUNDARIES.md"}
+BOUNDARY_SINCE = "20260910"
+
+
+def check_project_boundary():
+    """A trading-bot key reminder must not live in a web-project report.
+
+    10 Sep 2026, owner: "Bybit key is not this project - keep it right." It had
+    leaked into four ngernduangold documents in ten days, twice that same day by
+    the agent writing this. Each time the reasoning was "it is urgent and real
+    money, so mention it". That is exactly how a boundary erodes: one justified
+    exception at a time. PROJECT-BOUNDARIES.md already says the trading bot has
+    its own scheduler task and its own folder; this check makes the document
+    enforce itself instead of relying on someone remembering it.
+
+    Scope is deliberately narrow: markdown under automation-log/ and the repo
+    root, dated on or after the day the guard was written. Older files are
+    evidence of the leak, not new instances of it.
+    """
+    roots = [os.path.join(REPO, "automation-log"), REPO]
+    hits = []
+    for root in roots:
+        try:
+            names = os.listdir(root)
+        except OSError:
+            continue
+        for n in names:
+            if not n.lower().endswith(".md") or n in BOUNDARY_ALLOW:
+                continue
+            m = re.search(r"(\d{8})", n)
+            if not m or m.group(1) < BOUNDARY_SINCE:
+                continue
+            p = os.path.join(root, n)
+            try:
+                text = io.open(p, encoding="utf-8", errors="replace").read().casefold()
+            except OSError:
+                continue
+            found = sorted({t for t in BOUNDARY_TERMS if t in text})
+            if found:
+                hits.append("%s: %s" % (n, ", ".join(found)))
+    if hits:
+        add("project boundary", "FAIL",
+            "other-project terms in a current ngernduangold report - %s "
+            "(they belong in PROJECT-BOUNDARIES.md or that project's own folder)"
+            % "; ".join(hits[:4]))
+        return
+    add("project boundary", "PASS",
+        "no other-project terms in reports dated >= %s" % BOUNDARY_SINCE)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--full", action="store_true", help="also run the site build gate")
@@ -2480,6 +2536,7 @@ def main():
     check_official_source_freshness()
     check_open_decisions()
     check_content_cliff()
+    check_project_boundary()
     check_disclosure()
     check_attribution()
     if args.full:
