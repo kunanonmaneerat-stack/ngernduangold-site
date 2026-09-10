@@ -48,11 +48,13 @@ VERDICT_FAIL = "FAIL"
 PROCESS_PASS = "PASS"
 PROCESS_COMPLETED_BLOCKED = "COMPLETED_BLOCKED"
 PROCESS_BLOCKED = "BLOCKED"
+PROCESS_STRUCTURAL_FINDINGS = "STRUCTURAL_FINDINGS"
 PROCESS_RUNNER_FAILED = "RUNNER_FAILED"
 EXIT_CODES = {
     PROCESS_PASS: 0,
     PROCESS_COMPLETED_BLOCKED: 1,
     PROCESS_BLOCKED: 2,
+    PROCESS_STRUCTURAL_FINDINGS: 3,
     PROCESS_RUNNER_FAILED: 3,
 }
 
@@ -1541,8 +1543,11 @@ def evaluate_document(
                     findings.append(_finding("TESTING_BLOCKED_CHANNEL", "testing_blocked is reserved for the TikTok plan", placement_id))
                 if slot_state != RESERVED_SLOT or "channel_review" not in blockers:
                     findings.append(_finding("TESTING_BLOCKED_SLOT", "testing_blocked TikTok may only hold review-gated reservations", placement_id))
-                if any(channel_policy.get(field) is not False for field in ("auto", "automation_capable", "publication_authorized")):
-                    findings.append(_finding("TESTING_BLOCKED_CAPABILITY", "testing_blocked TikTok must keep auto, automation, and publication false", placement_id))
+                # Owner permission is independent of technical readiness. The
+                # state/reservation/blocker checks still prevent publication;
+                # authorize_live_publication also rejects testing_blocked.
+                if any(channel_policy.get(field) is not False for field in ("auto", "automation_capable")):
+                    findings.append(_finding("TESTING_BLOCKED_CAPABILITY", "testing_blocked TikTok must keep auto and automation_capable false", placement_id))
             authorized = channel_policy.get("publication_authorized") is True
             if not authorized:
                 if gates.get("publication_authority") != "BLOCKED" or "publication_authority" not in blockers:
@@ -2631,7 +2636,7 @@ def evaluate_document(
         "report_only_findings": len(report_findings),
     }
     if structural_findings:
-        process_state = PROCESS_RUNNER_FAILED
+        process_state = PROCESS_STRUCTURAL_FINDINGS
     elif publication_findings:
         process_state = PROCESS_BLOCKED
     elif report_findings:
@@ -2672,7 +2677,7 @@ def evaluate(
 
 
 def exit_code_for_result(result: dict) -> int:
-    """Map the four-state process classification to the runner exit contract."""
+    """Map process states to legacy exits; findings and runner failure share 3."""
     return EXIT_CODES.get(
         result.get("process_state"),
         EXIT_CODES[PROCESS_RUNNER_FAILED],
@@ -2747,6 +2752,11 @@ def main(argv=None) -> int:
             print(f"- {item['code']}{suffix}: {item['message']}")
     elif result["process_state"] == PROCESS_BLOCKED:
         print(f"content-calendar-guard: BLOCKED ({len(result['findings'])} safety finding(s))")
+        for item in result["findings"]:
+            suffix = f" [{item['placement_id']}]" if item.get("placement_id") else ""
+            print(f"- {item['code']}{suffix}: {item['message']}")
+    elif result["process_state"] == PROCESS_STRUCTURAL_FINDINGS:
+        print(f"content-calendar-guard: STRUCTURAL_FINDINGS ({result['counts']['structural_findings']} structural finding(s); publishable=0)")
         for item in result["findings"]:
             suffix = f" [{item['placement_id']}]" if item.get("placement_id") else ""
             print(f"- {item['code']}{suffix}: {item['message']}")

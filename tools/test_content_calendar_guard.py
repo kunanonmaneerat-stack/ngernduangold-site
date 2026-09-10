@@ -12,12 +12,187 @@ import sys
 import tempfile
 from types import SimpleNamespace
 import unittest
+from unittest.mock import patch
 from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
 import content_calendar_guard as guard  # noqa: E402
+
+
+class CalendarGuardFixTests(unittest.TestCase):
+    """Read-only regressions: --calendar-guard-fix-only creates no fixture files."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.now = datetime(2026, 9, 10, 12, tzinfo=ZoneInfo("Asia/Bangkok"))
+        cls.document = json.loads((ROOT / guard.CALENDAR_PATH).read_text(encoding="utf-8"))
+        cls.policy = json.loads((ROOT / guard.POLICY_PATH).read_text(encoding="utf-8"))
+
+    def evaluate_tiktok(self, *, authorized=True, capability=None, mutation=None):
+        policy = deepcopy(self.policy)
+        policy["channels"]["tiktok"].update(
+            state="testing_blocked", auto=False, automation_capable=False,
+            publication_authorized=authorized,
+        )
+        if capability:
+            policy["channels"]["tiktok"][capability] = True
+        document = deepcopy(self.document)
+        if mutation:
+            mutation(next(p for p in document["placements"] if p["account"] == "tiktok_main"))
+        return guard.evaluate_document(
+            document, repo=ROOT, now=self.now, policy=policy, ledger_rows=[],
+            source_evaluator=lambda *_: {"allowed": False, "source_ids": [], "failures": ["test review pending"]},
+            media_evaluator=lambda *_: {"verdict": "PASS", "media_type": "video", "findings": []},
+        )
+
+    def test_calendar_load_failure_stays_runner_failed(self):
+        with patch.object(guard, "_load_object", side_effect=ValueError("unreadable calendar")):
+            result = guard.evaluate(now=self.now)
+        self.assertEqual(result["process_state"], "RUNNER_FAILED")
+        self.assertEqual(result["findings"][0]["code"], "CALENDAR_LOAD")
+        self.assertEqual(guard.exit_code_for_result(result), 3)
+        self.assertEqual(result["counts"]["publishable"], 0)
+
+    def test_calendar_hash_failure_stays_runner_failed(self):
+        with patch.object(guard, "_load_object", return_value=self.document), patch.object(
+            guard, "_sha256", side_effect=OSError("hash read failed")
+        ):
+            result = guard.evaluate(now=self.now)
+        self.assertEqual(result["process_state"], "RUNNER_FAILED")
+        self.assertIn("hash failed", result["findings"][0]["message"])
+        self.assertEqual(guard.exit_code_for_result(result), 3)
+
+    def test_loaded_calendar_structural_findings_and_cli(self):
+        # Force one real structural error in memory; keep real parsing/hashing.
+        original_load = guard._load_object
+
+        def load(path, label):
+            value = original_load(path, label)
+            if label == "content calendar":
+                value["placements"][0]["status"] = "READY_FOR_OWNER_APPROVAL"
+            return value
+
+        import contextlib
+        import io
+        with patch.object(guard, "_load_object", side_effect=load):
+            result = guard.evaluate(now=self.now)
+        self.assertEqual(result["process_state"], "STRUCTURAL_FINDINGS")
+        self.assertEqual(result["verdict"], "FAIL")
+        self.assertIn("STATUS_NOT_BLOCKED", {f["code"] for f in result["findings"]})
+        self.assertGreater(result["counts"]["structural_findings"], 0)
+        self.assertEqual(result["counts"]["publishable"], 0)
+        self.assertEqual(guard.exit_code_for_result(result), 3)
+        for args in ([], ["--json"]):
+            with self.subTest(args=args), patch.object(guard, "evaluate", return_value=result):
+                output = io.StringIO()
+                with contextlib.redirect_stdout(output):
+                    self.assertEqual(guard.main(args), 3)
+                self.assertIn("STRUCTURAL_FINDINGS", output.getvalue())
+                self.assertNotIn("RUNNER_FAILED", output.getvalue())
+
+    def test_real_missing_calendar_cli_stays_runner_failed(self):
+        result = subprocess.run(
+            [sys.executable, "-X", "utf8", "-B", str(ROOT / "tools/content_calendar_guard.py"),
+             "--calendar", str(ROOT / "tools/content_calendar_guard.py" / "missing.json"), "--json"],
+            capture_output=True, text=True, encoding="utf-8", check=False,
+        )
+        self.assertEqual(result.returncode, 3)
+        payload = json.loads(result.stdout)
+        self.assertEqual(payload["process_state"], "RUNNER_FAILED")
+        self.assertEqual(payload["findings"][0]["code"], "CALENDAR_LOAD")
+
+    def test_tiktok_owner_authority_is_separate_from_capability(self):
+        for authorized in (False, True):
+            with self.subTest(authorized=authorized):
+                result = self.evaluate_tiktok(authorized=authorized)
+                codes = {f["code"] for f in result["findings"]}
+                self.assertNotIn("TESTING_BLOCKED_CAPABILITY", codes)
+                self.assertEqual(result["counts"]["publishable"], 0)
+                if authorized:
+                    self.assertIn("AUTHORITY_STATE_CHANGED", codes)
+
+    def test_tiktok_auto_and_automation_still_detected(self):
+        for capability in ("auto", "automation_capable"):
+            with self.subTest(capability=capability):
+                result = self.evaluate_tiktok(capability=capability)
+                self.assertIn("TESTING_BLOCKED_CAPABILITY", {f["code"] for f in result["findings"]})
+
+    def test_tiktok_reservation_and_blockers_still_enforced(self):
+        for code, mutation in (
+            ("TESTING_BLOCKED_SLOT", lambda p: p.update(slot_state="BLOCKED")),
+            ("TIKTOK_BLOCKERS", lambda p: p["blockers"].remove("live_landing_parity")),
+            ("TIKTOK_GATE", lambda p: p["gates"].update(owner_confirmation="PASS")),
+        ):
+            with self.subTest(code=code):
+                result = self.evaluate_tiktok(mutation=mutation)
+                self.assertIn(code, {f["code"] for f in result["findings"]})
+                self.assertEqual(result["counts"]["publishable"], 0)
+
+    def test_live_authority_rejects_authorized_testing_blocked_tiktok(self):
+        import publication_authority as authority
+        # Read real policy/calendar/roles. Rejection must be specifically state,
+        # before any receipt, ledger mutation or external guard can be reached.
+        self.assertIs(self.policy["channels"]["tiktok"]["publication_authorized"], True)
+        self.assertEqual(self.policy["channels"]["tiktok"]["state"], "testing_blocked")
+        with self.assertRaisesRegex(authority.PublicationBlocked, r"channels\.tiktok\.state is not live-eligible"):
+            authority.authorize_live_publication(
+                repo=ROOT, channel="tiktok", actor="owner", target_identity="@ngernduangold",
+                approval=None, content_id="test", placement_id="test", caption="test",
+                asset_sha256=None, content_source_evidence=None, media_qa_path=None,
+                scheduled_slot=None, receipt_nonce=None, now=self.now,
+                guard_runner=lambda *_: self.fail("state must stop before guard execution"),
+            )
+
+    def test_consumers_distinguish_structural_findings_from_runner_failure(self):
+        import preflight
+        sys.path.insert(0, str(ROOT / "pipeline"))
+        import improvement_loop as loop
+        for state, execution, blocker in (
+            ("STRUCTURAL_FINDINGS", True, "content_calendar_structural_findings"),
+            ("RUNNER_FAILED", False, "content_calendar_guard_failed"),
+        ):
+            with self.subTest(state=state):
+                payload = {"verdict": "FAIL", "process_state": state,
+                           "findings": [{"code": "STATUS_NOT_BLOCKED"}],
+                           "counts": {"publishable": 0, "structural_findings": 1,
+                                      "source_content_evaluated": 0, "source_content_allowed": 0,
+                                      "source_content_blocked": 0, "source_failure_reasons": 0}}
+                with patch.object(preflight.subprocess, "run", return_value=SimpleNamespace(
+                    returncode=3, stdout=json.dumps(payload)
+                )), patch.object(preflight, "add") as add:
+                    preflight.check_content_calendar_contract()
+                self.assertEqual(add.call_args_list[0].args[:2], ("calendar structure", "FAIL"))
+                self.assertIn("control=" + state, add.call_args_list[0].args[2])
+                self.assertEqual(add.call_args_list[1].args[:2], ("publish readiness", "FAIL"))
+                readiness = loop.evaluate_decision_readiness(
+                    {}, {}, {"exit_code": 3, "payload": payload, "summary": "test"}, {},
+                )
+                check = readiness["checks"]["content_calendar"]
+                self.assertEqual(check["execution_valid"], execution)
+                self.assertIs(check["guard_passed"], False)
+                self.assertIs(readiness["publication_ready"], False)
+                self.assertIn(blocker, readiness["blockers"])
+                self.assertCountEqual(readiness["blockers"], loop._readiness_expected_blockers(readiness["checks"]))
+
+    def test_preflight_cannot_accept_empty_structural_findings_payload(self):
+        import preflight
+        payload = {"verdict": "FAIL", "process_state": "STRUCTURAL_FINDINGS", "findings": [],
+                   "counts": {"publishable": 1, "source_content_evaluated": 0,
+                              "source_content_allowed": 0, "source_content_blocked": 0,
+                              "source_failure_reasons": 0}}
+        with patch.object(preflight.subprocess, "run", return_value=SimpleNamespace(
+            returncode=3, stdout=json.dumps(payload)
+        )), patch.object(preflight, "add") as add:
+            preflight.check_content_calendar_contract()
+        self.assertEqual(add.call_args_list[0].args[:2], ("calendar structure", "FAIL"))
+        self.assertEqual(add.call_args_list[1].args[:2], ("publish readiness", "FAIL"))
+
+
+if __name__ == "__main__" and "--calendar-guard-fix-only" in sys.argv:
+    suite = unittest.defaultTestLoader.loadTestsFromTestCase(CalendarGuardFixTests)
+    raise SystemExit(not unittest.TextTestRunner(verbosity=2).run(suite).wasSuccessful())
 
 
 CALENDAR = json.loads((ROOT / ".system_control/content_calendar.json").read_text(encoding="utf-8"))
@@ -290,7 +465,7 @@ check(
     and CALENDAR["accounts"]["tiktok_main"]["account_handle"] == "@ngernduangold"
     and POLICY["channels"]["tiktok"]["state"] == "testing_blocked"
     and POLICY["channels"]["tiktok"]["auto"] is False
-    and POLICY["channels"]["tiktok"]["publication_authorized"] is False,
+    and POLICY["channels"]["tiktok"]["automation_capable"] is False,
 )
 
 baseline = _run()
@@ -408,7 +583,7 @@ fatal_cli = subprocess.run(
 )
 fatal_cli_payload = json.loads(fatal_cli.stdout or "{}")
 check(
-    "CLI exit 3 is reserved for calendar load or runner failure",
+    "CLI calendar load failure retains RUNNER_FAILED and exit 3",
     fatal_cli.returncode == 3
     and fatal_cli_payload.get("verdict") == "FAIL"
     and fatal_cli_payload.get("process_state") == "RUNNER_FAILED"
@@ -462,7 +637,7 @@ stale_status_result = _run(
 check(
     "rolling lifecycle never downgrades a real status safety failure",
     stale_status_result["verdict"] == "FAIL"
-    and stale_status_result.get("process_state") == "RUNNER_FAILED"
+    and stale_status_result.get("process_state") == "STRUCTURAL_FINDINGS"
     and stale_status_result["counts"].get("blocking_findings", 0) > 0
     and "STATUS_NOT_BLOCKED" in _codes(stale_status_result)
     and guard.exit_code_for_result(stale_status_result) == 3,
@@ -1010,7 +1185,7 @@ factual_opt_out = _run(
 )
 check(
     "factual content cannot opt out through its placement-controlled source gate",
-    factual_opt_out["process_state"] == "RUNNER_FAILED"
+    factual_opt_out["process_state"] == "STRUCTURAL_FINDINGS"
     and factual_opt_out["counts"].get("source_content_evaluated") == 26
     and "SOURCE_GATE_DRIFT" in _codes(factual_opt_out)
     and "SOURCE_IDS_SHAPE" in _codes(factual_opt_out)

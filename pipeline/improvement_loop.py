@@ -157,6 +157,7 @@ CALENDAR_PROCESS_EXIT = {
     "PASS": 0,
     "COMPLETED_BLOCKED": 1,
     "BLOCKED": 2,
+    "STRUCTURAL_FINDINGS": 3,
     "RUNNER_FAILED": 3,
 }
 RUNTIME_CONTRACT_PATHS = (
@@ -440,6 +441,8 @@ def _readiness_expected_blockers(checks):
     process_state = calendar.get("process_state")
     if process_state == "BLOCKED":
         blockers.append("content_calendar_blocked")
+    elif process_state == "STRUCTURAL_FINDINGS":
+        blockers.append("content_calendar_structural_findings")
     elif process_state not in {"PASS", "COMPLETED_BLOCKED"}:
         blockers.append("content_calendar_guard_failed")
     elif calendar.get("passed") is not True:
@@ -3059,6 +3062,8 @@ def evaluate_decision_readiness(observation, policy, calendar_result,
     }
     if not calendar_execution_valid:
         blockers.append("content_calendar_guard_failed")
+    elif process_state == "STRUCTURAL_FINDINGS":
+        blockers.append("content_calendar_structural_findings")
     elif process_state == "BLOCKED":
         blockers.append("content_calendar_blocked")
     elif not publishable_valid or publishable == 0:

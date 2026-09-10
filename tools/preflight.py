@@ -1160,6 +1160,7 @@ def check_content_calendar_contract():
         "PASS": (0, "PASS"),
         "COMPLETED_BLOCKED": (1, "COMPLETED_BLOCKED"),
         "BLOCKED": (2, "FAIL"),
+        "STRUCTURAL_FINDINGS": (3, "FAIL"),
         "RUNNER_FAILED": (3, "FAIL"),
     }
     expected = exit_contract.get(process_state)
@@ -1187,7 +1188,7 @@ def check_content_calendar_contract():
     )
     if not source_contract_valid:
         structural_findings.append({"code": "SOURCE_COUNT_CONTRACT"})
-    if process_valid and process_state != "RUNNER_FAILED" and not structural_findings:
+    if process_valid and process_state in {"PASS", "COMPLETED_BLOCKED", "BLOCKED"} and not structural_findings:
         add(
             "calendar structure",
             "PASS",
