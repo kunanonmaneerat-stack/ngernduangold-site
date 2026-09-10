@@ -1,0 +1,3716 @@
+{
+  "description": "Frozen blocked calendar scenario, 2026-08-16. Never refresh from live files at test runtime. Policy authority is deliberately false for mutation tests. Other source/receipt evidence remains repository integration coverage.",
+  "calendar": {
+    "schema_version": 1,
+    "calendar_id": "ngernduangold-editorial-plan-2026-08-17",
+    "purpose": "editorial_plan_only_no_publication",
+    "plan_as_of": "2026-08-16",
+    "not_before": "2026-08-17",
+    "timezone": "Asia/Bangkok",
+    "public_identity": {
+      "canonical_brand": "เงินเดือนสมองทอง",
+      "entity_type": "Organization",
+      "page_only": true,
+      "rule": "Public copy speaks only as the configured page; agents are internal operators."
+    },
+    "defaults": {
+      "status": "PLANNED_BLOCKED",
+      "publication_authorized": false,
+      "permanent_same_account_dedup": true
+    },
+    "accounts": {
+      "threads_main": {
+        "channel": "threads",
+        "policy_channel": "threads",
+        "public_speaker": "เงินเดือนสมองทอง",
+        "entity_type": "Organization",
+        "page_only": true
+      },
+      "facebook_main": {
+        "channel": "facebook",
+        "policy_channel": "facebook",
+        "public_speaker": "เงินเดือนสมองทอง",
+        "entity_type": "Organization",
+        "page_only": true
+      },
+      "facebook_page2": {
+        "channel": "facebook",
+        "policy_channel": "facebook",
+        "public_speaker": "สินเชื่อธนาคารถูกกฎหมาย",
+        "brand_owner": "เงินเดือนสมองทอง",
+        "entity_type": "Organization",
+        "page_only": true
+      },
+      "youtube_main": {
+        "channel": "youtube",
+        "policy_channel": "youtube",
+        "public_speaker": "เงินเดือนสมองทอง",
+        "entity_type": "Organization",
+        "page_only": true
+      },
+      "instagram_main": {
+        "channel": "instagram",
+        "policy_channel": "instagram",
+        "public_speaker": "เงินเดือนสมองทอง",
+        "entity_type": "Organization",
+        "page_only": true
+      },
+      "pinterest_main": {
+        "channel": "pinterest",
+        "policy_channel": "pinterest",
+        "public_speaker": "เงินเดือนสมองทอง",
+        "entity_type": "Organization",
+        "page_only": true
+      },
+      "tiktok_main": {
+        "channel": "tiktok",
+        "policy_channel": "tiktok",
+        "account_handle": "@ngernduangold",
+        "profile_url": "https://www.tiktok.com/@ngernduangold",
+        "target_verified_on": "2026-08-16",
+        "public_speaker": "เงินเดือนสมองทอง",
+        "entity_type": "Organization",
+        "page_only": true
+      }
+    },
+    "cta_catalog": {
+      "bot-app": {
+        "kind": "official_source",
+        "landing": "https://www.bot.or.th/th/bot-mobile-app.html"
+      },
+      "bot-youth": {
+        "kind": "official_source",
+        "landing": "https://www.bot.or.th/th/news-and-media/news/news-20260731-2.html"
+      },
+      "loan-compare": {
+        "kind": "internal_guide",
+        "landing": "/loan-approval-compare"
+      },
+      "salary-budget": {
+        "kind": "internal_tool",
+        "landing": "/salary-budgeting-2026"
+      },
+      "card-payoff": {
+        "kind": "internal_tool",
+        "landing": "/pay-off-credit-card-debt-2026"
+      },
+      "debt-restructure": {
+        "kind": "internal_guide",
+        "landing": "/debt-restructuring-2026"
+      },
+      "close-debt": {
+        "kind": "official_help_first",
+        "landing": "/close-debt-fast-2026",
+        "forbidden_targets": [
+          "letter-kit-199"
+        ]
+      },
+      "legal-loan": {
+        "kind": "internal_safety_guide",
+        "landing": "/loan-online-legal-2026"
+      },
+      "home-refi": {
+        "kind": "internal_guide",
+        "landing": "/refinance-home-2026"
+      },
+      "your-data": {
+        "kind": "official_source",
+        "landing": "https://www.bot.or.th/th/financial-innovation/digital-finance/open-data/Your_Data_Project/utility-data.html"
+      },
+      "sec-check": {
+        "kind": "official_source",
+        "landing": "https://market.sec.or.th/LicenseCheck/Search?language=th"
+      },
+      "card-docs": {
+        "kind": "internal_checklist",
+        "landing": "/credit-card-documents-2026"
+      },
+      "about": {
+        "kind": "trust_page",
+        "landing": "/about"
+      },
+      "car-installment": {
+        "kind": "internal_guide",
+        "landing": "/car-still-installment-loan-2026"
+      },
+      "p2-profile": {
+        "kind": "profile_link",
+        "landing": "/links?utm_source=fb2&utm_medium=bio",
+        "body_url_allowed": false
+      },
+      "quote-profile": {
+        "kind": "profile_tools",
+        "landing": "/links",
+        "body_url_allowed": false
+      },
+      "salary30k": {
+        "kind": "internal_article",
+        "landing": "/credit-card-salary-30000-2026"
+      },
+      "tiktok-no-link": {
+        "kind": "no_link",
+        "landing": null,
+        "body_url_allowed": false,
+        "enabled": false,
+        "until_gate": "LIVE_LANDING_PARITY"
+      }
+    },
+    "content_sets": {
+      "knowledge": {
+        "source_file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+        "ids": [
+          "kn-30",
+          "kn-31",
+          "kn-32",
+          "kn-33",
+          "kn-34",
+          "kn-35",
+          "kn-36",
+          "kn-37",
+          "kn-38",
+          "kn-39",
+          "kn-40",
+          "kn-41",
+          "kn-42",
+          "kn-43",
+          "kn-44"
+        ],
+        "required_accounts": [
+          "threads_main",
+          "facebook_main"
+        ]
+      },
+      "weekly_replacements": {
+        "source_file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+        "ids": [
+          "wk36-sf02",
+          "wk36-sf03",
+          "wk36-sf04",
+          "wk36-sf05"
+        ],
+        "required_accounts": [
+          "threads_main",
+          "facebook_main"
+        ],
+        "selection_mode": "OWNER_AUTHORIZED_LOCAL_PLAN_REPLACEMENT",
+        "supersedes": {
+          "kn-38": "wk36-sf02",
+          "kn-40": "wk36-sf03",
+          "kn-41": "wk36-sf04",
+          "kn-43": "wk36-sf05"
+        },
+        "change_receipt": "automation-log/CONTENT-CALENDAR-CHANGE-RECEIPT_20260824_WK36-SF02.json",
+        "pack_sha256": "0ACD60E0D44F689841C8AAF2C7AF1ADAADA6A5E03CCCAF87C3B626BE84A21A28",
+        "freshness_receipt": {
+          "path": "automation-log/WEEK-CONTENT-FRESHNESS_20260823.json",
+          "sha256": "258D82CD9A6FB7E69F85F899DE83FAB9D33956FE8350447A4F5E0BB87F4E7ED2"
+        },
+        "novelty_receipt": {
+          "path": "automation-log/dedup-evidence/WEEK-CONTENT-R5-NOVELTY-RECEIPT_20260823.json",
+          "sha256": "F648CBBAD16409D7A2A1FDB73939B2ADE225FE064C4BDC5C9A7929AC516B4053"
+        }
+      },
+      "facebook_page2": {
+        "source_file": "automation-log/PAGE2-POSTS-B_20260818-0915.md",
+        "ids": [
+          "p2-09",
+          "p2-10",
+          "p2-11",
+          "p2-12",
+          "p2-13",
+          "p2-14",
+          "p2-15",
+          "p2-16"
+        ],
+        "required_accounts": [
+          "facebook_page2"
+        ]
+      },
+      "held_quotes": {
+        "source_file": "automation-log/QUOTE-CARDS_20260723-0822.md",
+        "ids": [
+          "qt-12",
+          "qt-13",
+          "qt-14"
+        ],
+        "required_accounts": [
+          "facebook_main",
+          "instagram_main",
+          "pinterest_main"
+        ]
+      },
+      "held_video": {
+        "source_file": "automation-log/BATCH4-PILOT_20260816.md",
+        "ids": [
+          "b4-p01"
+        ],
+        "required_accounts": [
+          "youtube_main",
+          "threads_main",
+          "facebook_main",
+          "instagram_main"
+        ]
+      },
+      "tiktok_reactivation": {
+        "source_file": "automation-log/TIKTOK-REACTIVATION-PLAN_20260817-30.md",
+        "ids": [
+          "b4-p01",
+          "b3-05",
+          "b3-06",
+          "b3-01",
+          "b3-02",
+          "b3-03",
+          "b3-04",
+          "tt-r14-08",
+          "tt-r14-09",
+          "tt-r14-10",
+          "tt-r14-11",
+          "tt-r14-12",
+          "tt-r14-13",
+          "tt-r14-14"
+        ],
+        "required_accounts": [
+          "tiktok_main"
+        ],
+        "reservation_only": true,
+        "excluded_ids": {
+          "b3-07": "semantic overlay mismatch"
+        },
+        "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY"
+      },
+      "tiktok_week_replacements": {
+        "source_file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+        "ids": [
+          "wk36-sf01",
+          "wk36-sf02",
+          "qt-12",
+          "wk36-sf03",
+          "wk36-sf04",
+          "qt-13",
+          "wk36-sf05"
+        ],
+        "required_accounts": [
+          "tiktok_main"
+        ],
+        "selection_mode": "OWNER_AUTHORIZED_LOCAL_PLAN_REPLACEMENT",
+        "supersedes": {
+          "tt-r14-08": "wk36-sf01",
+          "tt-r14-09": "wk36-sf02",
+          "tt-r14-10": "qt-12",
+          "tt-r14-11": "wk36-sf03",
+          "tt-r14-12": "wk36-sf04",
+          "tt-r14-13": "qt-13",
+          "tt-r14-14": "wk36-sf05"
+        },
+        "change_receipt": "automation-log/TIKTOK-WEEK-REPLACEMENT-RECEIPT_20260824_R5.json",
+        "pack_sha256": "0ACD60E0D44F689841C8AAF2C7AF1ADAADA6A5E03CCCAF87C3B626BE84A21A28",
+        "reservation_only": true,
+        "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY"
+      }
+    },
+    "placements": [
+      {
+        "placement_id": "kn-30__threads_main",
+        "content_id": "kn-30",
+        "topic": "ใช้แอป ธปท. หาเรื่องการเงินจากต้นทาง",
+        "date": "2026-08-17",
+        "time": "12:40",
+        "account": "threads_main",
+        "source": {
+          "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+          "row_id": "kn-30",
+          "field": "threads_text"
+        },
+        "adaptation": "short_text_no_body_url_reply_link_only",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "bot-app",
+        "source_ids": [
+          "bot-mobile-app",
+          "bot-mobile-app-launch"
+        ],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "kn-30__facebook_main",
+        "content_id": "kn-30",
+        "topic": "ใช้แอป ธปท. หาเรื่องการเงินจากต้นทาง",
+        "date": "2026-08-17",
+        "time": "12:50",
+        "account": "facebook_main",
+        "source": {
+          "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+          "row_id": "kn-30",
+          "field": "fb_text"
+        },
+        "adaptation": "long_text_first_comment_link_only",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "bot-app",
+        "source_ids": [
+          "bot-mobile-app",
+          "bot-mobile-app-launch"
+        ],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "kn-31__threads_main",
+        "content_id": "kn-31",
+        "topic": "บัญชีเยาวชนกับขีดจำกัดการโอน",
+        "date": "2026-08-18",
+        "time": "12:40",
+        "account": "threads_main",
+        "source": {
+          "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+          "row_id": "kn-31",
+          "field": "threads_text"
+        },
+        "adaptation": "short_text_no_body_url_reply_link_only",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "bot-youth",
+        "source_ids": [
+          "bot-youth-transfer-controls"
+        ],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "kn-31__facebook_main",
+        "content_id": "kn-31",
+        "topic": "บัญชีเยาวชนกับขีดจำกัดการโอน",
+        "date": "2026-08-18",
+        "time": "12:50",
+        "account": "facebook_main",
+        "source": {
+          "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+          "row_id": "kn-31",
+          "field": "fb_text"
+        },
+        "adaptation": "long_text_first_comment_link_only",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "bot-youth",
+        "source_ids": [
+          "bot-youth-transfer-controls"
+        ],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "kn-32__threads_main",
+        "content_id": "kn-32",
+        "topic": "อ่านรายงานภาวะสินเชื่อให้เป็น",
+        "date": "2026-08-19",
+        "time": "12:40",
+        "account": "threads_main",
+        "source": {
+          "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+          "row_id": "kn-32",
+          "field": "threads_text"
+        },
+        "adaptation": "short_text_no_body_url_reply_link_only",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "loan-compare",
+        "source_ids": [
+          "bot-loan-survey-q2-2026"
+        ],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "kn-32__facebook_main",
+        "content_id": "kn-32",
+        "topic": "อ่านรายงานภาวะสินเชื่อให้เป็น",
+        "date": "2026-08-19",
+        "time": "12:50",
+        "account": "facebook_main",
+        "source": {
+          "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+          "row_id": "kn-32",
+          "field": "fb_text"
+        },
+        "adaptation": "long_text_first_comment_link_only",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "loan-compare",
+        "source_ids": [
+          "bot-loan-survey-q2-2026"
+        ],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "kn-33__threads_main",
+        "content_id": "kn-33",
+        "topic": "ข่าวเศรษฐกิจเกี่ยวกับงบส่วนตัวอย่างไร",
+        "date": "2026-08-20",
+        "time": "12:40",
+        "account": "threads_main",
+        "source": {
+          "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+          "row_id": "kn-33",
+          "field": "threads_text"
+        },
+        "adaptation": "short_text_no_body_url_reply_link_only",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "salary-budget",
+        "source_ids": [
+          "bot-economy-q2-2026"
+        ],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "kn-33__facebook_main",
+        "content_id": "kn-33",
+        "topic": "ข่าวเศรษฐกิจเกี่ยวกับงบส่วนตัวอย่างไร",
+        "date": "2026-08-20",
+        "time": "12:50",
+        "account": "facebook_main",
+        "source": {
+          "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+          "row_id": "kn-33",
+          "field": "fb_text"
+        },
+        "adaptation": "long_text_first_comment_link_only",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "salary-budget",
+        "source_ids": [
+          "bot-economy-q2-2026"
+        ],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "kn-34__threads_main",
+        "content_id": "kn-34",
+        "topic": "จ่ายขั้นต่ำบัตรแล้วหนี้ลดแค่ไหน",
+        "date": "2026-08-21",
+        "time": "12:40",
+        "account": "threads_main",
+        "source": {
+          "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+          "row_id": "kn-34",
+          "field": "threads_text"
+        },
+        "adaptation": "short_text_no_body_url_reply_link_only",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "card-payoff",
+        "source_ids": [
+          "bot-card-minimum-2026",
+          "bot-happy-debtor"
+        ],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "kn-34__facebook_main",
+        "content_id": "kn-34",
+        "topic": "จ่ายขั้นต่ำบัตรแล้วหนี้ลดแค่ไหน",
+        "date": "2026-08-21",
+        "time": "12:50",
+        "account": "facebook_main",
+        "source": {
+          "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+          "row_id": "kn-34",
+          "field": "fb_text"
+        },
+        "adaptation": "long_text_first_comment_link_only",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "card-payoff",
+        "source_ids": [
+          "bot-card-minimum-2026",
+          "bot-happy-debtor"
+        ],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "kn-35__threads_main",
+        "content_id": "kn-35",
+        "topic": "ปรับโครงสร้างหนี้ต่างจากรีไฟแนนซ์",
+        "date": "2026-08-22",
+        "time": "12:40",
+        "account": "threads_main",
+        "source": {
+          "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+          "row_id": "kn-35",
+          "field": "threads_text"
+        },
+        "adaptation": "short_text_no_body_url_reply_link_only",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "debt-restructure",
+        "source_ids": [
+          "bot-consumer-loan-restructuring"
+        ],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "kn-35__facebook_main",
+        "content_id": "kn-35",
+        "topic": "ปรับโครงสร้างหนี้ต่างจากรีไฟแนนซ์",
+        "date": "2026-08-22",
+        "time": "12:50",
+        "account": "facebook_main",
+        "source": {
+          "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+          "row_id": "kn-35",
+          "field": "fb_text"
+        },
+        "adaptation": "long_text_first_comment_link_only",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "debt-restructure",
+        "source_ids": [
+          "bot-consumer-loan-restructuring"
+        ],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "kn-36__threads_main",
+        "content_id": "kn-36",
+        "topic": "เช็กสิทธิ์โครงการปิดหนี้ไวจากต้นทาง",
+        "date": "2026-08-23",
+        "time": "12:40",
+        "account": "threads_main",
+        "source": {
+          "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+          "row_id": "kn-36",
+          "field": "threads_text"
+        },
+        "adaptation": "short_text_no_body_url_reply_link_only",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "close-debt",
+        "source_ids": [
+          "bot-clear-debt-news",
+          "bot-clear-debt"
+        ],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "kn-36__facebook_main",
+        "content_id": "kn-36",
+        "topic": "เช็กสิทธิ์โครงการปิดหนี้ไวจากต้นทาง",
+        "date": "2026-08-23",
+        "time": "12:50",
+        "account": "facebook_main",
+        "source": {
+          "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+          "row_id": "kn-36",
+          "field": "fb_text"
+        },
+        "adaptation": "long_text_first_comment_link_only",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "close-debt",
+        "source_ids": [
+          "bot-clear-debt-news",
+          "bot-clear-debt"
+        ],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "kn-37__threads_main",
+        "content_id": "kn-37",
+        "topic": "ตรวจแอปเงินกู้และใบอนุญาต",
+        "date": "2026-08-24",
+        "time": "12:40",
+        "account": "threads_main",
+        "source": {
+          "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+          "row_id": "kn-37",
+          "field": "threads_text"
+        },
+        "adaptation": "short_text_no_body_url_reply_link_only",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "legal-loan",
+        "source_ids": [
+          "bot-license-check",
+          "bot-license-loan"
+        ],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "kn-37__facebook_main",
+        "content_id": "kn-37",
+        "topic": "ตรวจแอปเงินกู้และใบอนุญาต",
+        "date": "2026-08-24",
+        "time": "12:50",
+        "account": "facebook_main",
+        "source": {
+          "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+          "row_id": "kn-37",
+          "field": "fb_text"
+        },
+        "adaptation": "long_text_first_comment_link_only",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "legal-loan",
+        "source_ids": [
+          "bot-license-check",
+          "bot-license-loan"
+        ],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "wk36-sf02__threads_main",
+        "content_id": "wk36-sf02",
+        "topic": "พักการตัดสินใจหนึ่งคืน",
+        "date": "2026-08-25",
+        "time": "12:40",
+        "account": "threads_main",
+        "source": {
+          "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+          "row_id": "wk36-sf02",
+          "field": "threads_text"
+        },
+        "adaptation": "short_text_no_body_url_profile_link_only",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "quote-profile",
+        "source_ids": [],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "permanent_dedup_coverage"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "NOT_REQUIRED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS",
+          "evergreen_exact_copy": "PASS",
+          "candidate_novelty": "PASS_PER_ITEM",
+          "global_permanent_dedup": "BLOCKED"
+        },
+        "replacement_provenance": {
+          "supersedes_placement_id": "kn-38__threads_main",
+          "supersedes_content_id": "kn-38",
+          "candidate_id": "wk36-sf02",
+          "change_receipt": "automation-log/CONTENT-CALENDAR-CHANGE-RECEIPT_20260824_WK36-SF02.json"
+        }
+      },
+      {
+        "placement_id": "wk36-sf02__facebook_main",
+        "content_id": "wk36-sf02",
+        "topic": "พักการตัดสินใจหนึ่งคืน",
+        "date": "2026-08-25",
+        "time": "12:50",
+        "account": "facebook_main",
+        "source": {
+          "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+          "row_id": "wk36-sf02",
+          "field": "facebook_text"
+        },
+        "adaptation": "long_text_no_body_url_profile_link_only",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "quote-profile",
+        "source_ids": [],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "permanent_dedup_coverage"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "NOT_REQUIRED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS",
+          "evergreen_exact_copy": "PASS",
+          "candidate_novelty": "PASS_PER_ITEM",
+          "global_permanent_dedup": "BLOCKED"
+        },
+        "replacement_provenance": {
+          "supersedes_placement_id": "kn-38__facebook_main",
+          "supersedes_content_id": "kn-38",
+          "candidate_id": "wk36-sf02",
+          "change_receipt": "automation-log/CONTENT-CALENDAR-CHANGE-RECEIPT_20260824_WK36-SF02.json"
+        }
+      },
+      {
+        "placement_id": "kn-39__threads_main",
+        "content_id": "kn-39",
+        "topic": "Your Data และสิทธิ์ควบคุมข้อมูลของเรา",
+        "date": "2026-08-26",
+        "time": "12:40",
+        "account": "threads_main",
+        "source": {
+          "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+          "row_id": "kn-39",
+          "field": "threads_text"
+        },
+        "adaptation": "short_text_no_body_url_reply_link_only",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "your-data",
+        "source_ids": [
+          "bot-utility-data",
+          "bot-your-data-rules",
+          "bot-your-data-criteria"
+        ],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "kn-39__facebook_main",
+        "content_id": "kn-39",
+        "topic": "Your Data และสิทธิ์ควบคุมข้อมูลของเรา",
+        "date": "2026-08-26",
+        "time": "12:50",
+        "account": "facebook_main",
+        "source": {
+          "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+          "row_id": "kn-39",
+          "field": "fb_text"
+        },
+        "adaptation": "long_text_first_comment_link_only",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "your-data",
+        "source_ids": [
+          "bot-utility-data",
+          "bot-your-data-rules",
+          "bot-your-data-criteria"
+        ],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "wk36-sf03__threads_main",
+        "content_id": "wk36-sf03",
+        "topic": "ทบทวนคุณค่าของรายจ่าย",
+        "date": "2026-08-27",
+        "time": "12:40",
+        "account": "threads_main",
+        "source": {
+          "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+          "row_id": "wk36-sf03",
+          "field": "threads_text"
+        },
+        "adaptation": "short_text_no_body_url_profile_link_only",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "quote-profile",
+        "source_ids": [],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "permanent_dedup_coverage"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "NOT_REQUIRED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS",
+          "evergreen_exact_copy": "PASS",
+          "candidate_novelty": "PASS_PER_ITEM",
+          "global_permanent_dedup": "BLOCKED"
+        },
+        "replacement_provenance": {
+          "supersedes_placement_id": "kn-40__threads_main",
+          "supersedes_content_id": "kn-40",
+          "candidate_id": "wk36-sf03",
+          "change_receipt": "automation-log/CONTENT-CALENDAR-CHANGE-RECEIPT_20260824_WK36-SF02.json"
+        }
+      },
+      {
+        "placement_id": "wk36-sf03__facebook_main",
+        "content_id": "wk36-sf03",
+        "topic": "ทบทวนคุณค่าของรายจ่าย",
+        "date": "2026-08-27",
+        "time": "12:50",
+        "account": "facebook_main",
+        "source": {
+          "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+          "row_id": "wk36-sf03",
+          "field": "facebook_text"
+        },
+        "adaptation": "long_text_no_body_url_profile_link_only",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "quote-profile",
+        "source_ids": [],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "permanent_dedup_coverage"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "NOT_REQUIRED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS",
+          "evergreen_exact_copy": "PASS",
+          "candidate_novelty": "PASS_PER_ITEM",
+          "global_permanent_dedup": "BLOCKED"
+        },
+        "replacement_provenance": {
+          "supersedes_placement_id": "kn-40__facebook_main",
+          "supersedes_content_id": "kn-40",
+          "candidate_id": "wk36-sf03",
+          "change_receipt": "automation-log/CONTENT-CALENDAR-CHANGE-RECEIPT_20260824_WK36-SF02.json"
+        }
+      },
+      {
+        "placement_id": "wk36-sf04__threads_main",
+        "content_id": "wk36-sf04",
+        "topic": "จดรายจ่ายโดยไม่ตัดสินตัวเอง",
+        "date": "2026-08-28",
+        "time": "12:40",
+        "account": "threads_main",
+        "source": {
+          "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+          "row_id": "wk36-sf04",
+          "field": "threads_text"
+        },
+        "adaptation": "short_text_no_body_url_profile_link_only",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "quote-profile",
+        "source_ids": [],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "permanent_dedup_coverage"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "NOT_REQUIRED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS",
+          "evergreen_exact_copy": "PASS",
+          "candidate_novelty": "PASS_PER_ITEM",
+          "global_permanent_dedup": "BLOCKED"
+        },
+        "replacement_provenance": {
+          "supersedes_placement_id": "kn-41__threads_main",
+          "supersedes_content_id": "kn-41",
+          "candidate_id": "wk36-sf04",
+          "change_receipt": "automation-log/CONTENT-CALENDAR-CHANGE-RECEIPT_20260824_WK36-SF02.json"
+        }
+      },
+      {
+        "placement_id": "wk36-sf04__facebook_main",
+        "content_id": "wk36-sf04",
+        "topic": "จดรายจ่ายโดยไม่ตัดสินตัวเอง",
+        "date": "2026-08-28",
+        "time": "12:50",
+        "account": "facebook_main",
+        "source": {
+          "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+          "row_id": "wk36-sf04",
+          "field": "facebook_text"
+        },
+        "adaptation": "long_text_no_body_url_profile_link_only",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "quote-profile",
+        "source_ids": [],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "permanent_dedup_coverage"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "NOT_REQUIRED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS",
+          "evergreen_exact_copy": "PASS",
+          "candidate_novelty": "PASS_PER_ITEM",
+          "global_permanent_dedup": "BLOCKED"
+        },
+        "replacement_provenance": {
+          "supersedes_placement_id": "kn-41__facebook_main",
+          "supersedes_content_id": "kn-41",
+          "candidate_id": "wk36-sf04",
+          "change_receipt": "automation-log/CONTENT-CALENDAR-CHANGE-RECEIPT_20260824_WK36-SF02.json"
+        }
+      },
+      {
+        "placement_id": "kn-42__threads_main",
+        "content_id": "kn-42",
+        "topic": "อ่านโฆษณาสินเชื่อแบบไม่หลงคำเร่ง",
+        "date": "2026-08-29",
+        "time": "12:40",
+        "account": "threads_main",
+        "source": {
+          "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+          "row_id": "kn-42",
+          "field": "threads_text"
+        },
+        "adaptation": "short_text_no_body_url_reply_link_only",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "loan-compare",
+        "source_ids": [
+          "bot-responsible-lending-pdf"
+        ],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "kn-42__facebook_main",
+        "content_id": "kn-42",
+        "topic": "อ่านโฆษณาสินเชื่อแบบไม่หลงคำเร่ง",
+        "date": "2026-08-29",
+        "time": "12:50",
+        "account": "facebook_main",
+        "source": {
+          "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+          "row_id": "kn-42",
+          "field": "fb_text"
+        },
+        "adaptation": "long_text_first_comment_link_only",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "loan-compare",
+        "source_ids": [
+          "bot-responsible-lending-pdf"
+        ],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "wk36-sf05__threads_main",
+        "content_id": "wk36-sf05",
+        "topic": "วางแผนสามการตัดสินใจสำหรับสัปดาห์หน้า",
+        "date": "2026-08-30",
+        "time": "12:40",
+        "account": "threads_main",
+        "source": {
+          "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+          "row_id": "wk36-sf05",
+          "field": "threads_text"
+        },
+        "adaptation": "short_text_no_body_url_profile_link_only",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "quote-profile",
+        "source_ids": [],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "permanent_dedup_coverage"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "NOT_REQUIRED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS",
+          "evergreen_exact_copy": "PASS",
+          "candidate_novelty": "PASS_PER_ITEM",
+          "global_permanent_dedup": "BLOCKED"
+        },
+        "replacement_provenance": {
+          "supersedes_placement_id": "kn-43__threads_main",
+          "supersedes_content_id": "kn-43",
+          "candidate_id": "wk36-sf05",
+          "change_receipt": "automation-log/CONTENT-CALENDAR-CHANGE-RECEIPT_20260824_WK36-SF02.json"
+        }
+      },
+      {
+        "placement_id": "wk36-sf05__facebook_main",
+        "content_id": "wk36-sf05",
+        "topic": "วางแผนสามการตัดสินใจสำหรับสัปดาห์หน้า",
+        "date": "2026-08-30",
+        "time": "12:50",
+        "account": "facebook_main",
+        "source": {
+          "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+          "row_id": "wk36-sf05",
+          "field": "facebook_text"
+        },
+        "adaptation": "long_text_no_body_url_profile_link_only",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "quote-profile",
+        "source_ids": [],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "permanent_dedup_coverage"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "NOT_REQUIRED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS",
+          "evergreen_exact_copy": "PASS",
+          "candidate_novelty": "PASS_PER_ITEM",
+          "global_permanent_dedup": "BLOCKED"
+        },
+        "replacement_provenance": {
+          "supersedes_placement_id": "kn-43__facebook_main",
+          "supersedes_content_id": "kn-43",
+          "candidate_id": "wk36-sf05",
+          "change_receipt": "automation-log/CONTENT-CALENDAR-CHANGE-RECEIPT_20260824_WK36-SF02.json"
+        }
+      },
+      {
+        "placement_id": "kn-44__threads_main",
+        "content_id": "kn-44",
+        "topic": "รถยังผ่อนไม่หมดกับทางเลือกใช้รถหาเงินก้อน",
+        "date": "2026-08-31",
+        "time": "12:40",
+        "account": "threads_main",
+        "source": {
+          "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+          "row_id": "kn-44",
+          "field": "threads_text"
+        },
+        "adaptation": "short_text_no_body_url_reply_link_only",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "car-installment",
+        "source_ids": [
+          "bot-auto-loan-restructuring",
+          "bot-debt-management-basics",
+          "bot-hire-purchase-leasing",
+          "bot-license-loan",
+          "bot-secured-loan"
+        ],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "kn-44__facebook_main",
+        "content_id": "kn-44",
+        "topic": "รถยังผ่อนไม่หมดกับทางเลือกใช้รถหาเงินก้อน",
+        "date": "2026-08-31",
+        "time": "12:50",
+        "account": "facebook_main",
+        "source": {
+          "file": "automation-log/KNOWLEDGE-POSTS-C_20260816-0831.md",
+          "row_id": "kn-44",
+          "field": "fb_text"
+        },
+        "adaptation": "long_text_first_comment_link_only",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "car-installment",
+        "source_ids": [
+          "bot-auto-loan-restructuring",
+          "bot-debt-management-basics",
+          "bot-hire-purchase-leasing",
+          "bot-license-loan",
+          "bot-secured-loan"
+        ],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "p2-09__facebook_page2",
+        "content_id": "p2-09",
+        "topic": "รีไฟแนนซ์บ้านดูอะไรบ้างก่อนตัดสินใจย้าย",
+        "date": "2026-08-18",
+        "time": "15:50",
+        "account": "facebook_page2",
+        "source": {
+          "file": "automation-log/PAGE2-POSTS-B_20260818-0915.md",
+          "row_id": "p2-09",
+          "field": "fb_text"
+        },
+        "adaptation": "page2_search_intent_long_text_no_body_url",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "p2-profile",
+        "source_ids": [
+          "bot-before-loan",
+          "bot-secured-loan"
+        ],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review",
+          "live_registry"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "p2-10__facebook_page2",
+        "content_id": "p2-10",
+        "topic": "สินเชื่อสวัสดิการต่างกับสินเชื่อทั่วไปยังไง",
+        "date": "2026-08-21",
+        "time": "15:50",
+        "account": "facebook_page2",
+        "source": {
+          "file": "automation-log/PAGE2-POSTS-B_20260818-0915.md",
+          "row_id": "p2-10",
+          "field": "fb_text"
+        },
+        "adaptation": "page2_search_intent_long_text_no_body_url",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "p2-profile",
+        "source_ids": [
+          "bot-before-loan",
+          "bot-responsible-lending-pdf"
+        ],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review",
+          "live_registry"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "p2-11__facebook_page2",
+        "content_id": "p2-11",
+        "topic": "ค้ำประกันสินเชื่อให้คนอื่นเสี่ยงอะไรบ้าง",
+        "date": "2026-08-25",
+        "time": "15:50",
+        "account": "facebook_page2",
+        "source": {
+          "file": "automation-log/PAGE2-POSTS-B_20260818-0915.md",
+          "row_id": "p2-11",
+          "field": "fb_text"
+        },
+        "adaptation": "page2_search_intent_long_text_no_body_url",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "p2-profile",
+        "source_ids": [
+          "bot-before-loan",
+          "bot-responsible-lending-pdf"
+        ],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review",
+          "live_registry"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "p2-12__facebook_page2",
+        "content_id": "p2-12",
+        "topic": "ขอสินเชื่อครั้งแรกเตรียมตัวยังไงให้พร้อม",
+        "date": "2026-08-28",
+        "time": "15:50",
+        "account": "facebook_page2",
+        "source": {
+          "file": "automation-log/PAGE2-POSTS-B_20260818-0915.md",
+          "row_id": "p2-12",
+          "field": "fb_text"
+        },
+        "adaptation": "page2_search_intent_long_text_no_body_url",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "p2-profile",
+        "source_ids": [
+          "bot-before-loan",
+          "bot-responsible-lending-pdf"
+        ],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review",
+          "live_registry"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "p2-13__facebook_page2",
+        "content_id": "p2-13",
+        "topic": "เครดิตบูโรกระทบการขอสินเชื่อยังไง",
+        "date": "2026-09-01",
+        "time": "13:10",
+        "account": "facebook_page2",
+        "source": {
+          "file": "automation-log/PAGE2-POSTS-B_20260818-0915.md",
+          "row_id": "p2-13",
+          "field": "fb_text"
+        },
+        "adaptation": "page2_search_intent_long_text_no_body_url",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "p2-profile",
+        "source_ids": [
+          "bot-before-loan",
+          "bot-debt-management-basics"
+        ],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review",
+          "live_registry"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "p2-14__facebook_page2",
+        "content_id": "p2-14",
+        "topic": "สินเชื่อนอกระบบสังเกตอันตรายยังไง",
+        "date": "2026-09-04",
+        "time": "13:10",
+        "account": "facebook_page2",
+        "source": {
+          "file": "automation-log/PAGE2-POSTS-B_20260818-0915.md",
+          "row_id": "p2-14",
+          "field": "fb_text"
+        },
+        "adaptation": "page2_search_intent_long_text_no_body_url",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "p2-profile",
+        "source_ids": [
+          "bot-license-loan",
+          "bot-license-check",
+          "bot-debt-management-basics"
+        ],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review",
+          "live_registry"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "p2-15__facebook_page2",
+        "content_id": "p2-15",
+        "topic": "ปิดหนี้ก่อนกำหนดมีค่าปรับไหม ควรถามอะไร",
+        "date": "2026-09-08",
+        "time": "13:10",
+        "account": "facebook_page2",
+        "source": {
+          "file": "automation-log/PAGE2-POSTS-B_20260818-0915.md",
+          "row_id": "p2-15",
+          "field": "fb_text"
+        },
+        "adaptation": "page2_search_intent_long_text_no_body_url",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "p2-profile",
+        "source_ids": [
+          "bot-consumer-loan-restructuring",
+          "bot-responsible-lending-pdf"
+        ],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review",
+          "live_registry"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "p2-16__facebook_page2",
+        "content_id": "p2-16",
+        "topic": "ผ่อนสั้น vs ผ่อนยาว เลือกแบบไหนเหมาะกับเรา",
+        "date": "2026-09-11",
+        "time": "13:10",
+        "account": "facebook_page2",
+        "source": {
+          "file": "automation-log/PAGE2-POSTS-B_20260818-0915.md",
+          "row_id": "p2-16",
+          "field": "fb_text"
+        },
+        "adaptation": "page2_search_intent_long_text_no_body_url",
+        "format": "text",
+        "media": null,
+        "media_receipt": null,
+        "cta_id": "p2-profile",
+        "source_ids": [
+          "bot-before-loan",
+          "bot-responsible-lending-pdf"
+        ],
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review",
+          "live_registry"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "NOT_REQUIRED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "qt-12__facebook_main",
+        "content_id": "qt-12",
+        "topic": "อย่าเอาสถานะการเงินของเราไปเทียบกับภาพชีวิตของคนอื่น เพราะเราไม่เห็นภาพการเงินทั้งหมดของเขา",
+        "date": "2026-08-26",
+        "time": "16:00",
+        "account": "facebook_main",
+        "source": {
+          "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+          "row_id": "qt-12",
+          "field": "facebook_text"
+        },
+        "adaptation": "platform_native_image_exact_pack_caption",
+        "format": "image",
+        "media": "media/quotes/week-20260824-30-r5/qt-12_fb-ig_4x5.jpg",
+        "media_receipt": "automation-log/media-qa/qt-12-fb-ig-image-r5.json",
+        "media_content_id": "qt-12-4x5-r5",
+        "cta_id": "quote-profile",
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "RESERVED_BLOCKED",
+        "blockers": [
+          "publication_authority"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "NOT_REQUIRED",
+          "media": "PASS",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "qt-12__instagram_main",
+        "content_id": "qt-12",
+        "topic": "อย่าเอาสถานะการเงินของเราไปเทียบกับภาพชีวิตของคนอื่น เพราะเราไม่เห็นภาพการเงินทั้งหมดของเขา",
+        "date": "2026-08-27",
+        "time": "19:00",
+        "account": "instagram_main",
+        "source": {
+          "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+          "row_id": "qt-12",
+          "field": "threads_text"
+        },
+        "adaptation": "platform_native_image_exact_pack_caption",
+        "format": "image",
+        "media": "media/quotes/week-20260824-30-r5/qt-12_fb-ig_4x5.jpg",
+        "media_receipt": "automation-log/media-qa/qt-12-fb-ig-image-r5.json",
+        "media_content_id": "qt-12-4x5-r5",
+        "cta_id": "quote-profile",
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "RESERVED_BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "channel_review"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "NOT_REQUIRED",
+          "media": "PASS",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "qt-12__pinterest_main",
+        "content_id": "qt-12",
+        "topic": "อย่าเอาสถานะการเงินของเราไปเทียบกับภาพชีวิตของคนอื่น เพราะเราไม่เห็นภาพการเงินทั้งหมดของเขา",
+        "date": "2026-08-30",
+        "time": "10:00",
+        "account": "pinterest_main",
+        "source": {
+          "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+          "row_id": "qt-12",
+          "field": "threads_text"
+        },
+        "adaptation": "two_by_three_pin_exact_pack_caption_profile_link_only",
+        "format": "image",
+        "media": "media/quotes/week-20260824-30-r5/qt-12_pinterest_2x3.jpg",
+        "media_receipt": "automation-log/media-qa/qt-12-pinterest-image-r5.json",
+        "media_content_id": "qt-12-2x3-r5",
+        "cta_id": "quote-profile",
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "RESERVED_BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "channel_review"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "NOT_REQUIRED",
+          "media": "PASS",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "qt-13__facebook_main",
+        "content_id": "qt-13",
+        "topic": "ต้นไม้ใหญ่ไม่ได้โตในวันเดียว เงินก้อนแรกก็เช่นกัน แค่ดูแลมันทุกเดือน",
+        "date": "2026-08-29",
+        "time": "16:00",
+        "account": "facebook_main",
+        "source": {
+          "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+          "row_id": "qt-13",
+          "field": "facebook_text"
+        },
+        "adaptation": "platform_native_image_exact_pack_caption",
+        "format": "image",
+        "media": "media/quotes/week-20260824-30-r5/qt-13_fb-ig_4x5.jpg",
+        "media_receipt": "automation-log/media-qa/qt-13-fb-ig-image-r5.json",
+        "media_content_id": "qt-13-4x5-r5",
+        "cta_id": "quote-profile",
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "RESERVED_BLOCKED",
+        "blockers": [
+          "publication_authority"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "NOT_REQUIRED",
+          "media": "PASS",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "qt-13__instagram_main",
+        "content_id": "qt-13",
+        "topic": "ต้นไม้ใหญ่ไม่ได้โตในวันเดียว เงินก้อนแรกก็เช่นกัน แค่ดูแลมันทุกเดือน",
+        "date": "2026-08-31",
+        "time": "19:00",
+        "account": "instagram_main",
+        "source": {
+          "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+          "row_id": "qt-13",
+          "field": "threads_text"
+        },
+        "adaptation": "platform_native_image_exact_pack_caption",
+        "format": "image",
+        "media": "media/quotes/week-20260824-30-r5/qt-13_fb-ig_4x5.jpg",
+        "media_receipt": "automation-log/media-qa/qt-13-fb-ig-image-r5.json",
+        "media_content_id": "qt-13-4x5-r5",
+        "cta_id": "quote-profile",
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "RESERVED_BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "channel_review"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "NOT_REQUIRED",
+          "media": "PASS",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "qt-13__pinterest_main",
+        "content_id": "qt-13",
+        "topic": "ต้นไม้ใหญ่ไม่ได้โตในวันเดียว เงินก้อนแรกก็เช่นกัน แค่ดูแลมันทุกเดือน",
+        "date": "2026-09-02",
+        "time": "10:00",
+        "account": "pinterest_main",
+        "source": {
+          "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+          "row_id": "qt-13",
+          "field": "threads_text"
+        },
+        "adaptation": "two_by_three_pin_exact_pack_caption_profile_link_only",
+        "format": "image",
+        "media": "media/quotes/week-20260824-30-r5/qt-13_pinterest_2x3.jpg",
+        "media_receipt": "automation-log/media-qa/qt-13-pinterest-image-r5.json",
+        "media_content_id": "qt-13-2x3-r5",
+        "cta_id": "quote-profile",
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "RESERVED_BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "channel_review"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "NOT_REQUIRED",
+          "media": "PASS",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "qt-14__facebook_main",
+        "content_id": "qt-14",
+        "topic": "อิสรภาพทางการเงินไม่ใช่การมีเงินไม่จำกัด",
+        "date": "2026-09-02",
+        "time": "16:00",
+        "account": "facebook_main",
+        "source": {
+          "file": "automation-log/QUOTE-CARDS_20260723-0822.md",
+          "row_id": "qt-14",
+          "field": "caption"
+        },
+        "adaptation": "source_exact_image_caption_profile_link_only",
+        "format": "image",
+        "media": "media/quotes/week-20260824-30-r5/qt-14_fb-ig_4x5.jpg",
+        "media_receipt": "automation-log/media-qa/qt-14-fb-ig-image-r5.json",
+        "media_content_id": "qt-14-4x5-r5",
+        "media_binding_receipt": "automation-log/QT14-MEDIA-BINDING-RECEIPT_20260830.json",
+        "cta_id": "quote-profile",
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "RESERVED_BLOCKED",
+        "blockers": [
+          "publication_authority"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "NOT_REQUIRED",
+          "media": "PASS",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "qt-14__instagram_main",
+        "content_id": "qt-14",
+        "topic": "อิสรภาพทางการเงินไม่ใช่การมีเงินไม่จำกัด",
+        "date": "2026-09-03",
+        "time": "19:00",
+        "account": "instagram_main",
+        "source": {
+          "file": "automation-log/QUOTE-CARDS_20260723-0822.md",
+          "row_id": "qt-14",
+          "field": "caption"
+        },
+        "adaptation": "source_exact_image_caption_profile_link_only",
+        "format": "image",
+        "media": "media/quotes/week-20260824-30-r5/qt-14_fb-ig_4x5.jpg",
+        "media_receipt": "automation-log/media-qa/qt-14-fb-ig-image-r5.json",
+        "media_content_id": "qt-14-4x5-r5",
+        "media_binding_receipt": "automation-log/QT14-MEDIA-BINDING-RECEIPT_20260830.json",
+        "cta_id": "quote-profile",
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "RESERVED_BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "channel_review"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "NOT_REQUIRED",
+          "media": "PASS",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "qt-14__pinterest_main",
+        "content_id": "qt-14",
+        "topic": "อิสรภาพทางการเงินไม่ใช่การมีเงินไม่จำกัด",
+        "date": "2026-09-06",
+        "time": "10:00",
+        "account": "pinterest_main",
+        "source": {
+          "file": "automation-log/QUOTE-CARDS_20260723-0822.md",
+          "row_id": "qt-14",
+          "field": "caption"
+        },
+        "adaptation": "two_by_three_pin_exact_source_caption_profile_link_only",
+        "format": "image",
+        "media": "media/quotes/week-20260824-30-r5/qt-14_pinterest_2x3.jpg",
+        "media_receipt": "automation-log/media-qa/qt-14-pinterest-image-r5.json",
+        "media_content_id": "qt-14-2x3-r5",
+        "media_binding_receipt": "automation-log/QT14-MEDIA-BINDING-RECEIPT_20260830.json",
+        "cta_id": "quote-profile",
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "RESERVED_BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "channel_review"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "NOT_REQUIRED",
+          "media": "PASS",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "b4-p01__youtube_main",
+        "content_id": "b4-p01",
+        "topic": "เงินเดือนถึงเกณฑ์แล้ว เลือกบัตรเครดิตใบแรกจากอะไร",
+        "date": "2026-08-27",
+        "time": "19:00",
+        "account": "youtube_main",
+        "source": {
+          "file": "automation-log/BATCH4-PILOT_20260816.md",
+          "row_id": "b4-p01",
+          "field": "youtube_package"
+        },
+        "source_ids": [
+          "bot-credit-card-guidance",
+          "bot-responsible-lending-pdf"
+        ],
+        "adaptation": "youtube_package_description_own_domain_only",
+        "format": "video",
+        "media": "reels/2026-08-16_b4-p01.mp4",
+        "media_receipt": "automation-log/media-qa/b4-p01-video.json",
+        "cta_id": "salary30k",
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "RESERVED_BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review",
+          "manifest_registration",
+          "future_schedule_registration"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "PASS",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "b4-p01__threads_main",
+        "content_id": "b4-p01",
+        "topic": "เงินเดือนถึงเกณฑ์แล้ว เลือกบัตรเครดิตใบแรกจากอะไร",
+        "date": "2026-08-29",
+        "time": "19:00",
+        "account": "threads_main",
+        "source": {
+          "file": "automation-log/BATCH4-PILOT_20260816.md",
+          "row_id": "b4-p01",
+          "field": "social_caption"
+        },
+        "source_ids": [
+          "bot-credit-card-guidance",
+          "bot-responsible-lending-pdf"
+        ],
+        "adaptation": "short_video_caption_no_body_url",
+        "format": "video",
+        "media": "reels/2026-08-16_b4-p01.mp4",
+        "media_receipt": "automation-log/media-qa/b4-p01-video.json",
+        "cta_id": "salary30k",
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "RESERVED_BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review",
+          "manifest_registration",
+          "future_schedule_registration"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "PASS",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "b4-p01__facebook_main",
+        "content_id": "b4-p01",
+        "topic": "เงินเดือนถึงเกณฑ์แล้ว เลือกบัตรเครดิตใบแรกจากอะไร",
+        "date": "2026-08-31",
+        "time": "19:00",
+        "account": "facebook_main",
+        "source": {
+          "file": "automation-log/BATCH4-PILOT_20260816.md",
+          "row_id": "b4-p01",
+          "field": "social_caption"
+        },
+        "source_ids": [
+          "bot-credit-card-guidance",
+          "bot-responsible-lending-pdf"
+        ],
+        "adaptation": "reel_caption_first_comment_link",
+        "format": "video",
+        "media": "reels/2026-08-16_b4-p01.mp4",
+        "media_receipt": "automation-log/media-qa/b4-p01-video.json",
+        "cta_id": "salary30k",
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "RESERVED_BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review",
+          "manifest_registration",
+          "future_schedule_registration"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "PASS",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "b4-p01__instagram_main",
+        "content_id": "b4-p01",
+        "topic": "เงินเดือนถึงเกณฑ์แล้ว เลือกบัตรเครดิตใบแรกจากอะไร",
+        "date": "2026-09-02",
+        "time": "19:00",
+        "account": "instagram_main",
+        "source": {
+          "file": "automation-log/BATCH4-PILOT_20260816.md",
+          "row_id": "b4-p01",
+          "field": "social_caption"
+        },
+        "source_ids": [
+          "bot-credit-card-guidance",
+          "bot-responsible-lending-pdf"
+        ],
+        "adaptation": "reel_caption_link_in_bio_max_five_hashtags",
+        "format": "video",
+        "media": "reels/2026-08-16_b4-p01.mp4",
+        "media_receipt": "automation-log/media-qa/b4-p01-video.json",
+        "cta_id": "salary30k",
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "RESERVED_BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "official_source_review",
+          "manifest_registration",
+          "future_schedule_registration",
+          "channel_review"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "PASS",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS"
+        }
+      },
+      {
+        "placement_id": "b4-p01__tiktok_main",
+        "content_id": "b4-p01",
+        "topic": "เงินเดือนถึงเกณฑ์แล้ว เลือกบัตรเครดิตใบแรกจากอะไร",
+        "date": "2026-08-17",
+        "time": "19:00",
+        "account": "tiktok_main",
+        "source": {
+          "file": "automation-log/TIKTOK-REACTIVATION-PLAN_20260817-30.md",
+          "row_id": "b4-p01",
+          "field": "caption_no_link"
+        },
+        "source_ids": [
+          "bot-credit-card-guidance",
+          "bot-responsible-lending-pdf"
+        ],
+        "adaptation": "tiktok_full_length_no_link_reactivation_pilot",
+        "format": "video",
+        "media": "reels/2026-08-16_b4-p01.mp4",
+        "media_receipt": "automation-log/media-qa/b4-p01-video.json",
+        "cta_id": "tiktok-no-link",
+        "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY",
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "RESERVED_BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "channel_review",
+          "per_piece_owner_confirmation",
+          "official_source_review",
+          "live_tiktok_history_dedup",
+          "live_landing_parity",
+          "bio_route_parity"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "PASS",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS",
+          "owner_confirmation": "BLOCKED",
+          "live_history_dedup": "BLOCKED",
+          "landing_parity": "BLOCKED"
+        }
+      },
+      {
+        "placement_id": "b3-05__tiktok_main",
+        "content_id": "b3-05",
+        "topic": "เงินเดือนสามหมื่น วงเงินบัตรเครดิตดูอย่างไร",
+        "date": "2026-08-18",
+        "time": "19:00",
+        "account": "tiktok_main",
+        "source": {
+          "file": "automation-log/TIKTOK-REACTIVATION-PLAN_20260817-30.md",
+          "row_id": "b3-05",
+          "field": "caption_no_link"
+        },
+        "source_ids": [
+          "bot-credit-card-guidance",
+          "bot-responsible-lending-pdf"
+        ],
+        "adaptation": "tiktok_full_length_no_link_reactivation_candidate",
+        "format": "video",
+        "media": "reels/2026-07-31_b3-05.mp4",
+        "media_receipt": null,
+        "media_qa_report": "automation-log/video-production/b3-05_qa.json",
+        "cta_id": "tiktok-no-link",
+        "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY",
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "RESERVED_BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "channel_review",
+          "per_piece_owner_confirmation",
+          "official_source_review",
+          "live_tiktok_history_dedup",
+          "live_landing_parity",
+          "bio_route_parity",
+          "semantic_parity_failed",
+          "unsubstantiated_provider_license_claim",
+          "per_piece_hash_bound_media_receipt"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "BLOCKED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS",
+          "owner_confirmation": "BLOCKED",
+          "live_history_dedup": "BLOCKED",
+          "landing_parity": "BLOCKED"
+        }
+      },
+      {
+        "placement_id": "b3-06__tiktok_main",
+        "content_id": "b3-06",
+        "topic": "บัตรเครดิตเงินเดือนสามหมื่น เลือกแบบไหนก่อนสมัคร",
+        "date": "2026-08-19",
+        "time": "19:00",
+        "account": "tiktok_main",
+        "source": {
+          "file": "automation-log/TIKTOK-REACTIVATION-PLAN_20260817-30.md",
+          "row_id": "b3-06",
+          "field": "caption_no_link"
+        },
+        "source_ids": [
+          "bot-credit-card-guidance",
+          "bot-responsible-lending-pdf"
+        ],
+        "adaptation": "tiktok_full_length_no_link_reactivation_candidate",
+        "format": "video",
+        "media": "reels/2026-08-01_b3-06.mp4",
+        "media_receipt": null,
+        "media_qa_report": "automation-log/video-production/b3-06_qa.json",
+        "cta_id": "tiktok-no-link",
+        "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY",
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "RESERVED_BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "channel_review",
+          "per_piece_owner_confirmation",
+          "official_source_review",
+          "live_tiktok_history_dedup",
+          "live_landing_parity",
+          "bio_route_parity",
+          "semantic_parity_failed",
+          "unsubstantiated_provider_license_claim",
+          "per_piece_hash_bound_media_receipt"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "BLOCKED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS",
+          "owner_confirmation": "BLOCKED",
+          "live_history_dedup": "BLOCKED",
+          "landing_parity": "BLOCKED"
+        }
+      },
+      {
+        "placement_id": "b3-01__tiktok_main",
+        "content_id": "b3-01",
+        "topic": "รถยังผ่อนไม่หมดจำนำได้ไหม",
+        "date": "2026-08-20",
+        "time": "19:00",
+        "account": "tiktok_main",
+        "source": {
+          "file": "automation-log/TIKTOK-REACTIVATION-PLAN_20260817-30.md",
+          "row_id": "b3-01",
+          "field": "caption_no_link"
+        },
+        "source_ids": [
+          "bot-debt-management-basics",
+          "bot-license-loan",
+          "bot-auto-loan-restructuring",
+          "bot-secured-loan",
+          "bot-hire-purchase-leasing"
+        ],
+        "adaptation": "tiktok_full_length_no_link_reactivation_candidate",
+        "format": "video",
+        "media": "reels/2026-07-27_b3-01.mp4",
+        "media_receipt": null,
+        "media_qa_report": "automation-log/video-production/b3-01_qa.json",
+        "cta_id": "tiktok-no-link",
+        "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY",
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "RESERVED_BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "channel_review",
+          "per_piece_owner_confirmation",
+          "official_source_review",
+          "live_tiktok_history_dedup",
+          "live_landing_parity",
+          "bio_route_parity",
+          "semantic_parity_failed",
+          "unsubstantiated_provider_license_claim",
+          "per_piece_hash_bound_media_receipt"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "BLOCKED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS",
+          "owner_confirmation": "BLOCKED",
+          "live_history_dedup": "BLOCKED",
+          "landing_parity": "BLOCKED"
+        }
+      },
+      {
+        "placement_id": "b3-02__tiktok_main",
+        "content_id": "b3-02",
+        "topic": "รถเกินยี่สิบปีเข้าไฟแนนซ์ได้ไหม",
+        "date": "2026-08-21",
+        "time": "19:00",
+        "account": "tiktok_main",
+        "source": {
+          "file": "automation-log/TIKTOK-REACTIVATION-PLAN_20260817-30.md",
+          "row_id": "b3-02",
+          "field": "caption_no_link"
+        },
+        "source_ids": [
+          "bot-debt-management-basics",
+          "bot-license-loan",
+          "bot-auto-loan-restructuring",
+          "bot-secured-loan",
+          "bot-hire-purchase-leasing"
+        ],
+        "adaptation": "tiktok_full_length_no_link_reactivation_candidate",
+        "format": "video",
+        "media": "reels/2026-07-28_b3-02.mp4",
+        "media_receipt": null,
+        "media_qa_report": "automation-log/video-production/b3-02_qa.json",
+        "cta_id": "tiktok-no-link",
+        "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY",
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "RESERVED_BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "channel_review",
+          "per_piece_owner_confirmation",
+          "official_source_review",
+          "live_tiktok_history_dedup",
+          "live_landing_parity",
+          "bio_route_parity",
+          "semantic_parity_failed",
+          "unsubstantiated_provider_license_claim",
+          "per_piece_hash_bound_media_receipt"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "BLOCKED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS",
+          "owner_confirmation": "BLOCKED",
+          "live_history_dedup": "BLOCKED",
+          "landing_parity": "BLOCKED"
+        }
+      },
+      {
+        "placement_id": "b3-03__tiktok_main",
+        "content_id": "b3-03",
+        "topic": "รถเกินยี่สิบห้าปีเข้าไฟแนนซ์ได้ไหม",
+        "date": "2026-08-22",
+        "time": "19:00",
+        "account": "tiktok_main",
+        "source": {
+          "file": "automation-log/TIKTOK-REACTIVATION-PLAN_20260817-30.md",
+          "row_id": "b3-03",
+          "field": "caption_no_link"
+        },
+        "source_ids": [
+          "bot-debt-management-basics",
+          "bot-license-loan",
+          "bot-auto-loan-restructuring",
+          "bot-secured-loan",
+          "bot-hire-purchase-leasing"
+        ],
+        "adaptation": "tiktok_full_length_no_link_reactivation_candidate",
+        "format": "video",
+        "media": "reels/2026-07-29_b3-03.mp4",
+        "media_receipt": null,
+        "media_qa_report": "automation-log/video-production/b3-03_qa.json",
+        "cta_id": "tiktok-no-link",
+        "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY",
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "RESERVED_BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "channel_review",
+          "per_piece_owner_confirmation",
+          "official_source_review",
+          "live_tiktok_history_dedup",
+          "live_landing_parity",
+          "bio_route_parity",
+          "semantic_parity_failed",
+          "unsubstantiated_provider_license_claim",
+          "per_piece_hash_bound_media_receipt"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "BLOCKED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS",
+          "owner_confirmation": "BLOCKED",
+          "live_history_dedup": "BLOCKED",
+          "landing_parity": "BLOCKED"
+        }
+      },
+      {
+        "placement_id": "b3-04__tiktok_main",
+        "content_id": "b3-04",
+        "topic": "รถอายุสิบห้าปีจัดไฟแนนซ์ได้ไหม",
+        "date": "2026-08-23",
+        "time": "19:00",
+        "account": "tiktok_main",
+        "source": {
+          "file": "automation-log/TIKTOK-REACTIVATION-PLAN_20260817-30.md",
+          "row_id": "b3-04",
+          "field": "caption_no_link"
+        },
+        "source_ids": [
+          "bot-debt-management-basics",
+          "bot-license-loan",
+          "bot-auto-loan-restructuring",
+          "bot-secured-loan",
+          "bot-hire-purchase-leasing"
+        ],
+        "adaptation": "tiktok_full_length_no_link_reactivation_candidate",
+        "format": "video",
+        "media": "reels/2026-07-30_b3-04.mp4",
+        "media_receipt": null,
+        "media_qa_report": "automation-log/video-production/b3-04_qa.json",
+        "cta_id": "tiktok-no-link",
+        "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY",
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "RESERVED_BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "channel_review",
+          "per_piece_owner_confirmation",
+          "official_source_review",
+          "live_tiktok_history_dedup",
+          "live_landing_parity",
+          "bio_route_parity",
+          "semantic_parity_failed",
+          "unsubstantiated_provider_license_claim",
+          "per_piece_hash_bound_media_receipt"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "BLOCKED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS",
+          "owner_confirmation": "BLOCKED",
+          "live_history_dedup": "BLOCKED",
+          "landing_parity": "BLOCKED"
+        }
+      },
+      {
+        "placement_id": "wk36-sf01__tiktok_main",
+        "content_id": "wk36-sf01",
+        "topic": "เริ่มเห็นภาพเงินด้วยสามช่อง",
+        "date": "2026-08-24",
+        "time": "19:00",
+        "account": "tiktok_main",
+        "source": {
+          "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+          "row_id": "wk36-sf01",
+          "field": "threads_text"
+        },
+        "source_ids": [],
+        "adaptation": "tiktok_exact_week_pack_video_no_link",
+        "format": "video",
+        "media": "reels/week-20260824-30-r5/2026-08-24_wk36-sf01.mp4",
+        "media_receipt": "automation-log/media-qa/wk36-sf01-tiktok-video-r5.json",
+        "media_content_id": "wk36-sf01",
+        "cta_id": "tiktok-no-link",
+        "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY",
+        "replacement_provenance": {
+          "supersedes_placement_id": "tt-r14-08__tiktok_main",
+          "supersedes_content_id": "tt-r14-08",
+          "candidate_id": "wk36-sf01",
+          "change_receipt": "automation-log/TIKTOK-WEEK-REPLACEMENT-RECEIPT_20260824_R5.json"
+        },
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "RESERVED_BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "channel_review",
+          "per_piece_owner_confirmation",
+          "official_source_review",
+          "live_tiktok_history_dedup",
+          "live_landing_parity",
+          "bio_route_parity",
+          "human_listening_not_run"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "BLOCKED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS",
+          "owner_confirmation": "BLOCKED",
+          "live_history_dedup": "BLOCKED",
+          "landing_parity": "BLOCKED"
+        }
+      },
+      {
+        "placement_id": "wk36-sf02__tiktok_main",
+        "content_id": "wk36-sf02",
+        "topic": "พักการตัดสินใจหนึ่งคืน",
+        "date": "2026-08-25",
+        "time": "19:00",
+        "account": "tiktok_main",
+        "source": {
+          "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+          "row_id": "wk36-sf02",
+          "field": "threads_text"
+        },
+        "source_ids": [],
+        "adaptation": "tiktok_exact_week_pack_video_no_link",
+        "format": "video",
+        "media": "reels/week-20260824-30-r5/2026-08-25_wk36-sf02.mp4",
+        "media_receipt": "automation-log/media-qa/wk36-sf02-tiktok-video-r5.json",
+        "media_content_id": "wk36-sf02",
+        "cta_id": "tiktok-no-link",
+        "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY",
+        "replacement_provenance": {
+          "supersedes_placement_id": "tt-r14-09__tiktok_main",
+          "supersedes_content_id": "tt-r14-09",
+          "candidate_id": "wk36-sf02",
+          "change_receipt": "automation-log/TIKTOK-WEEK-REPLACEMENT-RECEIPT_20260824_R5.json"
+        },
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "RESERVED_BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "channel_review",
+          "per_piece_owner_confirmation",
+          "official_source_review",
+          "live_tiktok_history_dedup",
+          "live_landing_parity",
+          "bio_route_parity",
+          "human_listening_not_run"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "BLOCKED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS",
+          "owner_confirmation": "BLOCKED",
+          "live_history_dedup": "BLOCKED",
+          "landing_parity": "BLOCKED"
+        }
+      },
+      {
+        "placement_id": "qt-12__tiktok_main",
+        "content_id": "qt-12",
+        "topic": "ไม่เปรียบเทียบสถานะการเงิน",
+        "date": "2026-08-26",
+        "time": "19:00",
+        "account": "tiktok_main",
+        "source": {
+          "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+          "row_id": "qt-12",
+          "field": "threads_text"
+        },
+        "source_ids": [],
+        "adaptation": "tiktok_exact_week_pack_video_no_link",
+        "format": "video",
+        "media": "reels/week-20260824-30-r5/2026-08-26_qt-12.mp4",
+        "media_receipt": "automation-log/media-qa/qt-12-tiktok-video-r5.json",
+        "media_content_id": "qt-12",
+        "cta_id": "tiktok-no-link",
+        "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY",
+        "replacement_provenance": {
+          "supersedes_placement_id": "tt-r14-10__tiktok_main",
+          "supersedes_content_id": "tt-r14-10",
+          "candidate_id": "qt-12",
+          "change_receipt": "automation-log/TIKTOK-WEEK-REPLACEMENT-RECEIPT_20260824_R5.json"
+        },
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "RESERVED_BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "channel_review",
+          "per_piece_owner_confirmation",
+          "official_source_review",
+          "live_tiktok_history_dedup",
+          "live_landing_parity",
+          "bio_route_parity",
+          "human_listening_not_run"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "BLOCKED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS",
+          "owner_confirmation": "BLOCKED",
+          "live_history_dedup": "BLOCKED",
+          "landing_parity": "BLOCKED"
+        }
+      },
+      {
+        "placement_id": "wk36-sf03__tiktok_main",
+        "content_id": "wk36-sf03",
+        "topic": "ทบทวนคุณค่าของรายจ่าย",
+        "date": "2026-08-27",
+        "time": "19:00",
+        "account": "tiktok_main",
+        "source": {
+          "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+          "row_id": "wk36-sf03",
+          "field": "threads_text"
+        },
+        "source_ids": [],
+        "adaptation": "tiktok_exact_week_pack_video_no_link",
+        "format": "video",
+        "media": "reels/week-20260824-30-r5/2026-08-27_wk36-sf03.mp4",
+        "media_receipt": "automation-log/media-qa/wk36-sf03-tiktok-video-r5.json",
+        "media_content_id": "wk36-sf03",
+        "cta_id": "tiktok-no-link",
+        "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY",
+        "replacement_provenance": {
+          "supersedes_placement_id": "tt-r14-11__tiktok_main",
+          "supersedes_content_id": "tt-r14-11",
+          "candidate_id": "wk36-sf03",
+          "change_receipt": "automation-log/TIKTOK-WEEK-REPLACEMENT-RECEIPT_20260824_R5.json"
+        },
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "RESERVED_BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "channel_review",
+          "per_piece_owner_confirmation",
+          "official_source_review",
+          "live_tiktok_history_dedup",
+          "live_landing_parity",
+          "bio_route_parity",
+          "human_listening_not_run"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "BLOCKED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS",
+          "owner_confirmation": "BLOCKED",
+          "live_history_dedup": "BLOCKED",
+          "landing_parity": "BLOCKED"
+        }
+      },
+      {
+        "placement_id": "wk36-sf04__tiktok_main",
+        "content_id": "wk36-sf04",
+        "topic": "จดรายจ่ายโดยไม่ตัดสินตัวเอง",
+        "date": "2026-08-28",
+        "time": "19:00",
+        "account": "tiktok_main",
+        "source": {
+          "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+          "row_id": "wk36-sf04",
+          "field": "threads_text"
+        },
+        "source_ids": [],
+        "adaptation": "tiktok_exact_week_pack_video_no_link",
+        "format": "video",
+        "media": "reels/week-20260824-30-r5/2026-08-28_wk36-sf04.mp4",
+        "media_receipt": "automation-log/media-qa/wk36-sf04-tiktok-video-r5.json",
+        "media_content_id": "wk36-sf04",
+        "cta_id": "tiktok-no-link",
+        "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY",
+        "replacement_provenance": {
+          "supersedes_placement_id": "tt-r14-12__tiktok_main",
+          "supersedes_content_id": "tt-r14-12",
+          "candidate_id": "wk36-sf04",
+          "change_receipt": "automation-log/TIKTOK-WEEK-REPLACEMENT-RECEIPT_20260824_R5.json"
+        },
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "RESERVED_BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "channel_review",
+          "per_piece_owner_confirmation",
+          "official_source_review",
+          "live_tiktok_history_dedup",
+          "live_landing_parity",
+          "bio_route_parity",
+          "human_listening_not_run"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "BLOCKED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS",
+          "owner_confirmation": "BLOCKED",
+          "live_history_dedup": "BLOCKED",
+          "landing_parity": "BLOCKED"
+        }
+      },
+      {
+        "placement_id": "qt-13__tiktok_main",
+        "content_id": "qt-13",
+        "topic": "เติบโตจากความสม่ำเสมอ",
+        "date": "2026-08-29",
+        "time": "19:00",
+        "account": "tiktok_main",
+        "source": {
+          "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+          "row_id": "qt-13",
+          "field": "threads_text"
+        },
+        "source_ids": [],
+        "adaptation": "tiktok_exact_week_pack_video_no_link",
+        "format": "video",
+        "media": "reels/week-20260824-30-r5/2026-08-29_qt-13.mp4",
+        "media_receipt": "automation-log/media-qa/qt-13-tiktok-video-r5.json",
+        "media_content_id": "qt-13",
+        "cta_id": "tiktok-no-link",
+        "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY",
+        "replacement_provenance": {
+          "supersedes_placement_id": "tt-r14-13__tiktok_main",
+          "supersedes_content_id": "tt-r14-13",
+          "candidate_id": "qt-13",
+          "change_receipt": "automation-log/TIKTOK-WEEK-REPLACEMENT-RECEIPT_20260824_R5.json"
+        },
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "RESERVED_BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "channel_review",
+          "per_piece_owner_confirmation",
+          "official_source_review",
+          "live_tiktok_history_dedup",
+          "live_landing_parity",
+          "bio_route_parity",
+          "human_listening_not_run"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "BLOCKED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS",
+          "owner_confirmation": "BLOCKED",
+          "live_history_dedup": "BLOCKED",
+          "landing_parity": "BLOCKED"
+        }
+      },
+      {
+        "placement_id": "wk36-sf05__tiktok_main",
+        "content_id": "wk36-sf05",
+        "topic": "วางแผนสามการตัดสินใจสำหรับสัปดาห์หน้า",
+        "date": "2026-08-30",
+        "time": "19:00",
+        "account": "tiktok_main",
+        "source": {
+          "file": "automation-log/WEEK-CONTENT-PACK_20260824-30.json",
+          "row_id": "wk36-sf05",
+          "field": "threads_text"
+        },
+        "source_ids": [],
+        "adaptation": "tiktok_exact_week_pack_video_no_link",
+        "format": "video",
+        "media": "reels/week-20260824-30-r5/2026-08-30_wk36-sf05.mp4",
+        "media_receipt": "automation-log/media-qa/wk36-sf05-tiktok-video-r5.json",
+        "media_content_id": "wk36-sf05",
+        "cta_id": "tiktok-no-link",
+        "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY",
+        "replacement_provenance": {
+          "supersedes_placement_id": "tt-r14-14__tiktok_main",
+          "supersedes_content_id": "tt-r14-14",
+          "candidate_id": "wk36-sf05",
+          "change_receipt": "automation-log/TIKTOK-WEEK-REPLACEMENT-RECEIPT_20260824_R5.json"
+        },
+        "status": "PLANNED_BLOCKED",
+        "slot_state": "RESERVED_BLOCKED",
+        "blockers": [
+          "publication_authority",
+          "channel_review",
+          "per_piece_owner_confirmation",
+          "official_source_review",
+          "live_tiktok_history_dedup",
+          "live_landing_parity",
+          "bio_route_parity",
+          "human_listening_not_run"
+        ],
+        "gates": {
+          "publication_authority": "BLOCKED",
+          "source_review": "BLOCKED",
+          "media": "BLOCKED",
+          "dedup": "REQUIRED",
+          "page_identity": "PASS",
+          "owner_confirmation": "BLOCKED",
+          "live_history_dedup": "BLOCKED",
+          "landing_parity": "BLOCKED"
+        }
+      }
+    ]
+  },
+  "policy": {
+    "_readme": [
+      "Single source of truth for CHANNEL STATE and DECISION DATES.",
+      "Written 31 Jul 2026 after the Boris Cherny / YC talk 'Delete Your CLAUDE.md'.",
+      "Rule: anything that CHANGES lives here. Prose files (OPERATING-NOTES) keep only",
+      "timeless, counterintuitive lessons. Task prompts must READ this, never restate it.",
+      "Why: on 30-31 Jul the same fact (IG paused, TikTok paused, Meta token revoked) was",
+      "copied into 4+ task prompts and 2 python files. When TikTok was dropped, post_guard",
+      "and the daily card still asked for it -- the exact drift that caused the 4-day",
+      "blackout, just in a different file. One fact, one place.",
+      "kind = which pipeline a channel belongs to. Added 31 Jul after a dry-run of the daily card rule (state != paused AND auto == false) pulled PANTIP into the VIDEO card - pantip is a forum-comment flow with its own approval path, not a clip upload. Selection rules must filter on kind, never on state alone."
+    ],
+    "updated": "2026-08-16",
+    "publication_control": {
+      "default_publication_authorized": true,
+      "automation_capable_definition": "Technical capability only. automation_capable never grants permission to publish, schedule, promote, or resume a channel.",
+      "authority_rule": "Publishing requires publication_authorized=true plus every applicable dated gate and per-piece owner approval. A missing or false value must fail closed.",
+      "false_capability_note": "automation_capable=false means no currently verified automation route is recorded here; it is not a permanent claim about the channel.",
+      "_lifted_20260909": {
+        "date": "2026-09-09",
+        "by": "owner, direct instruction, 9 Sep 2026",
+        "scope": "every channel: youtube, facebook, threads, tiktok, instagram, pinterest, pantip",
+        "reason": "Owner is putting a Grok bot in as the publishing operator and instructed that all channels be authorized.",
+        "what_this_does_NOT_change": "authority_rule still stands in full. publication_authorized is one of THREE conditions - the dated gates and per-piece owner approval are untouched. Lifting this flag does not authorize unattended posting; it removes the blanket block, nothing more.",
+        "state_when_lifted": "Every Cowork scheduled task was disabled on 5 Sep, so nothing publishes as a side effect of this change. It is a permission edit, not an action.",
+        "cowork_dissent_on_record": "Cowork flagged pantip specifically and was overruled. Recording it rather than re-arguing it: pantip is state=limited under a FINAL WARNING where a repeat offence is a permanent ban, and it is simultaneously the highest-value channel in the system (4 affiliate clicks from 14 sessions, the only channel producing any conversion event at all). It is the one channel where a mistake cannot be undone. The owner owns this call; this note exists so that if it ever goes wrong the reasoning is legible rather than reconstructed.",
+        "cowork_error_on_record": "Cowork also claimed Grok could not publish to FB/Threads because the Meta token was revoked. That reasoning was faulty: the revocation applies to THIS project's app, not to a separate platform with its own integrations. Capability of an unexamined tool was inferred from facts about our own account. The correct move was to test what the bot can actually reach, not to assert a limit.",
+        "_amended_20260910": "pantip re-closed 10 Sep - see channels.pantip._reclosed_20260910. Scope is now six channels, not seven."
+      }
+    },
+    "public_identity": {
+      "canonical_name": "เงินเดือนสมองทอง",
+      "entity_type": "Organization",
+      "page_only": true,
+      "scope": [
+        "website pages and metadata",
+        "social posts and captions",
+        "public comments and replies",
+        "calls to action",
+        "drafts intended for public copy"
+      ],
+      "public_speaker_rule": "Every public-facing message is authored and spoken only as the page. Personal identities and automation agents are internal operators, never the public speaker or byline.",
+      "forbidden_public_speakers": [
+        "codex",
+        "claude",
+        "cowork",
+        "chatgpt",
+        "gemini",
+        "grok"
+      ],
+      "forbidden_personal_claim_patterns": [
+        "(?<![ก-๙])(?:ผม|ฉัน|ดิฉัน)(?![ก-๙])",
+        "ผู้จัดทำที่เป็น.+เอง",
+        "เคยผ่านการสมัคร.+ขอสินเชื่อ",
+        "เขียนจากมุมคนใช้งานจริง"
+      ],
+      "allowed_ai_disclosures": [
+        "ผลิตด้วย AI",
+        "ใช้ AI ช่วยค้นและเรียบเรียง"
+      ],
+      "required_prompt_marker": "PUBLIC_IDENTITY_PAGE_ONLY",
+      "outward_copy_tasks": [
+        "ngernduangold-comment-loop",
+        "ngernduangold-fb-evening-safetynet",
+        "ngernduangold-fb-page-comment-link",
+        "ngernduangold-fbgroup-listen",
+        "ngernduangold-knowledge-library-refill",
+        "ngernduangold-knowledge-post-noon",
+        "ngernduangold-page2-loan-post",
+        "ngernduangold-pantip-monitor"
+      ]
+    },
+    "continuous_improvement": {
+      "contract": ".system_control/improvement_policy.json",
+      "operator": "codex",
+      "operator_role": "internal_page_operator",
+      "public_identity": "เงินเดือนสมองทอง",
+      "local_safe_mode_authorized": true,
+      "unattended_external_mutation": false,
+      "rule": "The loop may observe, diagnose, prioritize, prepare scoped local improvements, validate and report. Publishing, source acknowledgement, commit, push, deploy and financial action remain separate owner-gated capabilities."
+    },
+    "channels": {
+      "youtube": {
+        "state": "active",
+        "auto": true,
+        "automation_capable": true,
+        "publication_authorized": false,
+        "note": "uploader tools/yt_upload_batch2.py --live --dates YYYY-MM-DD",
+        "kind": "video",
+        "channel_id": "UCVuqb7l5rJ4Q7PUKSIgsL4w",
+        "studio_url": "https://studio.youtube.com/channel/UCVuqb7l5rJ4Q7PUKSIgsL4w/videos/short",
+        "baseline_views": null,
+        "_baseline_note": "channel-heartbeat used to hard-code 'normal is 20-35 views/clip in 24-48h, under 10 after 48h = watch'. That was a July figure nobody ever refreshed, so the guard was judging against a number that had quietly stopped being true. Left null on purpose: the heartbeat now reports raw view counts instead of scoring them, and will only score again once someone sets a figure here with a date."
+      },
+      "facebook": {
+        "state": "manual",
+        "auto": false,
+        "automation_capable": true,
+        "publication_authorized": false,
+        "note": "Business Suite by hand; Meta token revoked 18 Jul 2026 - never ask for tokens",
+        "kind": "video",
+        "auto_legs": [
+          "text",
+          "comment"
+        ],
+        "auto_note": "auto=false refers to the VIDEO slot only (owner posts Reels by hand). text+comment legs are automated - see auto_legs.",
+        "video_path": {
+          "automated": false,
+          "owner": "owner-only",
+          "_evidence": "post-ledger has exactly 3 rows with channel=facebook type=video in its entire history: one 'cc-dispatcher-backfill' on 23 Jul with no clip_id, and two 'cowork-manual-recovery' on 31 Jul. Everything else automated on Facebook is text (knowledge-post-noon), comment (fb-comment-daily) or image (quote-card). Nothing posts a Reel on a schedule.",
+          "_why_it_matters": "This was never written down, so the 6 Aug gate and the first version of the 7 Aug CC order both planned around a Facebook video capability that does not exist. Meta token was revoked permanently on 18 Jul, so any Reel has to go through the browser on the owner's machine. Automation capability does not grant Cowork or CC publication authority.",
+          "current_task": "retired",
+          "retired_task": "ngernduangold-fb-reel-backfill (Cowork, 1/day 15:00, 9-13 Aug 2026, then retire)",
+          "open_question": "CC to confirm what cc-dispatcher-backfill (23 Jul) was, and whether it still works."
+        },
+        "page_id": "583765282304956",
+        "composer_url": "https://business.facebook.com/latest/composer?asset_id=583765282304956",
+        "_id_note": "Was written literally into three prompts (fb-evening-safetynet, knowledge-post-noon, fb-reel-backfill) and existed nowhere in policy.json. Same one-fact-many-places class that caused the 27-30 Jul blackout. Prompts now read it from here."
+      },
+      "threads": {
+        "state": "active",
+        "auto": true,
+        "automation_capable": true,
+        "publication_authorized": false,
+        "account_handle": "@ngernduangold",
+        "profile_url": "https://www.threads.com/@ngernduangold",
+        "note": "video attach WORKING again via native OS dialog (1 Aug 2026); see OPERATING-NOTES §OS-dialog",
+        "kind": "video",
+        "video_auto": true,
+        "video_note": "DISPROVEN AND REVERSED 1 Aug 2026 05:12 by threads-video-idle-window. The native OS file-dialog route WORKS and posted b3-01 successfully (first Threads video since 25 Jul). The 02:xx entry that closed this route was an INFERENCE from the Chrome-extension route (extension tabs run visibilityState='hidden'/hasFocus=false, so they cannot own a native dialog) - but this task never uses the extension. It drives a real VISIBLE FOCUSED Chrome window with OS-level mouse clicks (Windows-MCP Snapshot/Click). Clicking แนบสื่อ that way DID open dialog class #32770, and the composer rendered the preview (ลบออก button appeared, layout shifted 145px). STILL TRUE: file_upload into input[type=file] is dead on Threads (proven twice) - do not retry it. PRECONDITION: machine genuinely idle; verify GetForegroundWindow title before any keystroke. GOTCHA: keyboard layout is Thai - SendKeys/WM_SETTEXT both fail; type with SendInput KEYEVENTF_UNICODE."
+      },
+      "tiktok": {
+        "state": "testing_blocked",
+        "auto": false,
+        "automation_capable": false,
+        "publication_authorized": false,
+        "kind": "video",
+        "account_handle": "@ngernduangold",
+        "profile_url": "https://www.tiktok.com/@ngernduangold",
+        "target_verified_on": "2026-08-16",
+        "target_verification": "Authenticated read-only TikTok profile and TikTok Studio check; public handle matched @ngernduangold and Studio showed 37 posts / 0 drafts.",
+        "reason": "Owner requested TikTok be included again on 16 Aug 2026. The channel is now a local planning-only 14-day reactivation test; publication remains blocked until every listed gate is resolved per item.",
+        "decided_by": "owner request; Codex recorded the fail-closed local plan",
+        "decided_on": "2026-08-16",
+        "evidence": "Read TikTok Studio in the browser on 7 Aug - it does NOT need the owner's phone, which is why this sat open for 8 days. 37 posts live, 0 drafts, EVERY post privacy = public, no warning banner anywhere in Studio. So the account is NOT restricted and NOT shadowbanned - the theory that held this decision open was simply wrong. What is true: 12 followers, 1-2 views per post, 9 video views in the last 7 days, 0 profile views, 0 comments, 0 shares, and 0 sessions to the site ever. Last post 26 Jul; batch3 sent it nothing at all (0/7). The clips it did get were 10s, unlike the 20-21s used elsewhere.",
+        "reversible": "Return state to retired to cancel the test without touching any remote account or media.",
+        "reactivation_test": {
+          "status": "PLANNED_BLOCKED",
+          "plan_source": "automation-log/TIKTOK-REACTIVATION-PLAN_20260817-30.md",
+          "start_not_before": "2026-08-17",
+          "end_not_after": "2026-08-30",
+          "duration_days": 14,
+          "cadence": "one full-length vertical clip per day only after per-piece gates pass",
+          "source_side_candidate_ids": [
+            "b4-p01",
+            "b3-05",
+            "b3-06",
+            "b3-01",
+            "b3-02",
+            "b3-03",
+            "b3-04"
+          ],
+          "new_brief_ids": [
+            "tt-r14-08",
+            "tt-r14-09",
+            "tt-r14-10",
+            "tt-r14-11",
+            "tt-r14-12",
+            "tt-r14-13",
+            "tt-r14-14"
+          ],
+          "excluded_content": {
+            "b3-07": "Do not use: semantic overlay does not match the intended message."
+          },
+          "link_policy": "NO_LINK_UNTIL_LIVE_LANDING_PARITY",
+          "blockers": [
+            "publication_authority",
+            "channel_review",
+            "per_piece_owner_confirmation",
+            "official_source_review",
+            "live_tiktok_history_dedup",
+            "live_landing_parity",
+            "bio_route_parity",
+            "per_piece_hash_bound_media_receipt",
+            "seven_new_assets_not_yet_produced"
+          ]
+        }
+      },
+      "instagram": {
+        "state": "paused",
+        "auto": false,
+        "automation_capable": false,
+        "publication_authorized": false,
+        "until": "2026-08-25",
+        "reason": "GA4 28d: 1 session / 0 conv",
+        "decided_by": "owner review",
+        "kind": "video"
+      },
+      "pinterest": {
+        "state": "paused",
+        "auto": false,
+        "automation_capable": false,
+        "publication_authorized": false,
+        "until": "2026-08-25",
+        "reason": "GA4 28d: 0 sessions from 9 pins",
+        "decided_by": "owner review",
+        "kind": "image"
+      },
+      "pantip": {
+        "state": "limited",
+        "auto": false,
+        "automation_capable": false,
+        "publication_authorized": false,
+        "weekly_quota": 1,
+        "reason": "One owner-confirmed manual reply was published 2026-08-16 and its one-time authorization is consumed. The pilot is observing for 48 hours with channel-level publication locked; FINAL WARNING remains.",
+        "account": "9373300",
+        "kind": "forum",
+        "phase": "manual-reply-pilot-2026-08-16",
+        "phase_until": "2026-08-23",
+        "owner": "CC",
+        "owner_task": "ngernduangold-pantip-monitor",
+        "owner_decided_on": "2026-08-16",
+        "owner_note": "เจ้าของยืนยันข้อความและปลายทางรายชิ้นก่อนโพสต์ 16 ส.ค. 2026. เปิดเฉพาะ manual pilot แบบตอบกระทู้เดิม โดย CC ยังเป็น owner เดียวของช่อง; การโพสต์ครั้งถัดไปต้องผ่าน review 48 ชั่วโมงและการยืนยันรายชิ้น ณ เวลาลงมืออีกครั้ง.",
+        "manual_pilot": {
+          "status": "OBSERVING_48H",
+          "started_at": "2026-08-16T15:54:44+07:00",
+          "review_due_at": "2026-08-18T15:54:44+07:00",
+          "next_publication_not_before": "2026-08-18T15:54:44+07:00",
+          "authorization_state": "ONE_TIME_APPROVAL_CONSUMED",
+          "review_must_pass_before_reauthorization": true,
+          "scope": "reply_existing_topic_only",
+          "weekly_quota": 1,
+          "week_definition": "Monday-Sunday Asia/Bangkok",
+          "per_piece_owner_confirmation_required": true,
+          "allowed": [
+            "helpful factual reply to an existing topic"
+          ],
+          "forbidden": [
+            "new_topic",
+            "body_link",
+            "brand_mention",
+            "price_or_offer",
+            "affiliate_cta",
+            "automated_publication"
+          ],
+          "first_content_id": "pantip-reply-44197340-v1",
+          "first_placement_id": "pantip-reply-44197340-v1__pantip_main",
+          "first_post_status": "published_confirmed"
+        },
+        "_reclosed_20260910": {
+          "by": "owner, 10 Sep 2026 ('handle it'), on Cowork's recommendation",
+          "from": "true (9 Sep blanket lift)",
+          "to": "false",
+          "why": "tools/test_pantip_manual_pilot_contract.py has held this at false since the manual pilot, tied to the 18 Aug 48h review (gates[14]) which is still OPEN. The 9 Sep lift broke that contract and nothing said so because the suite had no scheduled runner. state=limited already stops every post, so re-closing costs nothing operationally and restores the contract on the one channel where a repeat offence is a permanent ban.",
+          "reopen_when": "gates[14] records a decision. Then set this true deliberately, in its own commit, not as part of a blanket change."
+        }
+      }
+    },
+    "gates": [
+      {
+        "date": "2026-07-30",
+        "task": "owner decision - pantip phase 2",
+        "status": "DECIDED",
+        "decides": [
+          "pantip phase 2 posting policy"
+        ],
+        "note": "Phase 1 ran 17-30 Jul (reply-only, <=3/week, no brand/link). From 31 Jul the daily task may still find+draft but must NOT recommend posting until the owner rules on phase 2. ADDED HERE 31 Jul 2026 by watchdog: this date previously existed ONLY in Claude/Scheduled/pantip-daily-opportunity/SKILL.md, so the expiry sweep - which reads this gates[] array - was blind to it. The SKILL.md ordered a warning on every run from 29 Jul, but the task was disabled 26-30 Jul in the token-saving sweep, so the warning was never delivered even once. Same one-truth-many-places drift as the 27-30 Jul blackout.",
+        "decided_on": "2026-07-31",
+        "decision": "do NOT open phase 2 yet - extend phase 1 (reply-only, <=3/week, spaced) to 14 Aug",
+        "rationale": "Phase 2 means starting NEW threads, which is the highest-risk action available on an account that is one strike from a permanent ban. The precondition for phase 2 was a clean, visible 30-day history - but we barely used phase 1: last Pantip post 26 Jul, 0/3 used this week. A thin record is not the same as a clean record, and it is the record a moderator would read. Extending reply-only costs almost nothing and builds the exact evidence phase 2 requires."
+      },
+      {
+        "date": "2026-07-31",
+        "task": "owner decision - which posting cap governs",
+        "status": "DECIDED",
+        "decides": [
+          "posts per day per channel (1 or 2)"
+        ],
+        "note": "Two rules disagree and both are live. POSTING-POLICY_antispam_20260702.md rule 2 says <=2/day/channel; STANDING-RULE_autopost.md (18 Jul, owner instruction, and until 31 Jul NOT even committed to git) says 1/day/channel. For Threads the owner then approved 2/day explicitly on 19 Jul, which post-dates the standing rule - so 2 clearly governs there. For Facebook nothing resolves it: the live guard (fb-evening-safetynet) enforces 2. policy.limits.posts_per_day.default is therefore set to 2 = what the system actually enforces today, NOT a ruling. Found 31 Jul 2026 while auditing my own breach of 3 FB posts in 20 minutes - which is over BOTH caps either way.",
+        "decided_on": "2026-07-31",
+        "decision": "cap stays 2/day/channel; the >=3h gap is the real anti-blast guard",
+        "rationale": "Three things point the same way. (1) POSTING-POLICY_antispam is the document comply_gate/qa_gate are meant to enforce, and it says 2. (2) The owner explicitly approved Threads 2/day on 19 Jul, which POST-DATES the 18 Jul standing rule - so the standing rule was already being refined per-channel rather than held at 1. (3) The standing rule's own stated purpose was 'กัน shadowban - ห้าม blast'; blasting is spacing, not volume. 3 posts in 20 minutes (31 Jul) breaks the spacing rule even at a cap of 1, and 2 posts 6h apart breaks nothing. REVERSIBLE: set limits.posts_per_day.default to 1 and this becomes the stricter rule again, no code change needed."
+      },
+      {
+        "date": "2026-08-01",
+        "task": "owner decision - threads video route",
+        "status": "SUPERSEDED",
+        "decided_on": "2026-08-01",
+        "decisions": [
+          "threads 19:00 slot = caption as text, no video"
+        ],
+        "decision": "stop attempting Threads video upload; keep the slot with the caption as a text post",
+        "rationale": "The brief said to propose text-only only once the OS route was PROVEN dead rather than merely unattempted. It is now proven, with a mechanism rather than a run of failures: the extension's tabs are hidden, so no real click or native dialog can ever reach them. Keeping the slot as text costs nothing to produce, holds the 2/day cap, and the clip still reaches YouTube and Facebook. Reversible the moment either Threads or the tooling changes.",
+        "superseded_on": "2026-08-01",
+        "superseded_by": "threads-video-idle-window 05:12 run",
+        "superseded_note": "Kept for the record. The decision was sound given what was known, but its premise was wrong: the mechanism cited (hidden extension tabs) does not apply to the OS-dialog route, which had never actually been run. OPERATING-NOTES flagged this gap at 04:06 the same night; the 05:12 run then executed the route on a genuinely idle machine and it worked end-to-end."
+      },
+      {
+        "date": "2026-08-03",
+        "task": "ngernduangold-bridge-clips",
+        "status": "SUPERSEDED",
+        "decides": [
+          "produce 2-3 bridge clips to cover 6-8 Aug video slots"
+        ],
+        "note": "Never ran - its date, 3 Aug, fell inside the 3-5 Aug agent blackout. Overtaken by events: the clips it was meant to bridge to already existed. b3-07 and b3-04 were rendered 18 Jul, sat unposted because their slots also fell in the blackout, and were re-dated to 7-8 Aug on 7 Aug. Producing bridge clips now would duplicate the Facebook backfill decided in batch4-gate, which covers 9-13 Aug.",
+        "decided_on": "2026-08-07"
+      },
+      {
+        "date": "2026-08-06",
+        "task": "ngernduangold-batch4-gate",
+        "decides": [
+          "batch4 production volume",
+          "tiktok channel fate"
+        ],
+        "status": "DECIDED",
+        "decided_on": "2026-08-07",
+        "decided_by": "Cowork (owner delegated)",
+        "decision": [
+          "no batch4 yet - run batch3 again on the channels that never received it",
+          "tiktok retired"
+        ],
+        "note": "Delivery measured from post-ledger clip_id (the manifest posted fields were stale and were reconciled the same day): YouTube 5/7, Facebook 2/7, Threads 3/7, TikTok 0/7, with 3 of the 7 measurement days blank. YouTube is the only channel that got a fair test and it reaches 7/7 tomorrow. Producing batch4 now would pay a second time for an answer we still would not have. Instead backfill the SAME clips to Facebook, which is both the biggest gap and the channel with the most proven traffic (33 sessions vs threads 13). That buys 5 days of runway and completes the test in one move. Threads self-heals: threads-video-idle-window already picks the oldest unposted clip.",
+        "backfill_facebook": [
+          {
+            "date": "2026-08-09",
+            "clip": "b3-02"
+          },
+          {
+            "date": "2026-08-10",
+            "clip": "b3-06"
+          },
+          {
+            "date": "2026-08-11",
+            "clip": "b3-03"
+          },
+          {
+            "date": "2026-08-12",
+            "clip": "b3-07"
+          },
+          {
+            "date": "2026-08-13",
+            "clip": "b3-04"
+          }
+        ]
+      },
+      {
+        "date": "2026-08-25",
+        "task": "owner review",
+        "decides": [
+          "instagram return",
+          "pinterest return"
+        ]
+      },
+      {
+        "date": "2026-10-09",
+        "task": "ngernduangold-90day-gate-debt-pivot",
+        "decides": [
+          "debt-wedge pivot go/park/productize"
+        ]
+      },
+      {
+        "date": "2026-08-01",
+        "task": "threads video route - reversal on evidence",
+        "status": "DECIDED",
+        "decided_on": "2026-08-01",
+        "decided_by": "threads-video-idle-window (evidence-based, needs owner ack)",
+        "decisions": [
+          "threads 19:00 slot = video via native OS dialog, text-only fallback retired"
+        ],
+        "decision": "resume Threads video upload using the OS-dialog recipe when the machine is idle",
+        "rationale": "Direct evidence beats inference. Dialog #32770 opened, composer rendered the preview, post published and verified on profile as a single new post. The earlier same-day closure was reasoned from a different code path. OWNER ACK REQUESTED: the 19:00 slot still runs in a normal (non-idle) session, where foreground cannot be guaranteed - so the durable fix is either to keep video on this idle window or to give the 19:00 task the same foreground check.",
+        "owner_ack": "implicit - route has run nightly since 1 Aug without objection; closing so preflight stops warning daily on a decision already in effect"
+      },
+      {
+        "date": "2026-08-08",
+        "task": "ngernduangold-buy-intent-gate",
+        "status": "SUPERSEDED",
+        "closed_on": "2026-08-09",
+        "outcome": "Fired on schedule and read (cc-outbox/result-buy-intent-gate-20260808.md). Verdict: undecidable, and that is the honest answer rather than a dodge. /debt-letter-kit had ZERO visitors between 2 and 8 Aug; the only 2 buy_intent_click events both landed on 1 Aug, the install day, and match our own verification click in time, device and path. position came back (not set) because the custom dimension was registered after those events fired and GA4 does not backfill - the next real click will resolve. Nothing here says anything about the offer. The same two questions now sit on the 2026-09-05 gate, which unlike this one states its precondition (a working checkout) up front.",
+        "superseded_by": "2026-09-05",
+        "decides": [
+          "buy button placement",
+          "whether buy intent is real"
+        ],
+        "count_from": "2026-08-06",
+        "note": "REVISED 7 Aug 2026. count_from was 2026-08-02, but 3, 4 and 5 Aug were an agent-layer blackout - no posts, no traffic driven, nothing measured. The clean window is 6-7 Aug = TWO days, not seven. Firing this gate on schedule produces an automatic 'no' about a test that was never run - exactly what just happened to batch3. Either move the gate out by the number of blackout days, or state plainly in its output that the window was too short to decide. Do NOT compare against July: affiliate_click before 2 Aug includes our own automation (see ga4.internal_traffic and ga4.clicktest_isolation)."
+      },
+      {
+        "date": "2026-09-05",
+        "task": "ngernduangold-sales-experiment-gate",
+        "status": "BLOCKED",
+        "decides": [
+          "whether a verified, deliverable 199 THB offer has real demand"
+        ],
+        "count_from": null,
+        "measurement_start": null,
+        "measurement_window_days": 28,
+        "why": "Until today nobody could answer 'why no sales' because the experiment had never been run. 28 days produced 14 sales-page views; at a 2% conversion that predicts 0.28 sales, so 0 was the expected result, not a signal. Worse, the sales page carries zero Gumroad links - the only checkout offered is 'add a stranger on LINE', and LINE friends = 1. This gate exists so the next reading is taken against a threshold set BEFORE the data arrives.",
+        "preconditions": [
+          "A0 (BLOCKING, owner): the 10-page PDF must exist and be uploaded as its own Gumroad product. Until it does, the page is taking orders it cannot fill.",
+          "A1 (CC, ~20 min, only after A0): wire that listing into site/debt-letter-kit.html and the debt articles",
+          "A2 (blocking): checkout, delivery, refund/contact copy and analytics must pass QA before a fresh measurement_start is written"
+        ],
+        "pass_if": {
+          "sales_page_views_28d": 50,
+          "real_sessions_28d": 90,
+          "sales": "1 - but only counts if A0 was done before the window opened"
+        },
+        "how_to_read": "sales_page_views >= 50 and still 0 sales -> demand can finally be discussed, the test was real. sales_page_views < 50 -> the bottleneck is still traffic; do NOT touch the offer, the price or the sales page copy, and do not read 0 sales as a demand signal. Preconditions not done -> the gate cannot decide anything; say so plainly rather than producing an automatic 'no', which is exactly what happened to batch3 on 6 Aug.",
+        "source": "automation-log/SALES-DIAGNOSIS_20260808.md",
+        "_revised_20260809": "Original preconditions assumed the product existed and that l/debt-toolkit could be linked to the sales page. Both were wrong. If A0 is not done, this gate CANNOT decide anything about demand: driving traffic to an unfulfillable offer is not an experiment, it is an exposure.",
+        "_revised_20260816": "Blocked and reset. Start a new 28-day window only after A0-A2 are complete. Pantip remains a separate channel decision and is not a sales-test precondition."
+      },
+      {
+        "date": "2026-08-10",
+        "task": "ngernduangold-batch3-gate-final",
+        "status": "DECIDED",
+        "decides": [
+          "does batch3 pass the >=100 views/7d bar",
+          "how many clips batch4 gets, if any",
+          "what happens to content_supply.planned_park, which expires the same day"
+        ],
+        "count_from": "2026-08-03",
+        "why": "The 6 Aug gate decided 'cannot decide yet, defer to 10 Aug'. Nobody registered the 10 Aug date anywhere - no gates[] entry, and the task that made the decision fires once and auto-disables. Found on 9 Aug: the decision day was about to pass in silence while the park expired underneath it. A deferral nobody registers is an accidental cancellation.",
+        "blocked_by": "secrets/yt_token.json needs the youtube.readonly scope or view counts cannot be read at all; owner-only. Without it the honest output is 'cannot decide', never 'fail'.",
+        "how_to_read": "A test that was never run is not a test that failed. If views cannot be read, defer again WITH a registered date and extend planned_park to match.",
+        "decided_on": "2026-08-10",
+        "decided_by": "Cowork (owner delegated)",
+        "decision": [
+          "batch3: CANNOT DECIDE - view counts unreadable. Not a fail.",
+          "batch4: do NOT produce yet; BATCH4-PRODUCTION-KIT has no sunk cost",
+          "tiktok: already retired 7 Aug - nothing to decide, not reopened",
+          "defer to 2026-08-13 10:00 and extend planned_park to match"
+        ],
+        "rationale": "Tested live today, not assumed: refreshed the token successfully, then called videos?part=statistics and got HTTP 403 ACCESS_TOKEN_SCOPE_INSUFFICIENT. scopes is still ['youtube.upload'] only - the file was touched 9 Aug 08:12 but that was an automatic refresh, NOT a re-auth, which is exactly why it looks healthy and is not. The measurement window is no longer the constraint: b3-01/05/02/06 all passed 7x24h days ago. Only the read permission is. A test that was never run is not a test that failed, so this is 'cannot decide', never 'fail'.",
+        "unblock_paths": {
+          "A_owner": "re-auth secrets/yt_token.json with scope youtube.readonly (~5 min, permanent fix)",
+          "B_no_owner": "read view counts off channels.youtube.studio_url in a real browser. This is the path nobody considered for 4 days. Precedent is in this same file: channels.tiktok.evidence says reading TikTok Studio in the browser 'does NOT need the owner's phone, which is why this sat open for 8 days'. Same wrong assumption, different channel.",
+          "_note": "The 6 Aug gate offered only path A and predicted it would defer forever if A was skipped. A was skipped. It did."
+        },
+        "output": "automation-log/GATE-batch3-FINAL_20260810.md"
+      },
+      {
+        "date": "2026-08-15",
+        "task": "ngernduangold-knowledge-library-refill",
+        "status": "DECIDED",
+        "decided_on": "2026-08-16",
+        "decision": "KNOWLEDGE-POSTS-C_20260816-0831.md created and passed the 16-row fail-closed validator; daily noon content now has coverage through 31 Aug.",
+        "decides": [
+          "whether the daily noon post has anything left to publish from 16 Aug"
+        ],
+        "why": "KNOWLEDGE-POSTS-B ends 15 Aug with 7 entries left. The noon post fires every day and reads from that library. No task was watching this cliff. Refill task now fires 13 Aug, two days of slack so a failed round can still be fixed before the library runs dry.",
+        "content_gate": true,
+        "note": "Registered as a gate so check_content_cliff can see it. The 27-30 Jul blackout happened because content ran out and only the posting routines knew."
+      },
+      {
+        "date": "2026-08-13",
+        "task": "ngernduangold-batch3-gate-final-2",
+        "status": "DECIDED",
+        "decides": [
+          "does batch3 pass the >=100 views/7d bar - LAST attempt at this question",
+          "how many clips batch4 gets, if any",
+          "what happens to content_supply.planned_park, which expires the same day"
+        ],
+        "count_from": "2026-08-03",
+        "why": "Deferred here from 10 Aug because YouTube view counts could not be read (live 403 confirmed). 13 Aug is chosen by the measurement, not by convenience: b3-03 completes 7x24h at 08:13 that morning, so n goes from 4 to 5 = every batch3 clip that reached YouTube. Shorter than 14 Aug on purpose - every extra day of park is another day YouTube stays silent.",
+        "blocked_by": "yt_token.json still lacks youtube.readonly. TWO unblock paths now, see gates[2026-08-10].unblock_paths - this is no longer owner-only.",
+        "no_further_deferral": true,
+        "how_to_read": "Deferred twice already (3->6 Aug, 6->10 Aug); this is the third. If views STILL cannot be read on 13 Aug, do NOT defer a fourth time. Retire the >=100-views criterion, recording it as UNMEASURABLE rather than failed, and size batch4 from evidence that can actually be read: GA4 session/piece and per-channel delivery rate. A criterion unreadable three rounds running is not a criterion, it is a roadblock - and holding it stops the whole system while deciding nothing.",
+        "source": "automation-log/GATE-batch3-FINAL_20260810.md",
+        "decided_on": "2026-08-16",
+        "decided_by": "Codex after owner-authorized live audit",
+        "decision": [
+          "batch3 view gate: PASS - b3-05 reached 304 views around 26 hours after public release, inside the 7-day window",
+          "batch4 volume: one pilot only, b4-p01; do not render the remaining prepared batch yet",
+          "publishing remains a separate control; this gate does not schedule or post",
+          "do not reopen retired or paused channels as a side effect"
+        ],
+        "rationale": "YouTube Studio was read successfully on 16 Aug and showed the same salary/credit-limit Short at 369 views. The older direct platform snapshot already pinned 304 views inside about 26 hours, so the >=100-within-7-days condition is measurable and passed. Only one clip clearly crossed the bar and GA4/revenue evidence is still weak, therefore a one-clip pilot is the maximum evidence supports.",
+        "output": "automation-log/GATE-batch3-FINAL_20260816.md"
+      },
+      {
+        "date": "2026-08-14",
+        "task": "owner decision - pantip phase 2",
+        "status": "DECIDED",
+        "decided_on": "2026-08-16",
+        "decision": "Pause Pantip after the expired reply-only phase; do not draft, post or link until a new explicitly approved phase exists.",
+        "decides": [
+          "pantip phase 2: open it, extend phase 1 again, or leave as is"
+        ],
+        "why": "REGISTERED (not decided) by the 10 Aug gate run. channels.pantip.phase_until is 2026-08-14 and the 30 Jul gate ordered 'extend phase 1 to 14 Aug' - but NO gates[] entry for 14 Aug existed. That is the identical bug that created ngernduangold-batch3-gate-final: the 6 Aug gate deferred to 10 Aug and nobody registered 10 Aug either. A deferral nobody registers is an accidental cancellation.",
+        "owner": "CC (channels.pantip.owner) - Cowork must not post or draft Pantip",
+        "note": "Decided fail-closed on 16 Aug after the deadline passed. Reopening requires a new dated phase and per-piece owner approval; an old OPEN gate or historical traffic is not permission.",
+        "rationale": "The apparent upside is based on only 4 recorded affiliate clicks while the account-level downside is a permanent ban. Pausing is reversible; a violation is not.",
+        "superseded_by": "pantip manual reply pilot approved 2026-08-16"
+      },
+      {
+        "date": "2026-08-18",
+        "task": "pantip manual pilot 48h review",
+        "status": "OPEN",
+        "review_due_at": "2026-08-18T15:54:44+07:00",
+        "decides": [
+          "whether comment 6 remains visible without a moderator warning or deletion",
+          "whether the reply-only one-per-week pilot may continue through 2026-08-23"
+        ],
+        "evidence": {
+          "content_id": "pantip-reply-44197340-v1",
+          "placement_id": "pantip-reply-44197340-v1__pantip_main",
+          "permalink": "https://pantip.com/topic/44197340/comment6"
+        },
+        "pass_if": [
+          "comment remains visible",
+          "no moderator warning, deletion, or account restriction",
+          "no link, brand, price, offer, or duplicate was introduced"
+        ],
+        "fail_action": "Set channels.pantip back to paused, publication_authorized=false, weekly_quota=0, and do not post again.",
+        "pass_action": "A PASS only makes one future reply eligible for fresh source/dedup/compliance review and action-time owner confirmation; it does not publish or grant standing authority.",
+        "note": "The owner confirmed this exact comment and destination at action time. That confirmation does not authorize any different future comment; the browser confirmation and all content gates still apply per piece."
+      }
+    ],
+    "specs": {
+      "reel_width": 1080,
+      "reel_height": 1920,
+      "post_slot_local": "19:00"
+    },
+    "slack": {
+      "ops": "C0BLWT5EEG1",
+      "action": "C0BLRL411V3",
+      "canvas": "F0BPD85PR40",
+      "canvas_url": "https://cowork-z7y1217.slack.com/docs/T0BLGA1MG73/F0BPD85PR40",
+      "_how_to_use": "Canvas = state (open items, current numbers) - UPDATE it, never re-broadcast. ops channel = new events only. action channel = things needing the owner's hands. Audit 7 Aug 2026: ops was running 15.7 msg/day averaging 1,766 chars, 72% over 1,500 chars, carrying ~12 real decisions inside 70,633 characters, of which one was ever closed. Volume was hiding the signal, not delivering it."
+    },
+    "limits": {
+      "_source": "POSTING-POLICY_antispam_20260702.md rule 2",
+      "posts_per_day": {
+        "default": 2,
+        "pinterest": 5
+      },
+      "min_gap_hours": 3,
+      "post_types": [
+        "text",
+        "video",
+        "image"
+      ],
+      "_conflict": "Historical conflict resolved by the dated gate on 2026-07-31: STANDING-RULE_autopost.md originally said 1/day/channel while POSTING-POLICY rule 2 said <=2/day/channel. DECIDED: 2/day/channel remains the cap and min_gap_hours >=3 is the anti-blast guard. The historical 1/day text remains in STANDING-RULE with its dated resolution."
+    },
+    "funnel_endpoint": {
+      "_why": "Verified live by Cowork on the owner-authenticated session, 1 Aug 2026 ~19:5x. FUNNEL-HEALTH_20260731 had to skip every LINE check because the session had expired, so for two days nobody could tell whether the only checkout path for the 199 THB product was even open. It is. Recorded here so the 8 Aug buy-intent gate can be read without that ambiguity.",
+      "line_oa": "@804qodya",
+      "verified_on": "2026-08-01",
+      "chat_open": true,
+      "greeting_message_on": true,
+      "reply_mode": "manual + auto-reply",
+      "business_hours_limit": false,
+      "auto_replies_active": [
+        "เคส-triage (keyword x3)",
+        "ขอจดหมาย-leadmag (keyword x2)",
+        "Default (all messages)"
+      ],
+      "friends": 1,
+      "verdict": "ENDPOINT HEALTHY - if buy_intent_click rises and sales stay 0, the offer is the problem, not a dead endpoint. That distinction was unavailable until now.",
+      "gumroad": {
+        "url": "https://ngernduangold.gumroad.com/l/debt-toolkit",
+        "sells": "ชุดเครื่องมือปลดหนี้ (Excel) - NOT the 5-letter PDF kit",
+        "is_the_letter_kit": false,
+        "catalogue_20260809": {
+          "l/debt-toolkit": "Excel toolkit, $5.97. Its own description reads: price in Thailand 199 THB, Gumroad displays an approximate USD figure.",
+          "l/debt-payoff-planner": "credit-card payoff guide + worksheet (the 59 THB ebook), $1.77",
+          "letter kit (5 negotiation letters + call script, 10-page PDF, 199 THB)": "NO GUMROAD PRODUCT EXISTS"
+        },
+        "verified_at": "2026-08-07",
+        "verified_how": "Opened the product page in a real browser: title renders, price $5.97 shown, 'I want this!' button present, 22.7 KB file attached, LINE contact live.",
+        "state": "PURCHASABLE",
+        "_meaning": "This closes the ambiguity in preflight's `sales recorded` WARN. The money endpoint is NOT broken, so an empty sales log means nobody has bought - a demand problem, not a plumbing one. Note the two figures the guard compares are different funnels: affiliate_click is AccessTrade bank commission, sales-log is the 199 THB own product. Keep the WARN - zero revenue is a real fact that should stay loud - but do not spend another session re-checking the plumbing.",
+        "linked_from_sales_page": false,
+        "_correction_20260809": "My 8 Aug correction said the fix was to link this Gumroad product from the sales page. That is WRONG and would have been harmful. This listing (l/debt-toolkit) delivers a spreadsheet; debt-letter-kit.html sells five letters as a PDF. Same 199 THB price, different product. The letters have no Gumroad listing and no file. Correct action: the owner creates the PDF and a new listing first; only then wire it up.",
+        "_correction_20260808": "The 7 Aug note concluded 'endpoint is not broken, so 0 sales is a demand problem'. That was incomplete and the conclusion does not follow. Checked site/debt-letter-kit.html today: it contains ZERO Gumroad links - 8 LINE links and no checkout. All 13 debt articles that point at the sales page are the same. Gumroad appears only on /links, which the sales page does not link to. So the working checkout exists and nobody arriving at the sales page can see it; the only offered path is 'add a stranger on LINE' and LINE friends = 1. Demand remains untested.",
+        "price_note": "The Gumroad page states 'ราคาไทย 199 บาท - แสดงเป็น USD โดยประมาณ'. There is no price conflict to fix; the card is simply charged ~215 THB after currency conversion. Tell the buyer, do not change the price. (Cancels action A2 from the 8 Aug note.)"
+      },
+      "sales_page_paths": {
+        "file": "site/debt-letter-kit.html",
+        "gumroad_links": 0,
+        "line_links": 3,
+        "_line_links_note": "3 anchor tags. The earlier count of 8 counted string occurrences of line.me including script and meta text.",
+        "price_mismatch": "NOT A MISMATCH - checked the listing itself on 9 Aug: it already states price in Thailand 199 THB and explains that Gumroad shows an approximate USD figure. Nothing to reconcile in the copy. The real friction is smaller and different: a Thai card is billed $5.97, which clears at roughly 215 THB after FX, so the buyer pays about 8% over the advertised number. That is a disclosure line, not a price change - and it is moot until a letter-kit product exists at all."
+      }
+    },
+    "ga4": {
+      "_why": "Custom dimensions are NOT retroactive. Registered 1 Aug 2026, the same day the three buy buttons went live, so the 8 Aug read can say which button was clicked and not merely that one was.",
+      "property": "541618281",
+      "measurement_id": "G-17PPE0M1B8",
+      "custom_dimensions_registered": {
+        "Buy Button Position": "position (event scope, 1 Aug 2026)",
+        "Buy Product": "product (event scope, 1 Aug 2026)",
+        "Affiliate Campaign": "campaign",
+        "Affiliate Channel": "channel",
+        "Affiliate Provider": "provider",
+        "Affiliate Sub ID": "sub_id"
+      },
+      "internal_traffic": {
+        "_why": "GA4 internal-traffic matching requires private network values. The public policy stores only this fail-closed contract; live egress state and configured CIDRs stay in ignored local runtime files.",
+        "rule_name": "Internal Traffic - My IP",
+        "traffic_type": "internal",
+        "filter_name": "Internal Traffic",
+        "private_config_contract": {
+          "schema_version": 1,
+          "environment": "NGERNDUANGOLD_GA4_PRIVATE_POLICY",
+          "default": ".local-private/runtime/ga4-policy-private.json",
+          "required_shape": "ga4.internal_traffic with active exclude state and non-empty CIDRs",
+          "missing_behavior": "UNTRUSTED"
+        },
+        "verified_at": "stored in private runtime state",
+        "verified_how": "Verify the private CIDRs in GA4 Admin and keep public logs free of network addresses.",
+        "on_mismatch": "Treat every GA4 decision as UNTRUSTED until the private egress state is covered by the private CIDR list. Never widen a consumer network range to hide address rotation.",
+        "rotation_history": [
+          {
+            "seen": "2026-08-01",
+            "event": "network address rotated; private filter state required an update"
+          },
+          {
+            "seen": "2026-08-07",
+            "event": "another rotation confirmed that broad consumer ranges must not be excluded"
+          }
+        ]
+      },
+      "clicktest_isolation": {
+        "_why": "Two different populations needed two different fixes and neither one covers the other. clicktest looks like a bot to GA4, so the IP rule was never what protected it; real-Chrome automation does not look like a bot, so source-side opt-out in clicktest was never what protected that. Writing this down because the next reader will otherwise assume one fix was enough.",
+        "mechanism": "ga-disable-<GA4_ID>=true injected before page scripts, plus traffic_type=internal",
+        "owner": "tools/postdeploy_click_test.py (CC, 1 Aug 2026)",
+        "self_check": "The run counts its own requests to */collect and FAILs if any escape, so the one-time manual proof (1 -> 0) is re-proved on every run. Reverse-tested 1 Aug: opt-out on = 0 hits, opt-out removed = 2 hits."
+      }
+    },
+    "blackouts": [
+      {
+        "dates": "2026-07-27..2026-07-30",
+        "days": 4,
+        "cause": "schedule.json pipe broken"
+      },
+      {
+        "dates": "2026-08-03..2026-08-05",
+        "days": 3,
+        "cause": "Cowork agent tasks only fire while the desktop app is open; owner away. The cron layer ran normally all three days, so nothing looked wrong on disk.",
+        "cost": "batch4-gate fired 6 Aug on a 7-day window with 3 blank days -> verdict 'cannot be measured'. A week of production bought no answer.",
+        "detected_by": "nobody at the time; found 7 Aug by auditing Slack silence",
+        "now_guarded_by": "tools/agent_gap_check.py on the cron layer"
+      },
+      {
+        "from": "2026-09-05",
+        "until": null,
+        "kind": "deliberate agent-layer pause",
+        "scope": "ALL Cowork scheduled tasks. The cron layer (pipeline/run_daily.cmd via Windows Task Scheduler) is NOT paused - it costs no tokens and keeps preflight, uptime_check, runway_guard and the ledger guards alive.",
+        "reason": "Owner is moving token budget to another project. This is a decision, not a failure.",
+        "declared_by": "owner, 5 Sep 2026",
+        "_read_this_before_diagnosing": "Silence from the from date is expected only for Cowork tasks actually disabled in the scheduler registry. Preserve failures from before the pause. Enabled Claude Code tasks and the Windows cron layer remain accountable to their own schedules. A business experiment whose measurement window overlaps this pause cannot establish an outcome from absent activity.",
+        "resume_checklist": "automation-log/RESUME-CHECKLIST_20260905.md",
+        "_date_correction": "First written as 9 Aug because the sandbox clock reported that date. The scheduled-task registry proved otherwise - tasks show lastRunAt through 5 Sep. Corrected before commit. Never trust the sandbox clock for anything dated."
+      }
+    ],
+    "task_roots": {
+      "_swept": "2026-08-16 read-only stable registry snapshot",
+      "cowork_root": "C:\\Users\\nL_ku\\Claude\\Scheduled",
+      "cc_root": "C:\\Users\\nL_ku\\.claude\\scheduled-tasks",
+      "counts": {
+        "cowork_folders": 103,
+        "cowork_registry_entries": 92,
+        "cowork_enabled": 26,
+        "cc_folders": 12,
+        "cc_registry_entries": 11,
+        "cc_enabled": 7,
+        "cowork_orphans": 11,
+        "cc_orphans": 1,
+        "ghosts": 0,
+        "shared_prompt_ids": 12
+      },
+      "_finding": "Folder presence is not execution authority. The current guard reads stable snapshots of both Claude Desktop scheduled-tasks registries and binds each record to its exact prompt root. Cowork has 11 orphan folders and CCD has 1; enabled state comes only from the registries.",
+      "cowork_orphans_with_cc_counterpart": [
+        "ngernduangold-buy-intent-gate",
+        "ngernduangold-clicktest",
+        "ngernduangold-comment-loop",
+        "ngernduangold-delivery-heartbeat",
+        "ngernduangold-delivery-verify",
+        "ngernduangold-first-signal",
+        "ngernduangold-gsc-weekly",
+        "ngernduangold-link-health",
+        "ngernduangold-queue-keeper"
+      ],
+      "explicitly_retired_or_absent_everywhere": [
+        "ngernduangold-gsc-weekly",
+        "tiktok-vmok-window-watcher"
+      ],
+      "shared_ids_require_registry_ownership_check": [
+        "daily-pantip-threads-engine",
+        "ngernduangold-pantip-monitor",
+        "ngernduangold-weekly-review"
+      ],
+      "_why_it_matters": "A byte-identical mirror can be unreachable, while an enabled registry may point to a retired no-op prompt. Content equality therefore cannot prove execution ownership. Registry state, prompt retirement state, role capabilities and executable side effects must be checked together.",
+      "rule": "Before editing a task prompt, read the stable scheduler ownership export from tools/automation_policy_guard.py --registry-json. Never infer ownership from a folder and never edit scheduler registry JSON by hand.",
+      "guarded_by": "tools/automation_policy_guard.py plus preflight automation ownership gate; cowork-task-watchdog is read-only evidence review and is not authority to mutate a scheduler."
+    },
+    "audits": {
+      "prompt_sweep_20260807": {
+        "scanned": "25 enabled Cowork tasks + 2 CC-side reachable",
+        "found": {
+          "evidence_after_external_call": 10,
+          "designed_silent_failure": 3,
+          "hardcoded_facts": 13,
+          "start_signal_as_success": 3,
+          "cap_violation": 1,
+          "self_contradiction": 7
+        },
+        "fixed_same_day": [
+          "ngernduangold-fb-reel-backfill (cap violation 2h26m < 3h - self-inflicted 2h earlier)",
+          "ngernduangold-weekly-review (tombstone restored from .bak, live since 1 Aug)",
+          "daily-social-post-reminder (no evidence step at all; scheduled-vs-published conflated)",
+          "ngernduangold-channel-heartbeat (no branch for state=retired; hardcoded dates/quota/thresholds; best-effort log)",
+          "bybit-api-key-rotation (hardcoded '14 days left', actually 34; log-is-alive used as proof key was rotated)"
+        ],
+        "still_open": [
+          "ngernduangold-funnel-endpoint-check: checks 2 of 3 auto-replies, misses the one the whole FB-Groups funnel hangs on; proof-of-run sits after the step most likely to fail (LINE login wall)",
+          "ngernduangold-fb-page-comment-link: 'ไม่ fail ดัง' downgrades a real failure, and skipping the ledger append makes the guard report the day as not done - it says so itself",
+          "ngernduangold-yt-comment-link / threads-daily / knowledge-post-noon: ledger written after the post, so a post that succeeds then errors leaves no row and the next run may repost",
+          "cascade-bot-weekly-check: no local artifact at all, ends at Slack",
+          "cowork-cc-review-loop: Slack channel ids hard-coded in step 0 while step 2 says to read them from LOOP_POLICY.md"
+        ],
+        "_note": "Fixed in order of how soon each fires, not how bad each looked. The cap violation was two days from firing on a page with two prior anti-spam offences, and I had introduced it myself two hours earlier by doing the arithmetic wrong in a comment that claimed the gap was fine."
+      },
+      "synthetic_traffic_20260808": {
+        "why": "preflight's `synthetic traffic` WARN has fired every run for weeks. Nobody had checked whether the number was moving, so each reader started the same investigation from scratch.",
+        "measured": "direct sessions in the 28-day rolling window, read from git history of automation-log/ga4-metrics.csv",
+        "series": {
+          "2026-07-26": 196,
+          "2026-07-27": 185,
+          "2026-07-30": 175,
+          "2026-07-31": 169,
+          "2026-08-01": 166,
+          "2026-08-02": 172,
+          "2026-08-06": 149,
+          "2026-08-07": 141
+        },
+        "reading": "falling steadily since 26 Jul, which is when 16 agent tasks were paused. Consistent with the direct traffic having been our own automation. NOT attributable to the 7 Aug GA4 internal-IP fix - the decline predates it.",
+        "prediction": "if this was our own robots, direct keeps falling as old days age out of the 28-day window. Re-read on 2026-08-20: below ~90 means the explanation held and the WARN can be re-tuned. Flat or rising with engagement still 0 means something ELSE is hitting the site and the real cause was never found.",
+        "do_not": "do not silence this WARN before that date - zero-engagement traffic at 77% is worth staying loud about"
+      },
+      "sales_diagnosis_20260808": {
+        "doc": "automation-log/SALES-DIAGNOSIS_20260808.md",
+        "funnel_28d": {
+          "sessions_total": 171,
+          "direct_own_robots": 128,
+          "real_humans": 43,
+          "sales_page_views": 14,
+          "buy_intent_clicks": 0,
+          "sales": 0,
+          "_buy_intent_correction": "Was recorded as 2 and attributed to pantip. Both events were (direct) on 1 Aug - our own test clicks when the button was installed. Cause: ga4_pull.py computed the channel name only inside the affiliate_click branch, so buy_intent rows inherited the previous row's channel. Every total was correct; only the attribution was wrong, which is why eight days of reports passed review. Human buy-intent clicks to date: ZERO. Fixed by fold_event_rows + pipeline/test_ga4_attribution.py, which pins the exact production row ordering."
+        },
+        "headline": "0 sales is the EXPECTED value at 14 sales-page views: 14 x 2% = 0.28. The selling experiment has never actually been run, so nothing about demand can be concluded yet.",
+        "labour_vs_return": {
+          "pantip": "0 pieces in 28d -> 15 sessions and 4 affiliate clicks. Still the best channel in the system, but the reason is 'the only channel sending people who click anything at all', NOT 'the only channel producing purchase intent' - that claim came from the attribution bug.",
+          "chatgpt": "0 pieces -> 12 sessions, growing 5 -> 11 -> 12 with no effort at all",
+          "threads": "25 pieces -> 1 session (0.04/piece). Pantip's historical rate is 133x this.",
+          "facebook": "17 pieces -> 11 sessions",
+          "youtube": "6 pieces -> 3 sessions"
+        },
+        "actions_ranked": [
+          "A: BLOCKED 9 Aug - no Gumroad product exists for the letter kit; the one on file sells something else. Owner must create it (~15 min) and supply the PDF before any linking work is real.",
+          "B: SUPERSEDED / BLOCKED - do not resume Pantip; current weekly_quota=0 and phase is paused. Reopening requires a new dated phase and per-piece owner approval.",
+          "C: stop producing Threads-only content",
+          "D: write for AI citation - chatgpt already compounds unaided"
+        ],
+        "do_not": [
+          "do not change price or rewrite the offer - n=14 cannot tell you what is wrong",
+          "do not treat historical Pantip traffic as permission to resume; current weekly_quota is 0 and the phase is paused",
+          "do not read 0 sales as a demand signal until the sales page gets >=50 views/month WITH a working checkout"
+        ],
+        "gate_date": "2026-09-05",
+        "gate_pass": {
+          "sales_page_views_28d": 50,
+          "real_sessions_28d": 90,
+          "pantip_pieces": 10,
+          "sales": 1
+        },
+        "_uptime_check_exonerated": "The 8 Aug note blamed direct traffic on uptime_check. It uses urllib only, runs no JavaScript, and therefore cannot create a GA4 session at all. The real cause is the internal-traffic rule pinned to a rotated-out IP. Do not 'fix' uptime_check for this - it is the detector, not the source.",
+        "_product_missing": "The largest finding, and it was not in the 8 Aug note at all: site/debt-letter-kit.html promises a 10-page PDF three times and that PDF does not exist. See policy.products. Action A from the 8 Aug note is void - l/debt-toolkit sells an Excel toolkit, not the letters, and both happen to cost 199 THB, which is exactly why the mismatch was easy to miss. Wiring them together would have turned 'no sales' into 'shipped the wrong product'."
+      }
+    },
+    "content_supply": {
+      "checked_at": "2026-08-16",
+      "checked_by": "Codex full policy/content audit",
+      "video": {
+        "queued_days_from_today": 0,
+        "last_queued_day": "2026-08-08",
+        "unposted_rendered_clips_1080x1920": [
+          "b3-04",
+          "b4-p01 (rendered and QA-passed 2026-08-16; not scheduled)"
+        ],
+        "clips_720p_unusable": [
+          "2026-07-11_kp04",
+          "2026-07-12_tl01b",
+          "2026-07-16_kp05",
+          "2026-07-17_eb02",
+          "2026-07-18_kp06",
+          "2026-07-19_eb03"
+        ],
+        "note_720p": "rendered but below the 1080x1920 clip spec - they FAIL check_queued_clip_spec. Do not queue them; they are not spare runway.",
+        "channel_runway": {
+          "youtube": "0 scheduled days; b4-p01 is ready for review but not authorized for publishing",
+          "threads": "no new schedule created by the 16 Aug production run",
+          "facebook": "manual video path; no new schedule created by the 16 Aug production run"
+        }
+      },
+      "text": {
+        "knowledge_posts_until": "2026-08-31",
+        "quote_cards_until": "2026-08-22",
+        "page2_posts_until": "2026-09-11",
+        "verdict": "sufficient - text is not the constraint"
+      },
+      "last_video_park": {
+        "scope": "video queue only",
+        "from": "2026-08-09",
+        "until": "2026-08-13",
+        "reason": "Waiting on PERMISSION TO READ YouTube view counts (scope youtube.readonly, or a browser read of YouTube Studio) - NOT waiting on clips to age. b3-01/05/02/06 passed 7x24h days ago; b3-03 does so 13 Aug 08:13. Producing batch4 before the gate still risks rendering clips the gate then says not to post.",
+        "decided_by": "automation-log/GATE-batch3-FINAL_20260810.md section 4.4",
+        "resume_by": "2026-08-14",
+        "will_not_be_extended_again": true,
+        "accepted_cost": "YouTube gets NO new clip 9-13 Aug. Runway is 0 and no spare 1080x1920 clip exists (the 6 in reels/ are 720p and fail spec). Facebook is covered by the 10-14 Aug backfill and Threads self-heals. Stated out loud rather than hidden: we are pausing production to measure YouTube, and the pause is what makes YouTube silent - which is the strongest argument for 13 Aug being the last deferral.",
+        "script_bottleneck_precleared": "automation-log/BATCH4-PRODUCTION-KIT.md",
+        "closed_on": "2026-08-16",
+        "closed_by": "automation-log/GATE-batch3-FINAL_20260816.md",
+        "close_reason": "Live Studio evidence closed the measurement gate; one pilot was produced and no further deferral was allowed."
+      },
+      "planned_park": {
+        "scope": "video queue only",
+        "from": "2026-09-05",
+        "until": "2026-10-15",
+        "reason": "Owner paused the entire agent layer on 5 Sep 2026 to move token budget to another project. Not a content decision - a resourcing one.",
+        "decided_by": "owner pause, 5 Sep 2026",
+        "resume_by": "set a real date when the agent layer is switched back on - this one is a placeholder chosen only to stop PARK_OVERRUN firing at nobody, and it still expires on purpose",
+        "_honesty_note": "This is a paused video queue. The authoritative expiry is the until field above; evaluate it on every control run so the pause cannot silently become permanent. This park does not exempt other content channels or enabled schedulers from their own checks."
+      }
+    },
+    "products": {
+      "_why": "Added 9 Aug 2026. site/debt-letter-kit.html promises 'ส่งสลิปในแชทเดิม แล้วรับไฟล์ PDF 10 หน้ากลับทางแชท' three times over. The PDF does not exist anywhere on this machine. Nobody noticed because every check in this repo watched whether the OFFER was reachable - never whether the THING could be handed over. A page that can take money for a file we cannot send is worse than a page nobody visits.",
+      "_status_note": "DELIVERABLE_READY means only that the recorded deliverable exists or is hosted. It does not authorize promotion, linking, publishing, scheduling, or accepting payment; promotion_authorized remains a separate fail-closed field.",
+      "items": [
+        {
+          "id": "letter-kit-199",
+          "price_thb": 199,
+          "sold_on": "site/debt-letter-kit.html",
+          "promises": "จดหมาย 5 ฉบับ + สคริปต์โทรแบงก์ (PDF 10 หน้า)",
+          "deliverable": null,
+          "status": "PROMISED-BUT-MISSING",
+          "promotion_authorized": false,
+          "note": "Blocks the whole 199 THB funnel. Owner must produce the PDF; it cannot be generated from anything in the repo. Same shape as the 24 Jul ebook case."
+        },
+        {
+          "id": "ebook-59",
+          "price_thb": 59,
+          "sold_on": "site/links.html",
+          "promises": "ebook แผนปลดหนี้",
+          "deliverable": "automation-log/_ebook_debt-payoff_v1.2.pdf",
+          "status": "DELIVERABLE_READY",
+          "promotion_authorized": false
+        },
+        {
+          "id": "debt-toolkit-gumroad",
+          "price_thb": 199,
+          "sold_on": "site/links.html",
+          "promises": "ชุดเครื่องมือปลดหนี้ (Excel)",
+          "deliverable": "gumroad:l/debt-toolkit",
+          "status": "DELIVERABLE_READY",
+          "promotion_authorized": false,
+          "note": "Hosted by Gumroad, verified purchasable 7 Aug. This is a DIFFERENT product from letter-kit-199 despite sharing the 199 THB price - linking the two would have shipped a spreadsheet to someone who paid for letters."
+        }
+      ]
+    },
+    "release_attestation": {
+      "schema_version": 1,
+      "live_domain_observation": {
+        "schema_version": 1,
+        "max_age_hours": 6,
+        "max_capture_duration_seconds": 120,
+        "future_skew_seconds": 300,
+        "exclusive_expiry": true
+      },
+      "predeploy_acceptance": {
+        "schema_version": 1,
+        "max_age_hours": 2,
+        "max_funnel_report_age_hours": 2,
+        "future_skew_seconds": 300,
+        "exclusive_expiry": true
+      }
+    }
+  },
+  "calendar_file_sha256": "978B5C91453D548E1285193A80428F7936CCCE052BE7ED2D6B9739969A762D23"
+}

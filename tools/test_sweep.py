@@ -69,6 +69,14 @@ PROTECTED = (
     ".system_control/role_capabilities.json",
     "automation-log/post-ledger.jsonl",
 )
+# Directories where a test must not ADD files either. Same day: a test dropped
+# a PROVISIONAL corpus-review.json into automation-log/dedup-evidence/, where
+# other suites read it as real evidence. A new file is a mutation too.
+PROTECTED_DIRS = (
+    ".system_control",
+    "automation-log/dedup-evidence",
+    "automation-log/media-qa",
+)
 
 
 def _snapshot():
@@ -79,7 +87,26 @@ def _snapshot():
             out[rel] = open(p, "rb").read()
         except OSError:
             out[rel] = None
+    for d in PROTECTED_DIRS:
+        p = os.path.join(REPO, d)
+        try:
+            names = sorted(os.listdir(p))
+        except OSError:
+            names = None
+        out["dir:" + d] = names
     return out
+
+
+def _new_files(before, after):
+    added = []
+    for k, was in before.items():
+        if not k.startswith("dir:") or was is None:
+            continue
+        now = after.get(k) or []
+        for n in now:
+            if n not in was:
+                added.append(os.path.join(k[4:], n))
+    return added
 
 
 def _restore(changed):
@@ -107,9 +134,15 @@ def run_one(rel, timeout):
     state, rc, took, note = _run_one_unfenced(rel, timeout)
     after = _snapshot()
     changed = [(k, before[k]) for k in PROTECTED if before[k] != after[k]]
-    if changed:
+    added = _new_files(before, after)
+    if changed or added:
         _restore(changed)
-        names = ", ".join(k for k, _ in changed)
+        for a in added:
+            try:
+                os.remove(os.path.join(REPO, a))
+            except OSError:
+                pass
+        names = ", ".join([k for k, _ in changed] + ["+" + a for a in added])
         return "mutated", rc, took, ("wrote to protected repo file(s): %s - restored; "
                                      "this suite must be fixed before it can count" % names)
     return state, rc, took, note

@@ -86,8 +86,8 @@ class ScheduledLlmSafetyTests(unittest.TestCase):
             root = Path(temp)
             inbox = root / "inbox"
             orders = root / "orders.txt"
-            _fixture_registry(orders, active_count=1, historical_count=0)
             with (
+                mock.patch.object(dispatcher, "ROOT", root),
                 mock.patch.object(dispatcher, "INBOX", str(inbox)),
                 mock.patch.object(dispatcher, "ORDERS", str(orders)),
                 mock.patch.object(daily_content, "INBOX", str(inbox)),
@@ -96,6 +96,7 @@ class ScheduledLlmSafetyTests(unittest.TestCase):
                 mock.patch.object(socket.socket, "connect", side_effect=AssertionError("network")) as connect,
                 contextlib.redirect_stdout(io.StringIO()),
             ):
+                _fixture_registry(orders, active_count=1, historical_count=0)
                 dispatcher.bootstrap_novelty_state(
                     dispatcher.ledger_path_for(inbox)
                 )

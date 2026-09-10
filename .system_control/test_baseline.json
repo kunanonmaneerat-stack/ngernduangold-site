@@ -6,7 +6,7 @@
   "known_red": {
     "pipeline/test_facebook_story39_recovery_guard.py": {
       "state": "fail",
-      "note": "--------------------------------------------------------------\r\nRan 4 tests in 0.014s\r\n\r\nFAILED (failures=3)"
+      "note": "--------------------------------------------------------------\r\nRan 4 tests in 0.059s\r\n\r\nFAILED (failures=3)"
     },
     "pipeline/test_improvement_loop.py": {
       "state": "fail",
@@ -14,15 +14,11 @@
     },
     "pipeline/test_post_ledger_collision_tombstone.py": {
       "state": "fail",
-      "note": "-------------------------------------------------------------\r\nRan 10 tests in 0.154s\r\n\r\nFAILED (failures=4)"
+      "note": "-------------------------------------------------------------\r\nRan 10 tests in 0.209s\r\n\r\nFAILED (failures=4)"
     },
     "pipeline/test_post_ledger_identity_bindings.py": {
       "state": "fail",
-      "note": "-------------------------------------------------------------\r\nRan 34 tests in 7.953s\r\n\r\nFAILED (failures=4)"
-    },
-    "tools/test_content_calendar_guard.py": {
-      "state": "fail",
-      "note": "content calendar guard tests: 89/102 PASS"
+      "note": "-------------------------------------------------------------\r\nRan 34 tests in 8.313s\r\n\r\nFAILED (failures=4)"
     },
     "tools/test_content_novelty_p1.py": {
       "state": "fail",
@@ -30,15 +26,11 @@
     },
     "tools/test_content_novelty_queue.py": {
       "state": "fail",
-      "note": "[daily_content] local request -> C:\\Users\\nL_ku\\AppData\\Local\\Temp\\tmpy5td2e7f\\automation-log\\cowork-inbox\\dai"
-    },
-    "tools/test_external_notification_safety.py": {
-      "state": "mutated",
-      "note": "wrote to protected repo file(s): .system_control/content_calendar.json, .system_control/content_manifest.json, automation-log/post-ledger.jsonl - restored; this suite must be fixed before it can count"
+      "note": "[daily_content] local request -> C:\\Users\\nL_ku\\AppData\\Local\\Temp\\tmpr4k_33ak\\automation-log\\cowork-inbox\\dai"
     },
     "tools/test_next48_owner_decision_packet.py": {
       "state": "fail",
-      "note": "----------------------------------------------------------------\r\nRan 2 tests in 0.161s\r\n\r\nFAILED (errors=1)"
+      "note": "----------------------------------------------------------------\r\nRan 2 tests in 0.309s\r\n\r\nFAILED (errors=1)"
     },
     "tools/test_post_ledger_completeness.py": {
       "state": "fail",
@@ -52,17 +44,13 @@
       "state": "fail",
       "note": "publication_authority: NONE"
     },
-    "tools/test_scheduled_llm_safety.py": {
-      "state": "mutated",
-      "note": "wrote to protected repo file(s): .system_control/content_calendar.json, .system_control/content_manifest.json, automation-log/post-ledger.jsonl - restored; this suite must be fixed before it can count"
-    },
     "tools/test_week_candidate_manifest_guard.py": {
       "state": "fail",
-      "note": "-------------------------------------------------------------\r\nRan 3 tests in 90.180s\r\n\r\nFAILED (failures=1)"
+      "note": "-------------------------------------------------------------\r\nRan 3 tests in 87.249s\r\n\r\nFAILED (failures=1)"
     },
     "tools/test_week_content_r5_novelty_guard.py": {
       "state": "fail",
-      "note": "-------------------------------------------------------------\r\nRan 10 tests in 0.089s\r\n\r\nFAILED (failures=1)"
+      "note": "-------------------------------------------------------------\r\nRan 10 tests in 0.073s\r\n\r\nFAILED (failures=1)"
     }
   }
 }

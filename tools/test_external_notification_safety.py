@@ -106,12 +106,13 @@ class LocalNotificationBehaviorTests(unittest.TestCase):
             root = Path(temp)
             inbox = root / "inbox"
             orders = root / "orders.txt"
-            _fixture_registry(orders, active_count=1, historical_count=0)
             with (
+                mock.patch.object(dispatcher, "ROOT", root),
                 mock.patch.object(dispatcher, "INBOX", str(inbox)),
                 mock.patch.object(dispatcher, "ORDERS", str(orders)),
                 contextlib.redirect_stdout(io.StringIO()),
             ):
+                _fixture_registry(orders, active_count=1, historical_count=0)
                 dispatcher.bootstrap_novelty_state(
                     dispatcher.ledger_path_for(inbox)
                 )

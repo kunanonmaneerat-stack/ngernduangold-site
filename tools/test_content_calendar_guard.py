@@ -215,8 +215,10 @@ if __name__ == "__main__" and "--calendar-guard-fix-only" in sys.argv:
     raise SystemExit(not unittest.TextTestRunner(verbosity=2).run(suite).wasSuccessful())
 
 
-CALENDAR = json.loads((ROOT / ".system_control/content_calendar.json").read_text(encoding="utf-8"))
-POLICY = json.loads((ROOT / ".system_control/policy.json").read_text(encoding="utf-8"))
+FIXTURE_PATH = ROOT / "tools/fixtures/content_calendar_guard_snapshot.json"
+FIXTURE = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+CALENDAR = FIXTURE["calendar"]
+POLICY = FIXTURE["policy"]
 TODAY = date(2026, 8, 16)
 NOW = datetime(2026, 8, 16, 23, 59, tzinfo=ZoneInfo("Asia/Bangkok"))
 
@@ -393,7 +395,22 @@ check("overflow calendar JSON numbers fail closed",
       strict_rejects('{"placements":[],"probe":1e999}'))
 
 
-actual = guard.evaluate(ROOT / ".system_control/content_calendar.json", repo=ROOT, now=NOW)
+# The historical 124/125 gap is a fixed scenario, not today's live ledger.
+# Keep production channel scoping/classification code under test.
+with patch.object(guard.post_ledger, "permanent_dedup_gate", return_value=(
+    False, "124 complete, 1 incomplete", {"coverage_percent": 99.2,
+    "complete_rows": 124, "identity_rows": 125},
+)), patch.object(guard.post_ledger, "permanent_dedup_channel_gate", side_effect=lambda channel, _path: (
+    channel != "fb", "36 complete, 1 incomplete" if channel == "fb" else "complete",
+    {"complete_rows": 36 if channel == "fb" else 1,
+     "incomplete_rows": 1 if channel == "fb" else 0,
+     "identity_rows": 37 if channel == "fb" else 1,
+     "coverage_percent": 100 * 36 / 37 if channel == "fb" else 100},
+)), patch.object(guard, "_ledger_rows", return_value=([], [])):
+    actual = guard.evaluate_document(
+        deepcopy(CALENDAR), repo=ROOT, now=NOW, policy=deepcopy(POLICY),
+        source_evaluator=_blocked_source(CALENDAR), media_evaluator=_pass_media,
+    )
 actual_dedup_findings = [
     item for item in actual.get("findings", []) if item.get("code") == "PERMANENT_DEDUP_INCOMPLETE"
 ]
@@ -402,7 +419,7 @@ actual_global_dedup_audit = [
     if item.get("code") == "PERMANENT_DEDUP_GLOBAL_AUDIT"
 ]
 check(
-    "actual calendar scopes the 124/125 permanent dedup gap to Facebook main",
+    "fixture calendar scopes the 124/125 permanent dedup gap to Facebook main",
     actual.get("verdict") == "FAIL"
     and actual.get("process_state") == "BLOCKED"
     and "PERMANENT_DEDUP_INCOMPLETE" in _codes(actual)
@@ -444,14 +461,15 @@ try:
             "identity_rows": 1,
         },
     )
-    global_only_dedup = guard.evaluate_document(
-        deepcopy(CALENDAR),
-        repo=ROOT,
-        now=NOW,
-        policy=deepcopy(POLICY),
-        source_evaluator=_blocked_source(CALENDAR),
-        media_evaluator=_pass_media,
-    )
+    with patch.object(guard, "_ledger_rows", return_value=([], [])):
+        global_only_dedup = guard.evaluate_document(
+            deepcopy(CALENDAR),
+            repo=ROOT,
+            now=NOW,
+            policy=deepcopy(POLICY),
+            source_evaluator=_blocked_source(CALENDAR),
+            media_evaluator=_pass_media,
+        )
 finally:
     guard.post_ledger.permanent_dedup_gate = original_global_dedup_gate
     guard.post_ledger.permanent_dedup_channel_gate = original_channel_dedup_gate
@@ -1545,7 +1563,7 @@ qt14_pinterest = next(
     item for item in CALENDAR["placements"]
     if item.get("placement_id") == "qt-14__pinterest_main"
 )
-calendar_file_hash = guard._sha256(ROOT / ".system_control/content_calendar.json")
+calendar_file_hash = FIXTURE["calendar_file_sha256"]
 check(
     "declared media binding receipt proves the exact calendar, source, asset and QA bytes",
     guard._media_binding_receipt_errors(
@@ -1623,6 +1641,64 @@ def non_page_identity(document):
 
 
 check("Page2 must remain a page-only Organization", "ACCOUNT_PAGE_ONLY" in _codes(_run(non_page_identity)))
+
+
+
+def fixture_is_independent_of_live_policy():
+    """Replay all 102 assertions with live authority flipped only in memory.
+
+    The replay also rejects *any* live calendar/policy read, including fallback
+    reads inside the guard. Live integration tests remain in CalendarGuardFixTests.
+    """
+    import io
+    import runpy
+
+    live_policy_path = (ROOT / guard.POLICY_PATH).resolve()
+    live_calendar_path = (ROOT / guard.CALENDAR_PATH).resolve()
+    changed_policy = json.loads(live_policy_path.read_text(encoding="utf-8"))
+    channel = changed_policy["channels"]["tiktok"]
+    channel["publication_authorized"] = not channel["publication_authorized"]
+    original_open = Path.open
+    reads = []
+
+    def memory_open(path, mode="r", *args, **kwargs):
+        resolved = path.resolve()
+        if resolved == live_policy_path:
+            reads.append(resolved)
+            raw = json.dumps(changed_policy, ensure_ascii=False)
+            return io.BytesIO(raw.encode("utf-8")) if "b" in mode else io.StringIO(raw)
+        if resolved == live_calendar_path:
+            raise AssertionError("fixture replay read the live calendar")
+        return original_open(path, mode, *args, **kwargs)
+
+    with patch.object(Path, "open", memory_open):
+        # Prove reads of the real policy path see the in-memory mutation.
+        observed = json.loads(live_policy_path.read_text(encoding="utf-8"))
+        if observed["channels"]["tiktok"] != channel:
+            return False
+        reads.clear()
+        replay = runpy.run_path(str(Path(__file__).resolve()), run_name="_calendar_fixture_replay")
+    # Retain every existing assertion; compare key scenario outputs as well as
+    # the boolean matrix so a different passing verdict cannot hide drift.
+    result_names = (
+        "actual", "global_only_dedup", "baseline", "same_instant_utc",
+        "date_compatibility", "before_first_slot", "after_first_slot",
+        "rolled_calendar", "source_clock_result", "human_audio_blocked",
+    )
+    return (
+        not reads and len(replay["cases"]) == 102
+        and replay["cases"] == cases and all(replay["cases"])
+        and all(
+            replay[name][key] == globals()[name][key]
+            for name in result_names
+            for key in ("verdict", "process_state", "counts", "findings")
+        )
+    )
+
+
+if __name__ != "_calendar_fixture_replay":
+    check("all 102 fixture assertions survive an in-memory live authority change",
+          fixture_is_independent_of_live_policy())
 
 
 class ContentCalendarGuardRegressionTests(unittest.TestCase):
