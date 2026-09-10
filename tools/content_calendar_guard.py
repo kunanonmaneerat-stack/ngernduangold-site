@@ -2689,7 +2689,9 @@ def evaluate(
 
 
 def exit_code_for_result(result: dict) -> int:
-    """Map process states to legacy exits; findings and runner failure share 3."""
+    """Map process states to exits. Only RUNNER_FAILED (and any unknown state,
+    which fails closed to it) returns 3; structural findings return 2 - see the
+    note on EXIT_CODES for the 10 Sep 2026 abort that made this explicit."""
     return EXIT_CODES.get(
         result.get("process_state"),
         EXIT_CODES[PROCESS_RUNNER_FAILED],

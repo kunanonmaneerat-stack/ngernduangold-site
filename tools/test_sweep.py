@@ -56,18 +56,127 @@ def discover():
     return sorted(out)
 
 
+# Files no test may change. 10 Sep 2026: a sweep gutted the live content
+# calendar (65 placements -> 0), the manifest and the post ledger (177 rows ->
+# 2), and the next sweep then read those ruins and reported nine healthy suites
+# BROKE. Some test writes fixtures to dispatcher.ROOT without patching it. Every
+# suite is now fenced: bytes before, bytes after, and a suite that touches any of
+# these is reported as MUTATED (never pass), and the file is put back from git.
+PROTECTED = (
+    ".system_control/policy.json",
+    ".system_control/content_calendar.json",
+    ".system_control/content_manifest.json",
+    ".system_control/role_capabilities.json",
+    "automation-log/post-ledger.jsonl",
+)
+
+
+def _snapshot():
+    out = {}
+    for rel in PROTECTED:
+        p = os.path.join(REPO, rel)
+        try:
+            out[rel] = open(p, "rb").read()
+        except OSError:
+            out[rel] = None
+    return out
+
+
+def _restore(changed):
+    """Put protected files back EXACTLY as they were before the suite ran.
+
+    Exact bytes, from memory - never `git checkout`. This repo has
+    core.autocrlf=true, so a checkout rewrites LF files as CRLF on disk. Several
+    receipts bind the calendar by sha256 of its bytes; on 10 Sep 2026 a manual
+    `git checkout` restore after the gutting silently turned seven green suites
+    red through that hash alone. If you ever must restore from git, write the
+    bytes of `git show HEAD:<path>` directly.
+    """
+    for rel, before in changed:
+        p = os.path.join(REPO, rel)
+        if before is None:
+            continue
+        with open(p, "wb") as fh:
+            fh.write(before)
+
+
 def run_one(rel, timeout):
-    """-> (state, rc, seconds, note). state in {pass, fail, timeout, error}."""
-    started = time.time()
-    env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1", PYTHONIOENCODING="utf-8")
-    # Run as a module (python -m tools.test_x) from the repo root, NOT by path.
-    # By path, sys.path[0] becomes tools/, and "from tools import x" then
-    # resolves to whatever package named `tools` is installed on this machine -
-    # on 10 Sep 2026 that was hermes-agent's, and it turned seven healthy suites
-    # into "cannot_run" in the first sweep. Six of them were green all along.
-    module = rel[:-3].replace("/", ".")
+    """-> (state, rc, seconds, note).
+    state in {pass, fail, cannot_run, mutated, timeout, error}."""
+    before = _snapshot()
+    state, rc, took, note = _run_one_unfenced(rel, timeout)
+    after = _snapshot()
+    changed = [(k, before[k]) for k in PROTECTED if before[k] != after[k]]
+    if changed:
+        _restore(changed)
+        names = ", ".join(k for k, _ in changed)
+        return "mutated", rc, took, ("wrote to protected repo file(s): %s - restored; "
+                                     "this suite must be fixed before it can count" % names)
+    return state, rc, took, note
+
+
+def _probe_python(path):
+    """True when this interpreter can import what the scheduled guards need -
+    the same bar pipeline/python_runtime.cmd applies."""
+    if not path or not os.path.isfile(path):
+        return False
     try:
-        r = subprocess.run([sys.executable, "-X", "utf8", "-B", "-m", module],
+        r = subprocess.run([path, "-c", "import numpy, cv2, PIL, cryptography"],
+                           capture_output=True, timeout=60)
+        return r.returncode == 0
+    except Exception:
+        return False
+
+
+def resolve_python():
+    """Pick the interpreter the cron layer would pick, in its order.
+
+    10 Sep 2026: `python` on this machine's PATH is hermes-agent's venv. Every
+    ad-hoc test run that day used it without noticing, which is why `tools`
+    resolved to the wrong package and why numpy looked missing. The scheduled
+    layer never had that problem because python_runtime.cmd probes for a runtime
+    that actually imports numpy/cv2/PIL/cryptography. Mirror that here so the
+    sweep judges suites on the interpreter that will really run them.
+    """
+    home = os.path.expanduser("~")
+    local = os.environ.get("LOCALAPPDATA", "")
+    candidates = [
+        os.environ.get("NGERNDUANGOLD_PYTHON"),
+        os.path.join(REPO, ".venv", "Scripts", "python.exe"),
+        os.path.join(REPO, "venv", "Scripts", "python.exe"),
+        os.environ.get("CODEX_WORKSPACE_PYTHON"),
+        os.path.join(home, ".cache", "codex-runtimes", "codex-primary-runtime",
+                     "dependencies", "python", "python.exe"),
+        os.path.join(local, "Python", "pythoncore-3.14-64", "python.exe"),
+    ]
+    if local:
+        candidates.extend(sorted(glob.glob(os.path.join(local, "Python", "*", "python.exe"))))
+    for c in candidates:
+        if _probe_python(c):
+            return c, "cron-equivalent"
+    return sys.executable, "FALLBACK sys.executable - cron runtime not found, results may not match the scheduled layer"
+
+
+PYTHON, PYTHON_NOTE = None, None
+
+
+def _run_one_unfenced(rel, timeout):
+    started = time.time()
+    # This repo's tests use TWO import conventions and neither runner mode alone
+    # satisfies both:
+    #   `import release_candidate`        needs tools/ on sys.path  (run by path)
+    #   `from tools import x`             needs the repo root       (run with -m)
+    # By path alone, `tools` resolved to hermes-agent's installed package and 7
+    # healthy suites read as cannot_run. With -m alone, 40+ suites lost their
+    # bare imports and read as BROKE. Run by path AND put the repo root on
+    # PYTHONPATH: script dir first (bare imports), repo root second (`tools.*`),
+    # site-packages last - so the foreign `tools` never wins. Verified 10 Sep on
+    # one suite of each convention.
+    env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1", PYTHONIOENCODING="utf-8",
+               PYTHONPATH=REPO + (os.pathsep + os.environ["PYTHONPATH"]
+                                  if os.environ.get("PYTHONPATH") else ""))
+    try:
+        r = subprocess.run([PYTHON, "-X", "utf8", "-B", rel],
                            cwd=REPO, capture_output=True, timeout=timeout, env=env)
     except subprocess.TimeoutExpired:
         return "timeout", None, time.time() - started, "exceeded %ss" % timeout
@@ -117,6 +226,11 @@ def main():
     if not suites:
         print("test_sweep: no test files found - that is itself the finding")
         return 2
+
+    global PYTHON, PYTHON_NOTE
+    PYTHON, PYTHON_NOTE = resolve_python()
+    if not a.json:
+        print("interpreter: %s (%s)" % (PYTHON, PYTHON_NOTE), flush=True)
 
     base = load_baseline()
     known = set((base or {}).get("known_red", {}))
