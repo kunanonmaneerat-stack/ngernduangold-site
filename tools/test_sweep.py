@@ -37,8 +37,13 @@ BASELINE = os.path.join(REPO, ".system_control", "test_baseline.json")
 SELF = os.path.basename(__file__)
 
 # Suites this sweep must not run.
-#   test_sweep itself - it would call itself forever.
-SKIP = {SELF}
+#   test_sweep itself          - it would call itself forever.
+#   test_sweep_baseline        - it proves the baseline comparison fires in both
+#                                directions by temporarily editing the real
+#                                baseline file. Safe on its own, but running it
+#                                from inside a sweep means two processes writing
+#                                the same file. Run it directly instead.
+SKIP = {SELF, "test_sweep_baseline.py"}
 
 
 def discover():
