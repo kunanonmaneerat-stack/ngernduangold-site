@@ -28,7 +28,7 @@ import time
 
 SCHEMA_VERSION = 3
 TASK_CONTRACT_SCHEMA_VERSION = 2
-STEP_CLASSIFIER_VERSION = 2
+STEP_CLASSIFIER_VERSION = 3
 RECEIPT_INSPECTION_SCHEMA_VERSION = 1
 LEGACY_RECEIPT_SCHEMA_VERSION = 2
 CLI_EVIDENCE_ERROR = 90
@@ -130,6 +130,13 @@ STEP_CLASSIFIER_REGISTRY = {
 STEP_CLASSIFIER_REGISTRY[2] = copy.deepcopy(STEP_CLASSIFIER_REGISTRY[1])
 STEP_CLASSIFIER_REGISTRY[2]["contract_exit_maps"]["novelty-queue-v1"] = {
     "0": "PASS", "10": "SKIP", "20": "BLOCKED",
+}
+
+
+# Preserve classifier v1/v2 hashes for already-sealed receipts.
+STEP_CLASSIFIER_REGISTRY[3] = copy.deepcopy(STEP_CLASSIFIER_REGISTRY[2])
+STEP_CLASSIFIER_REGISTRY[3]["contract_exit_maps"]["test-sweep-v1"] = {
+    "0": "PASS", "1": "REVIEW_REQUIRED", "2": "BLOCKED",
 }
 
 
@@ -392,9 +399,30 @@ TASK_STEP_COMMAND_REGISTRY[(
     TASK_STEP_COMMAND_REGISTRY[("ngernduangold_daily", "daily-runner-v5")]
 )
 
+# Weekly v5 adds a bounded sweep after the improvement loop; retain v4 history.
+_weekly_v5_spec = copy.deepcopy(
+    TASK_STEP_CONTRACT_REGISTRY[("ngernduangold_weekly", "weekly-runner-v4")]
+)
+_weekly_v5_spec["version"] = "weekly-runner-v5"
+_weekly_v5_spec["classifier_version"] = 3
+_weekly_v5_spec["runner_sha256"] = "25acb4bed5ca27cb03960a2ed462abfdd8ca97835c5290e258ba59172ba245f5"
+_weekly_v5_spec["expected_steps"] += (("test_sweep", "graded", "test-sweep-v1"),)
+TASK_STEP_CONTRACT_REGISTRY[(
+    "ngernduangold_weekly", "weekly-runner-v5"
+)] = _weekly_v5_spec
+TASK_STEP_COMMAND_REGISTRY[(
+    "ngernduangold_weekly", "weekly-runner-v5"
+)] = {
+    **TASK_STEP_COMMAND_REGISTRY[("ngernduangold_weekly", "weekly-runner-v4")],
+    "test_sweep": (
+        RUNTIME_LAUNCHER, _repo_path("tools", "test_sweep.py"),
+        "--total-timeout", "840",
+    ),
+}
+
 ACTIVE_TASK_CONTRACT_VERSION = {
     "ngernduangold_daily": "daily-runner-v6",
-    "ngernduangold_weekly": "weekly-runner-v4",
+    "ngernduangold_weekly": "weekly-runner-v5",
 }
 
 # Compatibility/readability view for wiring tests and callers that only need

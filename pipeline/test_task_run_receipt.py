@@ -478,7 +478,7 @@ class ReceiptTestCase(unittest.TestCase):
             receipt._classifier_hash(2),
             "719faa22cd322c0c886ddeeff1f99f8889772a8cc3a17feb00ff3fb76f2e6bb4",
         )
-        self.assertEqual(receipt.STEP_CLASSIFIER_VERSION, 2)
+        self.assertEqual(receipt.STEP_CLASSIFIER_VERSION, 3)
         self.assertEqual(
             receipt.TASK_STEP_CONTRACT_REGISTRY[
                 ("ngernduangold_weekly", "weekly-runner-v4")
@@ -1207,6 +1207,10 @@ class ReceiptTestCase(unittest.TestCase):
             ("privacy-guard-v1", 2, "RUNNER_FAILED", False),
             ("review-or-block-v1", 1, "REVIEW_REQUIRED", True),
             ("review-or-block-v1", 2, "BLOCKED", True),
+            ("test-sweep-v1", 0, "PASS", True),
+            ("test-sweep-v1", 1, "REVIEW_REQUIRED", True),
+            ("test-sweep-v1", 2, "BLOCKED", True),
+            ("test-sweep-v1", 3, "RUNNER_FAILED", False),
             ("official-news-v1", 1, "REVIEW_REQUIRED", True),
             ("official-news-v1", 2, "BLOCKED", True),
             ("official-news-v1", 3, "RUNNER_FAILED", False),
@@ -1946,6 +1950,107 @@ class ReceiptTestCase(unittest.TestCase):
         self.assertEqual(document["execution_state"], "RUNNER_FAILED")
 
 
+class WeeklySweepTestCase(unittest.TestCase):
+    """Pure regression tests: no live sweep, file writes, or cleanup."""
+
+    @staticmethod
+    def sweep_module():
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("weekly_test_sweep", ROOT / "tools/test_sweep.py")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module
+
+    def test_historical_classifiers_and_weekly_manifest_are_preserved(self):
+        self.assertEqual(receipt._classifier_hash(1), "4bcac846cef25d2892105df14ad564399ef111d7769d65473ac5f51db92d6673")
+        self.assertEqual(receipt._classifier_hash(2), "719faa22cd322c0c886ddeeff1f99f8889772a8cc3a17feb00ff3fb76f2e6bb4")
+        old = receipt.TASK_STEP_CONTRACT_REGISTRY[("ngernduangold_weekly", "weekly-runner-v4")]
+        new = receipt.TASK_STEP_CONTRACTS["ngernduangold_weekly"]
+        self.assertEqual(old["classifier_version"], 1)
+        self.assertEqual(old["runner_sha256"], "6ce1930f95c62cacff26ca71a6c7cf54c7f6330116b87f189a42cf3f1115bb44")
+        self.assertEqual(new["expected_steps"][:-1], old["expected_steps"])
+        self.assertEqual(new["expected_steps"][-1], ("test_sweep", "graded", "test-sweep-v1"))
+        self.assertEqual(new["classifier_version"], 3)
+
+    def test_sweep_exit_states_are_proven(self):
+        for rc, state, valid in ((0, "PASS", True), (1, "REVIEW_REQUIRED", True),
+                                 (2, "BLOCKED", True), (3, "RUNNER_FAILED", False)):
+            result = receipt.classify_step("graded", "test-sweep-v1", rc, classifier_version=3)
+            self.assertEqual(result["semantic_state"], state)
+            self.assertIs(result["execution_valid"], valid)
+
+    def test_review_and_block_close_as_completed_with_blockers(self):
+        for rc in (1, 2):
+            classified = receipt.classify_step("graded", "test-sweep-v1", rc, classifier_version=3)
+            document = {"steps": [{"step_id": "test_sweep", "raw_rc": rc, **classified}]}
+            self.assertEqual(
+                receipt._derive_execution_state(document, "end", rc, "normal_end"),
+                "COMPLETED_WITH_BLOCKERS",
+            )
+
+    def test_weekly_sweep_continues_to_close_and_daily_has_no_sweep(self):
+        weekly = (HERE / "run_weekly.cmd").read_text(encoding="utf-8")
+        body = weekly.split("\n:abort\n", 1)[0]
+        start = body.index('set "STEP_NAME=test_sweep"')
+        tail = body[start:]
+        self.assertLess(body.index('set "STEP_NAME=improvement_loop"'), start)
+        self.assertIn('call :graded "%PY%" "%BASE%\\..\\tools\\test_sweep.py" --total-timeout 840', tail)
+        self.assertNotIn("goto :abort", tail)
+        self.assertIn('call :close_receipt "end"', tail)
+        self.assertNotIn("test_sweep", (HERE / "run_daily.cmd").read_text(encoding="utf-8"))
+
+    def test_whole_sweep_deadline_includes_probes_and_caps_child_timeout(self):
+        sweep = self.sweep_module()
+        import io
+        with mock.patch.object(sys, "argv", ["test_sweep", "--total-timeout", "10", "--json"]), \
+             mock.patch.object(sweep, "discover", return_value=["a", "b"]), \
+             mock.patch.object(sweep, "resolve_python", return_value=("python", "fixture")) as resolve, \
+             mock.patch.object(sweep, "load_baseline", return_value={"known_red": {}}), \
+             mock.patch.object(sweep.time, "monotonic", side_effect=[100, 107, 110, 110]), \
+             mock.patch.object(sweep, "run_one", return_value=("timeout", None, 3, "timeout")) as run, \
+             mock.patch.object(sys, "stdout", new_callable=io.StringIO) as output:
+            self.assertEqual(sweep.main(), 2)
+            resolve.assert_called_once_with(deadline=110)
+            run.assert_called_once_with("a", 3)
+            result = json.loads(output.getvalue())
+            self.assertFalse(result["complete"])
+            self.assertEqual(result["pending"], ["b"])
+
+    def test_probe_budget_and_no_baseline_write_after_timeout(self):
+        sweep = self.sweep_module()
+        import io
+        with mock.patch.object(sweep.time, "monotonic", side_effect=[99, 100]), \
+             mock.patch.object(sweep, "_probe_python", return_value=False) as probe:
+            sweep.resolve_python(deadline=100)
+            self.assertEqual(probe.call_count, 1)
+            self.assertEqual(probe.call_args.kwargs["timeout"], 1)
+        with mock.patch.object(sys, "argv", ["test_sweep", "--total-timeout", "1", "--write-baseline"]), \
+             mock.patch.object(sweep, "discover", return_value=["a"]), \
+             mock.patch.object(sweep, "resolve_python", return_value=("python", "fixture")), \
+             mock.patch.object(sweep, "load_baseline", return_value={"known_red": {}}), \
+             mock.patch.object(sweep.time, "monotonic", side_effect=[100, 101]), \
+             mock.patch.object(sweep, "run_one") as run, \
+             mock.patch.object(sweep.io, "open") as write, \
+             mock.patch.object(sys, "stdout", new_callable=io.StringIO):
+            self.assertEqual(sweep.main(), 2)
+            run.assert_not_called()
+            write.assert_not_called()
+
+    def test_complete_sweep_still_reports_both_directions(self):
+        sweep = self.sweep_module()
+        import io
+        for known, state, expected in (({}, "pass", 0), ({}, "fail", 1), ({"a": {}}, "pass", 1)):
+            with self.subTest(known=known, state=state), \
+                 mock.patch.object(sys, "argv", ["test_sweep", "--json"]), \
+                 mock.patch.object(sweep, "discover", return_value=["a"]), \
+                 mock.patch.object(sweep, "resolve_python", return_value=("python", "fixture")), \
+                 mock.patch.object(sweep, "load_baseline", return_value={"known_red": known}), \
+                 mock.patch.object(sweep.time, "monotonic", return_value=100), \
+                 mock.patch.object(sweep, "run_one", return_value=(state, 0, 0, "")), \
+                 mock.patch.object(sys, "stdout", new_callable=io.StringIO):
+                self.assertEqual(sweep.main(), expected)
+
+
 class RunnerWiringTestCase(unittest.TestCase):
     @staticmethod
     def parsed_manifest(name):
@@ -2148,6 +2253,7 @@ class RunnerWiringTestCase(unittest.TestCase):
                 "ga4_pull": "block-on-2-v1",
                 "gsc_pull": "block-on-2-v1",
                 "weekly_growth_review": "zero-only-v1",
+                "test_sweep": "test-sweep-v1",
             },
         }
         for name, step_contracts in expectations.items():

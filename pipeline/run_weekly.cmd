@@ -112,6 +112,14 @@ set "STEP_CONTRACT=improvement-loop-v1"
 call :required "%PY%" "%BASE%\improvement_loop.py" run --cadence weekly --mode local-safe --json
 set IMPROVEMENT_RC=!errorlevel!
 if !IMPROVEMENT_RC! NEQ 0 echo [%date% %time%] improvement loop COMPLETED_BLOCKED - weekly evidence written, no growth action >> "%LOG%"
+echo [%date% %time%] test_sweep >> "%LOG%"
+set "STEP_NAME=test_sweep"
+set "STEP_CONTRACT=test-sweep-v1"
+call :graded "%PY%" "%BASE%\..\tools\test_sweep.py" --total-timeout 840
+set TEST_SWEEP_RC=!errorlevel!
+if !TEST_SWEEP_RC! EQU 1 echo [%date% %time%] TEST SWEEP REVIEW_REQUIRED - baseline moved; completing measurement receipt >> "%LOG%"
+if !TEST_SWEEP_RC! EQU 2 echo [%date% %time%] TEST SWEEP BLOCKED - sweep incomplete or unavailable >> "%LOG%"
+if !TEST_SWEEP_RC! GEQ 3 echo [%date% %time%] !! TEST SWEEP RUNNER_FAILED >> "%LOG%"
 echo [%date% %time%] run_weekly end exit=!RUN_EXIT! >> "%LOG%"
 call :close_receipt "end" !RUN_EXIT! "normal_end"
 set CLOSE_RC=!errorlevel!

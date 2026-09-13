@@ -26,6 +26,7 @@ USAGE
   python tools/test_sweep.py --write-baseline   # record today's reality
   python tools/test_sweep.py --only calendar    # substring filter
   python tools/test_sweep.py --timeout 120
+  python tools/test_sweep.py --total-timeout 840  # whole sweep, including probes
 
 EXIT CODES
   0 = nothing moved   1 = something moved (either direction)   2 = could not sweep
@@ -148,20 +149,20 @@ def run_one(rel, timeout):
     return state, rc, took, note
 
 
-def _probe_python(path):
+def _probe_python(path, timeout=60):
     """True when this interpreter can import what the scheduled guards need -
     the same bar pipeline/python_runtime.cmd applies."""
     if not path or not os.path.isfile(path):
         return False
     try:
         r = subprocess.run([path, "-c", "import numpy, cv2, PIL, cryptography"],
-                           capture_output=True, timeout=60)
+                           capture_output=True, timeout=timeout)
         return r.returncode == 0
     except Exception:
         return False
 
 
-def resolve_python():
+def resolve_python(deadline=None):
     """Pick the interpreter the cron layer would pick, in its order.
 
     10 Sep 2026: `python` on this machine's PATH is hermes-agent's venv. Every
@@ -185,7 +186,10 @@ def resolve_python():
     if local:
         candidates.extend(sorted(glob.glob(os.path.join(local, "Python", "*", "python.exe"))))
     for c in candidates:
-        if _probe_python(c):
+        remaining = 60 if deadline is None else deadline - time.monotonic()
+        if remaining <= 0:
+            break
+        if _probe_python(c, timeout=min(60, remaining)):
             return c, "cron-equivalent"
     return sys.executable, "FALLBACK sys.executable - cron runtime not found, results may not match the scheduled layer"
 
@@ -250,10 +254,15 @@ def load_baseline():
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--timeout", type=int, default=180)
+    ap.add_argument("--total-timeout", type=int, default=840,
+                    help="whole-sweep budget in seconds, including interpreter probes (1..900)")
     ap.add_argument("--only")
     ap.add_argument("--write-baseline", action="store_true")
     ap.add_argument("--json", action="store_true")
     a = ap.parse_args()
+    if a.timeout <= 0 or not 1 <= a.total_timeout <= 900:
+        ap.error("timeouts must be positive and total-timeout must be <= 900")
+    deadline = time.monotonic() + a.total_timeout
 
     suites = [s for s in discover() if not a.only or a.only in s]
     if not suites:
@@ -261,7 +270,7 @@ def main():
         return 2
 
     global PYTHON, PYTHON_NOTE
-    PYTHON, PYTHON_NOTE = resolve_python()
+    PYTHON, PYTHON_NOTE = resolve_python(deadline=deadline)
     if not a.json:
         print("interpreter: %s (%s)" % (PYTHON, PYTHON_NOTE), flush=True)
 
@@ -269,6 +278,7 @@ def main():
     known = set((base or {}).get("known_red", {}))
 
     results, moved = {}, []
+    incomplete = False
     # Progress is printed and flushed per suite on purpose. A sweep of a hundred
     # suites that prints nothing until it finishes cannot be told apart from a
     # sweep that hung, which is the same "I could not look" problem this repo
@@ -276,7 +286,11 @@ def main():
     for n, rel in enumerate(suites, 1):
         if not a.json:
             print("[%3d/%d] %s" % (n, len(suites), rel), flush=True)
-        state, rc, took, note = run_one(rel, a.timeout)
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            incomplete = True
+            break
+        state, rc, took, note = run_one(rel, min(a.timeout, remaining))
         if not a.json and state != "pass":
             print("         -> %s %s" % (state, note[:80]), flush=True)
         results[rel] = {"state": state, "rc": rc, "seconds": round(took, 1),
@@ -289,6 +303,20 @@ def main():
                                         "from the baseline"))
         elif not green and rel not in known:
             moved.append(("BROKE", rel, "%s %s" % (state, note)))
+
+    # Never certify a partial run or overwrite the baseline with partial data.
+    # run_one finishes its mutation fence before this check, even on timeout.
+    incomplete = incomplete or time.monotonic() >= deadline
+    if incomplete:
+        pending = [rel for rel in suites if rel not in results]
+        if a.json:
+            print(json.dumps({"results": results, "moved": moved,
+                              "complete": False, "pending": pending,
+                              "reason": "total_timeout"}, ensure_ascii=False, indent=2))
+        else:
+            print("test_sweep: BLOCKED - whole-sweep timeout; %d/%d suites measured"
+                  % (len(results), len(suites)))
+        return 2
 
     if a.write_baseline:
         red = {rel: {"state": r["state"], "note": r["note"]}

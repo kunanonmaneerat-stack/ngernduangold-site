@@ -113,7 +113,7 @@ class ScheduledPythonRuntimeTests(unittest.TestCase):
         )
         self.assertEqual(
             receipt.ACTIVE_TASK_CONTRACT_VERSION["ngernduangold_weekly"],
-            "weekly-runner-v4",
+            "weekly-runner-v5",
         )
         for task_name, version in receipt.ACTIVE_TASK_CONTRACT_VERSION.items():
             commands = receipt.TASK_STEP_COMMAND_REGISTRY[(task_name, version)]

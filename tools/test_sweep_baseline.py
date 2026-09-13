@@ -9,7 +9,14 @@ import io, json, shutil, subprocess, sys, os, hashlib
 B = ".system_control/test_baseline.json"
 BAK = B + ".rtbak"
 GREEN = "tools/test_channel_readiness.py"      # green today
-RED = "tools/test_pantip_manual_pilot_contract.py"  # baselined red today
+# Pick the red suite from the baseline itself. 13 Sep 2026: the hard-coded
+# pantip suite had been fixed, so this test's own fixture went green and the
+# BROKE case reported "nothing moved" - a reverse test that silently stops
+# testing when the world improves is the exact failure it exists to catch.
+_base = json.load(io.open(B, encoding="utf-8"))
+_reds = sorted(k for k, v in _base["known_red"].items() if v.get("state") == "fail")
+assert _reds, "no baselined red suite to borrow - baseline is fully green, rewrite this test"
+RED = _reds[0]
 
 
 def sweep(only):
@@ -41,13 +48,13 @@ try:
     d["known_red"].pop(RED, None)
     io.open(B, "w", encoding="utf-8", newline="\n").write(
         json.dumps(d, ensure_ascii=False, indent=2) + "\n")
-    rc, out = sweep("test_pantip_manual_pilot_contract")
+    rc, out = sweep(os.path.basename(RED)[:-3])
     results.append(("red suite missing from baseline -> BROKE, exit 1",
                     rc == 1 and "BROKE" in out, rc, out.strip().splitlines()[-1][:70]))
 
     # QUIET: untouched baseline, same red suite -> no alarm.
     shutil.copy2(BAK, B)
-    rc, out = sweep("test_pantip_manual_pilot_contract")
+    rc, out = sweep(os.path.basename(RED)[:-3])
     results.append(("baselined red suite -> quiet, exit 0",
                     rc == 0 and "nothing moved" in out, rc,
                     out.strip().splitlines()[-1][:70]))
