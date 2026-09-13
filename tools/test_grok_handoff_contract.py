@@ -36,7 +36,12 @@ class HandoffContractTests(unittest.TestCase):
     def test_no_false_receiver_acceptance(self):
         for destination in self.data['destinations'].values():
             self.assertEqual(destination['acceptance_status'], 'UNKNOWN')
-        self.assertEqual(self.data['destinations']['grok']['delivery_status'], 'NOT_SENT')
+        # Delivery may progress (routine 0 was delivered and run 13 Sep 16:27-16:34);
+        # acceptance may not, until a hash-bound acknowledgement exists. The two
+        # are different facts and the second must never be inferred from the first.
+        self.assertIn(self.data['destinations']['grok']['delivery_status'],
+                      ('NOT_SENT', 'ROUTINE_0_DELIVERED_AND_RUN'))
+        self.assertEqual(self.data['destinations']['grok']['scheduled_routines'].split(' ')[0], 'none')
 
     def test_probe_has_no_mutations(self):
         probe = self.data['read_only_probe']

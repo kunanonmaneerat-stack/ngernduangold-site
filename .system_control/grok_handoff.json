@@ -1,59 +1,119 @@
 {
-  "schema_version": 1,
-  "handoff_id": "NGD-HANDOFF-20260913-v1",
-  "prepared_on": "2026-09-13",
-  "status": "PREPARED_AWAITING_RECEIVER_ACCEPTANCE",
-  "purpose": "Role handoff and acceptance tracking only; never publication authority or a second calendar.",
-  "activation_authorized": false,
-  "scheduler_changes_authorized": false,
-  "sources_of_truth": {
-    "policy": ".system_control/policy.json",
-    "roles": ".system_control/role_capabilities.json",
-    "editorial_calendar": ".system_control/content_calendar.json",
-    "publication_authority": "tools/publication_authority.py",
-    "ledger": "automation-log/post-ledger.jsonl"
+ "schema_version": 1,
+ "handoff_id": "NGD-HANDOFF-20260913-v1",
+ "prepared_on": "2026-09-13",
+ "status": "PREPARED_AWAITING_RECEIVER_ACCEPTANCE",
+ "purpose": "Role handoff and acceptance tracking only; never publication authority or a second calendar.",
+ "activation_authorized": false,
+ "scheduler_changes_authorized": false,
+ "sources_of_truth": {
+  "policy": ".system_control/policy.json",
+  "roles": ".system_control/role_capabilities.json",
+  "editorial_calendar": ".system_control/content_calendar.json",
+  "publication_authority": "tools/publication_authority.py",
+  "ledger": "automation-log/post-ledger.jsonl"
+ },
+ "role_assignments": {
+  "codex": "Engineering and release-gate owner: repair and test the local bridge, bind exact evidence, export job cards and reconcile returned results. No self-approval or independent publication.",
+  "cowork": "Editorial and operations lead: prepare a rolling seven-day plan, source-backed copy and comment drafts; independently review Codex changes and reconcile published results. Never publish the same queue or override gates.",
+  "grok": "Single designated publishing operator for individually authorized, supported placements: verify exact job, request claim, submit once only after valid acknowledgement and authorization, return evidence. No content rewriting or canonical repo writes.",
+  "owner": "Retains account control, restricted policy decisions and exact publication approval; role assignment does not mint one-time receipts."
+ },
+ "destinations": {
+  "grok": {
+   "app": "Grok Bot",
+   "conversation": "NGD Publisher (new bot created 13 Sep 16:23; not the trading team's GROK)",
+   "delivery_status": "ROUTINE_0_DELIVERED_AND_RUN",
+   "acceptance_status": "UNKNOWN",
+   "scheduled_routines": "none - routine 0 deleted by the bot after reporting, confirmed 16:36",
+   "acceptance_note": "Bot accepted the role in chat and echoed the handoff id, but a hash-bound acknowledgement of the exact packet (the contract test requirement) has not been given. Chat agreement is not acceptance."
   },
-  "role_assignments": {
-    "codex": "Engineering and release-gate owner: repair and test the local bridge, bind exact evidence, export job cards and reconcile returned results. No self-approval or independent publication.",
-    "cowork": "Editorial and operations lead: prepare a rolling seven-day plan, source-backed copy and comment drafts; independently review Codex changes and reconcile published results. Never publish the same queue or override gates.",
-    "grok": "Single designated publishing operator for individually authorized, supported placements: verify exact job, request claim, submit once only after valid acknowledgement and authorization, return evidence. No content rewriting or canonical repo writes.",
-    "owner": "Retains account control, restricted policy decisions and exact publication approval; role assignment does not mint one-time receipts."
+  "cowork": {
+   "app": "Claude",
+   "conversation": "เงินเดือนสมองทอง e-book launch",
+   "delivery_status": "LOCAL_INBOX_PREPARED",
+   "acceptance_status": "UNKNOWN",
+   "model_label_observed": "Fable 5.1 High",
+   "model_capability_verified": false
+  }
+ },
+ "separation": {
+  "page_only": true,
+  "trading_rooms_excluded": true,
+  "pantip_publication_excluded": true,
+  "independent_publishers_for_same_job": false,
+  "grok_canonical_ledger_write": false
+ },
+ "read_only_probe": {
+  "create_drafts": false,
+  "delete_drafts": false,
+  "upload_media": false,
+  "follow_affiliate_trackers": false,
+  "change_scheduler": false,
+  "result_destination": "same verified project conversation"
+ },
+ "required_before_first_publication": [
+  "Receiver acknowledgement bound to this handoff ID and exact packet hash, with actual supported channels and evidence-return route",
+  "Implemented bridge with tests for denial, duplicate claim, stale approval, altered media, crash and unknown-outcome recovery",
+  "Exact approved job from canonical sources; planning READY and role booleans are not authorization",
+  "Fresh content-scoped source, merchant/link-structure, privacy, identity, media-hash and watermark/origin evidence",
+  "Current quota/gap and permanent dedup across all operators; atomic claim acknowledgement before submission",
+  "Unexpired one-time owner receipt and every applicable current policy gate; action-time confirmation where required",
+  "Verified permalink and platform/account/content/slot/media match; independent reconciliation before marking success"
+ ],
+ "unknown_outcome_rule": "Do not retry, release the claim, or fabricate success. Reconcile platform history and receipt first.",
+ "operational_cadence": {
+  "status": "PROPOSED_NOT_SCHEDULED",
+  "timezone": "Asia/Bangkok",
+  "daily": "Cowork reviews seven-day coverage; Codex validates 48-hour eligibility and blockers; Grok consumes only authorized live slots; Cowork independently reconciles results.",
+  "weekly": "Review verified affiliate results and defects; change one measurable hypothesis at a time, add a regression test and record before/after evidence. Missing revenue evidence is UNKNOWN, not zero.",
+  "publication_times": "Read the approved canonical slot; no fixed time in this handoff grants permission."
+ },
+ "review_request": "automation-log/cowork-inbox/CODEX_grok-handoff-review_20260913.md",
+ "probe_result_20260913": {
+  "run_at": "2026-09-13T16:32:50+07:00 (bot's own clock, Asia/Bangkok)",
+  "external_mutations": "none (bot's closing line; consistent with the read-only screenshots)",
+  "transport": {
+   "job_cards_in": "messages in the NGD Publisher chat only - the bot cannot see repo files",
+   "results_out": "messages in the same chat only; email/Slack/Telegram/LINE/webhook UNKNOWN (not tested by design)",
+   "implication": "grok_jobcards.py output must be relayed into the chat, and claim/result text relayed back into grok_ingest.py, by Cowork or CC. No direct file interface exists."
   },
-  "destinations": {
-    "grok": {"app": "Grok Bot", "conversation": "เงินเดือนสมองทอง", "delivery_status": "NOT_SENT", "acceptance_status": "UNKNOWN"},
-    "cowork": {"app": "Claude", "conversation": "เงินเดือนสมองทอง e-book launch", "delivery_status": "LOCAL_INBOX_PREPARED", "acceptance_status": "UNKNOWN", "model_label_observed": "Fable 5.1 High", "model_capability_verified": false}
+  "channels": {
+   "youtube": {
+    "connected": "browser session already signed in; avatar + Create visible as @ngernduangold; NOT verified that this session is the page account",
+    "read": "ok - last Short 2026-08-09 08:12 Asia/Bangkok, https://www.youtube.com/shorts/h2V2CMudzXQ",
+    "verify_by_url": "ok - opened the URL and read the text back",
+    "write": "UNKNOWN (not tested, by design)"
+   },
+   "facebook_text": {
+    "connected": "no - login wall at facebook.com/ngernduangold",
+    "read": "UNKNOWN",
+    "write": "UNKNOWN"
+   },
+   "facebook_comment": {
+    "connected": "no",
+    "read": "UNKNOWN - no post visible to comment on",
+    "write": "UNKNOWN"
+   },
+   "threads_video": {
+    "connected": "no",
+    "read": "UNKNOWN - latest visible post is text",
+    "write": "UNKNOWN"
+   },
+   "threads_text": {
+    "connected": "no - public profile readable without login",
+    "read": "ok - last post 2026-08-14, https://www.threads.com/@ngernduangold/post/DcCPveYEhyR",
+    "verify_by_url": "UNKNOWN - post page needs JS the bot could not read",
+    "write": "UNKNOWN"
+   },
+   "video_intake": "UNKNOWN - could not test receiving a video file via a job card"
   },
-  "separation": {
-    "page_only": true,
-    "trading_rooms_excluded": true,
-    "pantip_publication_excluded": true,
-    "independent_publishers_for_same_job": false,
-    "grok_canonical_ledger_write": false
-  },
-  "read_only_probe": {
-    "create_drafts": false,
-    "delete_drafts": false,
-    "upload_media": false,
-    "follow_affiliate_trackers": false,
-    "change_scheduler": false,
-    "result_destination": "same verified project conversation"
-  },
-  "required_before_first_publication": [
-    "Receiver acknowledgement bound to this handoff ID and exact packet hash, with actual supported channels and evidence-return route",
-    "Implemented bridge with tests for denial, duplicate claim, stale approval, altered media, crash and unknown-outcome recovery",
-    "Exact approved job from canonical sources; planning READY and role booleans are not authorization",
-    "Fresh content-scoped source, merchant/link-structure, privacy, identity, media-hash and watermark/origin evidence",
-    "Current quota/gap and permanent dedup across all operators; atomic claim acknowledgement before submission",
-    "Unexpired one-time owner receipt and every applicable current policy gate; action-time confirmation where required",
-    "Verified permalink and platform/account/content/slot/media match; independent reconciliation before marking success"
-  ],
-  "unknown_outcome_rule": "Do not retry, release the claim, or fabricate success. Reconcile platform history and receipt first.",
-  "operational_cadence": {
-    "status": "PROPOSED_NOT_SCHEDULED",
-    "timezone": "Asia/Bangkok",
-    "daily": "Cowork reviews seven-day coverage; Codex validates 48-hour eligibility and blockers; Grok consumes only authorized live slots; Cowork independently reconciles results.",
-    "weekly": "Review verified affiliate results and defects; change one measurable hypothesis at a time, add a regression test and record before/after evidence. Missing revenue evidence is UNKNOWN, not zero.",
-    "publication_times": "Read the approved canonical slot; no fixed time in this handoff grants permission."
-  },
-  "review_request": "automation-log/cowork-inbox/CODEX_grok-handoff-review_20260913.md"
+  "scheduler": "can save a fixed-time routine (Asia/Bangkok); drift UNKNOWN - never run on a schedule yet",
+  "identity": "confirmed PUBLIC_IDENTITY_PAGE_ONLY; will not speak as bot; keeps required AI/affiliate disclosure",
+  "what_this_changes_in_the_plan": {
+   "channels_actually_reachable_today": "youtube only, and only if the signed-in session is confirmed to be the page account (owner must confirm)",
+   "facebook_and_threads": "need the owner to sign in on the bot's browser profile before any card for those legs can be READY; login walls are a stop, never something the bot works around",
+   "first_real_card": "youtube video leg is the only candidate; still needs owner one-time receipt + grok_gate READY"
+  }
+ }
 }
