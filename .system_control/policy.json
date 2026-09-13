@@ -26,6 +26,23 @@
       "cowork_dissent_on_record": "Cowork flagged pantip specifically and was overruled. Recording it rather than re-arguing it: pantip is state=limited under a FINAL WARNING where a repeat offence is a permanent ban, and it is simultaneously the highest-value channel in the system (4 affiliate clicks from 14 sessions, the only channel producing any conversion event at all). It is the one channel where a mistake cannot be undone. The owner owns this call; this note exists so that if it ever goes wrong the reasoning is legible rather than reconstructed.",
       "cowork_error_on_record": "Cowork also claimed Grok could not publish to FB/Threads because the Meta token was revoked. That reasoning was faulty: the revocation applies to THIS project's app, not to a separate platform with its own integrations. Capability of an unexamined tool was inferred from facts about our own account. The correct move was to test what the bot can actually reach, not to assert a limit.",
       "_amended_20260910": "pantip re-closed 10 Sep - see channels.pantip._reclosed_20260910. Scope is now six channels, not seven."
+    },
+    "handover_20260913": {
+      "by": "owner, 13 Sep 2026: 'hand the posting work to the Grok bot; Cowork designs roles and handover; Codex (astra high) works alongside; do it now'",
+      "operator": "grok - external publishing operator (role_capabilities.actors.grok, social_publish=true, local_write=false)",
+      "scope": "youtube video, facebook text, facebook comment, threads video - the four legs channel_readiness reports READY for actor grok on this date",
+      "not_in_scope": "pantip (held by CC, publication_authorized=false until gates[14] decides), facebook video (owner-only Reel path), tiktok/instagram/pinterest (state closed pending their own gates)",
+      "gate_before_pickup": "tools/grok_gate.py (Codex) - a job card exists only if the gate said READY and the owner approved the piece",
+      "interface": "job cards per automation-log/HANDOVER_grok-publisher_20260913.md section 4; claim/result per section 5; claim goes through post_ledger.claim_text_publication, never the 'attempt' row type",
+      "what_this_does_NOT_change": "authority_rule stands: publication_authorized + dated gates + per-piece owner approval, all three. Handing the hand to Grok does not hand over any decision. No routine posts until the first job card leaves grok_gate READY.",
+      "status_on_this_date": "0 job cards exist (65 placements PLANNED_BLOCKED, 64 stale). Grok routine 0 (capability probe, no posting) is the only routine to run until then.",
+      "docs": [
+        "automation-log/HANDOVER_grok-publisher_20260913.md",
+        "automation-log/grok-routines/ROUTINE-0_capability-probe.md",
+        "automation-log/grok-routines/ROUTINE-1_daily-readiness.md",
+        "automation-log/grok-routines/ROUTINE-2_publish-slot.md",
+        "automation-log/cc-inbox/SPEC_grok-gate_20260913.md"
+      ]
     }
   },
   "public_identity": {
