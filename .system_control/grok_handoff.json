@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "handoff_id": "NGD-HANDOFF-20260913-v1",
+  "prepared_on": "2026-09-13",
+  "status": "PREPARED_AWAITING_RECEIVER_ACCEPTANCE",
+  "purpose": "Role handoff and acceptance tracking only; never publication authority or a second calendar.",
+  "activation_authorized": false,
+  "scheduler_changes_authorized": false,
+  "sources_of_truth": {
+    "policy": ".system_control/policy.json",
+    "roles": ".system_control/role_capabilities.json",
+    "editorial_calendar": ".system_control/content_calendar.json",
+    "publication_authority": "tools/publication_authority.py",
+    "ledger": "automation-log/post-ledger.jsonl"
+  },
+  "role_assignments": {
+    "codex": "Engineering and release-gate owner: repair and test the local bridge, bind exact evidence, export job cards and reconcile returned results. No self-approval or independent publication.",
+    "cowork": "Editorial and operations lead: prepare a rolling seven-day plan, source-backed copy and comment drafts; independently review Codex changes and reconcile published results. Never publish the same queue or override gates.",
+    "grok": "Single designated publishing operator for individually authorized, supported placements: verify exact job, request claim, submit once only after valid acknowledgement and authorization, return evidence. No content rewriting or canonical repo writes.",
+    "owner": "Retains account control, restricted policy decisions and exact publication approval; role assignment does not mint one-time receipts."
+  },
+  "destinations": {
+    "grok": {"app": "Grok Bot", "conversation": "เงินเดือนสมองทอง", "delivery_status": "NOT_SENT", "acceptance_status": "UNKNOWN"},
+    "cowork": {"app": "Claude", "conversation": "เงินเดือนสมองทอง e-book launch", "delivery_status": "LOCAL_INBOX_PREPARED", "acceptance_status": "UNKNOWN", "model_label_observed": "Fable 5.1 High", "model_capability_verified": false}
+  },
+  "separation": {
+    "page_only": true,
+    "trading_rooms_excluded": true,
+    "pantip_publication_excluded": true,
+    "independent_publishers_for_same_job": false,
+    "grok_canonical_ledger_write": false
+  },
+  "read_only_probe": {
+    "create_drafts": false,
+    "delete_drafts": false,
+    "upload_media": false,
+    "follow_affiliate_trackers": false,
+    "change_scheduler": false,
+    "result_destination": "same verified project conversation"
+  },
+  "required_before_first_publication": [
+    "Receiver acknowledgement bound to this handoff ID and exact packet hash, with actual supported channels and evidence-return route",
+    "Implemented bridge with tests for denial, duplicate claim, stale approval, altered media, crash and unknown-outcome recovery",
+    "Exact approved job from canonical sources; planning READY and role booleans are not authorization",
+    "Fresh content-scoped source, merchant/link-structure, privacy, identity, media-hash and watermark/origin evidence",
+    "Current quota/gap and permanent dedup across all operators; atomic claim acknowledgement before submission",
+    "Unexpired one-time owner receipt and every applicable current policy gate; action-time confirmation where required",
+    "Verified permalink and platform/account/content/slot/media match; independent reconciliation before marking success"
+  ],
+  "unknown_outcome_rule": "Do not retry, release the claim, or fabricate success. Reconcile platform history and receipt first.",
+  "operational_cadence": {
+    "status": "PROPOSED_NOT_SCHEDULED",
+    "timezone": "Asia/Bangkok",
+    "daily": "Cowork reviews seven-day coverage; Codex validates 48-hour eligibility and blockers; Grok consumes only authorized live slots; Cowork independently reconciles results.",
+    "weekly": "Review verified affiliate results and defects; change one measurable hypothesis at a time, add a regression test and record before/after evidence. Missing revenue evidence is UNKNOWN, not zero.",
+    "publication_times": "Read the approved canonical slot; no fixed time in this handoff grants permission."
+  },
+  "review_request": "automation-log/cowork-inbox/CODEX_grok-handoff-review_20260913.md"
+}

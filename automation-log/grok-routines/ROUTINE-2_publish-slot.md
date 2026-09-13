@@ -11,14 +11,14 @@
 
 ## ลำดับที่ห้ามสลับ
 
-**1. หยิบใบงาน** ของสล็อตนี้จาก `<ที่เก็บใบงาน>` — เฉพาะใบที่ `scheduled_at` ตรงสล็อตและรูทีน 1 เช้านี้ให้ `READY`
+**1. หยิบใบงาน** ของสล็อตนี้จาก `<ที่เก็บใบงาน>` — เฉพาะใบที่ `scheduled_at` ตรงสล็อตและรูทีน 1 ให้ `PRECHECK_READY_NOT_AUTHORIZED` ผลนี้ยังไม่อนุญาตให้เผยแพร่ ต้องผ่าน current live authority และ owner receipt ตาม review ข้างต้นก่อน
 
-**2. ตรวจซ้ำสิ่งที่เปลี่ยนได้ตั้งแต่เช้า** (ทุกข้อต้องผ่าน ไม่ผ่านข้อใด = หยุด รายงาน BLOCKED พร้อมชื่อ field)
-- เวลาปัจจุบันอยู่ใน `window` · `sha256(content.text)` == `content.text_sha256` · `limits.posted_today_before_this` + โพสต์ที่คุณทำวันนี้ในช่องนี้ < `limits.posts_per_day` · โพสต์ล่าสุดของคุณในช่องนี้ห่างจากตอนนี้ ≥ `limits.min_gap_hours` ชม.
+**2. ตรวจซ้ำสิ่งที่เปลี่ยนได้ตั้งแต่เช้า** (ตรวจแล้วไม่ผ่าน = BLOCKED; ตรวจไม่ได้ = UNKNOWN พร้อมชื่อ field)
+- เวลาปัจจุบันอยู่ใน `window` · `sha256(content.text)` == `content.text_sha256` · hash ไฟล์สื่อจริงและ QA ตรง · source/identity/policy ยังใช้ได้ · quota/gap จาก ledger ปัจจุบันรวมทุก operator ผ่านเกณฑ์ปัจจุบันของ policy ห้ามใช้ตัวนับเช้าแทนข้อมูลสด
 
 **3. ส่ง CLAIM แล้วรอ ack** — ส่ง `{"kind":"claim","job_id":…,"at":…,"text_sha256_seen":…}` ไปที่ `report.claim_to`
 - ได้ `claim_ack` กลับมาสำหรับ job_id นี้ → ไปข้อ 4
-- ไม่ได้ ack ภายใน 2 นาที / ได้ `claim_rejected` → **หยุด ห้ามโพสต์** รายงาน `BLOCKED field: claim` — ไม่มี ack แปลว่าอาจมีคนอื่นจองไปแล้ว การโพสต์ซ้ำเสียหายกว่าการพลาดสล็อต
+- ไม่ได้ ack ภายใน 2 นาที → หยุด `UNKNOWN field: claim_ack` ห้าม retry; ได้ `claim_rejected` ที่ตรวจที่มาได้ → หยุด `BLOCKED field: claim` ต้อง reconcile ก่อนดำเนินการใหม่
 
 **4. โพสต์** ข้อความ/สื่อ**ตามใบงานทุกตัวอักษร** ด้วยบัญชี `account` · ห้ามเพิ่มแฮชแท็ก ห้ามตัดคำ ห้ามแก้ลิงก์
 

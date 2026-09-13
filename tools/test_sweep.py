@@ -45,6 +45,7 @@ SELF = os.path.basename(__file__)
 #                                from inside a sweep means two processes writing
 #                                the same file. Run it directly instead.
 SKIP = {SELF, "test_sweep_baseline.py"}
+SELFTEST_SUITES = ("tools/grok_gate.py", "tools/grok_jobcards.py", "tools/grok_ingest.py")
 
 
 def discover():
@@ -54,6 +55,7 @@ def discover():
             if os.path.basename(p) in SKIP:
                 continue
             out.append(os.path.relpath(p, REPO).replace("\\", "/"))
+    out.extend(rel for rel in SELFTEST_SUITES if os.path.isfile(os.path.join(REPO, rel)))
     return sorted(out)
 
 
@@ -77,6 +79,7 @@ PROTECTED_DIRS = (
     ".system_control",
     "automation-log/dedup-evidence",
     "automation-log/media-qa",
+    "automation-log/grok-handoff",
 )
 
 
@@ -213,7 +216,10 @@ def _run_one_unfenced(rel, timeout):
                PYTHONPATH=REPO + (os.pathsep + os.environ["PYTHONPATH"]
                                   if os.environ.get("PYTHONPATH") else ""))
     try:
-        r = subprocess.run([PYTHON, "-X", "utf8", "-B", rel],
+        command = [PYTHON, "-X", "utf8", "-B", rel]
+        if rel in SELFTEST_SUITES:
+            command.append("--selftest")
+        r = subprocess.run(command,
                            cwd=REPO, capture_output=True, timeout=timeout, env=env)
     except subprocess.TimeoutExpired:
         return "timeout", None, time.time() - started, "exceeded %ss" % timeout

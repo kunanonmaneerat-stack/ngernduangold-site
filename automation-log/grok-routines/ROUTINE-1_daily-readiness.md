@@ -12,13 +12,13 @@
 ## ทำอะไร
 
 1. อ่านใบงานของวันนี้จาก `<ที่เก็บใบงาน — เติมจากรูทีน 0 ข้อ 5>` — ไฟล์ชื่อ `jobcards_<YYYY-MM-DD>.json` (รายการใบงาน schema ตาม §4 ของ HANDOVER)
-   - ไม่มีไฟล์ = รายงาน `NO_JOBCARDS` แล้วจบ นี่คือสภาพปกติจนกว่าจะมีชิ้นงานอนุมัติ ไม่ใช่ความผิดพลาด
+   - ไม่มีไฟล์และตรวจยืนยันว่าไม่มี eligible slot = `NO_JOBCARDS`; ถ้ามี eligible slot = `DELIVERY_GAP`; ถ้าอ่าน calendar ไม่ได้ = `UNKNOWN` ไม่สรุปว่าปกติ
    - อ่านไม่ได้/parse ไม่ผ่าน = `UNKNOWN` บอกว่าติดอะไร ห้ามเดาเนื้อหา
 2. ต่อใบงาน ตัดสิน**หนึ่งในสาม** ห้ามมีทางที่สี่:
 
 | คำตัดสิน | เมื่อ | ต้องระบุ |
 |---|---|---|
-| `READY` | ทุกช่องต่อไปนี้ผ่าน: `gate.verdict == "READY"` · `approval.owner_approved == true` · `window.not_after` ยังไม่ถึง · `content.text` ไม่มีคำใน `forbidden_in_text` · `disclosure_included == true` · ช่องใน `channel` เป็นช่องที่คุณเข้าถึงได้จริง (ตามรูทีน 0) | รายการที่ตรวจ |
+| `PRECHECK_READY_NOT_AUTHORIZED` | ตรวจใบงาน หลักฐานจริง hash ข้อความ/สื่อและ QA ที่ผูก hash อายุหลักฐาน policy บัญชี window และ disclosure ปัจจุบันครบ ยังไม่ใช่ owner receipt หรือสิทธิ์ส่ง | รายการที่ตรวจและ reference ของหลักฐาน |
 | `BLOCKED` | มีช่องใดไม่ผ่าน | **ชื่อ field ที่ไม่ผ่าน** ห้ามบอกแค่ "ไม่ผ่าน" |
 | `UNKNOWN` | ตรวจ field ใดไม่ได้ (ไม่มี field · อ่านไม่ออก · เครื่องมือล้ม) | **field ไหน และเพราะอะไร** |
 
@@ -29,8 +29,8 @@
 
 ```
 READINESS <YYYY-MM-DD> 08:30
-jobcards: <จำนวน> | READY <n> | BLOCKED <n> | UNKNOWN <n>
-<job_id>  READY    ตรวจ: gate,approval,window,forbidden,disclosure,channel
+jobcards: <จำนวน> | PRECHECK_READY_NOT_AUTHORIZED <n> | BLOCKED <n> | UNKNOWN <n>
+<job_id>  PRECHECK_READY_NOT_AUTHORIZED    ตรวจ: gate,hash,media_qa,freshness,identity,window,disclosure,channel
 <job_id>  BLOCKED  field: approval.owner_approved=false
 <job_id>  UNKNOWN  field: content.text_sha256 — ไฟล์ไม่มี field นี้
 ```
