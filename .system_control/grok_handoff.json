@@ -115,5 +115,32 @@
    "facebook_and_threads": "need the owner to sign in on the bot's browser profile before any card for those legs can be READY; login walls are a stop, never something the bot works around",
    "first_real_card": "youtube video leg is the only candidate; still needs owner one-time receipt + grok_gate READY"
   }
+ },
+ "probe_result_20260913_rerun_after_owner_login": {
+  "run_at": "2026-09-13 16:53-16:59 Asia/Bangkok, after the owner signed in on the bot's browser",
+  "external_mutations": "none (bot's closing line: no schedule set, /links not opened, no credentials typed)",
+  "youtube": {
+   "account": "CONFIRMED - YouTube Studio signed in as channel เงินเดือนสมองทอง, handle @ngernduangold",
+   "read_and_verify_by_url": "ok - Studio channel name matches the Short's URL",
+   "create_path_visible": "yes - Create/Upload visible in Studio (not clicked)",
+   "write": "UNKNOWN (untested by design)",
+   "status": "the only leg the bot can reach end to end today"
+  },
+  "facebook": {
+   "account": "signed in as the owner's personal account (name seen on screen; not recorded here)",
+   "page": "UNKNOWN - facebook.com/ngernduangold shows 'content not available'; no post visible; no create-post-as-page button",
+   "text_leg": "UNKNOWN",
+   "comment_leg": "UNKNOWN - no post to comment on",
+   "owner_action": "check in Facebook whether this account is an admin of the page and whether the page is published/restricted; the bot cannot tell which"
+  },
+  "threads": {
+   "account": "NOT signed in - Threads uses the Instagram login, which the Facebook sign-in did not cover; the bot saw the login modal and did not type anything",
+   "text_leg_read": "ok - public profile, last post 2026-08-14, permalink readable this time",
+   "verify_by_url": "ok now",
+   "video_leg": "UNKNOWN - latest visible post is text; no composer visible while signed out",
+   "write": "UNKNOWN",
+   "owner_action": "sign in to Threads (Instagram credentials) on the bot's browser profile"
+  },
+  "net_change_vs_first_probe": "YouTube moved from 'session unverified' to 'page account confirmed'. Facebook moved from 'login wall' to 'signed in but page not readable'. Threads unchanged - still signed out."
  }
 }
